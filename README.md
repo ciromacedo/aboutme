@@ -1,15 +1,18 @@
-# Ciro Macedo
-Has been a professor at the Federal Institute of Education, Science, and Technology of the State of Goiás (IFG) since 2013. He holds a degree in Informatics – Information Systems (2006) and a master’s degree in Electrical Engineering from Federal University of Goiás (UFG). He is currently a Ph.D. student in Computer Science at the Institute of Informatics at the Federal University of Goiás (UFG). His areas of interest include evolutionary computing, operational research, software engineering, wireless networks and resource allocation.
+# About me 
 
-## Website
+|Ciro J. A. Macedo                                            |
+| ----------------------------------------------------------- |
+|Instituto Federal de Educação, Ciências e Tecnologia de Goiás|
+|Câmpus Cidade de Goiás                                       |
+|76600-000 - Cidade de Goiás - GO- Brazil                     |
+|Phone: +55 62 3371 9000                                      |
+|Email: <b>ciro.macedo@ifg.edu.br</b>                         |
+## Resumé
+<b>Ciro J. A. Macedo</b> received the bachelor degree in Software Engineering from Salgado de Oliveira University, in 2006. Between 2001 and 2013, he worked as a senior full stack  developer in several technology companies. He received the M.Sc. degree in Electrical Engineering from the Federal University of Goiás (UFG), in 2012. Between 2009 and 2012, worked as assistant professor in a private college. He is currently a Ph.D. student in Computer Science at the Institute of Informatics at the Federal University of Goiás (UFG). Since 2013, has been a professor at the Federal Institute of Education, Science, and Technology of the State of Goiás (IFG).
+
+### Website
 - [Google Scholar](https://scholar.google.com.br/citations?user=GMxi-B8AAAAJ)
 - [Lattes Cnpq](http://lattes.cnpq.br/7461921402514789)
 
-## Academic Formation
-- <b>2019-current time</b> - Ph.D. student in Computer Science at the Institute of Informatics at the Federal University of Goiás (UFG). Work Title: <i>Improved Support for Mission-Critical Applications Assisted by Unmanned Aerial Vehicles with 5G and B5G Connectivity</i>
-- <b>2009-2011</b> - Master's Degree in Electrical and Computer Engineering at the <i>Federal University of Goiás(UFG)</i>. Work Title: <i>Automation in Planning Digital Television Signal Propagation Networks </i>
-- 2003 - 2007 - Graduation in Software Engineering
-
-## Professional performance
-- <b>[Ministry of Economy of Brazil](https://www.gov.br/servidor/pt-br/acesso-a-informacao/gestao-de-pessoas/pndp/paginas/times-impactagov)</b> - Member of the flying team <i>ImpactGOV</i> responsible for the modeling and development of Vitae software. System for the implementation of the national people development policy.
-
+### Languages
+- Java, Go, Docker, Python, C, HTML, Java Script, CSS, AngularJS, React
