@@ -18,6 +18,17 @@
 #### DevOps and Cloud
 - [Ansible](https://www.ansible.com/), [Docker](https://www.docker.com/), [Kubernetes](https://kubernetes.io/)
 #### Languages
-- Java, Go, C, Python
+- Java 
+- Go 
+- C 
+- Python
+#### Databases
+- PostgreSQL
+- MySQL
+- MongoDB
+- Oracle
 #### Other Frameworks / Technologies
-- AngularJS, React, Hibernate, Spring, PostgreSQL, Oracle, MongoDB, Web Development (HTML, Java Script, CSS) 
+- AngularJS, React, Hibernate, Spring, Web Development (HTML, Java Script, CSS), Apache Flex 
+
+## Projects
+- <b>[SUGEP](https://sugep.ifg.edu.br/eventos/#/)</b> - SUGEP is unified management system of research and event, developed and maintained since 2013 for the Federal Institute of Education, Science, and Technology of the State of Goiás (IFG). The system is responsible for managing events and managing scientific initiation projects, controlling the entire flow of activities such as: registration, issuance of certificates, logistics management, messaging, etc.
