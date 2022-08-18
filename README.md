@@ -31,7 +31,7 @@
 #### DevOps and Cloud
 - [Ansible](https://www.ansible.com/), [Docker](https://www.docker.com/), [Kubernetes](https://kubernetes.io/)
 #### Languages
-- JavaEE, Go, C, Python
+- Java, Go, C, Python, Matlab
 #### Databases
 - PostgreSQL, MySQL, MongoDB, Oracle
 #### Other Frameworks / Technologies
