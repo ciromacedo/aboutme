@@ -44,6 +44,7 @@
 - AngularJS, React, Hibernate, Spring, Web Development (HTML, Java Script, CSS), Apache Flex, Java Server Pages, JSF, Visual Basic, VBScrypt, Action Script, Google Web Toolkit 
 
 ## Relevant Scientific Results
+- **MACEDO, C. J. A.**; DIAS, E. V.; JÚNIOR, J. J. S.; BRUNO, G. Z.; GRINGS, F. H.; ALBERTI, A. M.; BOTH, C. B.; CARDOSO, KLEBER V.  _Improved support for UAV-based computer vision applications in Search and Rescue operations via RAN Intelligent Controllers_. [XL Simpósio Brasileiro de Telecomunicações e Processamento de Sinais (SBrT 2022)](https://inatel.br/sbrt/)
 - BOTH, C. B.; BORGES, J. ; GONCALVES, L. ; NAHUM, C. ; **MACEDO, C. J. A.** ; KLAUTAU, ALDEBARO ; CARDOSO, KLEBER V.  _System intelligence for UAV-based mission critical services with challenging 5G/B5G connectivity_. [ITU Journal on Future and Evolving Technologies, 2022](https://www.itu.int/pub/S-JNL-VOL3.ISSUE1-2022-A06)
 - BOTH, C. B. ; BORGES, J. ; GONCALVES, L. ; NAHUM, C. ; **MACEDO, C. J. A.** ; KLAUTAU, A. ; CARDOSO, K. V. . _System Intelligence for UAV-Based Mission Critical with Challenging 5G/B5G Connectivity_. [Arxvi, 2021 (Networking and Internet Architecture)](https://arxiv.org/abs/2102.02318)
 - BOTH, C. B. ; CARDOSO, K. V. ; PRADE, L. R. ; LOPES, V. H. L. ; **MACEDO, C. J. A.** . _Soft5G+: explorando a softwarização nas redes 5G_. [In: SBRC. (Org.). Minicursos do XXXVIII Simpósio Brasileiro de Redes de Computadores e Sistemas Distribuídos. 1ºed.: , 2020, v. 1, p. 1-49](https://sol.sbc.org.br/livros/index.php/sbc/catalog/download/50/230/467-1?inline=1).
