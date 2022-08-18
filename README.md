@@ -56,3 +56,6 @@
 - CORDEIRO, D. F. ; **MACEDO, C. J. A.** ; LEITE, A. T. C. ; BATISTA, M. A. _Conservação de volume em técnicas de tratamento de interface em métodos ISPH_. In: [Congresso Nacional de Matemática Aplicada a Indústria, 2014, Caldas Novas - Goiás. Conservação de volume em técnicas de tratamento de interface em métodos ISPH, 2014. v. 1. p. 1-2](https://www.proceedings.blucher.com.br/article-details/conservao-de-volume-em-tcnicas-de-tratamento-de-interface-em-mtodos-isph-11937).
 - ROCHA, A. S. ; **MACEDO, C. J. A.** ; BRITO, L. C. _An Improved Multiobjective Search Method applied to Single Frequency Networks Planning_. In: 10th International Information and Telecommunication Technologies Conference, 2011, Florianopolis.
 - BRITO, L. C. ; **MACEDO, C. J. A.** ; ROCHA, A. S. ; PALHARES, P. H. S. _A Performance Analysis of Mono and Multi-objective Evolutionary Algorithms Assisted by Meta-modeling_. In: [SBRN 2010 - 11th Brazilian Symposium on Neural Networks, 2010, Sao Bernardo do Campo v. 11. p. 170-175](https://ieeexplore.ieee.org/document/5715232).
+
+## Registered Computer Programs
+- [ICSGWIOT](https://busca.inpi.gov.br/pePI/servlet/ProgramaServletController?Action=detail&CodPedido=30063&SearchParameter=) - ICSGWIOT is a Communication Interface betweeb corporate Internet of Things (IoT) Gateways System and IoTApplication Development Plataform.
