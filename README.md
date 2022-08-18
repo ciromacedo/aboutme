@@ -58,4 +58,6 @@
 - BRITO, L. C. ; **MACEDO, C. J. A.** ; ROCHA, A. S. ; PALHARES, P. H. S. _A Performance Analysis of Mono and Multi-objective Evolutionary Algorithms Assisted by Meta-modeling_. In: [SBRN 2010 - 11th Brazilian Symposium on Neural Networks, 2010, Sao Bernardo do Campo v. 11. p. 170-175](https://ieeexplore.ieee.org/document/5715232).
 
 ## Registered Computer Programs
-- [ICSGWIOT](https://busca.inpi.gov.br/pePI/servlet/ProgramaServletController?Action=detail&CodPedido=30063&SearchParameter=) - ICSGWIOT is a Communication Interface betweeb corporate Internet of Things (IoT) Gateways System and IoTApplication Development Plataform.
+- [ICSGWIOT](https://busca.inpi.gov.br/pePI/servlet/ProgramaServletController?Action=detail&CodPedido=30063&SearchParameter=) - Is a communication interface between corporate Internet of Things (IoT) Gateways Systems and IoT Application Development Plataform.
+- [ORQCGIOT](https://busca.inpi.gov.br/pePI/servlet/ProgramaServletController?Action=detail&CodPedido=30064&SearchParameter=) - Is a orchestrator of virtual components for corporate IoT Gateways System.
+- [IFGEVENTOS](https://busca.inpi.gov.br/pePI/servlet/ProgramaServletController?Action=detail&CodPedido=17734&SearchParameter=) - Institutional event management system. Responsible for the entire logistical control of the execution of an event, automating the collection of registrations, managing the distribution of activities and automating the certification of participants at the end of the event.
