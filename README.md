@@ -31,15 +31,9 @@
 #### DevOps and Cloud
 - [Ansible](https://www.ansible.com/), [Docker](https://www.docker.com/), [Kubernetes](https://kubernetes.io/)
 #### Languages
-- JavaEE 
-- Go 
-- C 
-- Python
+- JavaEE, Go, C, Python
 #### Databases
-- PostgreSQL
-- MySQL
-- MongoDB
-- Oracle
+- PostgreSQL, MySQL, MongoDB, Oracle
 #### Other Frameworks / Technologies
 - AngularJS, React, Hibernate, Spring, Web Development (HTML, Java Script, CSS), Apache Flex, Java Server Pages, JSF, Visual Basic, VBScrypt, Action Script, Google Web Toolkit 
 
