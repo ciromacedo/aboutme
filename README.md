@@ -12,7 +12,7 @@
 |Phone: +55 62 3371 9000                                      |
 |Email: <b>ciro.macedo@ifg.edu.br</b>                         |
 ## Resumé
-<b>Ciro J. A. Macedo</b> received the bachelor degree in Software Engineering from Salgado de Oliveira University, in 2006. Between 2001 and 2013, he worked as a senior full stack  developer in several technology companies. He received the M.Sc. degree in Electrical Engineering from the Federal University of Goiás (UFG), in 2012. Between 2009 and 2012, worked as assistant professor in a private college. He is currently a Ph.D. student in Computer Science at the Institute of Informatics at the Federal University of Goiás (UFG). Since 2013, has been a professor at the Federal Institute of Education, Science, and Technology of the State of Goiás (IFG).
+<b>Ciro J. A. Macedo</b> received the bachelor degree in Software Engineering from Salgado de Oliveira University, in 2006. Between 2001 and 2013, he worked as a Java Senior Full Stack  developer in several technology companies. He received the M.Sc. degree in Electrical Engineering from the Federal University of Goiás (UFG), in 2012. Between 2009 and 2012, worked as assistant professor in a private college. He is currently a Ph.D. student in Computer Science at the Institute of Informatics at the Federal University of Goiás (UFG). Since 2013, has been a professor at the Federal Institute of Education, Science, and Technology of the State of Goiás (IFG).
 
 ## Website
 - [Google Scholar](https://scholar.google.com.br/citations?user=GMxi-B8AAAAJ)
@@ -43,3 +43,6 @@
 #### Other Frameworks / Technologies
 - AngularJS, React, Hibernate, Spring, Web Development (HTML, Java Script, CSS), Apache Flex, Java Server Pages, JSF, Visual Basic, VBScrypt, Action Script, Google Web Toolkit 
 
+## Relevant Scientific Results
+- BOTH, C. B.; BORGES, J. ; GONCALVES, L. ; NAHUM, C. ; **MACEDO, C. J. A.** ; KLAUTAU, ALDEBARO ; CARDOSO, KLEBER V.  _System intelligence for UAV-based mission critical services with challenging 5G/B5G connectivity_. [ITU Journal on Future and Evolving Technologies, 2022](https://www.itu.int/pub/S-JNL-VOL3.ISSUE1-2022-A06)
+- BOTH, C. B. ; BORGES, J. ; GONCALVES, L. ; NAHUM, C. ; **MACEDO, C. J. A.** ; KLAUTAU, A. ; CARDOSO, K. V. . _System Intelligence for UAV-Based Mission Critical with Challenging 5G/B5G Connectivity_. [Arxvi, 2021 (Networking and Internet Architecture)](https://arxiv.org/abs/2102.02318)
