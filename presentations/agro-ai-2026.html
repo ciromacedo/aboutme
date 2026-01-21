@@ -1,0 +1,1395 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tecnologias Digitais e IA no Agronegócio Sustentável</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: #1e3c72;
+            overflow: hidden;
+            height: 100vh;
+            margin: 0;
+            padding: 0;
+        }
+
+        .presentation-container {
+            width: 100%;
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+            padding: 0;
+            margin: 0;
+        }
+
+        .slide {
+            display: none;
+            background: white;
+            width: 100%;
+            height: 100vh;
+            padding: 80px 60px 40px 60px;
+            position: relative;
+            animation: slideIn 0.5s ease-out;
+            overflow-y: auto;
+        }
+
+        .slide.active {
+            display: flex;
+            flex-direction: column;
+        }
+
+        /* Slide de Capa - manter centralizado */
+        .slide.cover {
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            background: linear-gradient(135deg, #1b5e20 0%, #2e7d32 50%, #388e3c 100%);
+            color: white;
+            padding: 60px;
+        }
+
+        .cover h1 {
+            font-size: 3.5em;
+            margin-bottom: 30px;
+            line-height: 1.2;
+            text-shadow: 4px 4px 8px rgba(0, 0, 0, 0.8);
+            color: #FFFFFF !important;
+            border: none;
+            padding: 0;
+            opacity: 1 !important;
+        }
+
+        .cover h2 {
+            font-size: 1.8em;
+            font-weight: 300;
+            margin-bottom: 60px;
+            color: #FFFFFF !important;
+            text-shadow: 3px 3px 6px rgba(0, 0, 0, 0.7);
+            opacity: 1 !important;
+        }
+
+        .cover .footer-info {
+            position: absolute;
+            bottom: 40px;
+            left: 0;
+            right: 0;
+            text-align: center;
+            font-size: 1.2em;
+            padding: 20px;
+            border-top: 2px solid rgba(255, 255, 255, 0.5);
+        }
+
+        .cover .footer-info p {
+            margin: 5px 0;
+            color: #FFFFFF !important;
+            opacity: 1 !important;
+        }
+
+        @keyframes slideIn {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .slide h1 {
+            color: #2c5f2d;
+            font-size: 2.2em;
+            margin-bottom: 20px;
+            border-bottom: 4px solid #4a9c4d;
+            padding-bottom: 12px;
+        }
+
+        .slide h2 {
+            color: #3d7c3f;
+            font-size: 1.5em;
+            margin-top: 20px;
+            margin-bottom: 12px;
+        }
+
+        .slide h3 {
+            color: #5a9e5c;
+            font-size: 1.2em;
+            margin-top: 15px;
+            margin-bottom: 8px;
+        }
+
+        .slide h4 {
+            color: #6baf6d;
+            font-size: 1.1em;
+            margin-top: 12px;
+            margin-bottom: 6px;
+        }
+
+        .slide ul {
+            margin-left: 30px;
+            line-height: 1.6;
+        }
+
+        .slide li {
+            margin-bottom: 10px;
+            color: #333;
+            font-size: 1em;
+        }
+
+        .slide li ul {
+            margin-top: 6px;
+            margin-left: 25px;
+        }
+
+        .slide li ul li {
+            margin-bottom: 6px;
+            font-size: 0.95em;
+            color: #555;
+        }
+
+        .slide p {
+            line-height: 1.7;
+            color: #444;
+            font-size: 1.05em;
+            margin-bottom: 12px;
+        }
+
+        .highlight {
+            background-color: #e8f5e9;
+            padding: 15px;
+            border-left: 5px solid #4a9c4d;
+            margin: 15px 0;
+            border-radius: 5px;
+        }
+
+        .highlight p {
+            font-size: 1.05em;
+        }
+
+        .grid-2col {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+            margin: 15px 0;
+        }
+
+        .grid-3col {
+            display: grid;
+            grid-template-columns: 1fr 1fr 1fr;
+            gap: 12px;
+            margin: 15px 0;
+        }
+
+        .box {
+            background: #f5f5f5;
+            padding: 12px;
+            border-radius: 8px;
+            border-left: 4px solid #4a9c4d;
+        }
+
+        .box strong {
+            color: #2c5f2d;
+            display: block;
+            margin-bottom: 6px;
+            font-size: 1.05em;
+        }
+
+        .box p {
+            font-size: 1em;
+            margin-bottom: 6px;
+        }
+
+        .box ul li {
+            font-size: 0.98em;
+        }
+
+        .controls {
+            position: fixed;
+            top: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            display: flex;
+            gap: 20px;
+            z-index: 1000;
+        }
+
+        .btn {
+            background: linear-gradient(135deg, #4a9c4d 0%, #2c5f2d 100%);
+            color: white;
+            border: none;
+            padding: 12px 25px;
+            font-size: 1em;
+            border-radius: 25px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+        }
+
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.4);
+        }
+
+        .btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+
+        .progress-bar {
+            position: fixed;
+            top: 0;
+            left: 0;
+            height: 4px;
+            background: linear-gradient(90deg, #4a9c4d 0%, #2c5f2d 100%);
+            transition: width 0.3s ease;
+            z-index: 1001;
+        }
+
+        .slide-number {
+            position: fixed;
+            top: 20px;
+            right: 30px;
+            color: white;
+            font-size: 1.1em;
+            font-weight: bold;
+            background: rgba(0, 0, 0, 0.5);
+            padding: 10px 20px;
+            border-radius: 25px;
+            z-index: 1000;
+        }
+
+        .percentage {
+            color: #4a9c4d;
+            font-weight: bold;
+        }
+
+        .warning-box {
+            background-color: #fff3cd;
+            border-left-color: #ffc107;
+        }
+
+        .error-box {
+            background-color: #ffebee;
+            border-left-color: #c62828;
+        }
+
+        .success-box {
+            background-color: #e8f5e9;
+            border-left-color: #2e7d32;
+        }
+
+        .info-box {
+            background-color: #e3f2fd;
+            border-left-color: #1976d2;
+        }
+
+        .evolution-diagram {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin: 20px 0;
+        }
+
+        .evolution-step {
+            flex: 1;
+            margin: 0 8px;
+        }
+
+        .arrow {
+            font-size: 2em;
+            color: #4a9c4d;
+            margin: 0 5px;
+        }
+
+        .data-box {
+            background: #f9f9f9;
+            padding: 12px;
+            border-radius: 8px;
+            margin: 12px 0;
+            border: 2px solid #e0e0e0;
+        }
+
+        .metric {
+            display: inline-block;
+            background: #4a9c4d;
+            color: white;
+            padding: 5px 15px;
+            border-radius: 20px;
+            margin: 5px;
+            font-weight: bold;
+        }
+
+        @media (max-width: 768px) {
+            .slide {
+                padding: 70px 20px 30px 20px;
+            }
+
+            .slide h1 {
+                font-size: 1.6em;
+            }
+
+            .cover h1 {
+                font-size: 2em;
+            }
+
+            .cover h2 {
+                font-size: 1.3em;
+            }
+
+            .grid-2col, .grid-3col {
+                grid-template-columns: 1fr;
+            }
+
+            .btn {
+                padding: 10px 18px;
+                font-size: 0.9em;
+            }
+
+            .evolution-diagram {
+                flex-direction: column;
+            }
+
+            .arrow {
+                transform: rotate(90deg);
+                margin: 10px 0;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="progress-bar" id="progressBar"></div>
+    <div class="slide-number" id="slideNumber">1 / 19</div>
+    
+    <div class="presentation-container">
+        <!-- Slide 0 - CAPA -->
+        <div class="slide cover active">
+            <div style="background: rgba(0, 0, 0, 0.3); padding: 40px 60px; border-radius: 15px; max-width: 90%;">
+                <h1>Tecnologias Digitais e Inteligência Artificial<br>no Agronegócio Sustentável</h1>
+                <h2>Pesquisa científica, aplicações práticas e cultura de dados</h2>
+            </div>
+            <div class="footer-info">
+                <p><strong>Dr. Ciro Macedo</strong></p>
+                <p>Instituto Federal de Goiás - IFG</p>
+                <p>ciro.macedo@ifg.edu.br</p>
+            </div>
+        </div>
+
+        <!-- Slide 1 -->
+        <div class="slide">
+            <h1>Por que falar disso agora?</h1>
+            <h2>Pressões Simultâneas no Agronegócio</h2>
+            
+            <div class="grid-2col">
+                <div class="box">
+                    <strong>🌍 Produtividade + Sustentabilidade</strong>
+                    <p>Necessidade de aumentar produção para alimentar população crescente sem degradar o planeta</p>
+                </div>
+                <div class="box">
+                    <strong>⚖️ Normas e Transparência</strong>
+                    <p>Regulações ambientais cada vez mais rigorosas e exigências de rastreabilidade</p>
+                </div>
+            </div>
+
+            <h3>Sustentabilidade como Requisito de Mercado</h3>
+            <ul>
+                <li><strong>Acesso a mercados internacionais</strong>
+                    <ul>
+                        <li>Europa e outros mercados exigem certificações ambientais</li>
+                        <li>Desmatamento zero, uso racional de água e redução de agrotóxicos</li>
+                    </ul>
+                </li>
+                <li><strong>Diferenciação competitiva</strong>
+                    <ul>
+                        <li>Produtos sustentáveis agregam valor e conquistam consumidores</li>
+                        <li>Investidores priorizam empresas com práticas ESG comprovadas</li>
+                    </ul>
+                </li>
+            </ul>
+
+            <div class="highlight">
+                <h4>A Tecnologia como Viabilizadora</h4>
+                <p><strong>Mensuração:</strong> Medir indicadores ambientais em tempo real</p>
+                <p><strong>Rastreabilidade:</strong> Documentar toda a cadeia produtiva</p>
+                <p><strong>Auditoria:</strong> Comprovar conformidade com evidências objetivas</p>
+            </div>
+        </div>
+
+        <!-- Slide 2 -->
+        <div class="slide">
+            <h1>Sustentabilidade como Processo Mensurável</h1>
+            <h2>Da Intenção à Evidência</h2>
+            
+            <div class="highlight error-box">
+                <h3>⚠️ Intenção NÃO é Evidência</h3>
+                <p>Sem dados confiáveis, não há auditoria válida nem certificação reconhecida pelo mercado</p>
+            </div>
+
+            <h3>O que Sustentabilidade Exige:</h3>
+            <ul>
+                <li><strong>Métricas Objetivas</strong>
+                    <ul>
+                        <li>Indicadores quantificáveis: emissões de CO₂, consumo de água, uso de agrotóxicos</li>
+                        <li>Benchmarks setoriais e comparabilidade temporal</li>
+                        <li>Metodologias validadas cientificamente</li>
+                    </ul>
+                </li>
+                <li><strong>Histórico Consistente</strong>
+                    <ul>
+                        <li>Registro contínuo de práticas ao longo de safras</li>
+                        <li>Demonstração de melhoria progressiva</li>
+                        <li>Capacidade de rastrear origem de problemas</li>
+                    </ul>
+                </li>
+                <li><strong>Repetibilidade</strong>
+                    <ul>
+                        <li>Processos padronizados que podem ser replicados</li>
+                        <li>Resultados consistentes em diferentes períodos</li>
+                        <li>Validação independente possível</li>
+                    </ul>
+                </li>
+            </ul>
+
+            <div class="box success-box">
+                <strong>💡 Tecnologia como Instrumento de Prova</strong>
+                <p>Sensores, satélites e plataformas digitais transformam práticas invisíveis em dados auditáveis, reduzindo incertezas e fortalecendo a credibilidade do produtor</p>
+            </div>
+        </div>
+
+        <!-- Slide 3 -->
+        <div class="slide">
+            <h1>Tecnologias Digitais no Agronegócio</h1>
+            <h2>Base Tecnológica para Sustentabilidade</h2>
+            
+            <div class="evolution-diagram">
+                <div class="evolution-step box">
+                    <strong>🌾 Agricultura Empírica</strong>
+                    <p>Experiência e observação</p>
+                </div>
+                <div class="arrow">→</div>
+                <div class="evolution-step box info-box">
+                    <strong>🎯 Agricultura de Precisão</strong>
+                    <p>Medição e variabilidade espacial</p>
+                </div>
+                <div class="arrow">→</div>
+                <div class="evolution-step box success-box">
+                    <strong>💻 Agricultura Digital</strong>
+                    <p>Integração e análise de dados</p>
+                </div>
+            </div>
+
+            <h3>Principais Fontes de Dados:</h3>
+            <div class="grid-3col">
+                <div class="box">
+                    <strong>🛰️ Sensoriamento Remoto</strong>
+                    <p>NDVI, NDWI, NDMI, LST</p>
+                </div>
+                <div class="box">
+                    <strong>🌡️ Sensores IoT</strong>
+                    <p>Solo, clima, equipamentos</p>
+                </div>
+                <div class="box">
+                    <strong>📝 Plataformas Digitais</strong>
+                    <p>Rastreabilidade e gestão</p>
+                </div>
+            </div>
+
+            <div class="highlight">
+                <p><strong>Integração é o diferencial:</strong> Dados isolados têm baixo valor. O poder está em cruzar múltiplas fontes para decisões contextualizadas e baseadas em evidências.</p>
+            </div>
+        </div>
+
+        <!-- Slide 4 -->
+        <div class="slide">
+            <h1>Onde a IA Entra</h1>
+            <h2>Camada de Interpretação sobre Dados Organizados</h2>
+            
+            <div class="highlight warning-box">
+                <h3>⚠️ IA NÃO é Ponto de Partida</h3>
+                <p>Exige dados organizados, processos estruturados e objetivos claros</p>
+            </div>
+
+            <div class="grid-2col">
+                <div class="box success-box">
+                    <strong>Função da IA:</strong>
+                    <ul>
+                        <li>Cruzar múltiplas fontes de dados</li>
+                        <li>Priorizar alertas relevantes</li>
+                        <li>Sugerir ações baseadas em padrões</li>
+                        <li>Apoiar decisões complexas</li>
+                    </ul>
+                </div>
+                <div class="box info-box">
+                    <strong>Papel do Especialista:</strong>
+                    <ul>
+                        <li>Validar recomendações da IA</li>
+                        <li>Interpretar contexto local</li>
+                        <li>Tomar decisões finais</li>
+                        <li>Garantir responsabilização</li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="highlight">
+                <h4>Sustentabilidade Mensurável:</h4>
+                <p>Dados confiáveis + IA = evidências objetivas para certificações, auditorias e acesso a mercados premium</p>
+            </div>
+
+            <div class="box" style="margin-top: 30px; background-color: #e3f2fd; border-left-color: #1976d2;">
+                <strong>Próxima Etapa:</strong>
+                <p>O que a pesquisa científica tem mostrado sobre aplicação de IA no agronegócio sustentável?</p>
+            </div>
+        </div>
+
+        <!-- Slide 5 -->
+        <div class="slide">
+            <h1>Cenário Científico</h1>
+            <h2>Sustentabilidade é Tema Ativo na Pesquisa</h2>
+            
+            <div class="highlight">
+                <h3>IA aplicada à Sustentabilidade no Agro: Agenda Global</h3>
+                <p>Pesquisadores em todo o mundo investigam como tecnologias digitais e IA podem contribuir para tornar a agricultura mais sustentável</p>
+            </div>
+
+            <h3>O Papel das Revisões Sistemáticas (SLR):</h3>
+            <ul>
+                <li><strong>Systematic Literature Review (SLR)</strong>
+                    <ul>
+                        <li>Metodologia rigorosa para mapear e sintetizar conhecimento científico</li>
+                        <li>Diferente de revisão narrativa: processo sistemático, replicável e auditável</li>
+                        <li>Permite visualizar tendências, identificar lacunas e avaliar maturidade de temas</li>
+                    </ul>
+                </li>
+                <li><strong>SLR como "Mapa do Campo"</strong>
+                    <ul>
+                        <li>Organiza milhares de publicações em uma visão panorâmica</li>
+                        <li>Identifica o que já foi estudado e onde há oportunidades de pesquisa</li>
+                        <li>Orienta decisões de investimento em P&D e inovação</li>
+                    </ul>
+                </li>
+            </ul>
+
+            <div class="box success-box">
+                <strong>📚 Artigo-Base desta Apresentação</strong>
+                <p style="font-size: 1.1em; margin-top: 10px;"><strong>Título:</strong> "How artificial intelligence uses to achieve the agriculture sustainability: Systematic review"</p>
+                <p><strong>Autores:</strong> V. Sachithra; L.D.C.S. Subhashini</p>
+                <p style="margin-top: 10px;">Este artigo sintetiza a aplicação de IA em funções agrícolas com objetivo explícito de sustentabilidade</p>
+            </div>
+        </div>
+
+        <!-- Slide 6 -->
+        <div class="slide">
+            <h1>Recorte Metodológico do Artigo</h1>
+            <h2>Rigor Científico e Abrangência</h2>
+            
+            <h3>Janela Temporal:</h3>
+            <div class="metric">10 anos (2014–2024)</div>
+            <p style="margin: 15px 0;">Período que captura a explosão recente de aplicações de IA no agronegócio</p>
+
+            <h3>Bases de Dados Consultadas:</h3>
+            <div class="grid-2col">
+                <div class="box">
+                    <strong>Web of Science</strong>
+                    <p>347 artigos encontrados</p>
+                </div>
+                <div class="box">
+                    <strong>Scopus</strong>
+                    <p>256 artigos encontrados</p>
+                </div>
+                <div class="box">
+                    <strong>ScienceDirect</strong>
+                    <p>244 artigos encontrados</p>
+                </div>
+                <div class="box">
+                    <strong>Google Scholar</strong>
+                    <p>574 artigos encontrados</p>
+                </div>
+            </div>
+
+            <h3>Processo de Triagem (Funil Metodológico):</h3>
+            <div class="data-box">
+                <div style="font-size: 1.3em; text-align: center; margin: 20px 0;">
+                    <p><strong style="color: #1976d2;">1.421</strong> publicações encontradas inicialmente</p>
+                    <p style="margin: 15px 0; font-size: 1.5em;">⬇️</p>
+                    <p><strong style="color: #f57c00;">313</strong> artigos triados (análise de título, keywords, resumo)</p>
+                    <p style="margin: 15px 0; font-size: 1.5em;">⬇️</p>
+                    <p><strong style="color: #2e7d32;">115</strong> artigos finais incluídos (análise completa do texto)</p>
+                </div>
+            </div>
+
+            <div class="highlight">
+                <p><strong>Rigor Metodológico:</strong> Triagem manual criteriosa garante que apenas estudos diretamente relacionados à aplicação de IA para sustentabilidade agrícola foram incluídos</p>
+            </div>
+        </div>
+
+        <!-- Slide 7 -->
+        <div class="slide">
+            <h1>IA Não é Uma Coisa Só</h1>
+            <h2>Taxonomia de Técnicas</h2>
+            
+            <div class="highlight warning-box">
+                <h3>Não Existe "Remédio Único"</h3>
+                <p>Cada técnica de IA é adequada para tipos específicos de problemas. Escolher a técnica errada pode resultar em mau desempenho ou desperdício de recursos</p>
+            </div>
+
+            <h3>Principais Técnicas Identificadas no Artigo:</h3>
+            <div class="grid-2col">
+                <div class="box">
+                    <strong>🧠 Redes Neurais Artificiais (NN/ANN)</strong>
+                    <ul>
+                        <li>Reconhecimento de padrões complexos</li>
+                        <li>Classificação e regressão</li>
+                        <li>Base para técnicas avançadas</li>
+                    </ul>
+                </div>
+                <div class="box">
+                    <strong>🔬 Deep Learning (CNN/LSTM)</strong>
+                    <ul>
+                        <li>CNN: Visão computacional, imagens</li>
+                        <li>LSTM: Séries temporais, previsões</li>
+                        <li>Representações hierárquicas</li>
+                    </ul>
+                </div>
+                <div class="box">
+                    <strong>📍 K-Nearest Neighbors (KNN)</strong>
+                    <ul>
+                        <li>Classificação por proximidade</li>
+                        <li>Simples e interpretável</li>
+                        <li>Eficaz em problemas específicos</li>
+                    </ul>
+                </div>
+                <div class="box">
+                    <strong>📊 Support Vector Machine (SVM)</strong>
+                    <ul>
+                        <li>Classificação com margens ótimas</li>
+                        <li>Alta dimensionalidade</li>
+                        <li>Regressão e classificação</li>
+                    </ul>
+                </div>
+                <div class="box">
+                    <strong>🌳 Random Forest</strong>
+                    <ul>
+                        <li>Conjunto de árvores de decisão</li>
+                        <li>Robusto a overfitting</li>
+                        <li>Boa generalização</li>
+                    </ul>
+                </div>
+                <div class="box">
+                    <strong>🎯 Lógica Fuzzy</strong>
+                    <ul>
+                        <li>Decisões sob incerteza</li>
+                        <li>Modelagem de expertise</li>
+                        <li>Imprecisão controlada</li>
+                    </ul>
+                </div>
+                <div class="box" style="grid-column: span 2;">
+                    <strong>🦾 Robótica</strong>
+                    <ul>
+                        <li>Automação de tarefas físicas (colheita, pulverização, capina)</li>
+                        <li>Combina visão computacional + controle + atuação</li>
+                    </ul>
+                </div>
+            </div>
+
+            <h3>Distribuição na Literatura Analisada:</h3>
+            <div class="grid-3col">
+                <div class="metric" style="font-size: 1.05em;">Robótica: 44%</div>
+                <div class="metric" style="font-size: 1.05em;">Redes Neurais: 26%</div>
+                <div class="metric" style="font-size: 1.05em;">Deep Learning: 15%</div>
+                <div class="metric" style="font-size: 1.05em;">KNN: 7%</div>
+                <div class="metric" style="font-size: 1.05em;">Fuzzy: 4%</div>
+                <div class="metric" style="font-size: 1.05em;">SVM/RF: 2% cada</div>
+            </div>
+
+            <p style="margin-top: 15px; font-style: italic; color: #555; font-size: 1.05em;">Técnicas podem ser combinadas em pipelines híbridos: detecção (visão) + previsão (séries temporais) + atuação (robótica)</p>
+        </div>
+
+        <!-- Slide 8 -->
+        <div class="slide">
+            <h1>Funções Agrícolas onde IA é Aplicada</h1>
+            <h2>Do Campo ao Consumidor</h2>
+            
+            <p style="margin-bottom: 20px;">O artigo organiza aplicações de IA por <strong>funções agrícolas</strong> – as áreas onde a tecnologia "entra" na prática</p>
+
+            <div class="grid-2col">
+                <div class="box success-box">
+                    <strong>Prediction → Previsão</strong>
+                    <p><span class="percentage">~40%</span> dos artigos analisados</p>
+                    <ul>
+                        <li>Previsão de safra e produtividade</li>
+                        <li>Previsão climática e de irrigação</li>
+                        <li>Estimativa de demanda</li>
+                    </ul>
+                </div>
+                <div class="box success-box">
+                    <strong>Harvesting → Colheita</strong>
+                    <p><span class="percentage">~31%</span> dos artigos analisados</p>
+                    <ul>
+                        <li>Robôs de colheita autônoma</li>
+                        <li>Visão computacional para seleção</li>
+                        <li>Otimização de rotas e timing</li>
+                    </ul>
+                </div>
+                <div class="box success-box">
+                    <strong>Advanced Care → Cuidados Avançados</strong>
+                    <p><span class="percentage">~29%</span> dos artigos analisados</p>
+                    <ul>
+                        <li>Detecção de doenças e pragas</li>
+                        <li>Monitoramento de sanidade</li>
+                        <li>Fenotipagem automatizada</li>
+                    </ul>
+                </div>
+                <div class="box success-box">
+                    <strong>Weed Control → Controle de Daninhas</strong>
+                    <p><span class="percentage">~29%</span> dos artigos analisados</p>
+                    <ul>
+                        <li>Identificação de plantas daninhas</li>
+                        <li>Aplicação localizada (spot spraying)</li>
+                        <li>Capina robótica</li>
+                    </ul>
+                </div>
+                <div class="box warning-box">
+                    <strong>Resource Management → Gestão de Recursos</strong>
+                    <p><span class="percentage">~3%</span> dos artigos analisados</p>
+                    <ul>
+                        <li>Otimização de uso de solo, água e terra</li>
+                        <li>Irrigação inteligente</li>
+                        <li><strong>Área com grande oportunidade de expansão</strong></li>
+                    </ul>
+                </div>
+                <div class="box warning-box">
+                    <strong>Supply Chain → Cadeia de Suprimentos</strong>
+                    <p><span class="percentage">~4%</span> dos artigos analisados</p>
+                    <ul>
+                        <li>Rastreabilidade e logística</li>
+                        <li>Redução de desperdício</li>
+                        <li>Precificação e distribuição</li>
+                    </ul>
+                </div>
+            </div>
+
+            <p style="margin-top: 20px; font-style: italic; color: #555;"><strong>Observação metodológica:</strong> Percentuais derivados da amostra final da SLR (115 artigos), após triagem rigorosa (1421 → 313 → 115)</p>
+        </div>
+
+        <!-- Slide 9 -->
+        <div class="slide">
+            <h1>Síntese por Função</h1>
+            <h2>IA Conectada à Sustentabilidade</h2>
+            
+            <div class="grid-2col" style="font-size: 0.98em;">
+                <div class="box success-box">
+                    <strong>🔮 Previsão (Prediction)</strong>
+                    <p><strong>Aplicação:</strong> Lidar com variabilidade (clima, produtividade, irrigação necessária)</p>
+                    <p><strong>Contribuição:</strong> Redução de riscos e ineficiências; garante oferta adequada de alimento</p>
+                </div>
+
+                <div class="box success-box">
+                    <strong>🌾 Colheita (Harvesting)</strong>
+                    <p><strong>Aplicação:</strong> Automação/visão/robótica para colheita precisa</p>
+                    <p><strong>Contribuição:</strong> Reduz perdas, melhora qualidade e eficiência</p>
+                    <p style="color: #f57c00; font-size: 0.95em;"><em>Obs: baixa maturidade comercial</em></p>
+                </div>
+
+                <div class="box success-box">
+                    <strong>🔬 Cuidados Avançados</strong>
+                    <p><strong>Aplicação:</strong> Monitoramento de sanidade, detecção de doenças, fenotipagem</p>
+                    <p><strong>Contribuição:</strong> Reduz químicos; melhora saúde e nutrição dos alimentos</p>
+                </div>
+
+                <div class="box success-box">
+                    <strong>🌿 Controle de Daninhas</strong>
+                    <p><strong>Aplicação:</strong> Visão computacional + robótica/UAV</p>
+                    <p><strong>Contribuição:</strong> Redução dramática de herbicidas (até 90%); conservação de recursos naturais</p>
+                </div>
+
+                <div class="box warning-box">
+                    <strong>💧 Gestão de Recursos</strong>
+                    <p><strong>Aplicação:</strong> Otimização de uso de solo, água e irrigação</p>
+                    <p><strong>Status:</strong> Potencial enorme, mas ainda <strong>pouco explorado</strong></p>
+                    <p style="color: #c62828; font-size: 0.95em;"><strong>Oportunidade:</strong> Demanda evolução urgente</p>
+                </div>
+
+                <div class="box warning-box">
+                    <strong>📦 Cadeia de Suprimentos</strong>
+                    <p><strong>Aplicação:</strong> Rastreabilidade, logística, precificação</p>
+                    <p><strong>Contribuição:</strong> Reduzir desperdício, melhorar renda</p>
+                    <p style="color: #f57c00; font-size: 0.95em;"><em>Lado do consumidor ainda pouco endereçado</em></p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide 10 -->
+        <div class="slide">
+            <h1>A Mística da Inteligência Artificial</h1>
+            <h2>Expectativa vs Realidade</h2>
+            
+            <div class="grid-2col">
+                <div class="box error-box">
+                    <strong>❌ O Hype (Expectativa Inflada)</strong>
+                    <ul>
+                        <li>IA "entende" o negócio como humano</li>
+                        <li>IA resolve todos os problemas</li>
+                        <li>IA nunca erra</li>
+                        <li>Basta instalar e deixar rodar</li>
+                        <li>Substitui completamente o trabalho humano</li>
+                    </ul>
+                </div>
+                <div class="box success-box">
+                    <strong>✅ A Realidade</strong>
+                    <ul>
+                        <li>IA processa padrões estatísticos, não "entende"</li>
+                        <li>IA resolve problemas específicos bem definidos</li>
+                        <li>IA pode errar, especialmente fora do contexto de treinamento</li>
+                        <li>Requer dados de qualidade, ajustes e manutenção</li>
+                        <li>Potencializa trabalho humano, não substitui expertise</li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="highlight error-box">
+                <h3>⚠️ Risco: Delegar Decisões Críticas sem Validação</h3>
+                <ul>
+                    <li>Confiar cegamente em recomendações de IA pode gerar resultados catastróficos</li>
+                    <li>Modelos são treinados em dados passados - contexto atual pode ser diferente</li>
+                    <li>Sem validação humana, erros sistemáticos podem se perpetuar</li>
+                </ul>
+            </div>
+
+            <h3>IA Impressiona, mas Pode Errar:</h3>
+            <ul>
+                <li><strong>Fora do contexto do dado:</strong> Modelo treinado em soja pode não funcionar em milho</li>
+                <li><strong>Mudanças de contexto:</strong> Padrões climáticos atípicos podem confundir modelos</li>
+                <li><strong>Viés nos dados:</strong> Se dados históricos têm viés, modelo replicará esse viés</li>
+            </ul>
+
+            <div class="box info-box">
+                <strong>Mensagem Central: IA como Ferramenta, Não como Autoridade</strong>
+                <p>IA é uma ferramenta poderosa de <strong>apoio à decisão</strong>, mas a decisão final e a responsabilidade permanecem com humanos especialistas</p>
+            </div>
+        </div>
+
+        <!-- Slide 11 -->
+        <div class="slide">
+            <h1>IA é Probabilidade em Escala</h1>
+            <h2>Como Funciona por Baixo dos Panos</h2>
+            
+            <h3>Fundamentos Matemáticos:</h3>
+            <div class="grid-3col">
+                <div class="box">
+                    <strong>📊 Matrizes e Vetores</strong>
+                    <ul>
+                        <li>Dados transformados em tensores numéricos</li>
+                        <li>Multiplicações de matrizes em larga escala</li>
+                    </ul>
+                </div>
+                <div class="box">
+                    <strong>⚖️ Pesos e Parâmetros</strong>
+                    <ul>
+                        <li>Milhões/bilhões de parâmetros ajustáveis</li>
+                        <li>Treinamento = ajustar pesos para minimizar erro</li>
+                    </ul>
+                </div>
+                <div class="box">
+                    <strong>🔄 Otimização</strong>
+                    <ul>
+                        <li>Processo iterativo (gradiente descendente)</li>
+                        <li>Modelo aprende com erros gradualmente</li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="highlight warning-box">
+                <h3>Resultado é Probabilístico, Não Verdade Absoluta</h3>
+                <p>Modelos de IA escolhem a saída com <strong>maior probabilidade</strong> baseada em padrões aprendidos nos dados de treinamento</p>
+                <ul>
+                    <li>Não há "compreensão" ou "raciocínio" no sentido humano</li>
+                    <li>Apenas correlações estatísticas identificadas em grandes volumes de dados</li>
+                    <li>A resposta é "mais provável", não necessariamente "correta"</li>
+                </ul>
+            </div>
+
+            <h3>Qualidade do Dado Define Limite do Modelo:</h3>
+            <div class="data-box">
+                <p><strong>Dados ruins → Modelo ruim:</strong> "Garbage in, garbage out"</p>
+                <p><strong>Dados bons → Modelo pode ser bom:</strong> Mas ainda precisa de validação</p>
+                <p><strong>Dados excelentes + validação → Modelo confiável:</strong> Pode agregar valor real ao negócio</p>
+            </div>
+
+            <div class="box success-box">
+                <strong>💡 Validação Humana e Métricas são Obrigatórias</strong>
+                <ul>
+                    <li>Sempre testar modelo em dados que ele nunca viu (teste/validação)</li>
+                    <li>Monitorar desempenho em produção continuamente</li>
+                    <li>Especialistas devem validar resultados antes de decisões críticas</li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- Slide 12 -->
+        <div class="slide">
+            <h1>Breve História da IA</h1>
+            <h2>Fundamentos Antigos + Escala Moderna</h2>
+            
+            <div style="margin: 20px 0;">
+                <div class="box" style="margin-bottom: 15px;">
+                    <strong>1931 — Kurt Gödel: Teoremas da Incompletude</strong>
+                    <p>Demonstrou limites fundamentais da lógica formal e sistemas matemáticos</p>
+                </div>
+
+                <div class="box" style="margin-bottom: 15px;">
+                    <strong>1943 — McCulloch & Pitts: Neurônio Matemático</strong>
+                    <p>Primeiro modelo matemático de neurônio artificial - base conceitual das redes neurais</p>
+                </div>
+
+                <div class="box" style="margin-bottom: 15px;">
+                    <strong>1986 — Rumelhart, Hinton & Williams: Backpropagation</strong>
+                    <p>Algoritmo que viabilizou o treinamento eficiente de redes neurais profundas</p>
+                </div>
+
+                <div class="box success-box" style="margin-bottom: 15px;">
+                    <strong>2012 — ImageNet: Marco do Deep Learning</strong>
+                    <p>Deep Learning vence competição de reconhecimento de imagens com margem impressionante</p>
+                    <p>Inicia era moderna de aplicações práticas de IA em larga escala</p>
+                </div>
+
+                <div class="box success-box">
+                    <strong>2017 — Transformers: Revolução em Linguagem</strong>
+                    <p>Arquitetura "Attention is All You Need" revoluciona processamento de linguagem natural</p>
+                    <p>Base de modelos como Claude, Lhama, Gemini e ChatGPT</p>
+                </div>
+            </div>
+
+            <div class="highlight">
+                <h3>Escala Moderna = Dados + GPU + Arquitetura</h3>
+                <p><strong>Dados:</strong> Big Data e digitalização massiva fornecem combustível</p>
+                <p><strong>GPU (computação paralela):</strong> Hardware capaz de processar trilhões de operações por segundo</p>
+                <p><strong>Arquiteturas eficientes:</strong> Transformers, ResNets, etc. tornam treinamento viável</p>
+            </div>
+        </div>
+
+        <!-- Slide 13 -->
+        <div class="slide">
+            <h1>Gargalo: Tudo Vai para TI</h1>
+            <h2>Problema Cultural e Operacional</h2>
+            
+            <div class="highlight error-box">
+                <h3>Cenário Comum em Muitas Organizações:</h3>
+                <p>Qualquer demanda relacionada a dados ou IA é automaticamente encaminhada para TI</p>
+            </div>
+
+            <h3>Consequências Negativas:</h3>
+            <ul>
+                <li><strong>Fila interminável</strong>
+                    <ul>
+                        <li>TI se torna gargalo para qualquer análise ou dashboard</li>
+                        <li>Prazos se estendem de dias para semanas ou meses</li>
+                        <li>Demandas simples competem com projetos complexos</li>
+                    </ul>
+                </li>
+                <li><strong>Lentidão organizacional</strong>
+                    <ul>
+                        <li>Decisões atrasadas por falta de dados em tempo hábil</li>
+                        <li>Oportunidades de mercado perdidas</li>
+                        <li>Incapacidade de responder rapidamente a mudanças</li>
+                    </ul>
+                </li>
+                <li><strong>Baixa escalabilidade</strong>
+                    <ul>
+                        <li>Crescimento da empresa não é acompanhado por capacidade analítica</li>
+                        <li>Mesmo problema simples exige recurso escasso (desenvolvedor)</li>
+                    </ul>
+                </li>
+                <li><strong>Inovação travada</strong>
+                    <ul>
+                        <li>Áreas de negócio não conseguem experimentar ou testar hipóteses</li>
+                        <li>Dependência de código para análises básicas inibe criatividade</li>
+                    </ul>
+                </li>
+            </ul>
+
+            <div class="box warning-box">
+                <strong>Diagnóstico: Problema Cultural e de Modelo Operacional</strong>
+                <p>Não é falta de tecnologia ou ferramentas - é falta de autonomia nas áreas de negócio e cultura de dados descentralizada</p>
+            </div>
+        </div>
+
+        <!-- Slide 14 -->
+        <div class="slide">
+            <h1>Cultura de Dados como Estratégia</h1>
+            <h2>Distribuição Inteligente de Responsabilidades</h2>
+            
+            <div class="highlight success-box">
+                <h3>Cultura Vem da Liderança</h3>
+                <p>Dados precisam se tornar <strong>linguagem comum</strong> da organização, usada por todos os níveis para embasar decisões</p>
+            </div>
+
+            <h3>Novo Modelo Operacional:</h3>
+            <div class="grid-2col">
+                <div class="box success-box">
+                    <strong>👥 Áreas de Negócio</strong>
+                    <p><strong>Responsabilidade:</strong> Autonomia analítica básica</p>
+                    <ul>
+                        <li>Criar dashboards e relatórios</li>
+                        <li>Análises exploratórias de dados</li>
+                        <li>Resolver 70-80% das necessidades localmente</li>
+                        <li>Tomar decisões baseadas em dados sem esperar TI</li>
+                    </ul>
+                </div>
+                <div class="box info-box">
+                    <strong>💻 TI</strong>
+                    <p><strong>Responsabilidade:</strong> Governança, infraestrutura e complexidade</p>
+                    <ul>
+                        <li>Governança de dados e segurança</li>
+                        <li>Infraestrutura e integrações de sistemas</li>
+                        <li>Modelos complexos de IA/ML</li>
+                        <li>Suporte e capacitação para áreas</li>
+                    </ul>
+                </div>
+            </div>
+
+            <h3>Resultados Esperados:</h3>
+            <ul>
+                <li><strong>Velocidade:</strong> Decisões mais rápidas sem dependências burocráticas</li>
+                <li><strong>Precisão:</strong> Quem conhece o negócio é quem analisa os dados</li>
+                <li><strong>Escalabilidade:</strong> TI foca em questões verdadeiramente estratégicas</li>
+                <li><strong>Inovação:</strong> Experimentação contínua e aprendizado nas áreas</li>
+                <li><strong>Engajamento:</strong> Equipes mais empoderadas e satisfeitas</li>
+            </ul>
+
+            <div class="box warning-box">
+                <strong>⚠️ Exige Investimento em Capacitação</strong>
+                <p>Não adianta distribuir responsabilidade sem dar ferramentas e treinamento. Áreas precisam desenvolver competências analíticas básicas</p>
+            </div>
+        </div>
+
+        <!-- Slide 15 -->
+        <div class="slide">
+            <h1>O Profissional em "T"</h1>
+            <h2>Exemplo: Agrônomo Orientado a Dados</h2>
+            
+            <div class="highlight">
+                <h3>Conceito de "T-Shaped Professional"</h3>
+                <p>Profissional com profundidade vertical em uma área (expertise) + amplitude horizontal em competências complementares</p>
+            </div>
+
+            <div style="margin: 20px 0;">
+                <div class="box success-box" style="margin-bottom: 15px;">
+                    <strong>│ Pilar Vertical: Domínio Profundo do Negócio</strong>
+                    <p><strong>Para um Agrônomo:</strong></p>
+                    <ul>
+                        <li>Solos, nutrição vegetal, manejo de culturas</li>
+                        <li>Fitossanidade e controle de pragas/doenças</li>
+                        <li>Fisiologia e fenologia das plantas</li>
+                        <li>Práticas agronômicas e regulação</li>
+                    </ul>
+                    <p style="margin-top: 10px; font-weight: bold; color: #2c5f2d;">Esta expertise continua sendo o CORE - não pode ser perdida!</p>
+                </div>
+
+                <h3 style="margin-bottom: 10px;">Expansão Lateral: Competências Analíticas</h3>
+                <div class="grid-3col">
+                    <div class="box info-box">
+                        <strong>📊 Estatística Básica</strong>
+                        <ul>
+                            <li>Média, mediana, moda, desvio padrão</li>
+                            <li>Correlação e causalidade</li>
+                            <li>Probabilidade e distribuições</li>
+                            <li>Testes de hipótese simples</li>
+                        </ul>
+                    </div>
+                    <div class="box info-box">
+                        <strong>🛠️ Ferramentas Práticas</strong>
+                        <ul>
+                            <li>Excel/Sheets avançado (tabelas dinâmicas)</li>
+                            <li>Power BI, Looker Studio, Tableau</li>
+                            <li>Exploração de dados e visualização</li>
+                        </ul>
+                    </div>
+                    <div class="box info-box">
+                        <strong>💻 Bônus (opcional)</strong>
+                        <ul>
+                            <li>Noções de R ou Python para análises</li>
+                            <li>SQL básico para extrair dados</li>
+                            <li>Automação de tarefas repetitivas</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+            <div class="highlight success-box">
+                <h4>🎯 Objetivo: Resolver 70% Localmente, Acionar TI nos 30% Críticos</h4>
+                <ul>
+                    <li>Análises de rotina: criar dashboards, explorar tendências → <strong>Autonomia</strong></li>
+                    <li>Modelos preditivos complexos, integrações de sistemas → <strong>Acionar TI</strong></li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- Slide 16 -->
+        <div class="slide">
+            <h1>Impactos Diretos na Sustentabilidade</h1>
+            <h2>Como Dados e IA Transformam Práticas</h2>
+            
+            <div class="grid-2col">
+                <div class="box success-box">
+                    <strong>♻️ Menos Desperdício e Retrabalho</strong>
+                    <p>Processos rastreáveis e decisões baseadas em dados</p>
+                </div>
+                <div class="box success-box">
+                    <strong>💧 Uso Eficiente de Água e Insumos</strong>
+                    <p>Economia de 20-40% e menor impacto ambiental</p>
+                </div>
+                <div class="box success-box">
+                    <strong>✅ Evidências para Certificações</strong>
+                    <p>Rastreabilidade completa e acesso a mercados premium</p>
+                </div>
+                <div class="box success-box">
+                    <strong>⏱️ Redução de Custo/Tempo</strong>
+                    <p>Automação de evidências e menos burocracia</p>
+                </div>
+            </div>
+
+            <div class="highlight">
+                <h3>Ciclo Virtuoso da Sustentabilidade Digital:</h3>
+                <div style="margin: 30px auto; max-width: 900px;">
+                    <svg viewBox="0 0 800 500" style="width: 100%; height: auto;">
+                        <!-- Círculo central -->
+                        <circle cx="400" cy="250" r="60" fill="#4a9c4d" opacity="0.2"/>
+                        <text x="400" y="255" text-anchor="middle" font-size="14" font-weight="bold" fill="#2c5f2d">CICLO</text>
+                        <text x="400" y="270" text-anchor="middle" font-size="12" fill="#2c5f2d">VIRTUOSO</text>
+                        
+                        <!-- 1. Dados de Qualidade (topo) -->
+                        <rect x="320" y="30" width="160" height="70" rx="10" fill="#2e7d32" opacity="0.9"/>
+                        <text x="400" y="55" text-anchor="middle" font-size="14" font-weight="bold" fill="white">Dados de</text>
+                        <text x="400" y="75" text-anchor="middle" font-size="14" font-weight="bold" fill="white">Qualidade</text>
+                        
+                        <!-- Seta 1 para 2 -->
+                        <path d="M 460 80 L 580 150" stroke="#4a9c4d" stroke-width="3" fill="none" marker-end="url(#arrowhead)"/>
+                        
+                        <!-- 2. Decisões Mais Precisas (direita-cima) -->
+                        <rect x="570" y="140" width="160" height="70" rx="10" fill="#388e3c" opacity="0.9"/>
+                        <text x="650" y="165" text-anchor="middle" font-size="14" font-weight="bold" fill="white">Decisões Mais</text>
+                        <text x="650" y="185" text-anchor="middle" font-size="14" font-weight="bold" fill="white">Precisas</text>
+                        
+                        <!-- Seta 2 para 3 -->
+                        <path d="M 680 210 L 680 290" stroke="#4a9c4d" stroke-width="3" fill="none" marker-end="url(#arrowhead)"/>
+                        
+                        <!-- 3. Menos Desperdício (direita-baixo) -->
+                        <rect x="570" y="290" width="160" height="70" rx="10" fill="#43a047" opacity="0.9"/>
+                        <text x="650" y="315" text-anchor="middle" font-size="14" font-weight="bold" fill="white">Menos</text>
+                        <text x="650" y="335" text-anchor="middle" font-size="14" font-weight="bold" fill="white">Desperdício</text>
+                        
+                        <!-- Seta 3 para 4 -->
+                        <path d="M 570 340 L 460 400" stroke="#4a9c4d" stroke-width="3" fill="none" marker-end="url(#arrowhead)"/>
+                        
+                        <!-- 4. Maior Sustentabilidade (baixo) -->
+                        <rect x="320" y="400" width="160" height="70" rx="10" fill="#4caf50" opacity="0.9"/>
+                        <text x="400" y="425" text-anchor="middle" font-size="14" font-weight="bold" fill="white">Maior</text>
+                        <text x="400" y="445" text-anchor="middle" font-size="14" font-weight="bold" fill="white">Sustentabilidade</text>
+                        
+                        <!-- Seta 4 para 5 -->
+                        <path d="M 320 440 L 200 400" stroke="#4a9c4d" stroke-width="3" fill="none" marker-end="url(#arrowhead)"/>
+                        
+                        <!-- 5. Maior Valor Agregado (esquerda-baixo) -->
+                        <rect x="70" y="290" width="160" height="70" rx="10" fill="#66bb6a" opacity="0.9"/>
+                        <text x="150" y="315" text-anchor="middle" font-size="14" font-weight="bold" fill="white">Maior Valor</text>
+                        <text x="150" y="335" text-anchor="middle" font-size="14" font-weight="bold" fill="white">Agregado</text>
+                        
+                        <!-- Seta 5 para 6 -->
+                        <path d="M 120 290 L 120 210" stroke="#4a9c4d" stroke-width="3" fill="none" marker-end="url(#arrowhead)"/>
+                        
+                        <!-- 6. Mais Investimento em Tecnologia (esquerda-cima) -->
+                        <rect x="70" y="140" width="160" height="70" rx="10" fill="#81c784" opacity="0.9"/>
+                        <text x="150" y="160" text-anchor="middle" font-size="13" font-weight="bold" fill="white">Mais Investimento</text>
+                        <text x="150" y="178" text-anchor="middle" font-size="13" font-weight="bold" fill="white">em Tecnologia</text>
+                        
+                        <!-- Seta 6 para 1 (fecha o ciclo) -->
+                        <path d="M 220 150 L 320 80" stroke="#4a9c4d" stroke-width="3" fill="none" marker-end="url(#arrowhead)"/>
+                        
+                        <!-- Definição da ponta da seta -->
+                        <defs>
+                            <marker id="arrowhead" markerWidth="10" markerHeight="10" refX="9" refY="3" orient="auto">
+                                <polygon points="0 0, 10 3, 0 6" fill="#4a9c4d"/>
+                            </marker>
+                        </defs>
+                    </svg>
+                </div>
+            </div>
+
+            <p style="margin-top: 20px; font-style: italic; color: #555; text-align: center;">
+                Sustentabilidade deixa de ser custo e torna-se <strong>vantagem competitiva</strong> quando bem mensurada e comunicada
+            </p>
+        </div>
+
+        <!-- Slide 17 -->
+        <div class="slide">
+            <h1>Riscos e Postura Responsável</h1>
+            <h2>IA Também Tem Limitações Sérias</h2>
+            
+            <h3>Principais Riscos:</h3>
+            <div class="grid-2col">
+                <div class="box error-box">
+                    <strong>⚠️ Viés de Dados</strong>
+                    <ul>
+                        <li>Dados históricos podem conter preconceitos sistemáticos</li>
+                        <li>Modelo replicará e amplificará viés presente nos dados</li>
+                        <li>Exemplo: modelo treinado só com dados de anos bons pode falhar em anos ruins</li>
+                    </ul>
+                </div>
+                <div class="box error-box">
+                    <strong>⚠️ Generalização Indevida</strong>
+                    <ul>
+                        <li>Modelo treinado em uma região pode não funcionar em outra</li>
+                        <li>Contexto importa: solo, clima, práticas locais</li>
+                        <li>Sempre validar em ambiente real antes de confiar</li>
+                    </ul>
+                </div>
+                <div class="box error-box">
+                    <strong>⚠️ "Alucinações" em LLMs</strong>
+                    <ul>
+                        <li>Modelos de linguagem podem gerar informações falsas com confiança</li>
+                        <li>Não distinguem fato de ficção - apenas padrões linguísticos</li>
+                        <li>Sempre verificar informações críticas em fontes confiáveis</li>
+                    </ul>
+                </div>
+                <div class="box error-box">
+                    <strong>⚠️ Dependência Excessiva</strong>
+                    <ul>
+                        <li>Atrofia do conhecimento humano se IA for usada como "piloto automático"</li>
+                        <li>Perda de capacidade crítica da equipe</li>
+                        <li>Vulnerabilidade se sistema falhar</li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="highlight success-box">
+                <h3>Postura Responsável Obrigatória:</h3>
+                <ul>
+                    <li><strong>Sempre validar resultados</strong> com especialistas do domínio antes de decisões críticas</li>
+                    <li><strong>Monitorar desempenho continuamente</strong> - modelo pode degradar ao longo do tempo</li>
+                    <li><strong>Ajustar modelos conforme necessário</strong> - retreinar com dados novos periodicamente</li>
+                    <li><strong>Manter rastreabilidade</strong> - documentar decisões e justificativas</li>
+                    <li><strong>Treinar equipes</strong> - desenvolver senso crítico no uso de IA</li>
+                </ul>
+            </div>
+
+            <div class="box warning-box">
+                <strong>Governança é Essencial</strong>
+                <p>Métricas de desempenho, monitoramento, auditoria e responsabilização clara</p>
+                <p><strong>IA sem critério vira risco regulatório e reputacional</strong></p>
+            </div>
+        </div>
+
+        <!-- Slide 18 -->
+        <div class="slide">
+            <h1>Mensagem Final</h1>
+            <h2>Sustentabilidade = Dados + Processo + Evidência</h2>
+            
+            <div class="highlight success-box">
+                <h3>🎯 Três Pilares Insubstituíveis:</h3>
+                <ul style="font-size: 1.2em;">
+                    <li><strong>DADOS:</strong> Coleta sistemática, organizada e confiável de informações relevantes</li>
+                    <li><strong>PROCESSO:</strong> Metodologia consistente, padronizada e replicável</li>
+                    <li><strong>EVIDÊNCIA:</strong> Demonstração objetiva de resultados e conformidade</li>
+                </ul>
+            </div>
+
+            <h3>Conclusões-Chave desta Apresentação:</h3>
+            <ul>
+                <li><strong>IA amplifica quem domina o negócio - não substitui expertise</strong>
+                    <ul>
+                        <li>Agrônomos, engenheiros e gestores continuam essenciais</li>
+                        <li>Tecnologia potencializa capacidade humana, não a elimina</li>
+                    </ul>
+                </li>
+                <li><strong>Cultura de dados começa na liderança e se espalha pelas áreas</strong>
+                    <ul>
+                        <li>Não é projeto de TI - é transformação organizacional</li>
+                        <li>Requer investimento em capacitação e mudança de mindset</li>
+                    </ul>
+                </li>
+                <li><strong>Sustentabilidade é competitiva quando mensurável e comprovável</strong>
+                    <ul>
+                        <li>Dados transformam prática invisível em valor agregado</li>
+                        <li>Certificações e acesso a mercados premium dependem de evidências</li>
+                    </ul>
+                </li>
+            </ul>
+
+            <div class="box" style="margin-top: 40px; background: linear-gradient(135deg, #2c5f2d 0%, #4a9c4d 100%); color: white; padding: 30px;">
+                
+                               
+                <p style="font-size: 1.4em; text-align: center; font-weight: bold; margin: 0; color: #FFFFFF;">
+                    A transformação digital do agronegócio sustentável já começou.
+                </p>
+                <p style="font-size: 1.2em; text-align: center; margin-top: 15px; color: #FFFFFF;">
+                    A questão não é "se", mas "quando" e "como" sua organização vai se adaptar.
+                </p>
+            </div>
+
+            <div style="text-align: center; margin-top: 40px; color: #666;">
+                <p style="font-size: 1.2em;"><strong>Dr. Ciro Macedo</strong></p>
+                <p>ciro.macedo@ifg.edu.br</p>
+            </div>
+        </div>
+    </div>
+
+    <div class="controls">
+        <button class="btn" id="prevBtn" onclick="changeSlide(-1)">← Anterior</button>
+        <button class="btn" id="nextBtn" onclick="changeSlide(1)">Próximo →</button>
+    </div>
+
+    <script>
+        let currentSlide = 0;
+        const slides = document.querySelectorAll('.slide');
+        const totalSlides = slides.length;
+        const progressBar = document.getElementById('progressBar');
+        const slideNumber = document.getElementById('slideNumber');
+        const prevBtn = document.getElementById('prevBtn');
+        const nextBtn = document.getElementById('nextBtn');
+
+        function showSlide(n) {
+            slides[currentSlide].classList.remove('active');
+            
+            currentSlide = (n + totalSlides) % totalSlides;
+            
+            slides[currentSlide].classList.add('active');
+            
+            // Update progress bar
+            const progress = ((currentSlide + 1) / totalSlides) * 100;
+            progressBar.style.width = progress + '%';
+            
+            // Update slide number
+            slideNumber.textContent = `${currentSlide + 1} / ${totalSlides}`;
+            
+            // Update button states
+            prevBtn.disabled = currentSlide === 0;
+            nextBtn.disabled = currentSlide === totalSlides - 1;
+            
+            // Scroll to top of slide
+            slides[currentSlide].scrollTop = 0;
+        }
+
+        function changeSlide(direction) {
+            showSlide(currentSlide + direction);
+        }
+
+        // Keyboard navigation
+        document.addEventListener('keydown', function(event) {
+            if (event.key === 'ArrowLeft') {
+                if (currentSlide > 0) changeSlide(-1);
+            } else if (event.key === 'ArrowRight') {
+                if (currentSlide < totalSlides - 1) changeSlide(1);
+            }
+        });
+
+        // Initialize
+        showSlide(0);
+    </script>
+</body>
+</html>

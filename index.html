@@ -1,0 +1,516 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Dr. Ciro Macedo - Academic Presentations, Tutorials and Talks">
+    <meta name="author" content="Ciro J. A. Macedo">
+    <title>Ciro Macedo - Presentations & Talks</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%);
+            color: #333;
+            line-height: 1.6;
+            min-height: 100vh;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        /* Header */
+        header {
+            background: linear-gradient(135deg, #2c5f2d 0%, #4a9c4d 100%);
+            color: white;
+            padding: 60px 20px;
+            text-align: center;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+
+        header .profile-img {
+            width: 150px;
+            height: 150px;
+            border-radius: 50%;
+            border: 5px solid white;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+            margin-bottom: 20px;
+        }
+
+        header h1 {
+            font-size: 3em;
+            margin-bottom: 10px;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+        }
+
+        header .subtitle {
+            font-size: 1.3em;
+            font-weight: 300;
+            opacity: 0.95;
+            margin-top: 10px;
+        }
+
+        header .institution {
+            font-size: 1.1em;
+            margin-top: 15px;
+            opacity: 0.9;
+        }
+
+        header .contact {
+            margin-top: 25px;
+            font-size: 1.05em;
+        }
+
+        header .contact a {
+            color: #fff;
+            text-decoration: none;
+            margin: 0 12px;
+            transition: opacity 0.3s;
+            display: inline-block;
+            padding: 8px 15px;
+            background: rgba(255, 255, 255, 0.15);
+            border-radius: 20px;
+        }
+
+        header .contact a:hover {
+            background: rgba(255, 255, 255, 0.25);
+            text-decoration: none;
+        }
+
+        /* About Section */
+        .about-section {
+            background: white;
+            border-radius: 15px;
+            padding: 40px;
+            margin: 40px auto;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+            max-width: 900px;
+        }
+
+        .about-section h2 {
+            color: #2c5f2d;
+            font-size: 2.2em;
+            margin-bottom: 25px;
+            border-bottom: 4px solid #4a9c4d;
+            padding-bottom: 10px;
+        }
+
+        .about-section p {
+            font-size: 1.1em;
+            color: #444;
+            text-align: justify;
+            line-height: 1.8;
+            margin-bottom: 20px;
+        }
+
+        .about-section .highlight {
+            background: #e8f5e9;
+            padding: 20px;
+            border-left: 5px solid #4a9c4d;
+            margin: 20px 0;
+            border-radius: 5px;
+        }
+
+        .about-section .highlight strong {
+            color: #2c5f2d;
+        }
+
+        .about-section .highlight ul {
+            margin-top: 10px;
+            margin-left: 20px;
+        }
+
+        .about-section .highlight ul li {
+            margin: 5px 0;
+        }
+
+        .info-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+            margin: 25px 0;
+        }
+
+        .info-box {
+            background: #f5f5f5;
+            padding: 15px;
+            border-radius: 8px;
+            border-left: 4px solid #4a9c4d;
+        }
+
+        .info-box strong {
+            color: #2c5f2d;
+            display: block;
+            margin-bottom: 5px;
+        }
+
+        /* Presentations Section */
+        .presentations-section {
+            max-width: 1100px;
+            margin: 40px auto;
+        }
+
+        .presentations-section h2 {
+            color: white;
+            font-size: 2.5em;
+            margin-bottom: 30px;
+            text-align: center;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+        }
+
+        .presentations-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+            gap: 30px;
+            padding: 20px;
+        }
+
+        .presentation-card {
+            background: white;
+            border-radius: 12px;
+            padding: 30px;
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            border-left: 6px solid #4a9c4d;
+        }
+
+        .presentation-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 12px 30px rgba(0, 0, 0, 0.25);
+        }
+
+        .presentation-card h3 {
+            color: #2c5f2d;
+            font-size: 1.5em;
+            margin-bottom: 15px;
+        }
+
+        .presentation-card .meta {
+            color: #666;
+            font-size: 0.95em;
+            margin-bottom: 15px;
+            font-style: italic;
+        }
+
+        .presentation-card .badge {
+            display: inline-block;
+            background: #1976d2;
+            color: white;
+            padding: 5px 12px;
+            border-radius: 15px;
+            font-size: 0.85em;
+            font-weight: bold;
+            margin-bottom: 10px;
+        }
+
+        .presentation-card .badge.tutorial {
+            background: #f57c00;
+        }
+
+        .presentation-card .description {
+            color: #555;
+            margin-bottom: 20px;
+            line-height: 1.6;
+        }
+
+        .presentation-card .links {
+            display: flex;
+            gap: 15px;
+            flex-wrap: wrap;
+        }
+
+        .presentation-card .btn {
+            display: inline-block;
+            padding: 10px 20px;
+            background: linear-gradient(135deg, #4a9c4d 0%, #2c5f2d 100%);
+            color: white;
+            text-decoration: none;
+            border-radius: 25px;
+            font-size: 0.95em;
+            transition: all 0.3s ease;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+        }
+
+        .presentation-card .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.25);
+        }
+
+        /* Coming Soon Card */
+        .coming-soon {
+            background: #f5f5f5;
+            border-left-color: #999;
+            opacity: 0.7;
+        }
+
+        .coming-soon h3 {
+            color: #666;
+        }
+
+        .coming-soon .badge {
+            background: #ff9800;
+        }
+
+        /* Footer */
+        footer {
+            background: linear-gradient(135deg, #2c5f2d 0%, #1b5e20 100%);
+            color: white;
+            text-align: center;
+            padding: 30px 20px;
+            margin-top: 60px;
+        }
+
+        footer p {
+            margin: 5px 0;
+        }
+
+        footer a {
+            color: #a5d6a7;
+            text-decoration: none;
+        }
+
+        footer a:hover {
+            text-decoration: underline;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            header h1 {
+                font-size: 2em;
+            }
+
+            header .subtitle {
+                font-size: 1.1em;
+            }
+
+            .about-section {
+                padding: 25px;
+                margin: 20px;
+            }
+
+            .about-section h2 {
+                font-size: 1.8em;
+            }
+
+            .presentations-grid {
+                grid-template-columns: 1fr;
+                padding: 10px;
+            }
+
+            .presentation-card {
+                padding: 20px;
+            }
+
+            .info-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        /* Animations */
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .presentation-card {
+            animation: fadeIn 0.6s ease-out;
+        }
+
+        .presentation-card:nth-child(1) { animation-delay: 0.1s; }
+        .presentation-card:nth-child(2) { animation-delay: 0.2s; }
+        .presentation-card:nth-child(3) { animation-delay: 0.3s; }
+        .presentation-card:nth-child(4) { animation-delay: 0.4s; }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="container">
+            <img src="https://netsoft2020.ieee-netsoft.org/wp-content/uploads/sites/116/2020/05/tutorial_4_4.jpg" 
+                 alt="Dr. Ciro Macedo" 
+                 class="profile-img">
+            <h1>Dr. Ciro J. A. Macedo</h1>
+            <p class="subtitle">Professor | Researcher | Software Engineer</p>
+            <p class="institution">Federal Institute of Education, Science, and Technology of Goiás (IFG)<br>
+                Campus Cidade de Goiás</p>
+            <div class="contact">
+                <a href="mailto:ciro.macedo@ifg.edu.br">📧 Email</a>
+                <a href="https://scholar.google.com.br/citations?user=GMxi-B8AAAAJ" target="_blank">🎓 Google Scholar</a>
+                <a href="http://lattes.cnpq.br/7461921402514789" target="_blank">📄 Lattes CNPq</a>
+                <a href="https://github.com/ciromacedo" target="_blank">💻 GitHub</a>
+            </div>
+        </div>
+    </header>
+
+    <div class="about-section">
+        <h2>About</h2>
+        <p>
+            Dr. Ciro J. A. Macedo received the <strong>B.Sc. degree in Software Engineering</strong> from 
+            Salgado de Oliveira University in 2006. From 2001 to 2013, he worked as a <strong>Senior Full-Stack 
+            Java developer</strong> in several technology companies, accumulating extensive experience in enterprise 
+            software development and building production systems that serve thousands of users.
+        </p>
+        <p>
+            He received the <strong>M.Sc. degree in Electrical Engineering</strong> from the Federal 
+            University of Goiás (UFG) in 2012 and served as an assistant professor at a private college 
+            from 2009 to 2012. He received the <strong>Ph.D. degree in Computer Science</strong> from UFG, 
+            with an emphasis on <strong>Telecommunications (5G/6G)</strong>, combining his industry experience 
+            with advanced academic research in next-generation wireless networks.
+        </p>
+        
+        <div class="highlight">
+            <p>
+                <strong>Since 2013</strong>, he has been a professor at the <strong>Federal Institute of 
+                Education, Science, and Technology of Goiás (IFG)</strong>, where he teaches courses in 
+                software engineering, telecommunications, and emerging technologies.
+            </p>
+        </div>
+
+        <h2 style="margin-top: 40px;">Research Interests</h2>
+        <div class="info-grid">
+            <div class="info-box">
+                <strong>5G/6G Networks</strong>
+                <p style="font-size: 0.95em;">Next-generation wireless systems, RAN softwarization, and network slicing</p>
+            </div>
+            <div class="info-box">
+                <strong>Software Engineering</strong>
+                <p style="font-size: 0.95em;">DevOps, cloud computing, microservices, and distributed systems</p>
+            </div>
+            <div class="info-box">
+                <strong>IoT & Edge Computing</strong>
+                <p style="font-size: 0.95em;">Software-defined gateways, fog computing, and smart systems</p>
+            </div>
+            <div class="info-box">
+                <strong>AI/ML in Networks</strong>
+                <p style="font-size: 0.95em;">Intelligent network management and optimization</p>
+            </div>
+        </div>
+
+        <div class="highlight">
+            <p><strong>Notable Projects:</strong></p>
+            <ul>
+                <li><strong>RastreAI</strong> - RastreAI is a scalable platform that analyzes vehicle telematics to optimize fleet operations and energy efficiency using AI-driven analytics.</li>
+                <li><strong>SAMURAI</strong> - Smart 5G Core And Multiraccess Integration: Research on 5G systems integration with AI/ML for network optimization</li>
+                <li><strong>Brasil6G</strong> - Brasil 6G is a national R&D project led by Inatel, supported by Brazil’s MCTI and RNP, focused on defining the action plan and key steps to prepare the country for 6G networks and their high-impact use cases.</li>
+                <li><strong>SOFTWAY4IoT</strong> - Software-defined gateway and fog computing for IoT with multiple wireless technologies support (registered with Brazilian INPI)</li>
+                <!--li><strong>SUGEP</strong> - Unified management system for research and events (registered with Brazilian INPI)</li-->
+            </ul>
+        </div>
+
+        <div class="info-grid" style="margin-top: 30px;">
+            <div class="info-box">
+                <strong>📍 Location</strong>
+                <p style="font-size: 0.9em;">76600-000 - Cidade de Goiás - GO, Brazil</p>
+            </div>
+            <div class="info-box">
+                <strong>📞 Phone</strong>
+                <p style="font-size: 0.9em;">+55 62 3371 9000</p>
+            </div>
+            <div class="info-box">
+                <strong>✉️ Email</strong>
+                <p style="font-size: 0.9em;"><a href="mailto:ciro.macedo@ifg.edu.br" style="color: #2c5f2d;">ciro.macedo@ifg.edu.br</a></p>
+            </div>
+        </div>
+    </div>
+
+    <div class="presentations-section">
+        <h2>Presentations & Tutorials</h2>
+        <div class="presentations-grid">
+            
+            <!-- NetSoft 2020 Tutorial -->
+            <div class="presentation-card">
+                <span class="badge tutorial">TUTORIAL - IEEE</span>
+                <h3>A Softwarized Perspective of 5G Networks</h3>
+                <p class="meta">June 2020 | IEEE NetSoft 2020 Conference</p>
+                <p class="description">
+                    Comprehensive tutorial exploring softwarization in 5G systems (RAN and core components) 
+                    following 3GPP Release 15 standards. Covers virtualized/disaggregated RAN, Service-Based 
+                    Architecture (SBA), and includes hands-on experiments with detailed manuals and software 
+                    for replication.
+                </p>
+                <div class="links">
+                    <a href="https://github.com/LABORA-INF-UFG/NetSoft2020-Tutorial4" class="btn" target="_blank">📚 View Tutorial</a>
+                    <a href="https://ieeetv.ieee.org/tutorial-4-a-softwarized-perspective-of-5g-networks-netsoft-2020-conference" class="btn" target="_blank" style="background: linear-gradient(135deg, #1976d2 0%, #1565c0 100%);">🎥 Watch Video</a>
+                </div>
+            </div>
+
+            <!-- Presentation 1 - Agro + AI -->
+            <!--div class="presentation-card">
+                <span class="badge">PRESENTATION - PT-BR</span>
+                <h3>Digital Technologies and AI in Sustainable Agribusiness</h3>
+                <p class="meta">January 2026 | Agricultural Sustainability & Certification</p>
+                <p class="description">
+                    Scientific research, practical applications, and data culture in sustainable agriculture. 
+                    Systematic review of AI applications in agricultural functions with sustainability objectives. 
+                    Covers precision agriculture, IoT sensors, and data-driven decision making.
+                </p>
+                <div class="links">
+                    <a href="./presentations/agro-ai-2026.html" class="btn">📊 View Slides</a>
+                </div>
+            </div-->
+
+            <!-- Placeholder for future presentations -->
+            <div class="presentation-card coming-soon">
+                <span class="badge">COMING SOON</span>
+                <h3>AI/ML in 5G/6G Networks</h3>
+                <p class="meta">Future | Network Intelligence</p>
+                <p class="description">
+                    Advanced topics on Artificial Intelligence and Machine Learning applications in 
+                    next-generation wireless networks, including RAN Intelligent Controllers (RIC) and 
+                    network automation.
+                </p>
+            </div>
+
+            <div class="presentation-card coming-soon">
+                <span class="badge">COMING SOON</span>
+                <h3>Modern Software Engineering Practices</h3>
+                <p class="meta">Future | DevOps & Cloud</p>
+                <p class="description">
+                    Best practices in modern software development, including DevOps, CI/CD pipelines, 
+                    microservices architecture, containerization with Docker/Kubernetes, and cloud-native development.
+                </p>
+            </div>
+
+            <div class="presentation-card coming-soon">
+                <span class="badge">COMING SOON</span>
+                <h3>IoT and Smart Systems</h3>
+                <p class="meta">Future | Internet of Things</p>
+                <p class="description">
+                    Design and implementation of IoT systems, software-defined gateways, fog computing, 
+                    and smart applications for industry and precision agriculture.
+                </p>
+            </div>
+
+        </div>
+    </div>
+
+    <footer>
+        <div class="container">
+            <p><strong>Dr. Ciro J. A. Macedo</strong></p>
+            <p>Federal Institute of Education, Science, and Technology of Goiás (IFG)</p>
+            <p>Campus Cidade de Goiás - Goiás, Brazil</p>
+            <p style="margin-top: 15px;">
+                <a href="mailto:ciro.macedo@ifg.edu.br">ciro.macedo@ifg.edu.br</a> | 
+                <a href="https://scholar.google.com.br/citations?user=GMxi-B8AAAAJ" target="_blank">Google Scholar</a> | 
+                <a href="http://lattes.cnpq.br/7461921402514789" target="_blank">Lattes CNPq</a>
+            </p>
+            <p style="margin-top: 20px; font-size: 0.9em; opacity: 0.8;">
+                © 2026 Ciro J. A. Macedo. All presentations and tutorials are available for educational purposes.
+            </p>
+        </div>
+    </footer>
+</body>
+</html>
