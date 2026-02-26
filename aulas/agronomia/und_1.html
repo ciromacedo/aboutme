@@ -1,0 +1,1984 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Informática Aplicada à Agronomia</title>
+<link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Sans:wght@300;400;500;600&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --green-deep: #1a3a2a;
+    --green-mid: #2d5a3d;
+    --green-light: #4a8c5c;
+    --green-bright: #6bbf7a;
+    --amber: #d4a843;
+    --amber-light: #f0c96a;
+    --soil: #5c3d1e;
+    --cream: #f5f0e8;
+    --cream-light: #faf8f3;
+    --white: #ffffff;
+    --text-dark: #1a2a1e;
+    --text-mid: #3a5a42;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    font-family: 'DM Sans', sans-serif;
+    background: var(--green-deep);
+    color: var(--cream);
+    height: 100vh;
+    overflow: hidden;
+    cursor: default;
+  }
+
+  /* SLIDE CONTAINER */
+  .presentation {
+    width: 100vw;
+    height: 100vh;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .slide {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    flex-direction: column;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.6s ease, transform 0.6s ease;
+    transform: translateX(60px);
+  }
+
+  .slide.active {
+    opacity: 1;
+    pointer-events: all;
+    transform: translateX(0);
+  }
+
+  .slide.exit {
+    opacity: 0;
+    transform: translateX(-60px);
+    transition: opacity 0.4s ease, transform 0.4s ease;
+  }
+
+  /* BACKGROUND ELEMENTS */
+  .bg-pattern {
+    position: absolute;
+    inset: 0;
+    background-image:
+      radial-gradient(circle at 80% 20%, rgba(107,191,122,0.08) 0%, transparent 50%),
+      radial-gradient(circle at 10% 80%, rgba(212,168,67,0.06) 0%, transparent 40%);
+    pointer-events: none;
+  }
+
+  .leaf-deco {
+    position: absolute;
+    opacity: 0.04;
+    pointer-events: none;
+  }
+
+  /* ============ COVER SLIDE ============ */
+  .slide-cover {
+    background: linear-gradient(135deg, var(--green-deep) 0%, #0e2218 60%, var(--soil) 100%);
+    justify-content: center;
+    align-items: flex-start;
+    padding: 0;
+  }
+
+  .cover-left {
+    position: absolute;
+    left: 0; top: 0; bottom: 0;
+    width: 55%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    padding: 80px 70px;
+    z-index: 2;
+  }
+
+  .cover-eyebrow {
+    font-family: 'Space Mono', monospace;
+    font-size: 11px;
+    letter-spacing: 0.3em;
+    text-transform: uppercase;
+    color: var(--amber);
+    margin-bottom: 28px;
+    opacity: 0;
+    animation: fadeUp 0.8s 0.3s forwards;
+  }
+
+  .cover-title {
+    font-family: 'DM Serif Display', serif;
+    font-size: clamp(36px, 5vw, 62px);
+    line-height: 1.1;
+    color: var(--cream);
+    margin-bottom: 20px;
+    opacity: 0;
+    animation: fadeUp 0.8s 0.5s forwards;
+  }
+
+  .cover-title span {
+    color: var(--green-bright);
+    font-style: italic;
+  }
+
+  .cover-subtitle {
+    font-size: 16px;
+    font-weight: 300;
+    color: rgba(245,240,232,0.65);
+    line-height: 1.7;
+    margin-bottom: 50px;
+    max-width: 420px;
+    opacity: 0;
+    animation: fadeUp 0.8s 0.7s forwards;
+  }
+
+  .cover-unit-tag {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    background: rgba(107,191,122,0.15);
+    border: 1px solid rgba(107,191,122,0.3);
+    border-radius: 40px;
+    padding: 10px 20px;
+    font-size: 13px;
+    color: var(--green-bright);
+    font-weight: 500;
+    opacity: 0;
+    animation: fadeUp 0.8s 0.9s forwards;
+  }
+
+  .cover-unit-tag::before {
+    content: '';
+    width: 8px; height: 8px;
+    background: var(--green-bright);
+    border-radius: 50%;
+    animation: pulse 2s infinite;
+  }
+
+  .cover-right {
+    position: absolute;
+    right: 0; top: 0; bottom: 0;
+    width: 45%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 1;
+    overflow: hidden;
+  }
+
+  .cover-visual {
+    position: relative;
+    width: 380px;
+    height: 380px;
+  }
+
+  .ring {
+    position: absolute;
+    border-radius: 50%;
+    border: 1px solid rgba(107,191,122,0.2);
+    animation: rotate 20s linear infinite;
+  }
+
+  .ring-1 { inset: 0; animation-duration: 25s; }
+  .ring-2 { inset: 30px; animation-duration: 18s; animation-direction: reverse; border-color: rgba(212,168,67,0.15); }
+  .ring-3 { inset: 70px; animation-duration: 30s; border-color: rgba(107,191,122,0.1); }
+
+  .ring-dot {
+    position: absolute;
+    width: 8px; height: 8px;
+    background: var(--green-bright);
+    border-radius: 50%;
+    top: 50%;
+    right: -4px;
+    margin-top: -4px;
+    box-shadow: 0 0 12px var(--green-bright);
+  }
+
+  .ring-dot-amber {
+    background: var(--amber);
+    box-shadow: 0 0 12px var(--amber);
+    right: auto;
+    left: -4px;
+  }
+
+  .ring-icon {
+    position: absolute;
+    inset: 110px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 72px;
+    filter: drop-shadow(0 0 30px rgba(107,191,122,0.3));
+  }
+
+  .cover-footer {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    background: rgba(0,0,0,0.25);
+    backdrop-filter: blur(10px);
+    border-top: 1px solid rgba(107,191,122,0.15);
+    padding: 18px 70px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    z-index: 10;
+    opacity: 0;
+    animation: fadeUp 0.8s 1.1s forwards;
+  }
+
+  .footer-author {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+  }
+
+  .author-avatar {
+    width: 38px; height: 38px;
+    background: linear-gradient(135deg, var(--green-light), var(--green-bright));
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 700;
+    font-size: 14px;
+    color: var(--green-deep);
+  }
+
+  .author-info { font-size: 13px; }
+  .author-name { font-weight: 600; color: var(--cream); }
+  .author-email {
+    font-family: 'Space Mono', monospace;
+    font-size: 10px;
+    color: var(--amber);
+    margin-top: 2px;
+  }
+
+  .footer-duration {
+    font-family: 'Space Mono', monospace;
+    font-size: 11px;
+    color: rgba(245,240,232,0.4);
+    letter-spacing: 0.1em;
+  }
+
+  /* ============ CONTENT SLIDES ============ */
+  .slide-content {
+    background: var(--cream-light);
+    color: var(--text-dark);
+  }
+
+  .slide-header {
+    background: var(--green-deep);
+    padding: 28px 60px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-shrink: 0;
+  }
+
+  .slide-number {
+    font-family: 'Space Mono', monospace;
+    font-size: 11px;
+    color: var(--green-bright);
+    letter-spacing: 0.2em;
+  }
+
+  .slide-title-bar {
+    font-family: 'DM Serif Display', serif;
+    font-size: clamp(20px, 3vw, 32px);
+    color: var(--cream);
+    flex: 1;
+    text-align: center;
+  }
+
+  .slide-category {
+    font-size: 11px;
+    color: rgba(245,240,232,0.4);
+    font-weight: 500;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    min-width: 80px;
+    text-align: right;
+  }
+
+  .slide-body {
+    flex: 1;
+    padding: 50px 60px;
+    display: flex;
+    gap: 50px;
+    overflow: hidden;
+  }
+
+  .content-main { flex: 1; }
+
+  /* Bullets */
+  .bullet-list { list-style: none; display: flex; flex-direction: column; gap: 16px; }
+
+  .bullet-item {
+    display: flex;
+    align-items: flex-start;
+    gap: 16px;
+    opacity: 0;
+    transform: translateX(-20px);
+    animation: slideIn 0.5s forwards;
+  }
+
+  .bullet-icon {
+    width: 28px; height: 28px;
+    background: var(--green-light);
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 12px;
+    flex-shrink: 0;
+    margin-top: 2px;
+  }
+
+  .bullet-text {
+    font-size: 16px;
+    line-height: 1.5;
+    color: var(--text-dark);
+    font-weight: 400;
+  }
+
+  .bullet-detail {
+    font-size: 13px;
+    color: var(--text-mid);
+    margin-top: 4px;
+    line-height: 1.5;
+    font-weight: 300;
+  }
+
+  /* Concept box */
+  .concept-box {
+    background: var(--green-deep);
+    border-radius: 16px;
+    padding: 24px 28px;
+    margin-top: 24px;
+    border-left: 4px solid var(--amber);
+  }
+
+  .concept-label {
+    font-family: 'Space Mono', monospace;
+    font-size: 9px;
+    text-transform: uppercase;
+    letter-spacing: 0.3em;
+    color: var(--amber);
+    margin-bottom: 8px;
+  }
+
+  .concept-text {
+    font-size: 15px;
+    color: var(--cream);
+    line-height: 1.6;
+    font-weight: 300;
+  }
+
+  /* Highlight */
+  .highlight-box {
+    background: linear-gradient(135deg, var(--amber), var(--amber-light));
+    border-radius: 16px;
+    padding: 20px 24px;
+    margin-top: 20px;
+  }
+
+  .highlight-text {
+    font-family: 'DM Serif Display', serif;
+    font-size: 18px;
+    color: var(--green-deep);
+    line-height: 1.5;
+  }
+
+  /* Side panel */
+  .side-panel {
+    width: 280px;
+    flex-shrink: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+  }
+
+  .panel-card {
+    background: var(--green-deep);
+    border-radius: 16px;
+    padding: 20px;
+    color: var(--cream);
+  }
+
+  .panel-title {
+    font-family: 'Space Mono', monospace;
+    font-size: 10px;
+    text-transform: uppercase;
+    letter-spacing: 0.2em;
+    color: var(--green-bright);
+    margin-bottom: 12px;
+  }
+
+  .panel-item {
+    font-size: 13px;
+    padding: 6px 0;
+    border-bottom: 1px solid rgba(107,191,122,0.1);
+    color: rgba(245,240,232,0.8);
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  .panel-item:last-child { border-bottom: none; }
+
+  .panel-dot {
+    width: 6px; height: 6px;
+    background: var(--green-bright);
+    border-radius: 50%;
+    flex-shrink: 0;
+  }
+
+  /* Question */
+  .question-box {
+    background: linear-gradient(135deg, rgba(107,191,122,0.15), rgba(212,168,67,0.1));
+    border: 1px solid rgba(107,191,122,0.3);
+    border-radius: 16px;
+    padding: 20px 24px;
+    margin-top: 20px;
+  }
+
+  .question-icon { font-size: 24px; margin-bottom: 8px; }
+
+  .question-text {
+    font-family: 'DM Serif Display', serif;
+    font-size: 16px;
+    color: var(--text-dark);
+    font-style: italic;
+    line-height: 1.6;
+  }
+
+  /* Timeline */
+  .timeline { display: flex; flex-direction: column; gap: 12px; }
+
+  .timeline-item {
+    display: flex;
+    align-items: flex-start;
+    gap: 16px;
+    opacity: 0;
+    animation: slideIn 0.5s forwards;
+  }
+
+  .timeline-year {
+    font-family: 'Space Mono', monospace;
+    font-size: 11px;
+    color: var(--amber);
+    min-width: 50px;
+    padding-top: 2px;
+  }
+
+  .timeline-bar {
+    width: 2px;
+    background: linear-gradient(to bottom, var(--green-bright), var(--amber));
+    border-radius: 2px;
+    align-self: stretch;
+    flex-shrink: 0;
+  }
+
+  .timeline-text {
+    font-size: 15px;
+    color: var(--text-dark);
+    line-height: 1.5;
+    flex: 1;
+  }
+
+  /* Example box */
+  .example-row {
+    display: flex;
+    gap: 16px;
+    margin-top: 20px;
+  }
+
+  .example-card {
+    flex: 1;
+    border-radius: 12px;
+    padding: 16px;
+    text-align: center;
+  }
+
+  .example-card.bad {
+    background: rgba(180,60,60,0.1);
+    border: 1px solid rgba(180,60,60,0.2);
+  }
+
+  .example-card.good {
+    background: rgba(107,191,122,0.15);
+    border: 1px solid rgba(107,191,122,0.3);
+  }
+
+  .example-label {
+    font-family: 'Space Mono', monospace;
+    font-size: 9px;
+    text-transform: uppercase;
+    letter-spacing: 0.2em;
+    margin-bottom: 8px;
+  }
+
+  .example-label.bad { color: #e57373; }
+  .example-label.good { color: var(--green-bright); }
+
+  .example-value {
+    font-family: 'DM Serif Display', serif;
+    font-size: 24px;
+    color: var(--text-dark);
+  }
+
+  .example-desc {
+    font-size: 12px;
+    color: var(--text-mid);
+    margin-top: 4px;
+  }
+
+  /* Conversion display */
+  .conversion-display {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+    background: var(--green-deep);
+    border-radius: 16px;
+    padding: 20px 24px;
+    margin-top: 20px;
+    color: var(--cream);
+  }
+
+  .conv-num {
+    font-family: 'Space Mono', monospace;
+    font-size: 28px;
+    font-weight: 700;
+  }
+
+  .conv-arrow { font-size: 20px; color: var(--amber); }
+
+  .conv-binary {
+    font-family: 'Space Mono', monospace;
+    font-size: 28px;
+    color: var(--green-bright);
+  }
+
+  .conv-label {
+    font-size: 11px;
+    color: rgba(245,240,232,0.5);
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    margin-top: 4px;
+  }
+
+  /* Grid layout for applications */
+  .apps-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 14px;
+    margin-top: 10px;
+  }
+
+  .app-card {
+    background: var(--green-deep);
+    border-radius: 14px;
+    padding: 16px;
+    text-align: center;
+    border: 1px solid rgba(107,191,122,0.15);
+    transition: transform 0.2s, border-color 0.2s;
+    cursor: pointer;
+  }
+
+  .app-card:hover {
+    transform: translateY(-3px);
+    border-color: rgba(107,191,122,0.4);
+  }
+
+  .app-icon { font-size: 28px; margin-bottom: 8px; }
+
+  .app-name {
+    font-size: 12px;
+    color: var(--cream);
+    font-weight: 500;
+    line-height: 1.4;
+  }
+
+  /* Competency cards */
+  .comp-list { display: flex; flex-direction: column; gap: 12px; }
+
+  .comp-card {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    background: white;
+    border-radius: 12px;
+    padding: 14px 18px;
+    border: 1px solid rgba(0,0,0,0.06);
+    opacity: 0;
+    animation: slideIn 0.5s forwards;
+  }
+
+  .comp-num {
+    font-family: 'Space Mono', monospace;
+    font-size: 20px;
+    font-weight: 700;
+    color: rgba(0,0,0,0.08);
+    min-width: 30px;
+  }
+
+  .comp-text { font-size: 15px; color: var(--text-dark); font-weight: 500; }
+
+  .comp-detail { font-size: 12px; color: var(--text-mid); margin-top: 2px; }
+
+  /* Content slide footer */
+  .slide-footer {
+    background: var(--green-deep);
+    padding: 12px 60px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-top: 1px solid rgba(107,191,122,0.15);
+    flex-shrink: 0;
+  }
+
+  .footer-logo {
+    font-family: 'DM Serif Display', serif;
+    font-size: 14px;
+    color: var(--green-bright);
+  }
+
+  .footer-contact {
+    font-family: 'Space Mono', monospace;
+    font-size: 10px;
+    color: rgba(245,240,232,0.35);
+  }
+
+  /* NAVIGATION */
+  .nav {
+    position: fixed;
+    bottom: 36px;
+    left: 50%;
+    transform: translateX(-50%);
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    z-index: 1000;
+    background: rgba(10,25,16,0.85);
+    backdrop-filter: blur(20px);
+    border: 1px solid rgba(107,191,122,0.2);
+    border-radius: 50px;
+    padding: 10px 20px;
+  }
+
+  .nav-btn {
+    background: transparent;
+    border: none;
+    color: var(--cream);
+    cursor: pointer;
+    padding: 8px 16px;
+    border-radius: 30px;
+    font-size: 13px;
+    font-family: 'DM Sans', sans-serif;
+    font-weight: 500;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    transition: background 0.2s, color 0.2s;
+  }
+
+  .nav-btn:hover:not(:disabled) {
+    background: rgba(107,191,122,0.2);
+    color: var(--green-bright);
+  }
+
+  .nav-btn:disabled { opacity: 0.3; cursor: not-allowed; }
+
+  .nav-counter {
+    font-family: 'Space Mono', monospace;
+    font-size: 12px;
+    color: var(--amber);
+    min-width: 55px;
+    text-align: center;
+  }
+
+  .nav-dots {
+    display: flex;
+    gap: 5px;
+    align-items: center;
+  }
+
+  .nav-dot {
+    width: 6px; height: 6px;
+    border-radius: 50%;
+    background: rgba(245,240,232,0.2);
+    cursor: pointer;
+    transition: all 0.2s;
+  }
+
+  .nav-dot.active {
+    background: var(--green-bright);
+    width: 20px;
+    border-radius: 3px;
+  }
+
+  .nav-dot:hover:not(.active) { background: rgba(245,240,232,0.5); }
+
+  /* ANIMATIONS */
+  @keyframes fadeUp {
+    to { opacity: 1; transform: translateY(0); }
+    from { opacity: 0; transform: translateY(20px); }
+  }
+
+  @keyframes slideIn {
+    to { opacity: 1; transform: translateX(0); }
+  }
+
+  @keyframes rotate {
+    to { transform: rotate(360deg); }
+  }
+
+  @keyframes pulse {
+    0%, 100% { opacity: 1; transform: scale(1); }
+    50% { opacity: 0.5; transform: scale(0.8); }
+  }
+
+  .slide.active .bullet-item:nth-child(1) { animation-delay: 0.1s; }
+  .slide.active .bullet-item:nth-child(2) { animation-delay: 0.2s; }
+  .slide.active .bullet-item:nth-child(3) { animation-delay: 0.3s; }
+  .slide.active .bullet-item:nth-child(4) { animation-delay: 0.4s; }
+  .slide.active .bullet-item:nth-child(5) { animation-delay: 0.5s; }
+  .slide.active .bullet-item:nth-child(6) { animation-delay: 0.6s; }
+  .slide.active .bullet-item:nth-child(7) { animation-delay: 0.7s; }
+  .slide.active .bullet-item:nth-child(8) { animation-delay: 0.8s; }
+
+  .slide.active .timeline-item:nth-child(1) { animation-delay: 0.1s; }
+  .slide.active .timeline-item:nth-child(2) { animation-delay: 0.25s; }
+  .slide.active .timeline-item:nth-child(3) { animation-delay: 0.4s; }
+  .slide.active .timeline-item:nth-child(4) { animation-delay: 0.55s; }
+  .slide.active .timeline-item:nth-child(5) { animation-delay: 0.7s; }
+
+  .slide.active .comp-card:nth-child(1) { animation-delay: 0.1s; }
+  .slide.active .comp-card:nth-child(2) { animation-delay: 0.2s; }
+  .slide.active .comp-card:nth-child(3) { animation-delay: 0.3s; }
+  .slide.active .comp-card:nth-child(4) { animation-delay: 0.4s; }
+  .slide.active .comp-card:nth-child(5) { animation-delay: 0.5s; }
+
+  /* Keyboard hint */
+  .kbd-hint {
+    position: fixed;
+    top: 20px;
+    right: 24px;
+    font-family: 'Space Mono', monospace;
+    font-size: 10px;
+    color: rgba(245,240,232,0.25);
+    letter-spacing: 0.1em;
+    z-index: 100;
+  }
+</style>
+</head>
+<body>
+
+<div class="presentation" id="presentation">
+
+  <!-- SLIDE 0: COVER -->
+  <div class="slide slide-cover active" data-slide="0">
+    <div class="bg-pattern"></div>
+    <div class="cover-left">
+      <div class="cover-eyebrow">Instituto Federal de Goiás</div>
+      <h1 class="cover-title">Informática<br>Aplicada à <span>Agronomia</span></h1>
+      <p class="cover-subtitle">Explorando como a computação transformou — e continua transformando — as formas de cultivar, prever e decidir no campo.</p>
+      <div class="cover-unit-tag">Unidade 1 — Fundamentos e Evolução da Computação</div>
+    </div>
+    <div class="cover-right">
+      <div class="cover-visual">
+        <div class="ring ring-1"><div class="ring-dot"></div></div>
+        <div class="ring ring-2"><div class="ring-dot ring-dot-amber"></div></div>
+        <div class="ring ring-3"></div>
+        <div class="ring-icon">🌿</div>
+      </div>
+    </div>
+    <div class="cover-footer">
+      <div class="footer-author">
+        <div class="author-avatar">CM</div>
+        <div class="author-info">
+          <div class="author-name">Prof. Ciro Macedo</div>
+          <div class="author-email">ciro.macedo@ifg.edu.br</div>
+        </div>
+      </div>
+      <div class="footer-duration">⏱ 90 min · 21 slides</div>
+    </div>
+  </div>
+
+  <!-- SLIDE 1: OBJETIVOS -->
+  <div class="slide slide-content" data-slide="1">
+    <div class="slide-header">
+      <div class="slide-number">01 / 21</div>
+      <div class="slide-title-bar">Objetivos da Aula</div>
+      <div class="slide-category">Introdução</div>
+    </div>
+    <div class="slide-body">
+      <div class="content-main">
+        <ul class="bullet-list">
+          <li class="bullet-item">
+            <div class="bullet-icon">📖</div>
+            <div>
+              <div class="bullet-text">Entender como a computação surgiu</div>
+              <div class="bullet-detail">Traçar um panorama histórico: do ábaco ao smartphone, compreendendo os saltos tecnológicos que moldaram o mundo digital.</div>
+            </div>
+          </li>
+          <li class="bullet-item">
+            <div class="bullet-icon">💡</div>
+            <div>
+              <div class="bullet-text">Compreender o que é informação</div>
+              <div class="bullet-detail">Diferenciar dado bruto de informação com significado e entender por que essa distinção é fundamental no trabalho do agrônomo.</div>
+            </div>
+          </li>
+          <li class="bullet-item">
+            <div class="bullet-icon">🌾</div>
+            <div>
+              <div class="bullet-text">Relacionar computação com a evolução da agricultura</div>
+              <div class="bullet-detail">Mostrar que tecnologia e campo sempre andaram juntos — e como a agricultura de precisão é a fronteira atual dessa parceria.</div>
+            </div>
+          </li>
+        </ul>
+        <div class="concept-box">
+          <div class="concept-label">🎯 Foco da disciplina</div>
+          <div class="concept-text">Informática não é apenas uso de computador — é uma ferramenta estratégica para o agrônomo moderno tomar decisões baseadas em dados.</div>
+        </div>
+      </div>
+    </div>
+    <div class="slide-footer">
+      <div class="footer-logo">Informática Aplicada à Agronomia</div>
+      <div class="footer-contact">Prof. Ciro Macedo · ciro.macedo@ifg.edu.br</div>
+    </div>
+  </div>
+
+  <!-- SLIDE 2: PROBLEMA INICIAL -->
+  <div class="slide slide-content" data-slide="2">
+    <div class="slide-header">
+      <div class="slide-number">02 / 21</div>
+      <div class="slide-title-bar">Problema Inicial</div>
+      <div class="slide-category">Contexto</div>
+    </div>
+    <div class="slide-body">
+      <div class="content-main">
+        <div class="highlight-box" style="margin-bottom:24px">
+          <div class="highlight-text">Como o ser humano plantava e colhia antes de existir computador?</div>
+        </div>
+        <ul class="bullet-list">
+          <li class="bullet-item">
+            <div class="bullet-icon">☁️</div>
+            <div>
+              <div class="bullet-text">Observação do clima</div>
+              <div class="bullet-detail">Nuvens, vento, temperatura — o agricultor lia sinais da natureza para decidir quando plantar ou colher.</div>
+            </div>
+          </li>
+          <li class="bullet-item">
+            <div class="bullet-icon">🧠</div>
+            <div>
+              <div class="bullet-text">Experiência empírica</div>
+              <div class="bullet-detail">O saber era passado de geração em geração: "quando a saúva sai, é sinal de chuva forte". Conhecimento tácito, sem registro formal.</div>
+            </div>
+          </li>
+          <li class="bullet-item">
+            <div class="bullet-icon">🌙</div>
+            <div>
+              <div class="bullet-text">Calendários naturais</div>
+              <div class="bullet-detail">Posição do sol, fases da lua e migrações de animais funcionavam como relógios agrícolas muito antes dos calendários escritos.</div>
+            </div>
+          </li>
+          <li class="bullet-item">
+            <div class="bullet-icon">✋</div>
+            <div>
+              <div class="bullet-text">Contagem manual</div>
+              <div class="bullet-detail">Pedras, entalhes em osso, nós em cordas — cada colheita registrada da única forma possível: fisicamente.</div>
+            </div>
+          </li>
+        </ul>
+      </div>
+      <div class="side-panel">
+        <div class="panel-card">
+          <div class="panel-title">💡 Reflexão</div>
+          <div style="font-size:14px; color:rgba(245,240,232,0.8); line-height:1.6;">Controlar informação sempre foi questão de sobrevivência. Quem sabia prever as chuvas, sabia plantar. Quem sabia plantar, sobrevivia.</div>
+        </div>
+        <div class="panel-card" style="background:rgba(212,168,67,0.15); border:1px solid rgba(212,168,67,0.3);">
+          <div class="panel-title" style="color:var(--amber);">📌 Ponto-chave</div>
+          <div style="font-size:13px; color:var(--text-dark); line-height:1.6;">A necessidade de processar informação agrícola foi um dos primeiros motores da evolução tecnológica humana.</div>
+        </div>
+      </div>
+    </div>
+    <div class="slide-footer">
+      <div class="footer-logo">Informática Aplicada à Agronomia</div>
+      <div class="footer-contact">Prof. Ciro Macedo · ciro.macedo@ifg.edu.br</div>
+    </div>
+  </div>
+
+  <!-- SLIDE 3: COMUNICAÇÃO E INFORMAÇÃO -->
+  <div class="slide slide-content" data-slide="3">
+    <div class="slide-header">
+      <div class="slide-number">03 / 21</div>
+      <div class="slide-title-bar">Comunicação e Informação</div>
+      <div class="slide-category">Fundamentos</div>
+    </div>
+    <div class="slide-body">
+      <div class="content-main">
+        <ul class="bullet-list">
+          <li class="bullet-item">
+            <div class="bullet-icon">🗣️</div>
+            <div>
+              <div class="bullet-text">Comunicação rudimentar</div>
+              <div class="bullet-detail">Gestos, sons guturais e pinturas rupestres — as primeiras formas de transmitir mensagens entre indivíduos.</div>
+            </div>
+          </li>
+          <li class="bullet-item">
+            <div class="bullet-icon">💬</div>
+            <div>
+              <div class="bullet-text">Linguagem estruturada</div>
+              <div class="bullet-detail">A fala permitiu codificar e transmitir conhecimentos complexos, incluindo técnicas de cultivo e manejo do solo.</div>
+            </div>
+          </li>
+          <li class="bullet-item">
+            <div class="bullet-icon">📜</div>
+            <div>
+              <div class="bullet-text">Escrita</div>
+              <div class="bullet-detail">Com a escrita (~3000 a.C.), foi possível registrar estoques, plantios e colheitas — os primeiros "bancos de dados" agrícolas.</div>
+            </div>
+          </li>
+          <li class="bullet-item">
+            <div class="bullet-icon">🔢</div>
+            <div>
+              <div class="bullet-text">Sistemas numéricos</div>
+              <div class="bullet-detail">Quantificar produções, áreas e tempo — os números tornaram a gestão agrícola mais precisa e confiável.</div>
+            </div>
+          </li>
+          <li class="bullet-item">
+            <div class="bullet-icon">💻</div>
+            <div>
+              <div class="bullet-text">Computadores</div>
+              <div class="bullet-detail">O ápice dessa evolução: máquinas capazes de processar bilhões de informações por segundo, automatizando decisões complexas.</div>
+            </div>
+          </li>
+        </ul>
+        <div class="example-row">
+          <div class="example-card bad">
+            <div class="example-label bad">Dado bruto</div>
+            <div class="example-value">25</div>
+            <div class="example-desc">Sem contexto, sem significado</div>
+          </div>
+          <div style="display:flex;align-items:center;font-size:24px;color:var(--green-light);">→</div>
+          <div class="example-card good">
+            <div class="example-label good">Informação</div>
+            <div class="example-value">25 mm</div>
+            <div class="example-desc">de chuva hoje — plantar amanhã!</div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="slide-footer">
+      <div class="footer-logo">Informática Aplicada à Agronomia</div>
+      <div class="footer-contact">Prof. Ciro Macedo · ciro.macedo@ifg.edu.br</div>
+    </div>
+  </div>
+
+  <!-- SLIDE 4: ORIGEM DOS NÚMEROS -->
+  <div class="slide slide-content" data-slide="4">
+    <div class="slide-header">
+      <div class="slide-number">04 / 21</div>
+      <div class="slide-title-bar">Origem dos Números</div>
+      <div class="slide-category">História</div>
+    </div>
+    <div class="slide-body">
+      <div class="content-main">
+        <ul class="bullet-list">
+          <li class="bullet-item">
+            <div class="bullet-icon">🖐️</div>
+            <div>
+              <div class="bullet-text">Sistema decimal (10 dedos)</div>
+              <div class="bullet-detail">A base 10 que usamos hoje foi escolhida por razões anatômicas — nossos 10 dedos foram os primeiros instrumentos de contagem da humanidade.</div>
+            </div>
+          </li>
+          <li class="bullet-item">
+            <div class="bullet-icon">🏛️</div>
+            <div>
+              <div class="bullet-text">Numeração romana</div>
+              <div class="bullet-detail">Sistema aditivo sem o zero. Funcional para registros, mas limitado para cálculos complexos (tente multiplicar XIV × IX sem o sistema posicional).</div>
+            </div>
+          </li>
+          <li class="bullet-item">
+            <div class="bullet-icon">🌽</div>
+            <div>
+              <div class="bullet-text">Numeração maia</div>
+              <div class="bullet-detail">Sistema vigesimal (base 20) que incluía o zero! Permitiu ao povo Maia criar calendários astronômicos extraordinariamente precisos para a agricultura.</div>
+            </div>
+          </li>
+          <li class="bullet-item">
+            <div class="bullet-icon">📐</div>
+            <div>
+              <div class="bullet-text">Sistema decimal posicional</div>
+              <div class="bullet-detail">Origem árabe-indiana. O valor de um dígito depende de sua posição: 12 ≠ 21. Esse conceito revolucionário é a base de toda matemática computacional.</div>
+            </div>
+          </li>
+        </ul>
+        <div class="concept-box">
+          <div class="concept-label">💡 Conceito-chave</div>
+          <div class="concept-text">A posição altera o valor: 12 ≠ 21. Esse princípio, que parece óbvio hoje, foi uma das descobertas mais transformadoras da história matemática — e está na raiz de como computadores representam qualquer número.</div>
+        </div>
+      </div>
+    </div>
+    <div class="slide-footer">
+      <div class="footer-logo">Informática Aplicada à Agronomia</div>
+      <div class="footer-contact">Prof. Ciro Macedo · ciro.macedo@ifg.edu.br</div>
+    </div>
+  </div>
+
+  <!-- SLIDE 5: REPRESENTAÇÃO E ABSTRAÇÃO -->
+  <div class="slide slide-content" data-slide="5">
+    <div class="slide-header">
+      <div class="slide-number">05 / 21</div>
+      <div class="slide-title-bar">Representação e Abstração</div>
+      <div class="slide-category">Fundamentos</div>
+    </div>
+    <div class="slide-body">
+      <div class="content-main">
+        <ul class="bullet-list">
+          <li class="bullet-item">
+            <div class="bullet-icon">🪨</div>
+            <div>
+              <div class="bullet-text">Pedra = ovelha</div>
+              <div class="bullet-detail">Pastores mesopotâmicos usavam pedras como fichas: uma pedra representava um animal. A primeira abstração simbólica conhecida, há mais de 8000 anos.</div>
+            </div>
+          </li>
+          <li class="bullet-item">
+            <div class="bullet-icon">🧩</div>
+            <div>
+              <div class="bullet-text">Abstração</div>
+              <div class="bullet-detail">Capacidade de representar algo concreto por um símbolo. Números, letras, bits — tudo é abstração. Sem ela, a computação seria impossível.</div>
+            </div>
+          </li>
+          <li class="bullet-item">
+            <div class="bullet-icon">⚡</div>
+            <div>
+              <div class="bullet-text">Bit = estado elétrico</div>
+              <div class="bullet-detail">Um transistor ligado = 1. Desligado = 0. Da pedra ao circuito, o princípio é o mesmo: representar a realidade com símbolos simples e manipuláveis.</div>
+            </div>
+          </li>
+          <li class="bullet-item">
+            <div class="bullet-icon">🔢</div>
+            <div>
+              <div class="bullet-text">Número = representação binária</div>
+              <div class="bullet-detail">Todo número, texto, imagem ou vídeo que existe num computador é, no fundo, uma longa sequência de 0s e 1s armazenados em bilhões de transistores.</div>
+            </div>
+          </li>
+        </ul>
+        <div class="concept-box">
+          <div class="concept-label">🧠 Ideia central</div>
+          <div class="concept-text">Computação é representação simbólica. Assim como uma pedra pode representar uma ovelha, um bit pode representar qualquer informação do mundo real — inclusive uma medição de umidade do solo.</div>
+        </div>
+      </div>
+    </div>
+    <div class="slide-footer">
+      <div class="footer-logo">Informática Aplicada à Agronomia</div>
+      <div class="footer-contact">Prof. Ciro Macedo · ciro.macedo@ifg.edu.br</div>
+    </div>
+  </div>
+
+  <!-- SLIDE 6: STONEHENGE -->
+  <div class="slide slide-content" data-slide="6">
+    <div class="slide-header">
+      <div class="slide-number">06 / 21</div>
+      <div class="slide-title-bar">Stonehenge e Agricultura</div>
+      <div class="slide-category">História</div>
+    </div>
+    <div class="slide-body">
+      <div class="content-main">
+        <ul class="bullet-list">
+          <li class="bullet-item">
+            <div class="bullet-icon">🌞</div>
+            <div>
+              <div class="bullet-text">Previsão astronômica</div>
+              <div class="bullet-detail">Stonehenge (~3000 a.C.) é alinhada com os solstícios de verão e inverno. Seus construtores usaram a arquitetura como instrumento de cálculo astronômico.</div>
+            </div>
+          </li>
+          <li class="bullet-item">
+            <div class="bullet-icon">📅</div>
+            <div>
+              <div class="bullet-text">Calendário agrícola</div>
+              <div class="bullet-detail">Saber exatamente quando o verão começa permitia planejar o plantio com semanas de antecedência — uma vantagem enorme para comunidades agrícolas pré-históricas.</div>
+            </div>
+          </li>
+          <li class="bullet-item">
+            <div class="bullet-icon">🌱</div>
+            <div>
+              <div class="bullet-text">Organização do plantio</div>
+              <div class="bullet-detail">Com o calendário em pedra, era possível sincronizar esforços coletivos: preparar o solo, semear, irrigar e colher na época certa, maximizando a produção.</div>
+            </div>
+          </li>
+        </ul>
+        <div class="concept-box">
+          <div class="concept-label">🎯 Insight</div>
+          <div class="concept-text">Computar = calcular, prever, organizar. Stonehenge foi, em essência, um computador analógico para previsão agrícola. A lógica não mudou; só as ferramentas evoluíram.</div>
+        </div>
+        <div class="question-box">
+          <div class="question-icon">🤔</div>
+          <div class="question-text">Se Stonehenge é um "computador de pedra" para agricultura, o que é um drone com sensores multiespectrais?</div>
+        </div>
+      </div>
+    </div>
+    <div class="slide-footer">
+      <div class="footer-logo">Informática Aplicada à Agronomia</div>
+      <div class="footer-contact">Prof. Ciro Macedo · ciro.macedo@ifg.edu.br</div>
+    </div>
+  </div>
+
+  <!-- SLIDE 7: ÁBACO -->
+  <div class="slide slide-content" data-slide="7">
+    <div class="slide-header">
+      <div class="slide-number">07 / 21</div>
+      <div class="slide-title-bar">Ábaco e Primeiros Dispositivos</div>
+      <div class="slide-category">História</div>
+    </div>
+    <div class="slide-body">
+      <div class="content-main">
+        <ul class="bullet-list">
+          <li class="bullet-item">
+            <div class="bullet-icon">🔢</div>
+            <div>
+              <div class="bullet-text">Ábaco (2500 a.C.)</div>
+              <div class="bullet-detail">Originado na Mesopotâmia e aperfeiçoado na China, o ábaco permitia realizar operações aritméticas complexas com velocidade surpreendente. Um expert pode competir com calculadoras eletrônicas em somas e subtrações.</div>
+            </div>
+          </li>
+          <li class="bullet-item">
+            <div class="bullet-icon">🧮</div>
+            <div>
+              <div class="bullet-text">Auxílio ao cálculo</div>
+              <div class="bullet-detail">Do ábaco à régua de cálculo, da Pascalina (1642) à máquina analítica de Babbage (1837) — cada dispositivo buscava reduzir o esforço humano no processamento de números.</div>
+            </div>
+          </li>
+          <li class="bullet-item">
+            <div class="bullet-icon">⚙️</div>
+            <div>
+              <div class="bullet-text">Linha evolutiva dos dispositivos</div>
+              <div class="bullet-detail">Ábaco → Régua de cálculo → Pascalina → Máquina de Babbage → Máquinas eletromecânicas → Computadores eletrônicos. Cada salto aumentou a velocidade e reduziu o erro humano.</div>
+            </div>
+          </li>
+        </ul>
+        <div class="question-box">
+          <div class="question-icon">🤔</div>
+          <div class="question-text">O computador pensa ou executa? Ele apenas segue instruções definidas por humanos — mas faz isso bilhões de vezes mais rápido.</div>
+        </div>
+      </div>
+    </div>
+    <div class="slide-footer">
+      <div class="footer-logo">Informática Aplicada à Agronomia</div>
+      <div class="footer-contact">Prof. Ciro Macedo · ciro.macedo@ifg.edu.br</div>
+    </div>
+  </div>
+
+  <!-- SLIDE 8: SISTEMA BINÁRIO -->
+  <div class="slide slide-content" data-slide="8">
+    <div class="slide-header">
+      <div class="slide-number">08 / 21</div>
+      <div class="slide-title-bar">Sistema Binário</div>
+      <div class="slide-category">Fundamentos</div>
+    </div>
+    <div class="slide-body">
+      <div class="content-main">
+        <ul class="bullet-list">
+          <li class="bullet-item">
+            <div class="bullet-icon">⚡</div>
+            <div>
+              <div class="bullet-text">Dois estados físicos (ligado / desligado)</div>
+              <div class="bullet-detail">Circuitos elétricos têm naturalmente dois estados: corrente passa (1) ou não passa (0). A escolha de base 2 para computadores foi ditada pela física, não pela preferência matemática.</div>
+            </div>
+          </li>
+          <li class="bullet-item">
+            <div class="bullet-icon">🔌</div>
+            <div>
+              <div class="bullet-text">Transistor como chave elétrica</div>
+              <div class="bullet-detail">Um transistor funciona como uma chave microscópica. Um chip moderno tem mais de 10 bilhões de transistores em área menor que uma unha — cada um representando um bit de informação.</div>
+            </div>
+          </li>
+        </ul>
+        <div class="conversion-display">
+          <div>
+            <div class="conv-num">10</div>
+            <div class="conv-label">Decimal</div>
+          </div>
+          <div class="conv-arrow">→</div>
+          <div>
+            <div class="conv-binary">1010</div>
+            <div class="conv-label">Binário</div>
+          </div>
+          <div style="font-size:12px;color:rgba(245,240,232,0.5);margin-left:auto;line-height:1.8;">
+            1×8 + 0×4 + 1×2 + 0×1 = 10
+          </div>
+        </div>
+        <div class="concept-box" style="margin-top:16px;">
+          <div class="concept-label">🌾 Aplicação agrícola</div>
+          <div class="concept-text">Sensores de umidade, temperatura e luminosidade operam com sinais elétricos que são convertidos em valores binários. Um sensor de solo indica: solo úmido (1) ou seco (0) — e com essa lógica simples, sistemas automatizados decidem quando irrigar.</div>
+        </div>
+      </div>
+    </div>
+    <div class="slide-footer">
+      <div class="footer-logo">Informática Aplicada à Agronomia</div>
+      <div class="footer-contact">Prof. Ciro Macedo · ciro.macedo@ifg.edu.br</div>
+    </div>
+  </div>
+
+  <!-- SLIDE 9: REPRESENTAÇÃO DA INFORMAÇÃO -->
+  <div class="slide slide-content" data-slide="9">
+    <div class="slide-header">
+      <div class="slide-number">09 / 21</div>
+      <div class="slide-title-bar">Representação da Informação</div>
+      <div class="slide-category">Fundamentos</div>
+    </div>
+    <div class="slide-body">
+      <div class="content-main">
+        <ul class="bullet-list">
+          <li class="bullet-item">
+            <div class="bullet-icon">🔤</div>
+            <div>
+              <div class="bullet-text">Código ASCII</div>
+              <div class="bullet-detail">American Standard Code for Information Interchange (1963). Codifica 128 caracteres (letras, números, símbolos) em números de 0 a 127. A letra "A" é o número 65 em binário: 01000001.</div>
+            </div>
+          </li>
+          <li class="bullet-item">
+            <div class="bullet-icon">🌍</div>
+            <div>
+              <div class="bullet-text">Unicode (UTF-8)</div>
+              <div class="bullet-detail">ASCII não suportava acentos ou caracteres de outros idiomas. O Unicode resolve isso: cobre mais de 140.000 caracteres de 150+ sistemas de escrita — incluindo emojis 🌱.</div>
+            </div>
+          </li>
+          <li class="bullet-item">
+            <div class="bullet-icon">🖥️</div>
+            <div>
+              <div class="bullet-text">Computadores entendem apenas 0 e 1</div>
+              <div class="bullet-detail">Texto, imagem, áudio, vídeo — tudo é convertido em sequências binárias. O computador não "entende" o conteúdo; ele manipula padrões de bits conforme instruções do programa.</div>
+            </div>
+          </li>
+        </ul>
+        <div class="conversion-display" style="flex-direction:column;align-items:flex-start;gap:8px;">
+          <div class="conv-label">Texto "IFG" em binário:</div>
+          <div style="display:flex;gap:20px;">
+            <div><div class="conv-num" style="font-size:22px;color:var(--amber);">I</div><div style="font-family:'Space Mono',monospace;font-size:12px;color:var(--green-bright);">01001001</div></div>
+            <div><div class="conv-num" style="font-size:22px;color:var(--amber);">F</div><div style="font-family:'Space Mono',monospace;font-size:12px;color:var(--green-bright);">01000110</div></div>
+            <div><div class="conv-num" style="font-size:22px;color:var(--amber);">G</div><div style="font-family:'Space Mono',monospace;font-size:12px;color:var(--green-bright);">01000111</div></div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="slide-footer">
+      <div class="footer-logo">Informática Aplicada à Agronomia</div>
+      <div class="footer-contact">Prof. Ciro Macedo · ciro.macedo@ifg.edu.br</div>
+    </div>
+  </div>
+
+  <!-- SLIDE 10: GUERRAS E AVANÇO -->
+  <div class="slide slide-content" data-slide="10">
+    <div class="slide-header">
+      <div class="slide-number">10 / 21</div>
+      <div class="slide-title-bar">Guerras e Avanço Tecnológico</div>
+      <div class="slide-category">História</div>
+    </div>
+    <div class="slide-body">
+      <div class="content-main">
+        <ul class="bullet-list">
+          <li class="bullet-item">
+            <div class="bullet-icon">💥</div>
+            <div>
+              <div class="bullet-text">Cálculo balístico</div>
+              <div class="bullet-detail">Durante a 2ª Guerra, calcular a trajetória de projéteis exigia horas de trabalho manual. O exército dos EUA precisava de "tabelas de tiro" precisas — e isso impulsionou a criação de computadores eletrônicos.</div>
+            </div>
+          </li>
+          <li class="bullet-item">
+            <div class="bullet-icon">🔐</div>
+            <div>
+              <div class="bullet-text">Criptografia</div>
+              <div class="bullet-detail">Alan Turing construiu a "Bombe" para decifrar a máquina Enigma nazista. Este esforço deu origem à Teoria da Computação e à ideia de uma máquina universal programável.</div>
+            </div>
+          </li>
+          <li class="bullet-item">
+            <div class="bullet-icon">⚙️</div>
+            <div>
+              <div class="bullet-text">Mark I (1944)</div>
+              <div class="bullet-detail">Primeiro computador eletromecânico americano de grande escala. Pesava 4,5 toneladas, tinha 800 km de fios e realizava cálculos em segundos — o que levaria dias a um humano.</div>
+            </div>
+          </li>
+          <li class="bullet-item">
+            <div class="bullet-icon">💡</div>
+            <div>
+              <div class="bullet-text">ENIAC (1945)</div>
+              <div class="bullet-detail">Electronic Numerical Integrator and Computer — o primeiro computador totalmente eletrônico. 30 toneladas, 18.000 válvulas, consumia 150 kW. Realizava 5.000 somas por segundo.</div>
+            </div>
+          </li>
+        </ul>
+        <div class="concept-box">
+          <div class="concept-label">🏗️ Arquitetura de Von Neumann (1945)</div>
+          <div class="concept-text">John Von Neumann propôs que dados e programas fossem armazenados na mesma memória. Esse modelo — Entrada → Processamento → Saída, com memória unificada — é a base de todos os computadores modernos.</div>
+        </div>
+      </div>
+    </div>
+    <div class="slide-footer">
+      <div class="footer-logo">Informática Aplicada à Agronomia</div>
+      <div class="footer-contact">Prof. Ciro Macedo · ciro.macedo@ifg.edu.br</div>
+    </div>
+  </div>
+
+  <!-- SLIDE 11: DO MICROCHIP AO SMARTPHONE -->
+  <div class="slide slide-content" data-slide="11">
+    <div class="slide-header">
+      <div class="slide-number">11 / 21</div>
+      <div class="slide-title-bar">Do Microchip ao Smartphone</div>
+      <div class="slide-category">Evolução</div>
+    </div>
+    <div class="slide-body">
+      <div class="content-main">
+        <div class="timeline">
+          <div class="timeline-item">
+            <div class="timeline-year">1961</div>
+            <div class="timeline-bar"></div>
+            <div class="timeline-text"><strong>Circuito integrado</strong> — Jack Kilby e Robert Noyce inventam o chip. Dezenas de transistores num único pedaço de silício, reduzindo custo e tamanho radicalmente.</div>
+          </div>
+          <div class="timeline-item">
+            <div class="timeline-year">1971</div>
+            <div class="timeline-bar"></div>
+            <div class="timeline-text"><strong>Intel 4004</strong> — Primeiro microprocessador comercial. Cabia na ponta do dedo e era mais poderoso que o ENIAC de 30 toneladas.</div>
+          </div>
+          <div class="timeline-item">
+            <div class="timeline-year">1980s</div>
+            <div class="timeline-bar"></div>
+            <div class="timeline-text"><strong>PC (Computador Pessoal)</strong> — IBM PC e Apple democratizam o acesso. Computadores deixam os laboratórios e chegam a escritórios e residências.</div>
+          </div>
+          <div class="timeline-item">
+            <div class="timeline-year">2000s</div>
+            <div class="timeline-bar"></div>
+            <div class="timeline-text"><strong>Internet móvel</strong> — Smartphones conectam bilhões de pessoas. O computador cabe no bolso e está sempre conectado.</div>
+          </div>
+          <div class="timeline-item">
+            <div class="timeline-year">Hoje</div>
+            <div class="timeline-bar"></div>
+            <div class="timeline-text"><strong>Cloud, IoT, Inteligência Artificial</strong> — Processamento na nuvem, sensores inteligentes no campo e algoritmos que aprendem. A agricultura entra na era dos dados.</div>
+          </div>
+        </div>
+        <div class="question-box" style="margin-top:16px;">
+          <div class="question-icon">🌾</div>
+          <div class="question-text">Onde está o computador hoje na agricultura? Nos drones, nos sensores de solo, nas estações meteorológicas, nos aplicativos de gestão rural...</div>
+        </div>
+      </div>
+    </div>
+    <div class="slide-footer">
+      <div class="footer-logo">Informática Aplicada à Agronomia</div>
+      <div class="footer-contact">Prof. Ciro Macedo · ciro.macedo@ifg.edu.br</div>
+    </div>
+  </div>
+
+  <!-- SLIDE 12: O QUE É INFORMÁTICA -->
+  <div class="slide slide-content" data-slide="12">
+    <div class="slide-header">
+      <div class="slide-number">12 / 21</div>
+      <div class="slide-title-bar">O que é Informática?</div>
+      <div class="slide-category">Conceitos</div>
+    </div>
+    <div class="slide-body">
+      <div class="content-main">
+        <div class="highlight-box" style="margin-bottom:28px;">
+          <div class="highlight-text">Informática: processamento automático da informação com o auxílio de computadores e sistemas digitais.</div>
+        </div>
+        <ul class="bullet-list">
+          <li class="bullet-item">
+            <div class="bullet-icon">🖥️</div>
+            <div>
+              <div class="bullet-text">Hardware</div>
+              <div class="bullet-detail">Componentes físicos: processador, memória, disco, sensores, periféricos. Tudo que você pode tocar — incluindo um drone ou estação meteorológica.</div>
+            </div>
+          </li>
+          <li class="bullet-item">
+            <div class="bullet-icon">⚙️</div>
+            <div>
+              <div class="bullet-text">Software</div>
+              <div class="bullet-detail">Programas e sistemas: sistemas operacionais, aplicativos, algoritmos. Diz ao hardware o que fazer com os dados coletados.</div>
+            </div>
+          </li>
+          <li class="bullet-item">
+            <div class="bullet-icon">🌐</div>
+            <div>
+              <div class="bullet-text">Redes</div>
+              <div class="bullet-detail">A infraestrutura de comunicação: internet, redes locais, protocolos. Permite que sensores no campo enviem dados para a nuvem em tempo real.</div>
+            </div>
+          </li>
+          <li class="bullet-item">
+            <div class="bullet-icon">📊</div>
+            <div>
+              <div class="bullet-text">Dados</div>
+              <div class="bullet-detail">A matéria-prima da informática. No agronegócio: imagens de satélite, histórico climático, produtividade por talhão, índices de vegetação.</div>
+            </div>
+          </li>
+          <li class="bullet-item">
+            <div class="bullet-icon">🤖</div>
+            <div>
+              <div class="bullet-text">Inteligência Artificial</div>
+              <div class="bullet-detail">Algoritmos que aprendem com dados. Na agronomia: identifica doenças em folhas por foto, prevê produtividade, recomenda doses de fertilizante por área.</div>
+            </div>
+          </li>
+        </ul>
+      </div>
+    </div>
+    <div class="slide-footer">
+      <div class="footer-logo">Informática Aplicada à Agronomia</div>
+      <div class="footer-contact">Prof. Ciro Macedo · ciro.macedo@ifg.edu.br</div>
+    </div>
+  </div>
+
+  <!-- SLIDE 13: O QUE É UM COMPUTADOR -->
+  <div class="slide slide-content" data-slide="13">
+    <div class="slide-header">
+      <div class="slide-number">13 / 21</div>
+      <div class="slide-title-bar">O que é um Computador?</div>
+      <div class="slide-category">Conceitos</div>
+    </div>
+    <div class="slide-body">
+      <div class="content-main">
+        <div style="display:flex;align-items:center;gap:0;margin-bottom:32px;background:var(--green-deep);border-radius:16px;overflow:hidden;">
+          <div style="flex:1;padding:24px;text-align:center;border-right:1px solid rgba(107,191,122,0.2);">
+            <div style="font-size:32px;margin-bottom:8px;">📥</div>
+            <div style="font-family:'Space Mono',monospace;font-size:10px;text-transform:uppercase;letter-spacing:0.2em;color:var(--amber);margin-bottom:4px;">Entrada</div>
+            <div style="font-size:13px;color:rgba(245,240,232,0.7);">Recebe dados do mundo</div>
+          </div>
+          <div style="padding:0 8px;color:var(--green-bright);">→</div>
+          <div style="flex:1;padding:24px;text-align:center;border-right:1px solid rgba(107,191,122,0.2);background:rgba(107,191,122,0.08);">
+            <div style="font-size:32px;margin-bottom:8px;">⚙️</div>
+            <div style="font-family:'Space Mono',monospace;font-size:10px;text-transform:uppercase;letter-spacing:0.2em;color:var(--green-bright);margin-bottom:4px;">Processamento</div>
+            <div style="font-size:13px;color:rgba(245,240,232,0.7);">Executa instruções</div>
+          </div>
+          <div style="padding:0 8px;color:var(--green-bright);">→</div>
+          <div style="flex:1;padding:24px;text-align:center;">
+            <div style="font-size:32px;margin-bottom:8px;">📤</div>
+            <div style="font-family:'Space Mono',monospace;font-size:10px;text-transform:uppercase;letter-spacing:0.2em;color:var(--amber);margin-bottom:4px;">Saída</div>
+            <div style="font-size:13px;color:rgba(245,240,232,0.7);">Entrega resultado</div>
+          </div>
+        </div>
+        <div class="panel-card" style="background:rgba(107,191,122,0.1);border:1px solid rgba(107,191,122,0.25);">
+          <div class="panel-title">🌾 Exemplo Agrícola</div>
+          <div style="display:flex;align-items:center;gap:16px;padding-top:8px;">
+            <div style="text-align:center;flex:1;">
+              <div style="font-size:24px;">🌡️</div>
+              <div style="font-size:12px;color:var(--text-dark);margin-top:4px;">Sensor de temperatura e umidade do solo</div>
+            </div>
+            <div style="font-size:20px;color:var(--green-bright);">→</div>
+            <div style="text-align:center;flex:1;">
+              <div style="font-size:24px;">💻</div>
+              <div style="font-size:12px;color:var(--text-dark);margin-top:4px;">Software de gestão analisa os dados coletados</div>
+            </div>
+            <div style="font-size:20px;color:var(--green-bright);">→</div>
+            <div style="text-align:center;flex:1;">
+              <div style="font-size:24px;">📋</div>
+              <div style="font-size:12px;color:var(--text-dark);margin-top:4px;">Relatório de produtividade e recomendação de irrigação</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="slide-footer">
+      <div class="footer-logo">Informática Aplicada à Agronomia</div>
+      <div class="footer-contact">Prof. Ciro Macedo · ciro.macedo@ifg.edu.br</div>
+    </div>
+  </div>
+
+  <!-- SLIDE 14: CARACTERÍSTICAS FUNDAMENTAIS -->
+  <div class="slide slide-content" data-slide="14">
+    <div class="slide-header">
+      <div class="slide-number">14 / 21</div>
+      <div class="slide-title-bar">Características Fundamentais</div>
+      <div class="slide-category">Conceitos</div>
+    </div>
+    <div class="slide-body">
+      <div class="content-main">
+        <ul class="bullet-list">
+          <li class="bullet-item">
+            <div class="bullet-icon">🤖</div>
+            <div>
+              <div class="bullet-text">Automático</div>
+              <div class="bullet-detail">Executa tarefas sem intervenção humana durante o processo. Uma vez programado, o computador realiza as operações de forma independente — como um sistema de irrigação que ativa sozinho ao detectar seca.</div>
+            </div>
+          </li>
+          <li class="bullet-item">
+            <div class="bullet-icon">🧩</div>
+            <div>
+              <div class="bullet-text">Programável</div>
+              <div class="bullet-detail">Pode ser instruído para executar tarefas diferentes a partir de software. O mesmo hardware que calcula a dose de fertilizante pode gerar mapas de produtividade ou controlar drones.</div>
+            </div>
+          </li>
+          <li class="bullet-item">
+            <div class="bullet-icon">⚡</div>
+            <div>
+              <div class="bullet-text">Eletrônico</div>
+              <div class="bullet-detail">Baseado em circuitos elétricos (transistores). Isso garante velocidade de processamento em escala nanossegundos — bilhões de operações por segundo.</div>
+            </div>
+          </li>
+          <li class="bullet-item">
+            <div class="bullet-icon">0️⃣</div>
+            <div>
+              <div class="bullet-text">Digital</div>
+              <div class="bullet-detail">Opera com representações discretas (0 e 1), ao contrário de sistemas analógicos que usam valores contínuos. Isso garante precisão e reprodutibilidade perfeitas.</div>
+            </div>
+          </li>
+        </ul>
+        <div class="concept-box">
+          <div class="concept-label">⚠️ Importante</div>
+          <div class="concept-text">Computador executa instruções, não pensa. Toda inteligência que parece existir num sistema computacional foi colocada lá por um programador humano — ou aprendida a partir de dados humanos.</div>
+        </div>
+      </div>
+    </div>
+    <div class="slide-footer">
+      <div class="footer-logo">Informática Aplicada à Agronomia</div>
+      <div class="footer-contact">Prof. Ciro Macedo · ciro.macedo@ifg.edu.br</div>
+    </div>
+  </div>
+
+  <!-- SLIDE 15: VANTAGENS -->
+  <div class="slide slide-content" data-slide="15">
+    <div class="slide-header">
+      <div class="slide-number">15 / 21</div>
+      <div class="slide-title-bar">Vantagens do Uso de Computadores</div>
+      <div class="slide-category">Aplicações</div>
+    </div>
+    <div class="slide-body">
+      <div class="content-main">
+        <ul class="bullet-list">
+          <li class="bullet-item">
+            <div class="bullet-icon">⚡</div>
+            <div>
+              <div class="bullet-text">Velocidade</div>
+              <div class="bullet-detail">Processadores modernos executam bilhões de operações por segundo. Análises que levariam semanas são concluídas em minutos — como processar imagens de satélite de toda uma safra.</div>
+            </div>
+          </li>
+          <li class="bullet-item">
+            <div class="bullet-icon">🎯</div>
+            <div>
+              <div class="bullet-text">Precisão</div>
+              <div class="bullet-detail">Sem fadiga, sem erros de arredondamento acidental. Cálculos de dosagem de defensivos, coordenadas GPS para pulverização, análises estatísticas — todos com precisão absoluta.</div>
+            </div>
+          </li>
+          <li class="bullet-item">
+            <div class="bullet-icon">💾</div>
+            <div>
+              <div class="bullet-text">Armazenamento</div>
+              <div class="bullet-detail">Um HD de 1 TB armazena o equivalente a 500 milhões de páginas de texto. Histórico climático de décadas, imagens de satélite, laudos de solo — acessíveis em segundos.</div>
+            </div>
+          </li>
+          <li class="bullet-item">
+            <div class="bullet-icon">🔄</div>
+            <div>
+              <div class="bullet-text">Repetibilidade</div>
+              <div class="bullet-detail">Executa a mesma tarefa mil vezes sem variação. Um algoritmo de detecção de pragas analisa a milionésima foto com a mesma atenção que a primeira.</div>
+            </div>
+          </li>
+          <li class="bullet-item">
+            <div class="bullet-icon">📈</div>
+            <div>
+              <div class="bullet-text">Escalabilidade</div>
+              <div class="bullet-detail">O mesmo sistema que gerencia 10 hectares pode gerenciar 10.000 sem redesenho completo — apenas mais poder de processamento (cloud computing).</div>
+            </div>
+          </li>
+        </ul>
+      </div>
+      <div class="side-panel">
+        <div class="panel-card">
+          <div class="panel-title">🌾 Aplicações no Agro</div>
+          <div class="panel-item"><div class="panel-dot"></div>SIG — Sistemas de Informação Geográfica</div>
+          <div class="panel-item"><div class="panel-dot"></div>Drones para mapeamento e pulverização</div>
+          <div class="panel-item"><div class="panel-dot"></div>Estações meteorológicas automatizadas</div>
+          <div class="panel-item"><div class="panel-dot"></div>Modelos preditivos de produtividade</div>
+          <div class="panel-item"><div class="panel-dot"></div>Sistemas de irrigação inteligente</div>
+        </div>
+      </div>
+    </div>
+    <div class="slide-footer">
+      <div class="footer-logo">Informática Aplicada à Agronomia</div>
+      <div class="footer-contact">Prof. Ciro Macedo · ciro.macedo@ifg.edu.br</div>
+    </div>
+  </div>
+
+  <!-- SLIDE 16: TIPOS DE COMPUTADORES -->
+  <div class="slide slide-content" data-slide="16">
+    <div class="slide-header">
+      <div class="slide-number">16 / 21</div>
+      <div class="slide-title-bar">Tipos de Computadores</div>
+      <div class="slide-category">Classificação</div>
+    </div>
+    <div class="slide-body">
+      <div class="content-main">
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:20px;margin-bottom:20px;">
+          <div class="panel-card">
+            <div class="panel-title">🔒 Lógica Fixa</div>
+            <div style="font-size:13px;color:rgba(245,240,232,0.65);margin-bottom:12px;">Executam uma função específica e imutável.</div>
+            <div class="panel-item"><div class="panel-dot" style="background:var(--amber)"></div>Calculadora de bolso</div>
+            <div class="panel-item"><div class="panel-dot" style="background:var(--amber)"></div>Controlador simples de bomba d'água</div>
+            <div class="panel-item"><div class="panel-dot" style="background:var(--amber)"></div>Temporizador de irrigação analógico</div>
+          </div>
+          <div class="panel-card" style="background:rgba(107,191,122,0.15);border:1px solid rgba(107,191,122,0.25);">
+            <div class="panel-title">🔓 Lógica Programável</div>
+            <div style="font-size:13px;color:var(--text-mid);margin-bottom:12px;">Podem ser reprogramados para novas funções.</div>
+            <div class="panel-item" style="color:var(--text-dark);"><div class="panel-dot"></div>PC / Notebook</div>
+            <div class="panel-item" style="color:var(--text-dark);"><div class="panel-dot"></div>Microcontroladores (Arduino, Raspberry Pi)</div>
+            <div class="panel-item" style="color:var(--text-dark);"><div class="panel-dot"></div>Servidores em nuvem</div>
+          </div>
+        </div>
+        <div class="concept-box">
+          <div class="concept-label">🌾 Exemplo na Agricultura</div>
+          <div class="concept-text">Automação de irrigação: o controlador simples apenas liga/desliga a bomba em horário fixo (lógica fixa). Já um microcontrolador programável recebe dados do sensor de umidade e decide dinamicamente quando e por quanto tempo irrigar cada setor.</div>
+        </div>
+      </div>
+    </div>
+    <div class="slide-footer">
+      <div class="footer-logo">Informática Aplicada à Agronomia</div>
+      <div class="footer-contact">Prof. Ciro Macedo · ciro.macedo@ifg.edu.br</div>
+    </div>
+  </div>
+
+  <!-- SLIDE 17: CLASSIFICAÇÃO POR USO -->
+  <div class="slide slide-content" data-slide="17">
+    <div class="slide-header">
+      <div class="slide-number">17 / 21</div>
+      <div class="slide-title-bar">Classificação por Uso</div>
+      <div class="slide-category">Classificação</div>
+    </div>
+    <div class="slide-body">
+      <div class="content-main">
+        <ul class="bullet-list">
+          <li class="bullet-item">
+            <div class="bullet-icon">🔬</div>
+            <div>
+              <div class="bullet-text">Científico</div>
+              <div class="bullet-detail">Simulações climáticas, modelagem de solo, previsão de safras. Supercomputadores rodam modelos que simulam o clima de toda uma região agrícola.</div>
+            </div>
+          </li>
+          <li class="bullet-item">
+            <div class="bullet-icon">🏢</div>
+            <div>
+              <div class="bullet-text">Comercial</div>
+              <div class="bullet-detail">Gestão de estoque, emissão de notas fiscais, sistemas ERP para fazendas. Integra finanças, produção e logística da propriedade rural.</div>
+            </div>
+          </li>
+          <li class="bullet-item">
+            <div class="bullet-icon">💻</div>
+            <div>
+              <div class="bullet-text">Pessoal (PC/Notebook/Smartphone)</div>
+              <div class="bullet-detail">O agrônomo usa no dia a dia: relatórios, planilhas, comunicação, acesso a sistemas de monitoramento remoto de sua propriedade.</div>
+            </div>
+          </li>
+          <li class="bullet-item">
+            <div class="bullet-icon">🌐</div>
+            <div>
+              <div class="bullet-text">Embarcado (IoT)</div>
+              <div class="bullet-detail">Sensores inteligentes no solo, válvulas automatizadas, drones autônomos. Computadores minúsculos embutidos em equipamentos agrícolas conectados à internet.</div>
+            </div>
+          </li>
+          <li class="bullet-item">
+            <div class="bullet-icon">☁️</div>
+            <div>
+              <div class="bullet-text">Cloud (Nuvem)</div>
+              <div class="bullet-detail">Processamento remoto de grandes volumes de dados. Plataformas como AWS e Google Cloud rodam algoritmos de IA sobre dados de toda uma safra, acessíveis de qualquer lugar.</div>
+            </div>
+          </li>
+        </ul>
+        <div class="concept-box">
+          <div class="concept-label">🌾 Observação</div>
+          <div class="concept-text">A agricultura moderna utiliza todos esses tipos simultaneamente: um sensor IoT no campo envia dados para a nuvem, que processa um modelo científico e retorna uma recomendação no smartphone do agrônomo.</div>
+        </div>
+      </div>
+    </div>
+    <div class="slide-footer">
+      <div class="footer-logo">Informática Aplicada à Agronomia</div>
+      <div class="footer-contact">Prof. Ciro Macedo · ciro.macedo@ifg.edu.br</div>
+    </div>
+  </div>
+
+  <!-- SLIDE 18: APLICAÇÕES NA AGRONOMIA -->
+  <div class="slide slide-content" data-slide="18">
+    <div class="slide-header">
+      <div class="slide-number">18 / 21</div>
+      <div class="slide-title-bar">Aplicações na Agronomia</div>
+      <div class="slide-category">Aplicações</div>
+    </div>
+    <div class="slide-body">
+      <div class="content-main">
+        <div class="apps-grid">
+          <div class="app-card">
+            <div class="app-icon">🗺️</div>
+            <div class="app-name">Agricultura de Precisão</div>
+          </div>
+          <div class="app-card">
+            <div class="app-icon">🛰️</div>
+            <div class="app-name">Sensoriamento Remoto</div>
+          </div>
+          <div class="app-card">
+            <div class="app-icon">📍</div>
+            <div class="app-name">SIG — Sistemas de Informação Geográfica</div>
+          </div>
+          <div class="app-card">
+            <div class="app-icon">📈</div>
+            <div class="app-name">Modelagem de Produtividade</div>
+          </div>
+          <div class="app-card">
+            <div class="app-icon">🌦️</div>
+            <div class="app-name">Monitoramento Climático</div>
+          </div>
+          <div class="app-card">
+            <div class="app-icon">💧</div>
+            <div class="app-name">Automação de Irrigação</div>
+          </div>
+          <div class="app-card">
+            <div class="app-icon">🚁</div>
+            <div class="app-name">Drones para Mapeamento</div>
+          </div>
+          <div class="app-card">
+            <div class="app-icon">🤖</div>
+            <div class="app-name">IA para Diagnóstico de Doenças</div>
+          </div>
+          <div class="app-card">
+            <div class="app-icon">🌱</div>
+            <div class="app-name">Gestão de Insumos por Talhão</div>
+          </div>
+        </div>
+        <div class="concept-box" style="margin-top:20px;">
+          <div class="concept-label">🎯 Conceito central</div>
+          <div class="concept-text">Cada uma dessas aplicações resolve um problema antigo com uma ferramenta nova: prever, monitorar, decidir — só que com dados, velocidade e precisão impossíveis para o ser humano sem tecnologia.</div>
+        </div>
+      </div>
+    </div>
+    <div class="slide-footer">
+      <div class="footer-logo">Informática Aplicada à Agronomia</div>
+      <div class="footer-contact">Prof. Ciro Macedo · ciro.macedo@ifg.edu.br</div>
+    </div>
+  </div>
+
+  <!-- SLIDE 19: AGRÔNOMO DO SÉCULO XXI -->
+  <div class="slide slide-content" data-slide="19">
+    <div class="slide-header">
+      <div class="slide-number">19 / 21</div>
+      <div class="slide-title-bar">O Agrônomo do Século XXI</div>
+      <div class="slide-category">Perfil</div>
+    </div>
+    <div class="slide-body">
+      <div class="content-main">
+        <div class="comp-list">
+          <div class="comp-card">
+            <div class="comp-num">01</div>
+            <div>
+              <div class="comp-text">Interpretar dados</div>
+              <div class="comp-detail">Ler índices de vegetação (NDVI), analisar laudos de solo, compreender gráficos de precipitação e produtividade histórica.</div>
+            </div>
+          </div>
+          <div class="comp-card">
+            <div class="comp-num">02</div>
+            <div>
+              <div class="comp-text">Usar planilhas e sistemas de gestão</div>
+              <div class="comp-detail">Excel, Google Sheets, ERPs rurais — ferramentas para organizar, calcular e comunicar resultados de forma profissional.</div>
+            </div>
+          </div>
+          <div class="comp-card">
+            <div class="comp-num">03</div>
+            <div>
+              <div class="comp-text">Entender sensores e IoT</div>
+              <div class="comp-detail">Saber configurar, calibrar e interpretar dados de estações meteorológicas, sensores de solo e sistemas embarcados em equipamentos.</div>
+            </div>
+          </div>
+          <div class="comp-card">
+            <div class="comp-num">04</div>
+            <div>
+              <div class="comp-text">Analisar mapas e imagens de satélite</div>
+              <div class="comp-detail">Trabalhar com SIG, interpretar imagens multiespectrais e usar informações geoespaciais para decisões de manejo por talhão.</div>
+            </div>
+          </div>
+          <div class="comp-card">
+            <div class="comp-num">05</div>
+            <div>
+              <div class="comp-text">Tomar decisões baseadas em dados</div>
+              <div class="comp-detail">Substituir a intuição por evidências — sem abrir mão do conhecimento agronômico, mas somando a ele o poder preditivo dos dados.</div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="side-panel">
+        <div class="question-box" style="border:1px solid rgba(107,191,122,0.3);">
+          <div class="question-icon">🎯</div>
+          <div class="question-text">O agrônomo que não entende dados continuará competitivo num mercado onde a tomada de decisão é cada vez mais orientada por algoritmos e sensores?</div>
+        </div>
+      </div>
+    </div>
+    <div class="slide-footer">
+      <div class="footer-logo">Informática Aplicada à Agronomia</div>
+      <div class="footer-contact">Prof. Ciro Macedo · ciro.macedo@ifg.edu.br</div>
+    </div>
+  </div>
+
+  <!-- SLIDE 20: ENCERRAMENTO -->
+  <div class="slide slide-content" data-slide="20">
+    <div class="slide-header">
+      <div class="slide-number">20 / 21</div>
+      <div class="slide-title-bar">Encerramento</div>
+      <div class="slide-category">Síntese</div>
+    </div>
+    <div class="slide-body">
+      <div class="content-main">
+        <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:20px;margin-bottom:28px;">
+          <div class="panel-card" style="text-align:center;padding:28px 20px;">
+            <div style="font-size:36px;margin-bottom:12px;">🧮</div>
+            <div style="font-family:'DM Serif Display',serif;font-size:16px;color:var(--cream);margin-bottom:8px;">Para Contar</div>
+            <div style="font-size:12px;color:rgba(245,240,232,0.6);line-height:1.6;">Do ábaco aos processadores, a essência sempre foi quantificar e registrar o mundo.</div>
+          </div>
+          <div class="panel-card" style="text-align:center;padding:28px 20px;background:rgba(212,168,67,0.15);border:1px solid rgba(212,168,67,0.3);">
+            <div style="font-size:36px;margin-bottom:12px;">🌤️</div>
+            <div style="font-family:'DM Serif Display',serif;font-size:16px;color:var(--text-dark);margin-bottom:8px;">Para Prever</div>
+            <div style="font-size:12px;color:var(--text-mid);line-height:1.6;">De Stonehenge às estações meteorológicas inteligentes, prever sempre foi sobreviver.</div>
+          </div>
+          <div class="panel-card" style="text-align:center;padding:28px 20px;">
+            <div style="font-size:36px;margin-bottom:12px;">⚙️</div>
+            <div style="font-family:'DM Serif Display',serif;font-size:16px;color:var(--cream);margin-bottom:8px;">Para Controlar</div>
+            <div style="font-size:12px;color:rgba(245,240,232,0.6);line-height:1.6;">Automação, IoT, IA — controlar processos com precisão é a fronteira atual.</div>
+          </div>
+        </div>
+        <div style="background:linear-gradient(135deg,var(--green-light),var(--green-bright));border-radius:20px;padding:32px;text-align:center;">
+          <div style="font-family:'Space Mono',monospace;font-size:11px;letter-spacing:0.3em;color:var(--green-deep);text-transform:uppercase;margin-bottom:12px;">Conclusão</div>
+          <div style="font-family:'DM Serif Display',serif;font-size:28px;color:var(--green-deep);line-height:1.4;">Computação é a Base da<br><em>Agricultura Digital</em></div>
+          <div style="font-size:14px;color:rgba(26,58,42,0.7);margin-top:12px;max-width:500px;margin-left:auto;margin-right:auto;line-height:1.7;">O profissional que une conhecimento agronômico à fluência digital estará na vanguarda de uma das transformações mais importantes da história da produção de alimentos.</div>
+        </div>
+      </div>
+    </div>
+    <div class="slide-footer">
+      <div class="footer-logo">Informática Aplicada à Agronomia</div>
+      <div class="footer-contact">Prof. Ciro Macedo · ciro.macedo@ifg.edu.br</div>
+    </div>
+  </div>
+
+  <!-- SLIDE 21: OBRIGADO -->
+  <div class="slide slide-cover" data-slide="21" style="background:linear-gradient(135deg,#0e2218 0%,var(--green-deep) 50%,#1a3015 100%);">
+    <div class="bg-pattern"></div>
+    <div class="cover-left">
+      <div class="cover-eyebrow">Unidade 1 — Concluída</div>
+      <h1 class="cover-title">Obrigado<br>pela <span>atenção!</span></h1>
+      <p class="cover-subtitle">Dúvidas, sugestões ou feedback? Estou disponível pelos canais abaixo.</p>
+      <div style="display:flex;flex-direction:column;gap:12px;opacity:0;animation:fadeUp 0.8s 0.9s forwards;">
+        <div style="display:flex;align-items:center;gap:12px;font-size:14px;color:var(--cream);">
+          <span style="font-size:18px;">✉️</span> ciro.macedo@ifg.edu.br
+        </div>
+        <div style="display:flex;align-items:center;gap:12px;font-size:14px;color:rgba(245,240,232,0.6);">
+          <span style="font-size:18px;">🏛️</span> Instituto Federal de Goiás
+        </div>
+      </div>
+    </div>
+    <div class="cover-right">
+      <div class="cover-visual">
+        <div class="ring ring-1"><div class="ring-dot"></div></div>
+        <div class="ring ring-2"><div class="ring-dot ring-dot-amber"></div></div>
+        <div class="ring ring-3"></div>
+        <div class="ring-icon">🌾</div>
+      </div>
+    </div>
+    <div class="cover-footer">
+      <div class="footer-author">
+        <div class="author-avatar">CM</div>
+        <div class="author-info">
+          <div class="author-name">Prof. Ciro Macedo</div>
+          <div class="author-email">ciro.macedo@ifg.edu.br</div>
+        </div>
+      </div>
+      <div class="footer-duration" style="font-family:'DM Serif Display',serif;font-size:13px;color:var(--green-bright);font-style:italic;">Informática Aplicada à Agronomia</div>
+    </div>
+  </div>
+
+</div>
+
+<!-- NAVIGATION -->
+<div class="nav" id="nav">
+  <button class="nav-btn" id="prevBtn" onclick="navigate(-1)" disabled>
+    ← Anterior
+  </button>
+  <div class="nav-dots" id="navDots"></div>
+  <div class="nav-counter" id="navCounter">1 / 22</div>
+  <button class="nav-btn" id="nextBtn" onclick="navigate(1)">
+    Próximo →
+  </button>
+</div>
+
+<div class="kbd-hint">← → para navegar · ESC para capa</div>
+
+<script>
+  const slides = document.querySelectorAll('.slide');
+  const total = slides.length;
+  let current = 0;
+  let isAnimating = false;
+
+  const dotsContainer = document.getElementById('navDots');
+  const counter = document.getElementById('navCounter');
+  const prevBtn = document.getElementById('prevBtn');
+  const nextBtn = document.getElementById('nextBtn');
+
+  // Build dots (show max 15)
+  const maxDots = Math.min(total, 15);
+  for (let i = 0; i < maxDots; i++) {
+    const dot = document.createElement('div');
+    dot.className = 'nav-dot' + (i === 0 ? ' active' : '');
+    dot.onclick = () => goTo(i < maxDots ? i : i);
+    dotsContainer.appendChild(dot);
+  }
+
+  function navigate(dir) {
+    goTo(current + dir);
+  }
+
+  function goTo(index) {
+    if (isAnimating || index < 0 || index >= total || index === current) return;
+    isAnimating = true;
+
+    slides[current].classList.add('exit');
+    slides[current].classList.remove('active');
+
+    setTimeout(() => {
+      slides[current].classList.remove('exit');
+      current = index;
+      slides[current].classList.add('active');
+
+      // Reset animations on bullet items
+      slides[current].querySelectorAll('.bullet-item, .timeline-item, .comp-card').forEach(el => {
+        el.style.animation = 'none';
+        el.offsetHeight;
+        el.style.animation = '';
+      });
+
+      updateNav();
+      isAnimating = false;
+    }, 400);
+  }
+
+  function updateNav() {
+    counter.textContent = `${current + 1} / ${total}`;
+    prevBtn.disabled = current === 0;
+    nextBtn.disabled = current === total - 1;
+
+    const dots = dotsContainer.querySelectorAll('.nav-dot');
+    dots.forEach((dot, i) => {
+      dot.classList.toggle('active', i === current || (i === maxDots - 1 && current >= maxDots - 1));
+    });
+  }
+
+  document.addEventListener('keydown', e => {
+    if (e.key === 'ArrowRight' || e.key === 'ArrowDown' || e.key === ' ') { e.preventDefault(); navigate(1); }
+    if (e.key === 'ArrowLeft' || e.key === 'ArrowUp') { e.preventDefault(); navigate(-1); }
+    if (e.key === 'Escape') goTo(0);
+  });
+
+  // Touch swipe
+  let touchStartX = 0;
+  document.addEventListener('touchstart', e => touchStartX = e.touches[0].clientX, { passive: true });
+  document.addEventListener('touchend', e => {
+    const diff = touchStartX - e.changedTouches[0].clientX;
+    if (Math.abs(diff) > 50) navigate(diff > 0 ? 1 : -1);
+  }, { passive: true });
+
+  updateNav();
+</script>
+</body>
+</html>
