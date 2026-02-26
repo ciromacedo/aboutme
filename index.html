@@ -3,551 +3,847 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="description" content="Dr. Ciro Macedo - Academic Presentations, Tutorials and Talks">
+    <meta name="description" content="Academic portfolio of Dr. Ciro J. A. Macedo, Professor and Researcher at IFG — research in 5G/6G, IoT, Software Engineering, and AI.">
     <meta name="author" content="Ciro J. A. Macedo">
-    <title>Ciro Macedo - Presentations & Talks</title>
+    <title>Dr. Ciro J. A. Macedo — Academic Portfolio | IFG</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Source+Serif+4:wght@400;600;700&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
     <style>
+        :root {
+            --navy-dark:   #1a3055;
+            --navy-mid:    #2563a8;
+            --navy-light:  #3a7bd5;
+            --gold:        #c9a84c;
+            --gold-light:  #e8d5a3;
+            --off-white:   #f2f4f8;
+            --card-white:  #ffffff;
+            --text-primary: #1c2b3a;
+            --text-muted:   #5a6a7a;
+            --border-light: #dde3ed;
+        }
+
         * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
         }
 
+        html {
+            scroll-behavior: smooth;
+        }
+
         body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%);
-            color: #333;
+            font-family: 'Inter', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: var(--off-white);
+            color: var(--text-primary);
             line-height: 1.6;
             min-height: 100vh;
         }
 
-        .container {
-            max-width: 1200px;
-            margin: 0 auto;
-            padding: 20px;
+        h1, h2, h3 {
+            font-family: 'Source Serif 4', Georgia, 'Times New Roman', serif;
         }
 
-        /* Header */
+        /* ── Sticky Navigation ── */
+        .navbar {
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+            background: var(--navy-dark);
+            border-bottom: 2px solid var(--gold);
+            box-shadow: 0 2px 12px rgba(0, 0, 0, 0.25);
+        }
+
+        .navbar-inner {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 24px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            height: 58px;
+        }
+
+        .navbar-brand {
+            color: rgba(255, 255, 255, 0.9);
+            font-family: 'Inter', sans-serif;
+            font-weight: 600;
+            font-size: 0.9em;
+            letter-spacing: 0.03em;
+            text-decoration: none;
+        }
+
+        .navbar-links {
+            display: flex;
+            list-style: none;
+            gap: 0;
+        }
+
+        .navbar-links li a {
+            display: block;
+            padding: 0 18px;
+            line-height: 55px;
+            color: rgba(255, 255, 255, 0.72);
+            text-decoration: none;
+            font-size: 0.88em;
+            font-weight: 500;
+            letter-spacing: 0.04em;
+            text-transform: uppercase;
+            border-bottom: 3px solid transparent;
+            transition: color 0.2s, border-bottom-color 0.2s;
+        }
+
+        .navbar-links li a:hover {
+            color: var(--gold);
+            border-bottom-color: var(--gold);
+        }
+
+        /* ── Header ── */
         header {
-            background: linear-gradient(135deg, #2c5f2d 0%, #4a9c4d 100%);
+            background: linear-gradient(160deg, var(--navy-dark) 0%, #1e3a6a 100%);
             color: white;
-            padding: 60px 20px;
+            padding: 72px 20px 64px;
             text-align: center;
-            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
         }
 
         header .profile-img {
-            width: 150px;
-            height: 150px;
+            width: 140px;
+            height: 140px;
             border-radius: 50%;
-            border: 5px solid white;
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
-            margin-bottom: 20px;
+            border: 3px solid var(--gold);
+            box-shadow: 0 4px 24px rgba(0, 0, 0, 0.4);
+            margin-bottom: 24px;
+            object-fit: cover;
         }
 
         header h1 {
-            font-size: 3em;
+            font-size: 2.6em;
+            font-weight: 700;
             margin-bottom: 10px;
-            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+            letter-spacing: -0.01em;
         }
 
         header .subtitle {
-            font-size: 1.3em;
-            font-weight: 300;
-            opacity: 0.95;
-            margin-top: 10px;
+            font-family: 'Inter', sans-serif;
+            font-size: 0.9em;
+            font-weight: 400;
+            letter-spacing: 0.12em;
+            text-transform: uppercase;
+            opacity: 0.78;
+            margin-top: 8px;
         }
 
         header .institution {
-            font-size: 1.1em;
-            margin-top: 15px;
-            opacity: 0.9;
+            font-family: 'Inter', sans-serif;
+            font-size: 0.97em;
+            margin-top: 16px;
+            opacity: 0.82;
+            line-height: 1.8;
         }
 
         header .contact {
-            margin-top: 25px;
-            font-size: 1.05em;
+            margin-top: 30px;
+            display: flex;
+            justify-content: center;
+            flex-wrap: wrap;
+            gap: 10px;
         }
 
-        header .contact a {
-            color: #fff;
+        .contact-link {
+            color: rgba(255, 255, 255, 0.88);
             text-decoration: none;
-            margin: 0 12px;
-            transition: opacity 0.3s;
-            display: inline-block;
-            padding: 8px 15px;
-            background: rgba(255, 255, 255, 0.15);
-            border-radius: 20px;
+            padding: 8px 20px;
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            border-radius: 3px;
+            font-family: 'Inter', sans-serif;
+            font-size: 0.84em;
+            font-weight: 500;
+            letter-spacing: 0.05em;
+            text-transform: uppercase;
+            transition: background 0.2s, border-color 0.2s, color 0.2s;
         }
 
-        header .contact a:hover {
-            background: rgba(255, 255, 255, 0.25);
-            text-decoration: none;
+        .contact-link:hover {
+            background: rgba(201, 168, 76, 0.18);
+            border-color: var(--gold);
+            color: var(--gold);
         }
 
-        /* About Section */
+        /* ── Page Container ── */
+        .page-container {
+            max-width: 1100px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+
+        /* ── About Section ── */
         .about-section {
-            background: white;
-            border-radius: 15px;
-            padding: 40px;
-            margin: 40px auto;
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
-            max-width: 900px;
+            background: var(--card-white);
+            border-radius: 8px;
+            padding: 48px 52px;
+            margin: 48px auto;
+            box-shadow: 0 4px 24px rgba(26, 48, 85, 0.1);
+            max-width: 920px;
         }
 
-        .about-section h2 {
-            color: #2c5f2d;
-            font-size: 2.2em;
-            margin-bottom: 25px;
-            border-bottom: 4px solid #4a9c4d;
+        .section-heading {
+            color: var(--navy-dark);
+            font-size: 1.75em;
+            font-weight: 700;
+            margin-bottom: 24px;
+            padding-bottom: 12px;
+            border-bottom: 3px solid var(--gold);
+            letter-spacing: -0.01em;
+        }
+
+        .subsection-heading {
+            color: var(--navy-dark);
+            font-size: 1.45em;
+            font-weight: 600;
+            margin-top: 44px;
+            margin-bottom: 20px;
             padding-bottom: 10px;
+            border-bottom: 2px solid var(--gold-light);
         }
 
         .about-section p {
-            font-size: 1.1em;
-            color: #444;
+            font-size: 1.02em;
+            color: #3a4a5a;
             text-align: justify;
-            line-height: 1.8;
-            margin-bottom: 20px;
+            line-height: 1.9;
+            margin-bottom: 18px;
         }
 
-        .about-section .highlight {
-            background: #e8f5e9;
-            padding: 20px;
-            border-left: 5px solid #4a9c4d;
-            margin: 20px 0;
-            border-radius: 5px;
+        .highlight-box {
+            background: #eef2fa;
+            padding: 20px 24px;
+            border-left: 4px solid var(--navy-mid);
+            margin: 24px 0;
+            border-radius: 0 4px 4px 0;
         }
 
-        .about-section .highlight strong {
-            color: #2c5f2d;
+        .highlight-box strong {
+            color: var(--navy-dark);
         }
 
-        .about-section .highlight ul {
-            margin-top: 10px;
+        .highlight-box ul {
+            margin-top: 12px;
             margin-left: 20px;
         }
 
-        .about-section .highlight ul li {
-            margin: 5px 0;
+        .highlight-box ul li {
+            margin: 8px 0;
+            color: #3a4a5a;
+            line-height: 1.65;
+            font-size: 0.97em;
         }
 
         .info-grid {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-            gap: 15px;
-            margin: 25px 0;
+            gap: 14px;
+            margin: 24px 0;
         }
 
         .info-box {
-            background: #f5f5f5;
-            padding: 15px;
-            border-radius: 8px;
-            border-left: 4px solid #4a9c4d;
+            background: var(--off-white);
+            padding: 16px 18px;
+            border-radius: 5px;
+            border-left: 4px solid var(--gold);
         }
 
         .info-box strong {
-            color: #2c5f2d;
+            color: var(--navy-dark);
             display: block;
-            margin-bottom: 5px;
+            margin-bottom: 6px;
+            font-size: 0.88em;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
         }
 
-        /* Presentations Section */
-        .presentations-section {
+        .info-box p {
+            font-size: 0.9em !important;
+            color: var(--text-muted) !important;
+            margin-bottom: 0 !important;
+            text-align: left !important;
+            line-height: 1.5 !important;
+        }
+
+        .info-box a {
+            color: var(--navy-mid);
+            text-decoration: none;
+        }
+
+        .info-box a:hover {
+            text-decoration: underline;
+        }
+
+        /* ── Cards Sections ── */
+        .cards-section {
             max-width: 1100px;
-            margin: 40px auto;
+            margin: 60px auto;
+            padding: 0 20px;
         }
 
-        .presentations-section h2 {
-            color: white;
-            font-size: 2.5em;
-            margin-bottom: 30px;
-            text-align: center;
-            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
-        }
-
-        .presentations-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
-            gap: 30px;
-            padding: 20px;
-        }
-
-        .presentation-card {
-            background: white;
-            border-radius: 12px;
-            padding: 30px;
-            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
-            transition: transform 0.3s ease, box-shadow 0.3s ease;
-            border-left: 6px solid #4a9c4d;
-        }
-
-        .presentation-card:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 12px 30px rgba(0, 0, 0, 0.25);
-        }
-
-        .presentation-card h3 {
-            color: #2c5f2d;
-            font-size: 1.5em;
-            margin-bottom: 15px;
-        }
-
-        .presentation-card .meta {
-            color: #666;
-            font-size: 0.95em;
-            margin-bottom: 15px;
-            font-style: italic;
-        }
-
-        .presentation-card .badge {
-            display: inline-block;
-            background: #1976d2;
-            color: white;
-            padding: 5px 12px;
-            border-radius: 15px;
-            font-size: 0.85em;
-            font-weight: bold;
-            margin-bottom: 10px;
-        }
-
-        .presentation-card .badge.tutorial {
-            background: #f57c00;
-        }
-
-        .presentation-card .description {
-            color: #555;
-            margin-bottom: 20px;
-            line-height: 1.6;
-        }
-
-        .presentation-card .links {
+        .cards-section-header {
             display: flex;
-            gap: 15px;
+            align-items: flex-end;
+            margin-bottom: 30px;
+            padding-bottom: 14px;
+            border-bottom: 3px solid var(--gold);
+            gap: 16px;
+        }
+
+        .cards-section-header h2 {
+            color: var(--navy-dark);
+            font-size: 1.75em;
+            font-weight: 700;
+            letter-spacing: -0.01em;
+        }
+
+        .cards-section-header .section-label {
+            font-family: 'Inter', sans-serif;
+            font-size: 0.8em;
+            font-weight: 500;
+            color: var(--text-muted);
+            letter-spacing: 0.08em;
+            text-transform: uppercase;
+            padding-bottom: 4px;
+        }
+
+        .cards-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(340px, 1fr));
+            gap: 24px;
+        }
+
+        /* ── Cards ── */
+        .card {
+            background: var(--card-white);
+            border-radius: 6px;
+            padding: 28px 30px;
+            box-shadow: 0 2px 16px rgba(26, 48, 85, 0.1);
+            transition: transform 0.22s ease, box-shadow 0.22s ease;
+            border-top: 4px solid var(--navy-mid);
+            animation: fadeIn 0.5s ease-out backwards;
+        }
+
+        .card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 8px 28px rgba(26, 48, 85, 0.16);
+        }
+
+        .card.research { border-top-color: var(--navy-mid); }
+        .card.opensource { border-top-color: #c0392b; }
+        .card.teaching { border-top-color: var(--gold); }
+        .card.coming-soon { border-top-color: var(--border-light); background: #f9f9fb; opacity: 0.72; }
+
+        .card h3 {
+            color: var(--navy-dark);
+            font-size: 1.2em;
+            font-weight: 600;
+            margin-bottom: 10px;
+            line-height: 1.3;
+        }
+
+        .card.coming-soon h3 {
+            color: var(--text-muted);
+        }
+
+        .card .meta {
+            color: var(--text-muted);
+            font-size: 0.84em;
+            font-style: italic;
+            margin-bottom: 12px;
+        }
+
+        .card .description {
+            color: #3a4a5a;
+            font-size: 0.92em;
+            line-height: 1.7;
+            margin-bottom: 20px;
+        }
+
+        /* ── Badges ── */
+        .badge {
+            display: inline-block;
+            padding: 4px 10px;
+            border-radius: 3px;
+            font-family: 'Inter', sans-serif;
+            font-size: 0.72em;
+            font-weight: 700;
+            letter-spacing: 0.07em;
+            text-transform: uppercase;
+            margin-bottom: 12px;
+        }
+
+        .badge-navy  { background: var(--navy-dark); color: white; }
+        .badge-mid   { background: var(--navy-mid);  color: white; }
+        .badge-gold  { background: var(--gold);       color: #1a1a1a; }
+        .badge-red   { background: #c0392b;           color: white; }
+        .badge-teal  { background: #0d7377;           color: white; }
+        .badge-indigo{ background: #5c6bc0;           color: white; }
+        .badge-gray  { background: #78909c;           color: white; }
+
+        /* ── Buttons ── */
+        .btn {
+            display: inline-block;
+            padding: 9px 20px;
+            border-radius: 3px;
+            font-family: 'Inter', sans-serif;
+            font-size: 0.85em;
+            font-weight: 600;
+            letter-spacing: 0.04em;
+            text-decoration: none;
+            transition: background 0.2s, transform 0.15s;
+            cursor: pointer;
+        }
+
+        .btn-primary {
+            background: var(--navy-dark);
+            color: white;
+        }
+        .btn-primary:hover { background: var(--navy-mid); }
+
+        .btn-gold {
+            background: var(--gold);
+            color: #1a1a1a;
+        }
+        .btn-gold:hover { background: #b8962e; }
+
+        .btn-red {
+            background: #c0392b;
+            color: white;
+        }
+        .btn-red:hover { background: #a93226; }
+
+        .btn-teal {
+            background: #0d7377;
+            color: white;
+        }
+        .btn-teal:hover { background: #0a5c60; }
+
+        .btn-green {
+            background: #276246;
+            color: white;
+        }
+        .btn-green:hover { background: #1f4f38; }
+
+        .btn-purple {
+            background: #5c3a8a;
+            color: white;
+        }
+        .btn-purple:hover { background: #4a2e70; }
+
+        .card .links {
+            display: flex;
+            gap: 10px;
             flex-wrap: wrap;
         }
 
-        .presentation-card .btn {
-            display: inline-block;
-            padding: 10px 20px;
-            background: linear-gradient(135deg, #4a9c4d 0%, #2c5f2d 100%);
-            color: white;
-            text-decoration: none;
-            border-radius: 25px;
-            font-size: 0.95em;
-            transition: all 0.3s ease;
-            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+        /* ── Tech Tags ── */
+        .tag-list {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 6px;
+            margin-bottom: 16px;
         }
 
-        .presentation-card .btn:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.25);
+        .tech-tag {
+            background: #eef2f8;
+            color: var(--navy-mid);
+            padding: 3px 10px;
+            border-radius: 3px;
+            font-family: 'Inter', sans-serif;
+            font-size: 0.78em;
+            font-weight: 600;
         }
 
-        /* Coming Soon Card */
-        .coming-soon {
-            background: #f5f5f5;
-            border-left-color: #999;
-            opacity: 0.7;
-        }
-
-        .coming-soon h3 {
-            color: #666;
-        }
-
-        .coming-soon .badge {
-            background: #ff9800;
-        }
-
-        /* Footer */
+        /* ── Footer ── */
         footer {
-            background: linear-gradient(135deg, #2c5f2d 0%, #1b5e20 100%);
-            color: white;
+            background: var(--navy-dark);
+            border-top: 3px solid var(--gold);
+            color: rgba(255, 255, 255, 0.8);
             text-align: center;
-            padding: 30px 20px;
-            margin-top: 60px;
+            padding: 48px 20px;
+            margin-top: 80px;
         }
 
         footer p {
             margin: 5px 0;
+            font-size: 0.93em;
         }
 
         footer a {
-            color: #a5d6a7;
+            color: var(--gold-light);
             text-decoration: none;
         }
 
         footer a:hover {
+            color: var(--gold);
             text-decoration: underline;
         }
 
-        /* Responsive */
-        @media (max-width: 768px) {
-            header h1 {
-                font-size: 2em;
-            }
+        footer .footer-copy {
+            margin-top: 22px;
+            font-size: 0.8em;
+            opacity: 0.55;
+        }
 
-            header .subtitle {
-                font-size: 1.1em;
-            }
+        /* ── Responsive ── */
+        @media (max-width: 768px) {
+            header h1 { font-size: 1.8em; }
+            header .subtitle { font-size: 0.8em; }
 
             .about-section {
-                padding: 25px;
-                margin: 20px;
+                padding: 28px 24px;
+                margin: 24px 16px;
             }
 
-            .about-section h2 {
-                font-size: 1.8em;
-            }
+            .about-section h2.section-heading { font-size: 1.45em; }
 
-            .presentations-grid {
-                grid-template-columns: 1fr;
-                padding: 10px;
-            }
+            .cards-grid { grid-template-columns: 1fr; }
+            .card { padding: 22px 20px; }
+            .info-grid { grid-template-columns: 1fr; }
 
-            .presentation-card {
-                padding: 20px;
-            }
-
-            .info-grid {
-                grid-template-columns: 1fr;
-            }
+            .navbar-links { display: none; }
+            .navbar-brand { font-size: 0.82em; }
         }
 
-        /* Animations */
+        /* ── Animations ── */
         @keyframes fadeIn {
-            from {
-                opacity: 0;
-                transform: translateY(20px);
-            }
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
+            from { opacity: 0; transform: translateY(14px); }
+            to   { opacity: 1; transform: translateY(0); }
         }
 
-        .presentation-card {
-            animation: fadeIn 0.6s ease-out;
-        }
+        .card:nth-child(1) { animation-delay: 0.05s; }
+        .card:nth-child(2) { animation-delay: 0.12s; }
+        .card:nth-child(3) { animation-delay: 0.19s; }
+        .card:nth-child(4) { animation-delay: 0.26s; }
+        .card:nth-child(5) { animation-delay: 0.33s; }
 
-        .presentation-card:nth-child(1) { animation-delay: 0.1s; }
-        .presentation-card:nth-child(2) { animation-delay: 0.2s; }
-        .presentation-card:nth-child(3) { animation-delay: 0.3s; }
-        .presentation-card:nth-child(4) { animation-delay: 0.4s; }
-        .presentation-card:nth-child(5) { animation-delay: 0.5s; }
+        /* ── Clickable card wrapper ── */
+        a.card-link {
+            text-decoration: none;
+            color: inherit;
+            display: block;
+        }
     </style>
 </head>
 <body>
+
+    <!-- NAVIGATION -->
+    <nav class="navbar" aria-label="Main navigation">
+        <div class="navbar-inner">
+            <span class="navbar-brand">Dr. Ciro J. A. Macedo</span>
+            <ul class="navbar-links">
+                <li><a href="#about">Academic Profile</a></li>
+                <li><a href="#projects">Projects</a></li>
+                <li><a href="#presentations">Presentations</a></li>
+                <li><a href="#teaching">Teaching</a></li>
+            </ul>
+        </div>
+    </nav>
+
+    <!-- HEADER -->
     <header>
-        <div class="container">
-            <img src="https://netsoft2020.ieee-netsoft.org/wp-content/uploads/sites/116/2020/05/tutorial_4_4.jpg" 
-                 alt="Dr. Ciro Macedo" 
+        <div class="page-container">
+            <img src="https://netsoft2020.ieee-netsoft.org/wp-content/uploads/sites/116/2020/05/tutorial_4_4.jpg"
+                 alt="Dr. Ciro J. A. Macedo"
                  class="profile-img">
             <h1>Dr. Ciro J. A. Macedo</h1>
-            <p class="subtitle">Professor | Researcher | Software Engineer</p>
-            <p class="institution">Federal Institute of Education, Science, and Technology of Goiás (IFG)<br>
-                Campus Cidade de Goiás</p>
+            <p class="subtitle">Professor &middot; Researcher &middot; Software Engineer</p>
+            <p class="institution">
+                Federal Institute of Education, Science, and Technology of Goiás (IFG)<br>
+                Campus Cidade de Goiás — Goiás, Brazil
+            </p>
             <div class="contact">
-                <a href="mailto:ciro.macedo@ifg.edu.br">📧 Email</a>
-                <a href="https://scholar.google.com.br/citations?user=GMxi-B8AAAAJ" target="_blank">🎓 Google Scholar</a>
-                <a href="http://lattes.cnpq.br/7461921402514789" target="_blank">📄 Lattes CNPq</a>
-                <a href="https://github.com/ciromacedo" target="_blank">💻 GitHub</a>
+                <a href="mailto:ciro.macedo@ifg.edu.br" class="contact-link">Email</a>
+                <a href="https://scholar.google.com.br/citations?user=GMxi-B8AAAAJ" target="_blank" class="contact-link">Google Scholar</a>
+                <a href="http://lattes.cnpq.br/7461921402514789" target="_blank" class="contact-link">Lattes CNPq</a>
+                <a href="https://github.com/ciromacedo" target="_blank" class="contact-link">GitHub</a>
             </div>
         </div>
     </header>
 
-    <div class="about-section">
-        <h2>About</h2>
+    <!-- ABOUT -->
+    <div class="about-section" id="about">
+        <h2 class="section-heading">Academic Profile</h2>
         <p>
-            Dr. Ciro J. A. Macedo received the <strong>B.Sc. degree in Software Engineering</strong> from 
-            Salgado de Oliveira University in 2006. From 2001 to 2013, he worked as a <strong>Senior Full-Stack 
-            Java developer</strong> in several technology companies, accumulating extensive experience in enterprise 
-            software development and building production systems that serve thousands of users.
+            Dr. Ciro J. A. Macedo received the <strong>B.Sc. degree in Software Engineering</strong> from
+            Salgado de Oliveira University in 2006. From 2001 to 2013, he worked as a <strong>Senior Full-Stack
+            Java Developer</strong> in several technology companies, accumulating extensive experience in enterprise
+            software development and building production systems serving thousands of users.
         </p>
         <p>
-            He received the <strong>M.Sc. degree in Electrical Engineering</strong> from the Federal 
-            University of Goiás (UFG) in 2012 and served as an assistant professor at a private college 
-            from 2009 to 2012. He received the <strong>Ph.D. degree in Computer Science</strong> from UFG, 
-            with an emphasis on <strong>Telecommunications (5G/6G)</strong>, combining his industry experience 
-            with advanced academic research in next-generation wireless networks.
+            He received the <strong>M.Sc. degree in Electrical Engineering</strong> from the Federal
+            University of Goiás (UFG) in 2012, and served as an assistant professor at a private institution
+            from 2009 to 2012. He received the <strong>Ph.D. degree in Computer Science</strong> from UFG,
+            with an emphasis on <strong>Telecommunications (5G/6G)</strong>, combining extensive industry
+            experience with advanced academic research in next-generation wireless networks.
         </p>
-        
-        <div class="highlight">
+
+        <div class="highlight-box">
             <p>
-                <strong>Since 2013</strong>, he has been a professor at the <strong>Federal Institute of 
-                Education, Science, and Technology of Goiás (IFG)</strong>, where he teaches courses in 
-                software engineering, telecommunications, and emerging technologies.
+                <strong>Since 2013</strong>, he has been a professor at the <strong>Federal Institute of
+                Education, Science, and Technology of Goiás (IFG)</strong>, where he teaches undergraduate
+                and technical courses in software engineering, telecommunications, and emerging technologies.
             </p>
         </div>
 
-        <h2 style="margin-top: 40px;">Research Interests</h2>
+        <h2 class="subsection-heading">Research Interests</h2>
         <div class="info-grid">
             <div class="info-box">
                 <strong>5G/6G Networks</strong>
-                <p style="font-size: 0.95em;">Next-generation wireless systems, RAN softwarization, and network slicing</p>
+                <p>Next-generation wireless systems, RAN softwarization, and network slicing</p>
             </div>
             <div class="info-box">
                 <strong>Software Engineering</strong>
-                <p style="font-size: 0.95em;">DevOps, cloud computing, microservices, and distributed systems</p>
+                <p>DevOps, cloud computing, microservices, and distributed systems</p>
             </div>
             <div class="info-box">
-                <strong>IoT & Edge Computing</strong>
-                <p style="font-size: 0.95em;">Software-defined gateways, fog computing, and smart systems</p>
+                <strong>IoT &amp; Edge Computing</strong>
+                <p>Software-defined gateways, fog computing, and smart systems</p>
             </div>
             <div class="info-box">
                 <strong>AI/ML in Networks</strong>
-                <p style="font-size: 0.95em;">Intelligent network management and optimization</p>
+                <p>Intelligent network management and optimization</p>
             </div>
         </div>
 
-        <div class="highlight">
-            <p><strong>Notable Projects:</strong></p>
+        <div class="highlight-box">
+            <p><strong>Selected Research Projects:</strong></p>
             <ul>
-                <li><strong>RastreAI</strong> - RastreAI is a scalable platform that analyzes vehicle telematics to optimize fleet operations and energy efficiency using AI-driven analytics.</li>
-                <li><strong>SAMURAI</strong> - Smart 5G Core And Multiraccess Integration: Research on 5G systems integration with AI/ML for network optimization</li>
-                <li><strong>Brasil6G</strong> - Brasil 6G is a national R&D project led by Inatel, supported by Brazil’s MCTI and RNP, focused on defining the action plan and key steps to prepare the country for 6G networks and their high-impact use cases.</li>
-                <li><strong>Macedo SmartMesh</strong> - Distributed video surveillance system using WebRTC, MediaMTX, and ONVIF for remote camera monitoring across multiple NAT networks</li>
-                <li><strong>SOFTWAY4IoT</strong> - Software-defined gateway and fog computing for IoT with multiple wireless technologies support (registered with Brazilian INPI)</li>
-                <!--li><strong>SUGEP</strong> - Unified management system for research and events (registered with Brazilian INPI)</li-->
+                <li><strong>VigIA</strong> — Web platform for wildfire spread simulation in the Brazilian Cerrado, integrating the Rothermel fire spread model with real-time georeferenced visualization and IoT environmental monitoring.</li>
+                <li><strong>RastreAI</strong> — Scalable platform for vehicle telematics analysis, optimizing fleet operations and energy efficiency through AI-driven analytics.</li>
+                <li><strong>SAMURAI</strong> — Smart 5G Core and MultiAccess Integration: research on 5G systems integration with AI/ML for network optimization.</li>
+                <li><strong>Brasil6G</strong> — National R&amp;D project led by Inatel, supported by Brazil's MCTI and RNP, focused on defining Brazil's action plan for 6G networks and high-impact use cases.</li>
+                <li><strong>Macedo SmartMesh</strong> — Distributed video surveillance system using WebRTC, MediaMTX, and ONVIF for remote camera monitoring across multiple NAT networks.</li>
+                <li><strong>SOFTWAY4IoT</strong> — Software-defined gateway and fog computing for IoT with multiple wireless technologies support (registered with the Brazilian INPI).</li>
             </ul>
         </div>
 
-        <div class="info-grid" style="margin-top: 30px;">
+        <h2 class="subsection-heading">Contact Information</h2>
+        <div class="info-grid">
             <div class="info-box">
-                <strong>📍 Location</strong>
-                <p style="font-size: 0.9em;">76600-000 - Cidade de Goiás - GO, Brazil</p>
+                <strong>Location</strong>
+                <p>76600-000 — Cidade de Goiás — GO, Brazil</p>
             </div>
             <div class="info-box">
-                <strong>📞 Phone</strong>
-                <p style="font-size: 0.9em;">+55 62 3371 9000</p>
+                <strong>Phone</strong>
+                <p>+55 62 3371 9000</p>
             </div>
             <div class="info-box">
-                <strong>✉️ Email</strong>
-                <p style="font-size: 0.9em;"><a href="mailto:ciro.macedo@ifg.edu.br" style="color: #2c5f2d;">ciro.macedo@ifg.edu.br</a></p>
+                <strong>Email</strong>
+                <p><a href="mailto:ciro.macedo@ifg.edu.br">ciro.macedo@ifg.edu.br</a></p>
             </div>
         </div>
     </div>
 
-    <div class="presentations-section">
-        <h2>Projects</h2>
-        <div class="presentations-grid">
+    <!-- OPEN SOURCE PROJECTS -->
+    <section class="cards-section" id="projects">
+        <div class="cards-section-header">
+            <h2>Open Source Projects</h2>
+            <span class="section-label">Software &amp; Research</span>
+        </div>
+        <div class="cards-grid">
 
-            <!-- Macedo SmartMesh -->
-            <a href="https://github.com/ciromacedo/macedo-smart-mesh" target="_blank" style="text-decoration: none; color: inherit;">
-                <div class="presentation-card" style="border-left-color: #e94560; cursor: pointer;">
-                    <span class="badge" style="background: #e94560;">OPEN SOURCE</span>
-                    <h3 style="color: #1a1a2e;">Macedo SmartMesh</h3>
-                    <p class="meta">2026 | Distributed Video Surveillance System</p>
+            <a href="https://github.com/ciromacedo/macedo-smart-mesh" target="_blank" class="card-link">
+                <div class="card opensource">
+                    <span class="badge badge-red">Open Source</span>
+                    <h3>Macedo SmartMesh</h3>
+                    <p class="meta">2026 &middot; Distributed Video Surveillance System</p>
                     <p class="description">
                         Distributed video surveillance platform for remote monitoring of IP cameras (RTSP/ONVIF)
-                        across multiple local networks behind NAT, using WebRTC for low-latency live streaming.
-                        Features local gateways with automatic ONVIF camera discovery, RTSP relay to a central
-                        cloud server via FFmpeg, JWT-authenticated REST API, and a responsive React dashboard
-                        with real-time WebRTC playback.
+                        across multiple networks behind NAT, using WebRTC for low-latency live streaming.
+                        Features local gateways with automatic ONVIF camera discovery, RTSP relay via FFmpeg,
+                        JWT-authenticated REST API, and a responsive React dashboard with real-time WebRTC playback.
                     </p>
-                    <div style="display: flex; flex-wrap: wrap; gap: 6px; margin-bottom: 15px;">
-                        <span style="background: #e8f5e9; color: #2c5f2d; padding: 3px 10px; border-radius: 12px; font-size: 0.8em;">MediaMTX</span>
-                        <span style="background: #e8f5e9; color: #2c5f2d; padding: 3px 10px; border-radius: 12px; font-size: 0.8em;">WebRTC</span>
-                        <span style="background: #e8f5e9; color: #2c5f2d; padding: 3px 10px; border-radius: 12px; font-size: 0.8em;">React</span>
-                        <span style="background: #e8f5e9; color: #2c5f2d; padding: 3px 10px; border-radius: 12px; font-size: 0.8em;">Fastify</span>
-                        <span style="background: #e8f5e9; color: #2c5f2d; padding: 3px 10px; border-radius: 12px; font-size: 0.8em;">ONVIF</span>
-                        <span style="background: #e8f5e9; color: #2c5f2d; padding: 3px 10px; border-radius: 12px; font-size: 0.8em;">Docker</span>
-                        <span style="background: #e8f5e9; color: #2c5f2d; padding: 3px 10px; border-radius: 12px; font-size: 0.8em;">FFmpeg</span>
+                    <div class="tag-list">
+                        <span class="tech-tag">MediaMTX</span>
+                        <span class="tech-tag">WebRTC</span>
+                        <span class="tech-tag">React</span>
+                        <span class="tech-tag">Fastify</span>
+                        <span class="tech-tag">ONVIF</span>
+                        <span class="tech-tag">Docker</span>
+                        <span class="tech-tag">FFmpeg</span>
                     </div>
                     <div class="links">
-                        <span class="btn" style="background: linear-gradient(135deg, #e94560 0%, #c81d40 100%);">💻 View on GitHub</span>
+                        <span class="btn btn-red">View on GitHub</span>
+                    </div>
+                </div>
+            </a>
+
+            <!-- VigIA -->
+            <a href="https://github.com/ciromacedo/vigIA" target="_blank" class="card-link">
+                <div class="card opensource" style="border-top-color: #b34700;">
+                    <span class="badge" style="background: #b34700; color: white;">Open Source</span>
+                    <h3>VigIA — Wildfire Spread Simulation Platform</h3>
+                    <p class="meta">2025/2026 &middot; Environmental Monitoring &amp; AI &middot; IFG</p>
+                    <p class="description">
+                        Web platform for wildfire spread simulation and visualization in the Brazilian Cerrado biome,
+                        developed at IFG. The simulation engine is based on the Rothermel Surface Fire Spread Model
+                        (SimFire/MITRE Fireline), adapted for Brazilian geographic coordinates with Cerrado-specific
+                        fuel models (FBFM). Features configurable simulation parameters (ignition point, wind model,
+                        topography, fuel type), asynchronous processing via message queue, georeferenced interactive
+                        map with animated playback, and an IoT monitoring panel for cameras and environmental sensors.
+                    </p>
+                    <div class="tag-list">
+                        <span class="tech-tag">FastAPI</span>
+                        <span class="tech-tag">React 18</span>
+                        <span class="tech-tag">PostgreSQL</span>
+                        <span class="tech-tag">RabbitMQ</span>
+                        <span class="tech-tag">Docker</span>
+                        <span class="tech-tag">Python</span>
+                        <span class="tech-tag">SimFire</span>
+                        <span class="tech-tag">Rothermel Model</span>
+                        <span class="tech-tag">Leaflet</span>
+                        <span class="tech-tag">Ansible</span>
+                    </div>
+                    <div class="links">
+                        <span class="btn" style="background: #b34700;">View on GitHub</span>
                     </div>
                 </div>
             </a>
 
         </div>
-    </div>
+    </section>
 
-    <div class="presentations-section">
-        <h2>Presentations & Tutorials</h2>
-        <div class="presentations-grid">
-            
-            <!-- NetSoft 2020 Tutorial -->
-            <div class="presentation-card">
-                <span class="badge tutorial">TUTORIAL - IEEE</span>
+    <!-- PRESENTATIONS & TUTORIALS -->
+    <section class="cards-section" id="presentations">
+        <div class="cards-section-header">
+            <h2>Presentations &amp; Tutorials</h2>
+            <span class="section-label">Talks, Tutorials &amp; Lectures</span>
+        </div>
+        <div class="cards-grid">
+
+            <div class="card research">
+                <span class="badge badge-indigo">Tutorial — IEEE</span>
                 <h3>A Softwarized Perspective of 5G Networks</h3>
-                <p class="meta">June 2020 | IEEE NetSoft 2020 Conference</p>
+                <p class="meta">June 2020 &middot; IEEE NetSoft 2020 Conference</p>
                 <p class="description">
-                    Comprehensive tutorial exploring softwarization in 5G systems (RAN and core components) 
-                    following 3GPP Release 15 standards. Covers virtualized/disaggregated RAN, Service-Based 
-                    Architecture (SBA), and includes hands-on experiments with detailed manuals and software 
-                    for replication.
+                    Comprehensive tutorial on softwarization in 5G systems — RAN and core components —
+                    following 3GPP Release 15 standards. Covers virtualized and disaggregated RAN,
+                    Service-Based Architecture (SBA), and includes hands-on experiments with detailed
+                    replication materials.
                 </p>
                 <div class="links">
-                    <a href="https://github.com/LABORA-INF-UFG/NetSoft2020-Tutorial4" class="btn" target="_blank">📚 View Tutorial</a>
-                    <a href="https://ieeetv.ieee.org/tutorial-4-a-softwarized-perspective-of-5g-networks-netsoft-2020-conference" class="btn" target="_blank" style="background: linear-gradient(135deg, #1976d2 0%, #1565c0 100%);">🎥 Watch Video</a>
+                    <a href="https://github.com/LABORA-INF-UFG/NetSoft2020-Tutorial4" class="btn btn-primary" target="_blank">View Tutorial</a>
+                    <a href="https://ieeetv.ieee.org/tutorial-4-a-softwarized-perspective-of-5g-networks-netsoft-2020-conference" class="btn btn-gold" target="_blank">Watch Recording</a>
                 </div>
             </div>
 
-            <!-- Presentation 1 - Agro + AI -->
-            <div class="presentation-card">
-                <span class="badge">PRESENTATION - PT-BR</span>
+            <div class="card research">
+                <span class="badge badge-teal">Presentation — PT-BR</span>
                 <h3>Digital Technologies and AI in Sustainable Agribusiness</h3>
-                <p class="meta">January 2026 | Agricultural Sustainability & Certification</p>
+                <p class="meta">January 2026 &middot; Agricultural Sustainability &amp; Certification</p>
                 <p class="description">
-                    Scientific research, practical applications, and data culture in sustainable agriculture. 
-                    Systematic review of AI applications in agricultural functions with sustainability objectives. 
+                    Scientific research, practical applications, and data culture in sustainable agriculture.
+                    Systematic review of AI applications in agricultural functions with sustainability objectives.
                     Covers precision agriculture, IoT sensors, and data-driven decision making.
                 </p>
                 <div class="links">
-                    <a href="./presentations/agro-ai-2026.html" class="btn">📊 View Slides</a>
+                    <a href="./presentations/agro-ai-2026.html" class="btn btn-teal">View Slides</a>
                 </div>
             </div>
 
-            <!-- Placeholder for future presentations -->
-            <div class="presentation-card coming-soon">
-                <span class="badge">COMING SOON</span>
+            <div class="card coming-soon">
+                <span class="badge badge-gray">Forthcoming</span>
                 <h3>AI/ML in 5G/6G Networks</h3>
-                <p class="meta">Future | Network Intelligence</p>
+                <p class="meta">In preparation &middot; Network Intelligence</p>
                 <p class="description">
-                    Advanced topics on Artificial Intelligence and Machine Learning applications in 
-                    next-generation wireless networks, including RAN Intelligent Controllers (RIC) and 
-                    network automation.
+                    Advanced topics on Artificial Intelligence and Machine Learning applications in
+                    next-generation wireless networks, including RAN Intelligent Controllers (RIC)
+                    and network automation frameworks.
                 </p>
             </div>
 
-            <div class="presentation-card coming-soon">
-                <span class="badge">COMING SOON</span>
+            <div class="card coming-soon">
+                <span class="badge badge-gray">Forthcoming</span>
                 <h3>Modern Software Engineering Practices</h3>
-                <p class="meta">Future | DevOps & Cloud</p>
+                <p class="meta">In preparation &middot; DevOps &amp; Cloud</p>
                 <p class="description">
-                    Best practices in modern software development, including DevOps, CI/CD pipelines, 
-                    microservices architecture, containerization with Docker/Kubernetes, and cloud-native development.
+                    Best practices in modern software development: DevOps, CI/CD pipelines,
+                    microservices architecture, containerization with Docker and Kubernetes,
+                    and cloud-native development.
                 </p>
             </div>
 
-            <div class="presentation-card coming-soon">
-                <span class="badge">COMING SOON</span>
+            <div class="card coming-soon">
+                <span class="badge badge-gray">Forthcoming</span>
                 <h3>IoT and Smart Systems</h3>
-                <p class="meta">Future | Internet of Things</p>
+                <p class="meta">In preparation &middot; Internet of Things</p>
                 <p class="description">
-                    Design and implementation of IoT systems, software-defined gateways, fog computing, 
+                    Design and implementation of IoT systems, software-defined gateways, fog computing,
                     and smart applications for industry and precision agriculture.
                 </p>
             </div>
 
         </div>
-    </div>
+    </section>
 
+    <!-- TEACHING -->
+    <section class="cards-section" id="teaching">
+        <div class="cards-section-header">
+            <h2>Teaching</h2>
+            <span class="section-label">Aulas &amp; Disciplinas — IFG</span>
+        </div>
+        <div class="cards-grid">
+
+            <a href="./aulas/agronomia/und_1.html" target="_blank" class="card-link">
+                <div class="card teaching">
+                    <span class="badge badge-gold">Lecture Slides — PT-BR</span>
+                    <h3>Informática Aplicada à Agronomia</h3>
+                    <p class="meta">IFG, Campus Cidade de Goiás &middot; Agronomia &middot; 2025/2026</p>
+                    <p class="description">
+                        Lecture slides for the Applied Computing in Agronomy course.
+                        Unit 1 introduces computational thinking, the history of computing,
+                        and foundational digital tools relevant to precision agriculture and
+                        agro-environmental data management.
+                    </p>
+                    <div class="links">
+                        <span class="btn btn-green">Unit 1 — Foundations</span>
+                    </div>
+                </div>
+            </a>
+
+            <a href="./disciplinas/terceiro_audioevideo.html" target="_blank" class="card-link">
+                <div class="card teaching">
+                    <span class="badge badge-gold">Course Roadmap — PT-BR</span>
+                    <h3>Desenvolvimento de Games</h3>
+                    <p class="meta">IFG, Campus Cidade de Goiás &middot; Ensino Médio &middot; 2025/2026</p>
+                    <p class="description">
+                        10-session course roadmap for introductory game development using HTML, CSS,
+                        and JavaScript. Students design and publish a fully functional Snake game
+                        to GitHub Pages, building practical skills in version control and web development.
+                    </p>
+                    <div class="links">
+                        <span class="btn btn-purple">View Roadmap</span>
+                    </div>
+                </div>
+            </a>
+
+        </div>
+    </section>
+
+    <!-- FOOTER -->
     <footer>
-        <div class="container">
+        <div class="page-container">
             <p><strong>Dr. Ciro J. A. Macedo</strong></p>
             <p>Federal Institute of Education, Science, and Technology of Goiás (IFG)</p>
-            <p>Campus Cidade de Goiás - Goiás, Brazil</p>
-            <p style="margin-top: 15px;">
-                <a href="mailto:ciro.macedo@ifg.edu.br">ciro.macedo@ifg.edu.br</a> | 
-                <a href="https://scholar.google.com.br/citations?user=GMxi-B8AAAAJ" target="_blank">Google Scholar</a> | 
+            <p>Campus Cidade de Goiás — Goiás, Brazil</p>
+            <p style="margin-top: 16px;">
+                <a href="mailto:ciro.macedo@ifg.edu.br">ciro.macedo@ifg.edu.br</a>
+                &nbsp;&middot;&nbsp;
+                <a href="https://scholar.google.com.br/citations?user=GMxi-B8AAAAJ" target="_blank">Google Scholar</a>
+                &nbsp;&middot;&nbsp;
                 <a href="http://lattes.cnpq.br/7461921402514789" target="_blank">Lattes CNPq</a>
             </p>
-            <p style="margin-top: 20px; font-size: 0.9em; opacity: 0.8;">
-                © 2026 Ciro J. A. Macedo. All presentations and tutorials are available for educational purposes.
+            <p class="footer-copy">
+                &copy; 2026 Ciro J. A. Macedo. All presentations and course materials are made available for educational purposes.
             </p>
         </div>
     </footer>
+
 </body>
 </html>
