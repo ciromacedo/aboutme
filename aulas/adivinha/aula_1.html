@@ -1,0 +1,1945 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Aula 1 — GitHub e Repositório · Projeto de Games</title>
+<link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Sans:wght@300;400;500;600&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg-dark:    #0d1117;
+    --bg-card:    #161b22;
+    --bg-mid:     #21262d;
+    --border:     #30363d;
+    --blue:       #58a6ff;
+    --blue-dark:  #1f6feb;
+    --green:      #3fb950;
+    --green-dim:  #238636;
+    --orange:     #e3b341;
+    --orange-dim: #9e6a03;
+    --purple:     #bc8cff;
+    --red:        #f85149;
+    --cream:      #e6edf3;
+    --cream-dim:  #c9d1d9;
+    --muted:      #8b949e;
+    --text-dark:  #24292f;
+    --text-mid:   #57606a;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    font-family: 'DM Sans', sans-serif;
+    background: var(--bg-dark);
+    color: var(--cream);
+    height: 100vh;
+    overflow: hidden;
+    cursor: default;
+  }
+
+  /* SLIDE CONTAINER */
+  .presentation {
+    width: 100vw;
+    height: 100vh;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .slide {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    flex-direction: column;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.6s ease, transform 0.6s ease;
+    transform: translateX(60px);
+  }
+
+  .slide.active {
+    opacity: 1;
+    pointer-events: all;
+    transform: translateX(0);
+  }
+
+  .slide.exit {
+    opacity: 0;
+    transform: translateX(-60px);
+    transition: opacity 0.4s ease, transform 0.4s ease;
+  }
+
+  /* BACKGROUND ELEMENTS */
+  .bg-pattern {
+    position: absolute;
+    inset: 0;
+    background-image:
+      radial-gradient(circle at 80% 20%, rgba(88,166,255,0.07) 0%, transparent 50%),
+      radial-gradient(circle at 10% 80%, rgba(63,185,80,0.05) 0%, transparent 40%);
+    pointer-events: none;
+  }
+
+  /* ============ COVER SLIDE ============ */
+  .slide-cover {
+    background: linear-gradient(135deg, var(--bg-dark) 0%, #090d13 60%, #0d1b35 100%);
+    justify-content: center;
+    align-items: flex-start;
+    padding: 0;
+  }
+
+  .cover-left {
+    position: absolute;
+    left: 0; top: 0; bottom: 0;
+    width: 58%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    padding: 80px 70px;
+    z-index: 2;
+  }
+
+  .cover-eyebrow {
+    font-family: 'Space Mono', monospace;
+    font-size: 11px;
+    letter-spacing: 0.3em;
+    text-transform: uppercase;
+    color: var(--green);
+    margin-bottom: 28px;
+    opacity: 0;
+    animation: fadeUp 0.8s 0.3s forwards;
+  }
+
+  .cover-title {
+    font-family: 'DM Serif Display', serif;
+    font-size: clamp(36px, 5vw, 60px);
+    line-height: 1.1;
+    color: var(--cream);
+    margin-bottom: 20px;
+    opacity: 0;
+    animation: fadeUp 0.8s 0.5s forwards;
+  }
+
+  .cover-title span { color: var(--blue); font-style: italic; }
+
+  .cover-subtitle {
+    font-size: 16px;
+    font-weight: 300;
+    color: var(--muted);
+    line-height: 1.7;
+    margin-bottom: 50px;
+    max-width: 440px;
+    opacity: 0;
+    animation: fadeUp 0.8s 0.7s forwards;
+  }
+
+  .cover-unit-tag {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    background: rgba(63,185,80,0.1);
+    border: 1px solid rgba(63,185,80,0.25);
+    border-radius: 40px;
+    padding: 10px 20px;
+    font-size: 13px;
+    color: var(--green);
+    font-weight: 500;
+    opacity: 0;
+    animation: fadeUp 0.8s 0.9s forwards;
+  }
+
+  .cover-unit-tag::before {
+    content: '';
+    width: 8px; height: 8px;
+    background: var(--green);
+    border-radius: 50%;
+    animation: pulse 2s infinite;
+  }
+
+  .cover-right {
+    position: absolute;
+    right: 0; top: 0; bottom: 0;
+    width: 42%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 1;
+    overflow: hidden;
+  }
+
+  .cover-visual {
+    position: relative;
+    width: 360px;
+    height: 360px;
+  }
+
+  .ring {
+    position: absolute;
+    border-radius: 50%;
+    border: 1px solid rgba(88,166,255,0.2);
+    animation: rotate 20s linear infinite;
+  }
+
+  .ring-1 { inset: 0; animation-duration: 25s; }
+  .ring-2 { inset: 30px; animation-duration: 18s; animation-direction: reverse; border-color: rgba(63,185,80,0.15); }
+  .ring-3 { inset: 70px; animation-duration: 30s; border-color: rgba(88,166,255,0.08); }
+
+  .ring-dot {
+    position: absolute;
+    width: 8px; height: 8px;
+    background: var(--blue);
+    border-radius: 50%;
+    top: 50%; right: -4px;
+    margin-top: -4px;
+    box-shadow: 0 0 12px var(--blue);
+  }
+
+  .ring-dot-green {
+    background: var(--green);
+    box-shadow: 0 0 12px var(--green);
+    right: auto; left: -4px;
+  }
+
+  .ring-icon {
+    position: absolute;
+    inset: 110px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 72px;
+    filter: drop-shadow(0 0 30px rgba(88,166,255,0.3));
+  }
+
+  .cover-footer {
+    position: absolute;
+    bottom: 0; left: 0; right: 0;
+    background: rgba(0,0,0,0.35);
+    backdrop-filter: blur(10px);
+    border-top: 1px solid rgba(88,166,255,0.1);
+    padding: 18px 70px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    z-index: 10;
+    opacity: 0;
+    animation: fadeUp 0.8s 1.1s forwards;
+  }
+
+  .footer-author { display: flex; align-items: center; gap: 14px; }
+
+  .author-avatar {
+    width: 38px; height: 38px;
+    background: linear-gradient(135deg, var(--blue-dark), var(--blue));
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 700;
+    font-size: 14px;
+    color: white;
+  }
+
+  .author-info { font-size: 13px; }
+  .author-name { font-weight: 600; color: var(--cream); }
+  .author-email {
+    font-family: 'Space Mono', monospace;
+    font-size: 10px;
+    color: var(--orange);
+    margin-top: 2px;
+  }
+
+  .footer-duration {
+    font-family: 'Space Mono', monospace;
+    font-size: 11px;
+    color: var(--muted);
+    letter-spacing: 0.1em;
+  }
+
+  /* ============ CONTENT SLIDES ============ */
+  .slide-content { background: #f6f8fa; color: var(--text-dark); }
+
+  .slide-header {
+    background: var(--bg-dark);
+    padding: 24px 60px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-shrink: 0;
+    border-bottom: 1px solid var(--border);
+  }
+
+  .slide-number {
+    font-family: 'Space Mono', monospace;
+    font-size: 11px;
+    color: var(--blue);
+    letter-spacing: 0.2em;
+  }
+
+  .slide-title-bar {
+    font-family: 'DM Serif Display', serif;
+    font-size: clamp(20px, 2.8vw, 30px);
+    color: var(--cream);
+    flex: 1;
+    text-align: center;
+  }
+
+  .slide-category {
+    font-size: 11px;
+    color: var(--muted);
+    font-weight: 500;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    min-width: 80px;
+    text-align: right;
+  }
+
+  .slide-body {
+    flex: 1;
+    padding: 44px 60px;
+    display: flex;
+    gap: 50px;
+    overflow: hidden;
+  }
+
+  .content-main { flex: 1; }
+
+  /* Bullets */
+  .bullet-list { list-style: none; display: flex; flex-direction: column; gap: 14px; }
+
+  .bullet-item {
+    display: flex;
+    align-items: flex-start;
+    gap: 16px;
+    opacity: 0;
+    transform: translateX(-20px);
+    animation: slideIn 0.5s forwards;
+  }
+
+  .bullet-icon {
+    width: 30px; height: 30px;
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 13px;
+    flex-shrink: 0;
+    margin-top: 2px;
+  }
+
+  .bullet-text {
+    font-size: 16px;
+    line-height: 1.5;
+    color: var(--text-dark);
+    font-weight: 600;
+  }
+
+  .bullet-detail {
+    font-size: 13px;
+    color: var(--text-mid);
+    margin-top: 4px;
+    line-height: 1.55;
+    font-weight: 300;
+  }
+
+  /* Concept box */
+  .concept-box {
+    background: var(--bg-card);
+    border-radius: 12px;
+    padding: 20px 24px;
+    margin-top: 20px;
+    border-left: 4px solid var(--orange);
+    border: 1px solid var(--border);
+    border-left: 4px solid var(--orange);
+  }
+
+  .concept-label {
+    font-family: 'Space Mono', monospace;
+    font-size: 9px;
+    text-transform: uppercase;
+    letter-spacing: 0.3em;
+    color: var(--orange);
+    margin-bottom: 8px;
+  }
+
+  .concept-text {
+    font-size: 14px;
+    color: var(--cream-dim);
+    line-height: 1.65;
+    font-weight: 300;
+  }
+
+  /* Highlight box */
+  .highlight-box {
+    background: linear-gradient(135deg, #1f6feb, #388bfd);
+    border-radius: 14px;
+    padding: 22px 26px;
+    margin-bottom: 20px;
+  }
+
+  .highlight-text {
+    font-family: 'DM Serif Display', serif;
+    font-size: 19px;
+    color: white;
+    line-height: 1.5;
+  }
+
+  /* Green highlight */
+  .highlight-green {
+    background: linear-gradient(135deg, #1a4731, #2d6a4f);
+    border: 1px solid var(--green-dim);
+  }
+
+  .highlight-green .highlight-text { color: #d3f9d8; }
+
+  /* Side panel */
+  .side-panel {
+    width: 270px;
+    flex-shrink: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+  }
+
+  .panel-card {
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 18px;
+    color: var(--cream);
+  }
+
+  .panel-title {
+    font-family: 'Space Mono', monospace;
+    font-size: 10px;
+    text-transform: uppercase;
+    letter-spacing: 0.2em;
+    color: var(--blue);
+    margin-bottom: 12px;
+  }
+
+  .panel-item {
+    font-size: 13px;
+    padding: 5px 0;
+    border-bottom: 1px solid rgba(48,54,61,0.8);
+    color: var(--cream-dim);
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  .panel-item:last-child { border-bottom: none; }
+
+  .panel-dot {
+    width: 6px; height: 6px;
+    background: var(--green);
+    border-radius: 50%;
+    flex-shrink: 0;
+  }
+
+  .panel-dot.blue { background: var(--blue); }
+  .panel-dot.orange { background: var(--orange); }
+
+  /* Question box */
+  .question-box {
+    background: rgba(88,166,255,0.08);
+    border: 1px solid rgba(88,166,255,0.25);
+    border-radius: 12px;
+    padding: 18px 22px;
+    margin-top: 18px;
+  }
+
+  .question-icon { font-size: 22px; margin-bottom: 8px; }
+
+  .question-text {
+    font-family: 'DM Serif Display', serif;
+    font-size: 15px;
+    color: var(--text-dark);
+    font-style: italic;
+    line-height: 1.6;
+  }
+
+  /* Timeline (commit history) */
+  .commit-timeline { display: flex; flex-direction: column; gap: 0; }
+
+  .commit-item {
+    display: flex;
+    align-items: flex-start;
+    gap: 16px;
+    padding: 10px 0;
+    opacity: 0;
+    animation: slideIn 0.5s forwards;
+    position: relative;
+  }
+
+  .commit-item:not(:last-child)::after {
+    content: '';
+    position: absolute;
+    left: 14px;
+    top: 34px;
+    bottom: -10px;
+    width: 2px;
+    background: var(--border);
+  }
+
+  .commit-dot-outer {
+    width: 30px; height: 30px;
+    border-radius: 50%;
+    background: var(--bg-card);
+    border: 2px solid var(--blue);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    z-index: 1;
+  }
+
+  .commit-dot-inner {
+    width: 10px; height: 10px;
+    border-radius: 50%;
+    background: var(--blue);
+  }
+
+  .commit-content { flex: 1; padding-top: 4px; }
+
+  .commit-hash {
+    font-family: 'Space Mono', monospace;
+    font-size: 10px;
+    color: var(--muted);
+    margin-bottom: 2px;
+  }
+
+  .commit-msg {
+    font-size: 14px;
+    font-weight: 600;
+    color: var(--text-dark);
+    margin-bottom: 2px;
+  }
+
+  .commit-detail {
+    font-size: 12px;
+    color: var(--text-mid);
+    line-height: 1.4;
+  }
+
+  /* Step cards */
+  .steps { display: flex; flex-direction: column; gap: 10px; }
+
+  .step-card {
+    display: flex;
+    align-items: flex-start;
+    gap: 14px;
+    background: white;
+    border: 1px solid #e1e4e8;
+    border-radius: 10px;
+    padding: 12px 16px;
+    opacity: 0;
+    animation: slideIn 0.5s forwards;
+  }
+
+  .step-num {
+    width: 26px; height: 26px;
+    border-radius: 50%;
+    background: var(--blue-dark);
+    color: white;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 12px;
+    font-weight: 700;
+    flex-shrink: 0;
+    font-family: 'Space Mono', monospace;
+  }
+
+  .step-text { font-size: 14px; font-weight: 600; color: var(--text-dark); line-height: 1.3; }
+  .step-detail { font-size: 12px; color: var(--text-mid); margin-top: 3px; line-height: 1.4; }
+
+  .step-code {
+    font-family: 'Space Mono', monospace;
+    font-size: 12px;
+    background: var(--bg-card);
+    color: var(--blue);
+    padding: 2px 8px;
+    border-radius: 4px;
+    border: 1px solid var(--border);
+  }
+
+  /* Warning box */
+  .warn-box {
+    background: rgba(227,179,65,0.1);
+    border: 1px solid rgba(227,179,65,0.3);
+    border-radius: 10px;
+    padding: 10px 14px;
+    font-size: 13px;
+    color: #7d4e00;
+    margin-top: 12px;
+    display: flex;
+    gap: 8px;
+    align-items: flex-start;
+    line-height: 1.5;
+  }
+
+  /* Comparison row */
+  .compare-row {
+    display: grid;
+    grid-template-columns: 1fr auto 1fr;
+    gap: 12px;
+    align-items: center;
+    margin-top: 14px;
+  }
+
+  .compare-card {
+    border-radius: 10px;
+    padding: 16px;
+    text-align: center;
+  }
+
+  .compare-card.bad {
+    background: rgba(248,81,73,0.08);
+    border: 1px solid rgba(248,81,73,0.2);
+  }
+
+  .compare-card.good {
+    background: rgba(63,185,80,0.1);
+    border: 1px solid rgba(63,185,80,0.25);
+  }
+
+  .compare-label {
+    font-family: 'Space Mono', monospace;
+    font-size: 9px;
+    text-transform: uppercase;
+    letter-spacing: 0.2em;
+    margin-bottom: 8px;
+  }
+
+  .compare-label.bad { color: var(--red); }
+  .compare-label.good { color: var(--green); }
+
+  .compare-value {
+    font-family: 'Space Mono', monospace;
+    font-size: 18px;
+    color: var(--text-dark);
+    font-weight: 700;
+  }
+
+  .compare-desc { font-size: 11px; color: var(--text-mid); margin-top: 4px; line-height: 1.4; }
+
+  /* Feature pills */
+  .feature-row {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    margin-top: 16px;
+  }
+
+  .feature-pill {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    border-radius: 20px;
+    padding: 7px 14px;
+    font-size: 13px;
+    color: var(--cream-dim);
+  }
+
+  .feature-pill .dot {
+    width: 8px; height: 8px;
+    border-radius: 50%;
+    flex-shrink: 0;
+  }
+
+  /* Summary grid */
+  .summary-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 14px;
+    margin-bottom: 20px;
+  }
+
+  .summary-card {
+    background: white;
+    border: 1px solid #e1e4e8;
+    border-radius: 12px;
+    padding: 18px 20px;
+    display: flex;
+    align-items: flex-start;
+    gap: 14px;
+  }
+
+  .summary-icon { font-size: 28px; flex-shrink: 0; }
+  .summary-title { font-weight: 700; font-size: 14px; color: var(--text-dark); margin-bottom: 4px; }
+  .summary-desc { font-size: 12px; color: var(--text-mid); line-height: 1.5; }
+
+  /* Code block */
+  .code-block {
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 16px 20px;
+    font-family: 'Space Mono', monospace;
+    font-size: 14px;
+    color: var(--cream);
+    margin-top: 14px;
+    line-height: 1.8;
+  }
+
+  .code-block .kw { color: var(--blue); }
+  .code-block .tag { color: var(--red); }
+  .code-block .str { color: var(--green); }
+  .code-block .cmt { color: var(--muted); }
+
+  /* Content slide footer */
+  .slide-footer {
+    background: var(--bg-dark);
+    padding: 11px 60px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-top: 1px solid var(--border);
+    flex-shrink: 0;
+  }
+
+  .footer-logo {
+    font-family: 'DM Serif Display', serif;
+    font-size: 13px;
+    color: var(--blue);
+  }
+
+  .footer-contact {
+    font-family: 'Space Mono', monospace;
+    font-size: 10px;
+    color: var(--muted);
+  }
+
+  /* NAVIGATION */
+  .nav {
+    position: fixed;
+    bottom: 32px;
+    left: 50%;
+    transform: translateX(-50%);
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    z-index: 1000;
+    background: rgba(13,17,23,0.9);
+    backdrop-filter: blur(20px);
+    border: 1px solid var(--border);
+    border-radius: 50px;
+    padding: 10px 20px;
+  }
+
+  .nav-btn {
+    background: transparent;
+    border: none;
+    color: var(--cream);
+    cursor: pointer;
+    padding: 7px 15px;
+    border-radius: 30px;
+    font-size: 13px;
+    font-family: 'DM Sans', sans-serif;
+    font-weight: 500;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    transition: background 0.2s, color 0.2s;
+  }
+
+  .nav-btn:hover:not(:disabled) { background: rgba(88,166,255,0.15); color: var(--blue); }
+  .nav-btn:disabled { opacity: 0.3; cursor: not-allowed; }
+
+  .nav-counter {
+    font-family: 'Space Mono', monospace;
+    font-size: 12px;
+    color: var(--orange);
+    min-width: 55px;
+    text-align: center;
+  }
+
+  .nav-dots { display: flex; gap: 5px; align-items: center; }
+
+  .nav-dot {
+    width: 6px; height: 6px;
+    border-radius: 50%;
+    background: rgba(230,237,243,0.2);
+    cursor: pointer;
+    transition: all 0.2s;
+  }
+
+  .nav-dot.active { background: var(--blue); width: 20px; border-radius: 3px; }
+  .nav-dot:hover:not(.active) { background: rgba(230,237,243,0.5); }
+
+  /* ANIMATIONS */
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(20px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+
+  @keyframes slideIn {
+    to { opacity: 1; transform: translateX(0); }
+  }
+
+  @keyframes rotate { to { transform: rotate(360deg); } }
+
+  @keyframes pulse {
+    0%, 100% { opacity: 1; transform: scale(1); }
+    50% { opacity: 0.5; transform: scale(0.8); }
+  }
+
+  .slide.active .bullet-item:nth-child(1)  { animation-delay: 0.08s; }
+  .slide.active .bullet-item:nth-child(2)  { animation-delay: 0.18s; }
+  .slide.active .bullet-item:nth-child(3)  { animation-delay: 0.28s; }
+  .slide.active .bullet-item:nth-child(4)  { animation-delay: 0.38s; }
+  .slide.active .bullet-item:nth-child(5)  { animation-delay: 0.48s; }
+  .slide.active .bullet-item:nth-child(6)  { animation-delay: 0.58s; }
+
+  .slide.active .commit-item:nth-child(1)  { animation-delay: 0.1s; }
+  .slide.active .commit-item:nth-child(2)  { animation-delay: 0.25s; }
+  .slide.active .commit-item:nth-child(3)  { animation-delay: 0.4s; }
+  .slide.active .commit-item:nth-child(4)  { animation-delay: 0.55s; }
+  .slide.active .commit-item:nth-child(5)  { animation-delay: 0.7s; }
+
+  .slide.active .step-card:nth-child(1) { animation-delay: 0.08s; }
+  .slide.active .step-card:nth-child(2) { animation-delay: 0.18s; }
+  .slide.active .step-card:nth-child(3) { animation-delay: 0.28s; }
+  .slide.active .step-card:nth-child(4) { animation-delay: 0.38s; }
+  .slide.active .step-card:nth-child(5) { animation-delay: 0.48s; }
+  .slide.active .step-card:nth-child(6) { animation-delay: 0.58s; }
+  .slide.active .step-card:nth-child(7) { animation-delay: 0.68s; }
+
+  /* Keyboard hint */
+  .kbd-hint {
+    position: fixed;
+    top: 18px;
+    right: 22px;
+    font-family: 'Space Mono', monospace;
+    font-size: 10px;
+    color: rgba(139,148,158,0.35);
+    letter-spacing: 0.1em;
+    z-index: 100;
+  }
+</style>
+</head>
+<body>
+
+<div class="presentation" id="presentation">
+
+  <!-- =========================================================
+       SLIDE 0 — CAPA
+  ========================================================== -->
+  <div class="slide slide-cover active" data-slide="0">
+    <div class="bg-pattern"></div>
+    <div class="cover-left">
+      <div class="cover-eyebrow">IFG · Projeto de Games · Aula 1</div>
+      <h1 class="cover-title">GitHub &amp;<br><span>Repositórios</span></h1>
+      <p class="cover-subtitle">Da criação da conta ao primeiro commit — construindo sua identidade digital como desenvolvedor e preparando o ambiente para construir nosso jogo.</p>
+      <div class="cover-unit-tag">Ferramentas do Programador Moderno</div>
+    </div>
+    <div class="cover-right">
+      <div class="cover-visual">
+        <div class="ring ring-1"><div class="ring-dot"></div></div>
+        <div class="ring ring-2"><div class="ring-dot ring-dot-green"></div></div>
+        <div class="ring ring-3"></div>
+        <div class="ring-icon">🐙</div>
+      </div>
+    </div>
+    <div class="cover-footer">
+      <div class="footer-author">
+        <div class="author-avatar">CM</div>
+        <div class="author-info">
+          <div class="author-name">Prof. Ciro Macedo</div>
+          <div class="author-email">ciro.macedo@ifg.edu.br</div>
+        </div>
+      </div>
+      <div class="footer-duration">⏱ 90 min · 16 slides</div>
+      <a href="../../index.html#teaching" style="font-family:'Space Mono',monospace;font-size:10px;color:rgba(139,148,158,0.5);text-decoration:none;letter-spacing:0.1em;" onmouseover="this.style.color='var(--blue)'" onmouseout="this.style.color='rgba(139,148,158,0.5)'">&#8592; Portfólio</a>
+    </div>
+  </div>
+
+  <!-- =========================================================
+       SLIDE 1 — AGENDA
+  ========================================================== -->
+  <div class="slide slide-content" data-slide="1">
+    <div class="slide-header">
+      <div class="slide-number">01 / 16</div>
+      <div class="slide-title-bar">O que faremos hoje</div>
+      <div class="slide-category">Agenda</div>
+    </div>
+    <div class="slide-body">
+      <div class="content-main">
+        <ul class="bullet-list">
+          <li class="bullet-item">
+            <div class="bullet-icon">🐙</div>
+            <div>
+              <div class="bullet-text">O que é o GitHub — e por que todo programador usa</div>
+              <div class="bullet-detail">Portfólio, histórico de versões e colaboração: os três superpoderes do GitHub.</div>
+            </div>
+          </li>
+          <li class="bullet-item">
+            <div class="bullet-icon">🎯</div>
+            <div>
+              <div class="bullet-text">Criar sua conta gratuita em github.com</div>
+              <div class="bullet-detail">Escolha de username, configuração de e-mail e verificação da conta.</div>
+            </div>
+          </li>
+          <li class="bullet-item">
+            <div class="bullet-icon">🖼️</div>
+            <div>
+              <div class="bullet-text">Configurar nome e foto de perfil</div>
+              <div class="bullet-detail">Seu perfil GitHub é sua identidade profissional na área de tecnologia.</div>
+            </div>
+          </li>
+          <li class="bullet-item">
+            <div class="bullet-icon">📁</div>
+            <div>
+              <div class="bullet-text">Entender o que é um repositório</div>
+              <div class="bullet-detail">A "pasta inteligente" onde seu projeto vive na nuvem — com superpoderes.</div>
+            </div>
+          </li>
+          <li class="bullet-item">
+            <div class="bullet-icon">✅</div>
+            <div>
+              <div class="bullet-text">Criar o repositório do jogo e fazer o primeiro commit</div>
+              <div class="bullet-detail">Seu primeiro passo real como desenvolvedor: código vivo, na nuvem, com histórico.</div>
+            </div>
+          </li>
+        </ul>
+        <div class="concept-box">
+          <div class="concept-label">🎯 Resultado desta aula</div>
+          <div class="concept-text">Ao final, você terá um repositório público chamado <span style="color:var(--blue);font-family:'Space Mono',monospace;font-size:13px;">jogo-adivinhacao</span> com seu primeiro arquivo HTML publicado na nuvem — e saberá exatamente o que isso significa.</div>
+        </div>
+      </div>
+    </div>
+    <div class="slide-footer">
+      <div class="footer-logo">Projeto de Games — Aula 1</div>
+      <div class="footer-contact">Prof. Ciro Macedo · ciro.macedo@ifg.edu.br</div>
+    </div>
+  </div>
+
+  <!-- =========================================================
+       SLIDE 2 — MOTIVAÇÃO
+  ========================================================== -->
+  <div class="slide slide-content" data-slide="2">
+    <div class="slide-header">
+      <div class="slide-number">02 / 16</div>
+      <div class="slide-title-bar">Um Problema Familiar</div>
+      <div class="slide-category">Motivação</div>
+    </div>
+    <div class="slide-body">
+      <div class="content-main">
+        <div class="highlight-box">
+          <div class="highlight-text">Você está construindo um jogo. Em algum momento, ele para de funcionar. O que você faz?</div>
+        </div>
+        <ul class="bullet-list">
+          <li class="bullet-item">
+            <div class="bullet-icon">😰</div>
+            <div>
+              <div class="bullet-text">"Funcionava ontem, mas agora quebrou…"</div>
+              <div class="bullet-detail">Você não sabe o que mudou. Apaga e reescreve tudo? Fica horas procurando o erro no código?</div>
+            </div>
+          </li>
+          <li class="bullet-item">
+            <div class="bullet-icon">😬</div>
+            <div>
+              <div class="bullet-text">"Perdi meu pen drive com o projeto"</div>
+              <div class="bullet-detail">Arquivo salvo só na máquina — um problema de hardware e o trabalho vai embora.</div>
+            </div>
+          </li>
+          <li class="bullet-item">
+            <div class="bullet-icon">😤</div>
+            <div>
+              <div class="bullet-text">"Meu colega e eu editamos o mesmo arquivo e agora é um caos"</div>
+              <div class="bullet-detail">Trabalho em grupo sem controle vira bagunça: quem mudou o quê? Qual versão é a certa?</div>
+            </div>
+          </li>
+          <li class="bullet-item">
+            <div class="bullet-icon">🤷</div>
+            <div>
+              <div class="bullet-text">"Como mostro meu jogo para alguém de outra cidade?"</div>
+              <div class="bullet-detail">Mandar o arquivo por WhatsApp? A outra pessoa precisa ter os mesmos programas instalados?</div>
+            </div>
+          </li>
+        </ul>
+        <div class="question-box">
+          <div class="question-icon">💡</div>
+          <div class="question-text">Todos esses problemas — segurança, histórico, colaboração e publicação — têm a mesma solução. Seu nome é GitHub.</div>
+        </div>
+      </div>
+    </div>
+    <div class="slide-footer">
+      <div class="footer-logo">Projeto de Games — Aula 1</div>
+      <div class="footer-contact">Prof. Ciro Macedo · ciro.macedo@ifg.edu.br</div>
+    </div>
+  </div>
+
+  <!-- =========================================================
+       SLIDE 3 — O QUE É O GITHUB
+  ========================================================== -->
+  <div class="slide slide-content" data-slide="3">
+    <div class="slide-header">
+      <div class="slide-number">03 / 16</div>
+      <div class="slide-title-bar">O que é o GitHub?</div>
+      <div class="slide-category">Conceito</div>
+    </div>
+    <div class="slide-body">
+      <div class="content-main">
+        <ul class="bullet-list">
+          <li class="bullet-item">
+            <div class="bullet-icon">🌐</div>
+            <div>
+              <div class="bullet-text">Plataforma online para guardar e gerenciar código</div>
+              <div class="bullet-detail">Seus arquivos ficam na nuvem, acessíveis de qualquer computador, a qualquer hora — igual ao Google Drive, mas feito especialmente para código.</div>
+            </div>
+          </li>
+          <li class="bullet-item">
+            <div class="bullet-icon">📸</div>
+            <div>
+              <div class="bullet-text">Cada mudança fica registrada para sempre</div>
+              <div class="bullet-detail">O GitHub guarda um histórico completo de tudo que você escreveu. Você pode ver o estado do seu projeto em qualquer momento do passado.</div>
+            </div>
+          </li>
+          <li class="bullet-item">
+            <div class="bullet-icon">👥</div>
+            <div>
+              <div class="bullet-text">Feito para equipes trabalharem juntas</div>
+              <div class="bullet-detail">Várias pessoas podem trabalhar no mesmo projeto ao mesmo tempo, sem conflitos — o GitHub organiza tudo automaticamente.</div>
+            </div>
+          </li>
+          <li class="bullet-item">
+            <div class="bullet-icon">🆓</div>
+            <div>
+              <div class="bullet-text">Gratuito para projetos públicos</div>
+              <div class="bullet-detail">Você pode criar repositórios públicos ilimitados de graça. O VS Code, o Linux, o React — todos vivem no GitHub, publicamente acessíveis.</div>
+            </div>
+          </li>
+        </ul>
+        <div class="concept-box">
+          <div class="concept-label">📌 Analogia</div>
+          <div class="concept-text">Pense no GitHub como o <strong style="color:var(--blue)">Google Drive do programador</strong> — mas com superpoderes: ele lembra de <em>tudo</em> que você mudou, quando mudou, e quem mudou.</div>
+        </div>
+      </div>
+      <div class="side-panel">
+        <div class="panel-card">
+          <div class="panel-title">📊 Em Números</div>
+          <div class="panel-item"><div class="panel-dot blue"></div>+100 milhões de desenvolvedores</div>
+          <div class="panel-item"><div class="panel-dot blue"></div>+372 milhões de repositórios</div>
+          <div class="panel-item"><div class="panel-dot blue"></div>Fundado em 2008</div>
+          <div class="panel-item"><div class="panel-dot blue"></div>Comprado pela Microsoft (2018)</div>
+          <div class="panel-item"><div class="panel-dot blue"></div>Base do Git (criado por Linus Torvalds)</div>
+        </div>
+        <div class="panel-card" style="background:rgba(63,185,80,0.1);border-color:rgba(63,185,80,0.25);">
+          <div class="panel-title" style="color:var(--green);">🎮 Projetos famosos no GitHub</div>
+          <div class="panel-item" style="color:var(--cream-dim);"><div class="panel-dot"></div>VS Code (Microsoft)</div>
+          <div class="panel-item" style="color:var(--cream-dim);"><div class="panel-dot"></div>Linux (kernel)</div>
+          <div class="panel-item" style="color:var(--cream-dim);"><div class="panel-dot"></div>React (Meta)</div>
+          <div class="panel-item" style="color:var(--cream-dim);"><div class="panel-dot"></div>Godot Engine</div>
+        </div>
+      </div>
+    </div>
+    <div class="slide-footer">
+      <div class="footer-logo">Projeto de Games — Aula 1</div>
+      <div class="footer-contact">Prof. Ciro Macedo · ciro.macedo@ifg.edu.br</div>
+    </div>
+  </div>
+
+  <!-- =========================================================
+       SLIDE 4 — PORTFÓLIO DE CÓDIGO
+  ========================================================== -->
+  <div class="slide slide-content" data-slide="4">
+    <div class="slide-header">
+      <div class="slide-number">04 / 16</div>
+      <div class="slide-title-bar">GitHub = Portfólio de Código</div>
+      <div class="slide-category">Superpoder 1</div>
+    </div>
+    <div class="slide-body">
+      <div class="content-main">
+        <div class="highlight-box" style="background:linear-gradient(135deg,#1f6feb,#0d419d);margin-bottom:18px;">
+          <div class="highlight-text">O GitHub é o currículo do programador.<br>Empregadores verificam seu perfil antes da entrevista.</div>
+        </div>
+        <ul class="bullet-list">
+          <li class="bullet-item">
+            <div class="bullet-icon">👀</div>
+            <div>
+              <div class="bullet-text">Tudo que você cria fica visível publicamente</div>
+              <div class="bullet-detail">Cada projeto, cada arquivo de código que você escreve pode ser visto por qualquer pessoa no mundo — incluindo quem vai te contratar no futuro.</div>
+            </div>
+          </li>
+          <li class="bullet-item">
+            <div class="bullet-icon">📈</div>
+            <div>
+              <div class="bullet-text">O gráfico de contribuições mostra sua dedicação</div>
+              <div class="bullet-detail">O GitHub exibe um calendário colorido com todos os dias que você fez commits. Quanto mais verde, mais ativo você é. Isso impressiona recrutadores.</div>
+            </div>
+          </li>
+          <li class="bullet-item">
+            <div class="bullet-icon">🔗</div>
+            <div>
+              <div class="bullet-text">Cada projeto tem um link único compartilhável</div>
+              <div class="bullet-detail">Ao invés de mandar um arquivo comprimido por e-mail, você manda o link: <span style="font-family:'Space Mono',monospace;font-size:12px;color:var(--blue);">github.com/seu-usuario/jogo-adivinhacao</span></div>
+            </div>
+          </li>
+          <li class="bullet-item">
+            <div class="bullet-icon">🌐</div>
+            <div>
+              <div class="bullet-text">Projetos públicos podem ser publicados como sites</div>
+              <div class="bullet-detail">Com o GitHub Pages, seu jogo vira um site acessível por qualquer pessoa — de graça, em menos de 5 minutos.</div>
+            </div>
+          </li>
+        </ul>
+      </div>
+      <div class="side-panel">
+        <div class="panel-card">
+          <div class="panel-title">💼 Na prática</div>
+          <div style="font-size:13px;color:var(--cream-dim);line-height:1.7;">
+            Um designer tem portfólio de imagens.<br><br>
+            Um fotógrafo tem portfólio de fotos.<br><br>
+            Um programador tem <strong style="color:var(--blue)">portfólio de código no GitHub</strong>.
+          </div>
+        </div>
+        <div class="panel-card" style="background:rgba(227,179,65,0.1);border-color:rgba(227,179,65,0.3);">
+          <div class="panel-title" style="color:var(--orange);">⭐ Neste curso</div>
+          <div style="font-size:13px;color:var(--text-mid);line-height:1.65;">Ao final, você terá um jogo real publicado com link público — pronto para mostrar a qualquer pessoa.</div>
+        </div>
+      </div>
+    </div>
+    <div class="slide-footer">
+      <div class="footer-logo">Projeto de Games — Aula 1</div>
+      <div class="footer-contact">Prof. Ciro Macedo · ciro.macedo@ifg.edu.br</div>
+    </div>
+  </div>
+
+  <!-- =========================================================
+       SLIDE 5 — HISTÓRICO DE VERSÕES
+  ========================================================== -->
+  <div class="slide slide-content" data-slide="5">
+    <div class="slide-header">
+      <div class="slide-number">05 / 16</div>
+      <div class="slide-title-bar">GitHub = Histórico de Versões</div>
+      <div class="slide-category">Superpoder 2</div>
+    </div>
+    <div class="slide-body">
+      <div class="content-main">
+        <ul class="bullet-list">
+          <li class="bullet-item">
+            <div class="bullet-icon">📸</div>
+            <div>
+              <div class="bullet-text">Cada "save" vira um <strong>commit</strong></div>
+              <div class="bullet-detail">Um commit é uma foto do estado do seu código naquele momento. Você escreve uma mensagem descrevendo o que mudou — e esse registro fica para sempre.</div>
+            </div>
+          </li>
+          <li class="bullet-item">
+            <div class="bullet-icon">⏪</div>
+            <div>
+              <div class="bullet-text">Você pode voltar a qualquer commit anterior</div>
+              <div class="bullet-detail">Quebrou tudo? Sem pânico. O GitHub permite voltar ao estado exato em que o projeto estava ontem, na semana passada, ou em qualquer momento.</div>
+            </div>
+          </li>
+          <li class="bullet-item">
+            <div class="bullet-icon">🎮</div>
+            <div>
+              <div class="bullet-text">É como um checkpoint num videogame</div>
+              <div class="bullet-detail">Você não precisa ter medo de experimentar — se não funcionar, volta ao checkpoint. O GitHub é seu seguro de código.</div>
+            </div>
+          </li>
+        </ul>
+        <div style="margin-top:18px;">
+          <div style="font-family:'Space Mono',monospace;font-size:10px;text-transform:uppercase;letter-spacing:0.2em;color:var(--muted);margin-bottom:12px;">Exemplo: histórico do nosso jogo</div>
+          <div class="commit-timeline">
+            <div class="commit-item">
+              <div class="commit-dot-outer" style="border-color:var(--green);"><div class="commit-dot-inner" style="background:var(--green);"></div></div>
+              <div class="commit-content">
+                <div class="commit-hash">a1b2c3d · agora</div>
+                <div class="commit-msg">Adicionando mensagem de fim de jogo</div>
+                <div class="commit-detail">+12 linhas · JS finalizado</div>
+              </div>
+            </div>
+            <div class="commit-item">
+              <div class="commit-dot-outer"><div class="commit-dot-inner"></div></div>
+              <div class="commit-content">
+                <div class="commit-hash">e4f5a6b · Aula 8</div>
+                <div class="commit-msg">Implementando contador de tentativas</div>
+                <div class="commit-detail">+18 linhas · lógica de derrota</div>
+              </div>
+            </div>
+            <div class="commit-item">
+              <div class="commit-dot-outer"><div class="commit-dot-inner"></div></div>
+              <div class="commit-content">
+                <div class="commit-hash">c7d8e9f · Aula 5</div>
+                <div class="commit-msg">Adicionando CSS: cores e layout</div>
+                <div class="commit-detail">+35 linhas · página ficou bonita!</div>
+              </div>
+            </div>
+            <div class="commit-item">
+              <div class="commit-dot-outer" style="border-color:var(--orange);"><div class="commit-dot-inner" style="background:var(--orange);"></div></div>
+              <div class="commit-content">
+                <div class="commit-hash">0a1b2c3 · Aula 1</div>
+                <div class="commit-msg">Criando meu primeiro arquivo</div>
+                <div class="commit-detail">+1 linha · começo de tudo!</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="side-panel">
+        <div class="panel-card">
+          <div class="panel-title">🔄 Ctrl + Z turbinado</div>
+          <div style="font-size:13px;color:var(--cream-dim);line-height:1.7;">O Ctrl+Z desfaz a última ação. O commit permite voltar a qualquer momento específico do passado — com uma mensagem explicando o que era aquele estado.</div>
+        </div>
+        <div class="panel-card" style="background:rgba(63,185,80,0.1);border-color:rgba(63,185,80,0.25);">
+          <div class="panel-title" style="color:var(--green);">💡 Boa prática</div>
+          <div style="font-size:13px;color:var(--text-mid);line-height:1.65;">Commit frequente = mais pontos de segurança. Faça um commit sempre que algo novo funcionar.</div>
+        </div>
+      </div>
+    </div>
+    <div class="slide-footer">
+      <div class="footer-logo">Projeto de Games — Aula 1</div>
+      <div class="footer-contact">Prof. Ciro Macedo · ciro.macedo@ifg.edu.br</div>
+    </div>
+  </div>
+
+  <!-- =========================================================
+       SLIDE 6 — COLABORAÇÃO
+  ========================================================== -->
+  <div class="slide slide-content" data-slide="6">
+    <div class="slide-header">
+      <div class="slide-number">06 / 16</div>
+      <div class="slide-title-bar">GitHub = Colaboração</div>
+      <div class="slide-category">Superpoder 3</div>
+    </div>
+    <div class="slide-body">
+      <div class="content-main">
+        <ul class="bullet-list">
+          <li class="bullet-item">
+            <div class="bullet-icon">🤝</div>
+            <div>
+              <div class="bullet-text">Várias pessoas no mesmo projeto, ao mesmo tempo</div>
+              <div class="bullet-detail">Você trabalha na tela de jogo, seu colega trabalha na lógica de pontos — o GitHub organiza as mudanças de cada um sem conflito.</div>
+            </div>
+          </li>
+          <li class="bullet-item">
+            <div class="bullet-icon">🔀</div>
+            <div>
+              <div class="bullet-text">Pull Request: proposta de mudança revisável</div>
+              <div class="bullet-detail">Antes de uma mudança entrar no projeto, ela pode ser revisada e aprovada por outros membros da equipe — igual a revisar uma redação antes de entregar.</div>
+            </div>
+          </li>
+          <li class="bullet-item">
+            <div class="bullet-icon">🌎</div>
+            <div>
+              <div class="bullet-text">Projetos de código aberto (open source)</div>
+              <div class="bullet-detail">Qualquer pessoa no mundo pode ver o código, sugerir melhorias ou corrigir erros. O VS Code tem mais de 1.500 colaboradores espalhados pelo mundo.</div>
+            </div>
+          </li>
+          <li class="bullet-item">
+            <div class="bullet-icon">🔗</div>
+            <div>
+              <div class="bullet-text">Compartilhar = enviar um link</div>
+              <div class="bullet-detail">Sem e-mail com arquivo, sem pen drive, sem "qual versão é a mais recente?". O link do repositório é sempre a versão atual e definitiva.</div>
+            </div>
+          </li>
+        </ul>
+        <div class="feature-row">
+          <div class="feature-pill"><div class="dot" style="background:var(--blue)"></div>GitHub para 2 pessoas</div>
+          <div class="feature-pill"><div class="dot" style="background:var(--green)"></div>GitHub para 10 pessoas</div>
+          <div class="feature-pill"><div class="dot" style="background:var(--orange)"></div>GitHub para 10.000 pessoas</div>
+        </div>
+      </div>
+      <div class="side-panel">
+        <div class="panel-card">
+          <div class="panel-title">🎮 Nesta disciplina</div>
+          <div style="font-size:13px;color:var(--cream-dim);line-height:1.7;">Você vai compartilhar o link do seu jogo com a turma e com o professor — em vez de mandar o arquivo, você manda um link que qualquer pessoa pode abrir diretamente no navegador.</div>
+        </div>
+        <div class="panel-card" style="background:rgba(248,81,73,0.08);border-color:rgba(248,81,73,0.2);">
+          <div class="panel-title" style="color:var(--red);">⚠️ Sem GitHub</div>
+          <div style="font-size:13px;color:var(--text-mid);line-height:1.65;">Sem controle de versão, trabalhar em equipe significa enviar arquivos por mensagem e torcer para ninguém sobrescrever o trabalho de ninguém.</div>
+        </div>
+      </div>
+    </div>
+    <div class="slide-footer">
+      <div class="footer-logo">Projeto de Games — Aula 1</div>
+      <div class="footer-contact">Prof. Ciro Macedo · ciro.macedo@ifg.edu.br</div>
+    </div>
+  </div>
+
+  <!-- =========================================================
+       SLIDE 7 — CRIANDO SUA CONTA (PARTE 1)
+  ========================================================== -->
+  <div class="slide slide-content" data-slide="7">
+    <div class="slide-header">
+      <div class="slide-number">07 / 16</div>
+      <div class="slide-title-bar">Criando sua Conta no GitHub</div>
+      <div class="slide-category">Prática</div>
+    </div>
+    <div class="slide-body">
+      <div class="content-main">
+        <div class="highlight-box" style="background:linear-gradient(135deg,#1a4731,#2d6a4f);border:1px solid var(--green-dim);margin-bottom:18px;">
+          <div class="highlight-text" style="color:#d3f9d8;">🌐 Acesse: <span style="font-family:'Space Mono',monospace;font-size:16px;border-bottom:1px dashed rgba(211,249,216,0.5);">github.com</span> → botão "Sign up"</div>
+        </div>
+        <div class="steps">
+          <div class="step-card">
+            <div class="step-num">1</div>
+            <div>
+              <div class="step-text">Digite seu e-mail</div>
+              <div class="step-detail">Use um e-mail que você acessa com frequência — será necessário para verificar a conta.</div>
+            </div>
+          </div>
+          <div class="step-card">
+            <div class="step-num">2</div>
+            <div>
+              <div class="step-text">Crie uma senha segura</div>
+              <div class="step-detail">Mínimo 8 caracteres com letras, números e símbolos. Anote em algum lugar seguro!</div>
+            </div>
+          </div>
+          <div class="step-card">
+            <div class="step-num">3</div>
+            <div>
+              <div class="step-text">Escolha seu <span class="step-code">username</span> — com cuidado!</div>
+              <div class="step-detail">Este nome aparecerá no link de todos os seus projetos: <span style="font-family:'Space Mono',monospace;font-size:11px;color:var(--blue);">github.com/seu-username</span></div>
+            </div>
+          </div>
+          <div class="step-card">
+            <div class="step-num">4</div>
+            <div>
+              <div class="step-text">Complete o captcha e clique em "Create account"</div>
+              <div class="step-detail">O GitHub pode pedir para resolver um desafio visual para confirmar que você é humano.</div>
+            </div>
+          </div>
+          <div class="step-card">
+            <div class="step-num">5</div>
+            <div>
+              <div class="step-text">Verifique seu e-mail</div>
+              <div class="step-detail">Abra o e-mail recebido e clique no link ou copie o código de verificação.</div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="side-panel">
+        <div class="panel-card" style="background:rgba(227,179,65,0.1);border-color:rgba(227,179,65,0.3);">
+          <div class="panel-title" style="color:var(--orange);">⚠️ Username: escolha bem</div>
+          <div style="font-size:13px;color:var(--text-mid);line-height:1.7;">O username é <strong>permanente e público</strong>. Ele aparece no link de todos os seus projetos. Pense como um e-mail profissional, não como um apelido de jogo.</div>
+        </div>
+        <div class="panel-card">
+          <div class="panel-title">✅ Bons exemplos</div>
+          <div class="panel-item"><div class="panel-dot"></div><span style="font-family:'Space Mono',monospace;font-size:12px;color:var(--green);">joao-silva</span></div>
+          <div class="panel-item"><div class="panel-dot"></div><span style="font-family:'Space Mono',monospace;font-size:12px;color:var(--green);">mariadev</span></div>
+          <div class="panel-item"><div class="panel-dot orange"></div><span style="font-family:'Space Mono',monospace;font-size:12px;color:var(--red);">x_darkgamer99_x</span></div>
+          <div class="panel-item"><div class="panel-dot orange"></div><span style="font-family:'Space Mono',monospace;font-size:12px;color:var(--red);">asd123qwerty</span></div>
+        </div>
+      </div>
+    </div>
+    <div class="slide-footer">
+      <div class="footer-logo">Projeto de Games — Aula 1</div>
+      <div class="footer-contact">Prof. Ciro Macedo · ciro.macedo@ifg.edu.br</div>
+    </div>
+  </div>
+
+  <!-- =========================================================
+       SLIDE 8 — CONFIGURANDO O PERFIL
+  ========================================================== -->
+  <div class="slide slide-content" data-slide="8">
+    <div class="slide-header">
+      <div class="slide-number">08 / 16</div>
+      <div class="slide-title-bar">Configurando seu Perfil</div>
+      <div class="slide-category">Identidade</div>
+    </div>
+    <div class="slide-body">
+      <div class="content-main">
+        <div class="highlight-box" style="background:linear-gradient(135deg,#1f6feb,#0d419d);margin-bottom:16px;">
+          <div class="highlight-text">Clique na foto de perfil (canto superior direito) → <span style="font-family:'Space Mono',monospace;font-size:14px;">Settings</span> → <span style="font-family:'Space Mono',monospace;font-size:14px;">Public profile</span></div>
+        </div>
+        <div class="steps">
+          <div class="step-card">
+            <div class="step-num">1</div>
+            <div>
+              <div class="step-text">Name — seu nome completo</div>
+              <div class="step-detail">Diferente do username. Este é o nome legível que aparece em destaque no seu perfil. Ex: "Maria Fernanda Oliveira".</div>
+            </div>
+          </div>
+          <div class="step-card">
+            <div class="step-num">2</div>
+            <div>
+              <div class="step-text">Bio — quem você é em uma frase</div>
+              <div class="step-detail">Ex: "Estudante de Projeto de Games · IFG Campus Cidade de Goiás". Seja profissional e direto.</div>
+            </div>
+          </div>
+          <div class="step-card">
+            <div class="step-num">3</div>
+            <div>
+              <div class="step-text">Foto de perfil — clique em "Upload a photo"</div>
+              <div class="step-detail">Use uma foto com rosto visível. Empregadores e recrutadores vão ver isso. Evite fotos de personagem ou imagens aleatórias.</div>
+            </div>
+          </div>
+          <div class="step-card">
+            <div class="step-num">4</div>
+            <div>
+              <div class="step-text">Location — cidade e estado</div>
+              <div class="step-detail">Ex: "Cidade de Goiás, GO". Ajuda na descoberta por empresas e oportunidades locais.</div>
+            </div>
+          </div>
+          <div class="step-card">
+            <div class="step-num">5</div>
+            <div>
+              <div class="step-text">Clique em "Save" e confira seu perfil</div>
+              <div class="step-detail">Acesse <span style="font-family:'Space Mono',monospace;font-size:12px;color:var(--blue);">github.com/seu-username</span> e veja como ele aparece para o mundo.</div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="side-panel">
+        <div class="panel-card">
+          <div class="panel-title">💼 Por que isso importa?</div>
+          <div style="font-size:13px;color:var(--cream-dim);line-height:1.7;">Seu perfil GitHub é como um LinkedIn da tecnologia. Quanto mais completo e profissional, melhor a impressão que você passa — desde o primeiro projeto.</div>
+        </div>
+        <div class="panel-card" style="background:rgba(63,185,80,0.1);border-color:rgba(63,185,80,0.25);">
+          <div class="panel-title" style="color:var(--green);">🎯 Missão desta aula</div>
+          <div style="font-size:13px;color:var(--text-mid);line-height:1.65;">Antes de continuar:<br>✅ Conta criada<br>✅ Nome real preenchido<br>✅ Bio escrita<br>✅ Foto carregada</div>
+        </div>
+      </div>
+    </div>
+    <div class="slide-footer">
+      <div class="footer-logo">Projeto de Games — Aula 1</div>
+      <div class="footer-contact">Prof. Ciro Macedo · ciro.macedo@ifg.edu.br</div>
+    </div>
+  </div>
+
+  <!-- =========================================================
+       SLIDE 9 — O QUE É UM REPOSITÓRIO
+  ========================================================== -->
+  <div class="slide slide-content" data-slide="9">
+    <div class="slide-header">
+      <div class="slide-number">09 / 16</div>
+      <div class="slide-title-bar">O que é um Repositório?</div>
+      <div class="slide-category">Conceito</div>
+    </div>
+    <div class="slide-body">
+      <div class="content-main">
+        <ul class="bullet-list">
+          <li class="bullet-item">
+            <div class="bullet-icon">📁</div>
+            <div>
+              <div class="bullet-text">É a "pasta" do seu projeto na nuvem</div>
+              <div class="bullet-detail">Um repositório contém todos os arquivos do projeto: HTML, CSS, JavaScript, imagens, documentação — tudo junto, organizado e versionado.</div>
+            </div>
+          </li>
+          <li class="bullet-item">
+            <div class="bullet-icon">🕰️</div>
+            <div>
+              <div class="bullet-text">Guarda o histórico completo de mudanças</div>
+              <div class="bullet-detail">Cada commit que você faz fica registrado no repositório. Você pode navegar pela linha do tempo do projeto e ver exatamente o que mudou em cada etapa.</div>
+            </div>
+          </li>
+          <li class="bullet-item">
+            <div class="bullet-icon">🔓</div>
+            <div>
+              <div class="bullet-text">Pode ser público ou privado</div>
+              <div class="bullet-detail">Público: qualquer pessoa pode ver (perfeito para portfólio e para publicar o jogo). Privado: apenas você (ou quem você convidar) pode acessar.</div>
+            </div>
+          </li>
+          <li class="bullet-item">
+            <div class="bullet-icon">📝</div>
+            <div>
+              <div class="bullet-text">Tem um README — a descrição do projeto</div>
+              <div class="bullet-detail">O arquivo README.md é a "capa" do repositório. É a primeira coisa que aparece quando alguém visita seu projeto — uma boa prática é sempre ter um.</div>
+            </div>
+          </li>
+        </ul>
+        <div class="compare-row">
+          <div class="compare-card bad">
+            <div class="compare-label bad">Pasta comum</div>
+            <div class="compare-value">📂</div>
+            <div class="compare-desc">Só guarda arquivos. Sem histórico. Sem link. Se o HD queimar, perdeu tudo.</div>
+          </div>
+          <div style="text-align:center;font-size:22px;color:var(--muted);">→</div>
+          <div class="compare-card good">
+            <div class="compare-label good">Repositório GitHub</div>
+            <div class="compare-value">🗂️</div>
+            <div class="compare-desc">Guarda arquivos + histórico + link público + publicação automática na web.</div>
+          </div>
+        </div>
+      </div>
+      <div class="side-panel">
+        <div class="panel-card">
+          <div class="panel-title">📌 Estrutura típica</div>
+          <div class="panel-item"><div class="panel-dot blue"></div>index.html — página principal</div>
+          <div class="panel-item"><div class="panel-dot blue"></div>style.css — estilos visuais</div>
+          <div class="panel-item"><div class="panel-dot blue"></div>script.js — lógica do jogo</div>
+          <div class="panel-item"><div class="panel-dot orange"></div>README.md — descrição</div>
+        </div>
+        <div class="panel-card" style="background:rgba(63,185,80,0.1);border-color:rgba(63,185,80,0.25);">
+          <div class="panel-title" style="color:var(--green);">🎯 Nosso repositório</div>
+          <div style="font-size:13px;color:var(--text-mid);line-height:1.6;">Nome: <span style="font-family:'Space Mono',monospace;font-size:12px;color:var(--blue);">jogo-adivinhacao</span><br>Visibilidade: Público<br>Usado para: portfólio + publicação</div>
+        </div>
+      </div>
+    </div>
+    <div class="slide-footer">
+      <div class="footer-logo">Projeto de Games — Aula 1</div>
+      <div class="footer-contact">Prof. Ciro Macedo · ciro.macedo@ifg.edu.br</div>
+    </div>
+  </div>
+
+  <!-- =========================================================
+       SLIDE 10 — CRIANDO O REPOSITÓRIO
+  ========================================================== -->
+  <div class="slide slide-content" data-slide="10">
+    <div class="slide-header">
+      <div class="slide-number">10 / 16</div>
+      <div class="slide-title-bar">Criando o Repositório do Jogo</div>
+      <div class="slide-category">Prática</div>
+    </div>
+    <div class="slide-body">
+      <div class="content-main">
+        <div class="steps">
+          <div class="step-card">
+            <div class="step-num">1</div>
+            <div>
+              <div class="step-text">Clique no "+" no canto superior direito → "New repository"</div>
+              <div class="step-detail">Ou acesse diretamente: <span class="step-code">github.com/new</span></div>
+            </div>
+          </div>
+          <div class="step-card">
+            <div class="step-num">2</div>
+            <div>
+              <div class="step-text">Repository name: <span class="step-code">jogo-adivinhacao</span></div>
+              <div class="step-detail">Use letras minúsculas e hífen. Sem espaços, sem acentos — o nome vira parte do link do seu site.</div>
+            </div>
+          </div>
+          <div class="step-card">
+            <div class="step-num">3</div>
+            <div>
+              <div class="step-text">Description: "Meu primeiro jogo em HTML, CSS e JavaScript"</div>
+              <div class="step-detail">Aparece no seu perfil abaixo do nome do repositório. Seja descritivo e profissional.</div>
+            </div>
+          </div>
+          <div class="step-card">
+            <div class="step-num">4</div>
+            <div>
+              <div class="step-text">Marque <span class="step-code">Public</span> (não Private)</div>
+              <div class="step-detail">Repositórios públicos são necessários para publicar com GitHub Pages gratuitamente.</div>
+            </div>
+          </div>
+          <div class="step-card">
+            <div class="step-num">5</div>
+            <div>
+              <div class="step-text">✅ Marque "Add a README file"</div>
+              <div class="step-detail">Isso cria automaticamente o arquivo README.md e já faz o primeiro commit por você.</div>
+            </div>
+          </div>
+          <div class="step-card">
+            <div class="step-num" style="background:var(--green-dim);">✓</div>
+            <div>
+              <div class="step-text">Clique em "Create repository"</div>
+              <div class="step-detail">Pronto! Seu repositório está criado em <span style="font-family:'Space Mono',monospace;font-size:11px;color:var(--blue);">github.com/seu-usuario/jogo-adivinhacao</span></div>
+            </div>
+          </div>
+        </div>
+        <div class="warn-box">
+          ⚠️ <strong>Regra de nomes:</strong> nunca use espaços ou acentos no nome do repositório. Use hífen (-) em vez de espaço. Ex: <span style="font-family:'Space Mono',monospace;">jogo-adivinhacao</span> ✅ &nbsp; <span style="font-family:'Space Mono',monospace;">Jogo de Adivinhação</span> ❌
+        </div>
+      </div>
+      <div class="side-panel">
+        <div class="panel-card">
+          <div class="panel-title">🔗 Seu link será</div>
+          <div style="font-family:'Space Mono',monospace;font-size:11px;color:var(--blue);line-height:1.8;word-break:break-all;">github.com/<span style="color:var(--orange);">seu-usuario</span>/jogo-adivinhacao</div>
+        </div>
+        <div class="panel-card" style="background:rgba(227,179,65,0.1);border-color:rgba(227,179,65,0.3);">
+          <div class="panel-title" style="color:var(--orange);">📌 Sobre o README</div>
+          <div style="font-size:13px;color:var(--text-mid);line-height:1.65;">O arquivo README.md usa a linguagem Markdown para formatar texto. É a "capa" do projeto — o que aparece quando alguém visita seu repositório.</div>
+        </div>
+      </div>
+    </div>
+    <div class="slide-footer">
+      <div class="footer-logo">Projeto de Games — Aula 1</div>
+      <div class="footer-contact">Prof. Ciro Macedo · ciro.macedo@ifg.edu.br</div>
+    </div>
+  </div>
+
+  <!-- =========================================================
+       SLIDE 11 — VS CODE NO NAVEGADOR
+  ========================================================== -->
+  <div class="slide slide-content" data-slide="11">
+    <div class="slide-header">
+      <div class="slide-number">11 / 16</div>
+      <div class="slide-title-bar">VS Code Direto no Navegador</div>
+      <div class="slide-category">Ferramentas</div>
+    </div>
+    <div class="slide-body">
+      <div class="content-main">
+        <div class="highlight-box" style="background:linear-gradient(135deg,#1f6feb,#0d419d);margin-bottom:18px;">
+          <div class="highlight-text">Com o repositório aberto no GitHub, pressione a tecla <span style="font-family:'Space Mono',monospace;background:rgba(255,255,255,0.15);padding:2px 10px;border-radius:6px;">.</span> (ponto) no teclado. O VS Code abre no navegador!</div>
+        </div>
+        <ul class="bullet-list">
+          <li class="bullet-item">
+            <div class="bullet-icon">🖥️</div>
+            <div>
+              <div class="bullet-text">VS Code é o editor de código mais usado no mundo</div>
+              <div class="bullet-detail">Criado pela Microsoft, é gratuito e open source. A maioria dos desenvolvedores profissionais o usa diariamente. Você vai usá-lo neste curso sem instalar nada.</div>
+            </div>
+          </li>
+          <li class="bullet-item">
+            <div class="bullet-icon">🌐</div>
+            <div>
+              <div class="bullet-text">O <span style="font-family:'Space Mono',monospace;font-size:14px;color:var(--blue);">github.dev</span> é o VS Code no navegador</div>
+              <div class="bullet-detail">Troque <span style="font-family:'Space Mono',monospace;font-size:12px;color:var(--muted);">github.com</span> por <span style="font-family:'Space Mono',monospace;font-size:12px;color:var(--blue);">github.dev</span> no endereço — o editor abre com seu repositório conectado.</div>
+            </div>
+          </li>
+          <li class="bullet-item">
+            <div class="bullet-icon">📂</div>
+            <div>
+              <div class="bullet-text">Barra lateral esquerda: seus arquivos</div>
+              <div class="bullet-detail">Explorer (ícone de pasta): crie, renomeie e organize arquivos. Source Control (ícone de ramificação): faça commits para o GitHub.</div>
+            </div>
+          </li>
+          <li class="bullet-item">
+            <div class="bullet-icon">⌨️</div>
+            <div>
+              <div class="bullet-text">Atalhos úteis</div>
+              <div class="bullet-detail"><span style="font-family:'Space Mono',monospace;font-size:12px;">Ctrl + S</span> → salvar arquivo &nbsp;·&nbsp; <span style="font-family:'Space Mono',monospace;font-size:12px;">Ctrl + Shift + E</span> → Explorer &nbsp;·&nbsp; <span style="font-family:'Space Mono',monospace;font-size:12px;">Ctrl + `</span> → terminal</div>
+            </div>
+          </li>
+        </ul>
+      </div>
+      <div class="side-panel">
+        <div class="panel-card">
+          <div class="panel-title">🔄 Dois caminhos</div>
+          <div class="panel-item"><div class="panel-dot"></div>Tecla <span style="font-family:'Space Mono',monospace;font-size:12px;">.</span> no repositório</div>
+          <div class="panel-item"><div class="panel-dot"></div>Mudar URL para <span style="font-family:'Space Mono',monospace;font-size:11px;color:var(--blue);">github.dev</span></div>
+          <div class="panel-item"><div class="panel-dot"></div>Ambos abrem o mesmo editor</div>
+        </div>
+        <div class="panel-card" style="background:rgba(63,185,80,0.1);border-color:rgba(63,185,80,0.25);">
+          <div class="panel-title" style="color:var(--green);">✅ Vantagem</div>
+          <div style="font-size:13px;color:var(--text-mid);line-height:1.65;">Zero instalação. Funciona em qualquer computador com navegador — inclusive os da escola. Seus arquivos são salvos direto no GitHub.</div>
+        </div>
+      </div>
+    </div>
+    <div class="slide-footer">
+      <div class="footer-logo">Projeto de Games — Aula 1</div>
+      <div class="footer-contact">Prof. Ciro Macedo · ciro.macedo@ifg.edu.br</div>
+    </div>
+  </div>
+
+  <!-- =========================================================
+       SLIDE 12 — PRIMEIRO ARQUIVO
+  ========================================================== -->
+  <div class="slide slide-content" data-slide="12">
+    <div class="slide-header">
+      <div class="slide-number">12 / 16</div>
+      <div class="slide-title-bar">Criando o Primeiro Arquivo</div>
+      <div class="slide-category">Prática</div>
+    </div>
+    <div class="slide-body">
+      <div class="content-main">
+        <div class="steps">
+          <div class="step-card">
+            <div class="step-num">1</div>
+            <div>
+              <div class="step-text">No Explorer (barra lateral), clique no ícone de "New File"</div>
+              <div class="step-detail">É o ícone de página com um "+" ao passar o mouse sobre o nome do repositório.</div>
+            </div>
+          </div>
+          <div class="step-card">
+            <div class="step-num">2</div>
+            <div>
+              <div class="step-text">Nomeie o arquivo: <span class="step-code">index.html</span></div>
+              <div class="step-detail">O arquivo <code>index.html</code> é sempre o ponto de entrada de um site. O servidor web o serve automaticamente quando alguém acessa o link.</div>
+            </div>
+          </div>
+          <div class="step-card">
+            <div class="step-num">3</div>
+            <div>
+              <div class="step-text">Digite o conteúdo abaixo</div>
+              <div class="step-detail">Apenas uma linha por enquanto — vamos expandir isso nas próximas aulas.</div>
+            </div>
+          </div>
+        </div>
+        <div class="code-block">
+<span class="tag">&lt;h1&gt;</span>Meu Jogo de Adivinhação<span class="tag">&lt;/h1&gt;</span>
+        </div>
+        <div class="steps" style="margin-top:12px;">
+          <div class="step-card">
+            <div class="step-num">4</div>
+            <div>
+              <div class="step-text">Salve o arquivo: <span class="step-code">Ctrl + S</span></div>
+              <div class="step-detail">Um ponto aparece na aba do arquivo indicando que há mudanças não salvas. Após salvar, o ponto some.</div>
+            </div>
+          </div>
+        </div>
+        <div class="warn-box" style="margin-top:12px;">
+          💡 <strong>Por que index.html?</strong> Quando alguém acessa seu site (<span style="font-family:'Space Mono',monospace;font-size:11px;">usuario.github.io/jogo-adivinhacao</span>), o servidor procura automaticamente por um arquivo chamado <span style="font-family:'Space Mono',monospace;font-size:11px;">index.html</span> para exibir.
+        </div>
+      </div>
+      <div class="side-panel">
+        <div class="panel-card">
+          <div class="panel-title">🏷️ O que é h1?</div>
+          <div style="font-size:13px;color:var(--cream-dim);line-height:1.7;">
+            <span style="font-family:'Space Mono',monospace;color:var(--red);">&lt;h1&gt;</span> é a tag HTML para o título principal de uma página — o maior e mais importante. Aprenderemos muito mais sobre HTML na próxima aula.
+          </div>
+        </div>
+        <div class="panel-card" style="background:rgba(63,185,80,0.1);border-color:rgba(63,185,80,0.25);">
+          <div class="panel-title" style="color:var(--green);">📌 Resultado</div>
+          <div style="font-size:13px;color:var(--text-mid);line-height:1.65;">Ao abrir o arquivo no navegador, você verá um texto grande e em negrito com "Meu Jogo de Adivinhação". É o seu primeiro HTML!</div>
+        </div>
+      </div>
+    </div>
+    <div class="slide-footer">
+      <div class="footer-logo">Projeto de Games — Aula 1</div>
+      <div class="footer-contact">Prof. Ciro Macedo · ciro.macedo@ifg.edu.br</div>
+    </div>
+  </div>
+
+  <!-- =========================================================
+       SLIDE 13 — FAZENDO O COMMIT
+  ========================================================== -->
+  <div class="slide slide-content" data-slide="13">
+    <div class="slide-header">
+      <div class="slide-number">13 / 16</div>
+      <div class="slide-title-bar">Fazendo o Primeiro Commit</div>
+      <div class="slide-category">Prática</div>
+    </div>
+    <div class="slide-body">
+      <div class="content-main">
+        <div class="highlight-box" style="margin-bottom:16px;">
+          <div class="highlight-text">Commit = salvar uma versão do trabalho. É o "checkpoint" do seu código.</div>
+        </div>
+        <div class="steps">
+          <div class="step-card">
+            <div class="step-num">1</div>
+            <div>
+              <div class="step-text">Clique no ícone de "Source Control" na barra lateral</div>
+              <div class="step-detail">É o ícone que parece uma ramificação (três bolinhas conectadas). Um número aparece indicando quantos arquivos foram modificados.</div>
+            </div>
+          </div>
+          <div class="step-card">
+            <div class="step-num">2</div>
+            <div>
+              <div class="step-text">Confira os arquivos na seção "Changes"</div>
+              <div class="step-detail">Você verá <span class="step-code">index.html</span> listado com um "U" (Untracked — arquivo novo que o Git ainda não conhece).</div>
+            </div>
+          </div>
+          <div class="step-card">
+            <div class="step-num">3</div>
+            <div>
+              <div class="step-text">Clique no "+" ao lado do arquivo para prepará-lo</div>
+              <div class="step-detail">Isso adiciona o arquivo à área de preparação (staging). Só arquivos preparados entram no commit.</div>
+            </div>
+          </div>
+          <div class="step-card">
+            <div class="step-num">4</div>
+            <div>
+              <div class="step-text">Escreva a mensagem do commit</div>
+              <div class="step-detail">No campo de texto, escreva: <span class="step-code">Criando meu primeiro arquivo HTML</span>. Seja descritivo — você vai agradecer no futuro!</div>
+            </div>
+          </div>
+          <div class="step-card">
+            <div class="step-num" style="background:var(--green-dim);">✓</div>
+            <div>
+              <div class="step-text">Clique em "Commit &amp; Push" ou pressione Ctrl + Enter</div>
+              <div class="step-detail">O arquivo sobe para o GitHub. Acesse <span style="font-family:'Space Mono',monospace;font-size:11px;color:var(--blue);">github.com/seu-usuario/jogo-adivinhacao</span> e veja seu arquivo lá!</div>
+            </div>
+          </div>
+        </div>
+        <div class="concept-box">
+          <div class="concept-label">📌 Regra de ouro dos commits</div>
+          <div class="concept-text">Mensagens de commit devem descrever <strong style="color:var(--blue)">o que foi feito</strong>, não o que vai ser feito. Ex: "Adicionando botão de adivinhar" ✅ — não: "vou adicionar o botão" ❌</div>
+        </div>
+      </div>
+      <div class="side-panel">
+        <div class="panel-card">
+          <div class="panel-title">🎮 Analogia perfeita</div>
+          <div style="font-size:13px;color:var(--cream-dim);line-height:1.7;">Em um videogame, você salva no checkpoint para não perder progresso. No GitHub, cada commit é um checkpoint — você pode sempre voltar aqui se algo der errado.</div>
+        </div>
+        <div class="panel-card" style="background:rgba(227,179,65,0.1);border-color:rgba(227,179,65,0.3);">
+          <div class="panel-title" style="color:var(--orange);">⚠️ Não esqueça</div>
+          <div style="font-size:13px;color:var(--text-mid);line-height:1.65;">Arquivo salvo (Ctrl+S) ≠ Commit. Você pode salvar o arquivo mil vezes localmente — só o commit envia para o GitHub.</div>
+        </div>
+      </div>
+    </div>
+    <div class="slide-footer">
+      <div class="footer-logo">Projeto de Games — Aula 1</div>
+      <div class="footer-contact">Prof. Ciro Macedo · ciro.macedo@ifg.edu.br</div>
+    </div>
+  </div>
+
+  <!-- =========================================================
+       SLIDE 14 — SÍNTESE
+  ========================================================== -->
+  <div class="slide slide-content" data-slide="14">
+    <div class="slide-header">
+      <div class="slide-number">14 / 16</div>
+      <div class="slide-title-bar">O que aprendemos hoje</div>
+      <div class="slide-category">Síntese</div>
+    </div>
+    <div class="slide-body">
+      <div class="content-main">
+        <div class="summary-grid">
+          <div class="summary-card">
+            <div class="summary-icon">🐙</div>
+            <div>
+              <div class="summary-title">GitHub</div>
+              <div class="summary-desc">Portfólio de código, histórico de versões e ferramenta de colaboração. O endereço onde seu código vive na nuvem.</div>
+            </div>
+          </div>
+          <div class="summary-card">
+            <div class="summary-icon">👤</div>
+            <div>
+              <div class="summary-title">Conta e Perfil</div>
+              <div class="summary-desc">Username profissional, nome real, bio e foto. Sua identidade no mundo do desenvolvimento de software.</div>
+            </div>
+          </div>
+          <div class="summary-card">
+            <div class="summary-icon">📁</div>
+            <div>
+              <div class="summary-title">Repositório</div>
+              <div class="summary-desc">Pasta do projeto na nuvem com histórico completo. Público ou privado, com link único e compartilhável.</div>
+            </div>
+          </div>
+          <div class="summary-card">
+            <div class="summary-icon">📸</div>
+            <div>
+              <div class="summary-title">Commit</div>
+              <div class="summary-desc">Checkpoint do código. Cada commit guarda uma versão com mensagem descritiva — você pode sempre voltar atrás.</div>
+            </div>
+          </div>
+        </div>
+        <div class="concept-box">
+          <div class="concept-label">✅ Entrega desta aula</div>
+          <div class="concept-text">Repositório <span style="font-family:'Space Mono',monospace;color:var(--blue);font-size:13px;">jogo-adivinhacao</span> criado e público, com um arquivo <span style="font-family:'Space Mono',monospace;color:var(--blue);font-size:13px;">index.html</span> contendo <span style="font-family:'Space Mono',monospace;color:var(--green);font-size:13px;">&lt;h1&gt;Meu Jogo de Adivinhação&lt;/h1&gt;</span> e pelo menos um commit com mensagem descritiva.</div>
+        </div>
+        <div style="margin-top:16px;padding:14px 18px;background:rgba(88,166,255,0.08);border:1px solid rgba(88,166,255,0.2);border-radius:10px;">
+          <div style="font-family:'Space Mono',monospace;font-size:10px;text-transform:uppercase;letter-spacing:0.2em;color:var(--blue);margin-bottom:8px;">📅 Próxima aula</div>
+          <div style="font-size:14px;color:var(--text-dark);font-weight:600;">Como a Internet Funciona + Ativando o GitHub Pages</div>
+          <div style="font-size:13px;color:var(--text-mid);margin-top:4px;">Clientes, servidores, HTTP e como o seu arquivo HTML se transforma em um site acessível por qualquer pessoa no mundo.</div>
+        </div>
+      </div>
+    </div>
+    <div class="slide-footer">
+      <div class="footer-logo">Projeto de Games — Aula 1</div>
+      <div class="footer-contact">Prof. Ciro Macedo · ciro.macedo@ifg.edu.br</div>
+    </div>
+  </div>
+
+  <!-- =========================================================
+       SLIDE 15 — ENCERRAMENTO
+  ========================================================== -->
+  <div class="slide slide-cover" data-slide="15" style="background:linear-gradient(135deg,#0d1117 0%,#090d13 50%,#0d1b35 100%);">
+    <div class="bg-pattern"></div>
+    <div class="cover-left">
+      <div class="cover-eyebrow">Aula 1 — Concluída</div>
+      <h1 class="cover-title">Parabéns!<br>Você é um <span>desenvolvedor</span></h1>
+      <p class="cover-subtitle">Você criou sua conta, configurou seu perfil, criou um repositório e fez seu primeiro commit. Isso é código real, na nuvem, com histórico. Isso é desenvolvimento de software.</p>
+      <div style="display:flex;flex-direction:column;gap:12px;opacity:0;animation:fadeUp 0.8s 0.9s forwards;">
+        <div style="display:flex;align-items:center;gap:12px;font-size:14px;color:var(--cream);">
+          <span style="font-size:18px;">✉️</span> ciro.macedo@ifg.edu.br
+        </div>
+        <div style="display:flex;align-items:center;gap:12px;font-size:14px;color:var(--muted);">
+          <span style="font-size:18px;">🏛️</span> IFG — Campus Cidade de Goiás
+        </div>
+        <div style="display:flex;align-items:center;gap:12px;font-size:14px;color:var(--muted);">
+          <span style="font-size:18px;">🐙</span> github.com/ciromacedo
+        </div>
+      </div>
+    </div>
+    <div class="cover-right">
+      <div class="cover-visual">
+        <div class="ring ring-1"><div class="ring-dot"></div></div>
+        <div class="ring ring-2"><div class="ring-dot ring-dot-green"></div></div>
+        <div class="ring ring-3"></div>
+        <div class="ring-icon">🎯</div>
+      </div>
+    </div>
+    <div class="cover-footer">
+      <div class="footer-author">
+        <div class="author-avatar">CM</div>
+        <div class="author-info">
+          <div class="author-name">Prof. Ciro Macedo</div>
+          <div class="author-email">ciro.macedo@ifg.edu.br</div>
+        </div>
+      </div>
+      <div class="footer-duration" style="font-family:'DM Serif Display',serif;font-size:13px;color:var(--blue);font-style:italic;">Projeto de Games — IFG</div>
+      <a href="../../disciplinas/adivinha.html" style="font-family:'Space Mono',monospace;font-size:10px;color:rgba(139,148,158,0.5);text-decoration:none;letter-spacing:0.1em;" onmouseover="this.style.color='var(--green)'" onmouseout="this.style.color='rgba(139,148,158,0.5)'">&#8592; Roadmap</a>
+    </div>
+  </div>
+
+</div><!-- /presentation -->
+
+<!-- NAVIGATION -->
+<div class="nav" id="nav">
+  <button class="nav-btn" id="prevBtn" onclick="navigate(-1)" disabled>← Anterior</button>
+  <div class="nav-dots" id="navDots"></div>
+  <div class="nav-counter" id="navCounter">1 / 16</div>
+  <button class="nav-btn" id="nextBtn" onclick="navigate(1)">Próximo →</button>
+</div>
+
+<div class="kbd-hint">← → navegar · ESC capa</div>
+
+<script>
+  const slides = document.querySelectorAll('.slide');
+  const total = slides.length;
+  let current = 0;
+  let isAnimating = false;
+
+  const dotsContainer = document.getElementById('navDots');
+  const counter = document.getElementById('navCounter');
+  const prevBtn = document.getElementById('prevBtn');
+  const nextBtn = document.getElementById('nextBtn');
+
+  const maxDots = Math.min(total, 16);
+  for (let i = 0; i < maxDots; i++) {
+    const dot = document.createElement('div');
+    dot.className = 'nav-dot' + (i === 0 ? ' active' : '');
+    dot.onclick = () => goTo(i);
+    dotsContainer.appendChild(dot);
+  }
+
+  function navigate(dir) { goTo(current + dir); }
+
+  function goTo(index) {
+    if (isAnimating || index < 0 || index >= total || index === current) return;
+    isAnimating = true;
+
+    slides[current].classList.add('exit');
+    slides[current].classList.remove('active');
+
+    setTimeout(() => {
+      slides[current].classList.remove('exit');
+      current = index;
+      slides[current].classList.add('active');
+
+      slides[current].querySelectorAll('.bullet-item, .commit-item, .step-card').forEach(el => {
+        el.style.animation = 'none';
+        el.offsetHeight;
+        el.style.animation = '';
+      });
+
+      updateNav();
+      isAnimating = false;
+    }, 400);
+  }
+
+  function updateNav() {
+    counter.textContent = `${current + 1} / ${total}`;
+    prevBtn.disabled = current === 0;
+    nextBtn.disabled = current === total - 1;
+
+    const dots = dotsContainer.querySelectorAll('.nav-dot');
+    dots.forEach((dot, i) => {
+      dot.classList.toggle('active', i === current || (i === maxDots - 1 && current >= maxDots - 1));
+    });
+  }
+
+  document.addEventListener('keydown', e => {
+    if (e.key === 'ArrowRight' || e.key === 'ArrowDown' || e.key === ' ') { e.preventDefault(); navigate(1); }
+    if (e.key === 'ArrowLeft'  || e.key === 'ArrowUp')                   { e.preventDefault(); navigate(-1); }
+    if (e.key === 'Escape') goTo(0);
+  });
+
+  let touchStartX = 0;
+  document.addEventListener('touchstart', e => { touchStartX = e.touches[0].clientX; }, { passive: true });
+  document.addEventListener('touchend', e => {
+    const diff = touchStartX - e.changedTouches[0].clientX;
+    if (Math.abs(diff) > 50) navigate(diff > 0 ? 1 : -1);
+  }, { passive: true });
+
+  updateNav();
+</script>
+</body>
+</html>
