@@ -1,0 +1,785 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Roadmap — Informática para Agronomia</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;900&family=Source+Code+Pro:wght@400;600&family=Lato:wght@300;400;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --verde-claro: #4caf6e;
+    --terra: #c4845a;
+    --amarelo: #e8c84a;
+    --laranja: #d4732a;
+    --azul: #5bb8e8;
+    --roxo: #b08adf;
+    --palha: #f5e9c8;
+    --page-bg: #111f14;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    background: var(--page-bg);
+    color: var(--palha);
+    font-family: 'Lato', sans-serif;
+  }
+
+  body::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    background:
+      radial-gradient(ellipse at 15% 10%, rgba(76,175,110,0.07) 0%, transparent 45%),
+      radial-gradient(ellipse at 85% 90%, rgba(139,94,60,0.06) 0%, transparent 45%);
+    pointer-events: none;
+    z-index: 0;
+  }
+
+  .page {
+    max-width: 860px;
+    margin: 0 auto;
+    padding: 0 2rem 6rem;
+    position: relative;
+    z-index: 1;
+  }
+
+  /* HEADER */
+  header {
+    padding: 4.5rem 0 3rem;
+    text-align: center;
+    border-bottom: 1px solid rgba(245,233,200,0.12);
+    margin-bottom: 2rem;
+  }
+
+  .eyebrow {
+    font-family: 'Source Code Pro', monospace;
+    font-size: 0.72rem;
+    letter-spacing: 0.28em;
+    text-transform: uppercase;
+    color: var(--verde-claro);
+    margin-bottom: 1.1rem;
+  }
+
+  header h1 {
+    font-family: 'Playfair Display', serif;
+    font-size: clamp(2rem, 5vw, 3.5rem);
+    font-weight: 900;
+    line-height: 1.1;
+    color: var(--palha);
+    margin-bottom: 0.6rem;
+  }
+
+  header h1 em { font-style: italic; color: var(--verde-claro); }
+
+  .header-sub {
+    font-size: 1rem;
+    color: rgba(245,233,200,0.55);
+    font-weight: 300;
+  }
+
+  .header-chips {
+    display: flex;
+    justify-content: center;
+    gap: 0.8rem;
+    flex-wrap: wrap;
+    margin-top: 2rem;
+  }
+
+  .chip {
+    font-family: 'Source Code Pro', monospace;
+    font-size: 0.72rem;
+    color: rgba(245,233,200,0.6);
+    border: 1px solid rgba(245,233,200,0.18);
+    border-radius: 2rem;
+    padding: 0.35rem 0.9rem;
+  }
+
+  /* LEGEND */
+  .legend {
+    display: flex;
+    gap: 1.2rem;
+    justify-content: center;
+    flex-wrap: wrap;
+    padding: 1.5rem 0 2rem;
+    border-bottom: 1px solid rgba(245,233,200,0.08);
+    margin-bottom: 3rem;
+  }
+
+  .legend-item {
+    display: flex;
+    align-items: center;
+    gap: 0.45rem;
+    font-size: 0.8rem;
+    color: rgba(245,233,200,0.6);
+  }
+
+  .legend-dot { width: 10px; height: 10px; border-radius: 50%; flex-shrink: 0; }
+
+  /* PHASE */
+  .phase { margin-bottom: 3.5rem; }
+
+  .phase-header {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    margin-bottom: 1.5rem;
+  }
+
+  .phase-badge {
+    font-family: 'Source Code Pro', monospace;
+    font-size: 0.68rem;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    padding: 0.3rem 0.9rem;
+    border-radius: 2rem;
+    font-weight: 600;
+    flex-shrink: 0;
+    white-space: nowrap;
+  }
+
+  .phase-meta { flex: 1; }
+
+  .phase-title {
+    font-family: 'Playfair Display', serif;
+    font-size: 1.45rem;
+    font-weight: 700;
+    color: var(--palha);
+    line-height: 1.2;
+  }
+
+  .phase-subtitle {
+    font-size: 0.8rem;
+    color: rgba(245,233,200,0.42);
+    margin-top: 0.2rem;
+  }
+
+  /* Phase accent colors */
+  .ph-terra   .phase-badge { background: rgba(196,132,90,0.18);  color: var(--terra); }
+  .ph-verde   .phase-badge { background: rgba(76,175,110,0.18);  color: var(--verde-claro); }
+  .ph-amarelo .phase-badge { background: rgba(232,200,74,0.18);  color: var(--amarelo); }
+  .ph-laranja .phase-badge { background: rgba(212,115,42,0.18);  color: var(--laranja); }
+  .ph-azul    .phase-badge { background: rgba(91,184,232,0.18);  color: var(--azul); }
+  .ph-roxo    .phase-badge { background: rgba(176,138,223,0.18); color: var(--roxo); }
+
+  .ph-terra   .accent { color: var(--terra); }
+  .ph-verde   .accent { color: var(--verde-claro); }
+  .ph-amarelo .accent { color: var(--amarelo); }
+  .ph-laranja .accent { color: var(--laranja); }
+  .ph-azul    .accent { color: var(--azul); }
+  .ph-roxo    .accent { color: var(--roxo); }
+
+  /* WEEK CARD */
+  .week-card {
+    background: rgba(255,255,255,0.038);
+    border: 1px solid rgba(255,255,255,0.08);
+    border-left-width: 4px;
+    border-left-style: solid;
+    border-radius: 12px;
+    overflow: hidden;
+    margin-bottom: 1rem;
+    transition: transform 0.2s ease, border-color 0.2s ease;
+  }
+
+  .week-card:hover {
+    transform: translateY(-2px);
+    border-color: rgba(255,255,255,0.14);
+  }
+
+  .ph-terra   .week-card { border-left-color: var(--terra); }
+  .ph-verde   .week-card { border-left-color: var(--verde-claro); }
+  .ph-amarelo .week-card { border-left-color: var(--amarelo); }
+  .ph-laranja .week-card { border-left-color: var(--laranja); }
+  .ph-azul    .week-card { border-left-color: var(--azul); }
+  .ph-roxo    .week-card { border-left-color: var(--roxo); }
+
+  .card-top {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 1rem 1.6rem 0.5rem;
+  }
+
+  .card-week-num {
+    font-family: 'Source Code Pro', monospace;
+    font-size: 0.66rem;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: rgba(245,233,200,0.35);
+  }
+
+  .card-tag {
+    font-family: 'Source Code Pro', monospace;
+    font-size: 0.65rem;
+    letter-spacing: 0.1em;
+    padding: 0.18rem 0.65rem;
+    border-radius: 2rem;
+    font-weight: 600;
+  }
+
+  .ph-terra   .card-tag { background: rgba(196,132,90,0.15);  color: var(--terra); }
+  .ph-verde   .card-tag { background: rgba(76,175,110,0.15);  color: var(--verde-claro); }
+  .ph-amarelo .card-tag { background: rgba(232,200,74,0.15);  color: var(--amarelo); }
+  .ph-laranja .card-tag { background: rgba(212,115,42,0.15);  color: var(--laranja); }
+  .ph-azul    .card-tag { background: rgba(91,184,232,0.15);  color: var(--azul); }
+  .ph-roxo    .card-tag { background: rgba(176,138,223,0.15); color: var(--roxo); }
+
+  .card-body { padding: 0 1.6rem 1.4rem; }
+
+  .card-title {
+    font-size: 1.05rem;
+    font-weight: 700;
+    color: var(--palha);
+    margin-bottom: 0.5rem;
+    line-height: 1.3;
+  }
+
+  .card-desc {
+    font-size: 0.87rem;
+    color: rgba(245,233,200,0.62);
+    line-height: 1.65;
+    margin-bottom: 0.9rem;
+  }
+
+  .card-topics {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.4rem;
+    margin-bottom: 0.9rem;
+  }
+
+  .pill {
+    font-size: 0.68rem;
+    font-family: 'Source Code Pro', monospace;
+    padding: 0.2rem 0.6rem;
+    border-radius: 4px;
+    background: rgba(255,255,255,0.06);
+    color: rgba(245,233,200,0.58);
+    border: 1px solid rgba(255,255,255,0.07);
+  }
+
+  .card-activity {
+    border-top: 1px dashed rgba(255,255,255,0.09);
+    padding-top: 0.75rem;
+    font-size: 0.8rem;
+    color: rgba(245,233,200,0.48);
+    display: flex;
+    gap: 0.5rem;
+    align-items: flex-start;
+    line-height: 1.55;
+  }
+
+  /* DATASET BOX */
+  .data-box {
+    border: 1px solid rgba(76,175,110,0.25);
+    border-left: 4px solid var(--verde-claro);
+    border-radius: 0 12px 12px 0;
+    background: rgba(76,175,110,0.04);
+    padding: 1.4rem 1.8rem;
+    margin: 2rem 0 3rem;
+  }
+
+  .data-box-label {
+    font-family: 'Source Code Pro', monospace;
+    font-size: 0.68rem;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--verde-claro);
+    margin-bottom: 0.5rem;
+  }
+
+  .data-box-desc {
+    font-size: 0.84rem;
+    color: rgba(245,233,200,0.58);
+    margin-bottom: 1.2rem;
+    line-height: 1.6;
+  }
+
+  .datasets-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(210px, 1fr));
+    gap: 0.8rem;
+  }
+
+  .ds-item {
+    background: rgba(255,255,255,0.05);
+    border: 1px solid rgba(255,255,255,0.07);
+    border-radius: 8px;
+    padding: 0.9rem 1.1rem;
+  }
+
+  .ds-icon { font-size: 1.3rem; margin-bottom: 0.4rem; display: block; }
+  .ds-name { font-weight: 700; font-size: 0.82rem; color: var(--palha); margin-bottom: 0.2rem; }
+  .ds-desc { font-size: 0.73rem; color: rgba(245,233,200,0.48); line-height: 1.5; }
+
+  /* DIVIDER */
+  .divider {
+    text-align: center;
+    color: rgba(245,233,200,0.15);
+    font-size: 1rem;
+    letter-spacing: 0.4em;
+    margin: 0.5rem 0 2.5rem;
+  }
+
+  /* FOOTER */
+  footer {
+    border-top: 1px solid rgba(245,233,200,0.08);
+    padding-top: 2.5rem;
+    text-align: center;
+    font-family: 'Source Code Pro', monospace;
+    font-size: 0.68rem;
+    letter-spacing: 0.1em;
+    color: rgba(245,233,200,0.25);
+  }
+
+  @media (max-width: 580px) {
+    .page { padding: 0 1rem 4rem; }
+    .datasets-grid { grid-template-columns: 1fr 1fr; }
+    header h1 { font-size: 1.9rem; }
+    .phase-header { flex-direction: column; align-items: flex-start; }
+  }
+</style>
+</head>
+<body>
+<div class="page">
+
+  <header>
+    <div class="eyebrow">Plano de Ensino · Graduação em Agronomia</div>
+    <h1>Informática &amp; <em>Análise de Dados</em><br>no Campo</h1>
+    <p class="header-sub">Do básico de planilhas à visualização e programação aplicada à agronomia</p>
+    <div class="header-chips">
+      <span class="chip">📅 6 meses · semestral</span>
+      <span class="chip">🗓 ~24 aulas semanais</span>
+      <span class="chip">🎓 1° ano · Agronomia</span>
+      <span class="chip">🛠 Google Workspace + Python</span>
+    </div>
+  </header>
+
+  <div class="legend">
+    <div class="legend-item"><div class="legend-dot" style="background:var(--terra)"></div> Introdução à Computação</div>
+    <div class="legend-item"><div class="legend-dot" style="background:var(--verde-claro)"></div> Google Planilhas</div>
+    <div class="legend-item"><div class="legend-dot" style="background:var(--amarelo)"></div> Análise Intermediária</div>
+    <div class="legend-item"><div class="legend-dot" style="background:var(--laranja)"></div> Looker Studio</div>
+    <div class="legend-item"><div class="legend-dot" style="background:var(--azul)"></div> Python / Colab</div>
+    <div class="legend-item"><div class="legend-dot" style="background:var(--roxo)"></div> Projeto Final</div>
+  </div>
+
+  <!-- FASE 0 -->
+  <div class="phase ph-terra">
+    <div class="phase-header">
+      <div class="phase-badge">Fase 0 · Sem. 1–2</div>
+      <div class="phase-meta">
+        <div class="phase-title">Introdução à <span class="accent">Computação</span></div>
+        <div class="phase-subtitle">Fundamentos, evolução histórica e aplicações na agronomia moderna</div>
+      </div>
+    </div>
+
+    <div class="week-card">
+      <div class="card-top"><span class="card-week-num">Semana 01 · Aula 1</span><span class="card-tag">Intro</span></div>
+      <div class="card-body">
+        <div class="card-title">Das Pedras aos Processadores — História e Fundamentos</div>
+        <div class="card-desc">Como o ser humano registrou e processou informação antes dos computadores? Da observação do clima e dos calendários naturais (Stonehenge) ao ábaco, da Pascalina à máquina de Babbage. Origem dos números, sistema binário e representação da informação: por que computadores falam em 0s e 1s. O papel das guerras no avanço tecnológico — da máquina Enigma ao ENIAC.</div>
+        <div class="card-topics">
+          <span class="pill">história da computação</span>
+          <span class="pill">sistemas numéricos</span>
+          <span class="pill">sistema binário</span>
+          <span class="pill">abstração</span>
+          <span class="pill">ábaco → microchip</span>
+          <span class="pill">ASCII / Unicode</span>
+          <span class="pill">Alan Turing</span>
+        </div>
+        <div class="card-activity">🧮 Problema inicial: "Como o agricultor decidia quando plantar antes de existir computador?" — discussão sobre experiência empírica, calendários lunares e solares e o salto para a agricultura de precisão.</div>
+      </div>
+    </div>
+
+    <div class="week-card">
+      <div class="card-top"><span class="card-week-num">Semana 02 · Aula 2</span><span class="card-tag">Intro</span></div>
+      <div class="card-body">
+        <div class="card-title">O que é Informática — Conceitos, Hardware, Software e Agronomia</div>
+        <div class="card-desc">Definição de informática: processamento automático da informação com auxílio de computadores. Componentes fundamentais: hardware (processador, memória, sensores, periféricos), software (sistemas operacionais, algoritmos) e redes. Ciclo entrada → processamento → saída → armazenamento. Tipos de computadores por lógica (fixa vs. programável) e por uso (científico, comercial, pessoal). Perfil do agrônomo do século XXI.</div>
+        <div class="card-topics">
+          <span class="pill">hardware / software</span>
+          <span class="pill">redes</span>
+          <span class="pill">entrada / saída</span>
+          <span class="pill">tipos de computadores</span>
+          <span class="pill">velocidade / precisão</span>
+          <span class="pill">IoT na fazenda</span>
+          <span class="pill">agricultura de precisão</span>
+        </div>
+        <div class="card-activity">🌾 Mapeamento coletivo: quais tecnologias computacionais os alunos já viram na fazenda ou no campo? Drones, estações meteorológicas, GPS no trator, apps de manejo — conectar o vivido ao conceitual.</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="divider">· · ·</div>
+
+  <!-- FASE 1 -->
+  <div class="phase ph-verde">
+    <div class="phase-header">
+      <div class="phase-badge">Fase 1 · Sem. 1–6</div>
+      <div class="phase-meta">
+        <div class="phase-title">Google <span class="accent">Planilhas</span></div>
+        <div class="phase-subtitle">Navegação, fórmulas, organização e intercâmbio de dados</div>
+      </div>
+    </div>
+
+    <div class="week-card">
+      <div class="card-top"><span class="card-week-num">Semana 01</span><span class="card-tag">Planilhas</span></div>
+      <div class="card-body">
+        <div class="card-title">Orientação e Ecossistema Google</div>
+        <div class="card-desc">Introdução à disciplina, criação de conta Google, navegação no Drive e interface do Planilhas. O que são dados e por que analisá-los na agronomia.</div>
+        <div class="card-topics">
+          <span class="pill">Google Drive</span><span class="pill">interface</span><span class="pill">linha / coluna / célula</span><span class="pill">navegação</span>
+        </div>
+        <div class="card-activity">📋 Criar planilha com dados da turma: nome, cidade de origem e experiência com agricultura.</div>
+      </div>
+    </div>
+
+    <div class="week-card">
+      <div class="card-top"><span class="card-week-num">Semana 02</span><span class="card-tag">Planilhas</span></div>
+      <div class="card-body">
+        <div class="card-title">Inserção e Organização de Dados</div>
+        <div class="card-desc">Tipos de dados (texto, número, data, booleano), formatação de células, congelar linhas e colunas, classificar e filtrar dados.</div>
+        <div class="card-topics">
+          <span class="pill">tipos de dados</span><span class="pill">formatação</span><span class="pill">filtros</span><span class="pill">ordenação</span>
+        </div>
+        <div class="card-activity">🌽 Planilha com dados de produção de milho (safra, área, produtividade): registrar, formatar e ordenar.</div>
+      </div>
+    </div>
+
+    <div class="week-card">
+      <div class="card-top"><span class="card-week-num">Semana 03</span><span class="card-tag">Planilhas</span></div>
+      <div class="card-body">
+        <div class="card-title">Fórmulas Essenciais</div>
+        <div class="card-desc">SOMA, MÉDIA, MÁXIMO, MÍNIMO, CONT.NÚM, CONT.SE. Diferença entre referências relativas e absolutas. Barra de fórmulas e autocompletar.</div>
+        <div class="card-topics">
+          <span class="pill">SOMA / MÉDIA</span><span class="pill">MÁXIMO / MÍNIMO</span><span class="pill">ref. relativa / absoluta</span><span class="pill">CONT.SE</span>
+        </div>
+        <div class="card-activity">📊 Calcular médias de temperatura e pluviosidade mensal de uma estação meteorológica fictícia.</div>
+      </div>
+    </div>
+
+    <div class="week-card">
+      <div class="card-top"><span class="card-week-num">Semana 04</span><span class="card-tag">Planilhas</span></div>
+      <div class="card-body">
+        <div class="card-title">Fórmulas Condicionais e Texto</div>
+        <div class="card-desc">SE simples e aninhado, SEERRO, SOMASE, MÉDIASE. Funções de texto: CONCAT, MAIÚSCULA, ARRUMAR. Formatação condicional com cores.</div>
+        <div class="card-topics">
+          <span class="pill">SE / SEERRO</span><span class="pill">SOMASE / MÉDIASE</span><span class="pill">formatação condicional</span><span class="pill">CONCAT</span>
+        </div>
+        <div class="card-activity">🌿 Classificar lavouras por produtividade (alta / média / baixa) e destacar automaticamente com cores.</div>
+      </div>
+    </div>
+
+    <div class="week-card">
+      <div class="card-top"><span class="card-week-num">Semana 05</span><span class="card-tag">Planilhas</span></div>
+      <div class="card-body">
+        <div class="card-title">Gráficos no Planilhas</div>
+        <div class="card-desc">Tipos de gráfico: linha, barra, dispersão, pizza. Quando usar cada um. Personalização de títulos, eixos, cores e legendas aplicados a dados agronômicos.</div>
+        <div class="card-topics">
+          <span class="pill">linhas</span><span class="pill">barras</span><span class="pill">dispersão</span><span class="pill">personalização</span>
+        </div>
+        <div class="card-activity">📈 Graficar série temporal de chuvas mensais e sobrepor curva de produtividade de soja.</div>
+      </div>
+    </div>
+
+    <div class="week-card">
+      <div class="card-top"><span class="card-week-num">Semana 06</span><span class="card-tag">Planilhas</span></div>
+      <div class="card-body">
+        <div class="card-title">Múltiplas Abas e Intercâmbio de Dados</div>
+        <div class="card-desc">Referência entre abas, PROCV e PROCH, importar CSV, exportar para diferentes formatos, compartilhamento e colaboração em tempo real.</div>
+        <div class="card-topics">
+          <span class="pill">PROCV / PROCH</span><span class="pill">ref. entre abas</span><span class="pill">importar CSV</span><span class="pill">compartilhamento</span>
+        </div>
+        <div class="card-activity">🔗 Cruzar tabela de talhões (área/cultura) com tabela de custos em abas separadas usando PROCV.</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="divider">· · ·</div>
+
+  <!-- FASE 2 -->
+  <div class="phase ph-amarelo">
+    <div class="phase-header">
+      <div class="phase-badge">Fase 2 · Sem. 7–10</div>
+      <div class="phase-meta">
+        <div class="phase-title">Análise <span class="accent">Intermediária</span></div>
+        <div class="phase-subtitle">Tabelas dinâmicas, limpeza de dados e pensamento analítico</div>
+      </div>
+    </div>
+
+    <div class="week-card">
+      <div class="card-top"><span class="card-week-num">Semana 07</span><span class="card-tag">Análise</span></div>
+      <div class="card-body">
+        <div class="card-title">Tabelas Dinâmicas</div>
+        <div class="card-desc">Criar e interpretar tabelas dinâmicas. Agregar por região, cultura, safra. Drill-down de dados. Slicers para filtragem visual interativa.</div>
+        <div class="card-topics">
+          <span class="pill">tabelas dinâmicas</span><span class="pill">agrupamento</span><span class="pill">slicer</span><span class="pill">drill-down</span>
+        </div>
+        <div class="card-activity">🗺 Resumir produção agrícola por estado e cultura usando tabela dinâmica sobre dataset do IBGE/CONAB.</div>
+      </div>
+    </div>
+
+    <div class="week-card">
+      <div class="card-top"><span class="card-week-num">Semana 08</span><span class="card-tag">Análise</span></div>
+      <div class="card-body">
+        <div class="card-title">Qualidade e Limpeza de Dados</div>
+        <div class="card-desc">O que são dados sujos: duplicatas, nulos, inconsistências de unidade. Estratégias de limpeza no Planilhas. Conceito de dado "tidy".</div>
+        <div class="card-topics">
+          <span class="pill">dados nulos</span><span class="pill">duplicatas</span><span class="pill">consistência</span><span class="pill">tidy data</span>
+        </div>
+        <div class="card-activity">🧹 Receber planilha "suja" de registro de campo e realizar processo completo de limpeza.</div>
+      </div>
+    </div>
+
+    <div class="week-card">
+      <div class="card-top"><span class="card-week-num">Semana 09</span><span class="card-tag">Análise</span></div>
+      <div class="card-body">
+        <div class="card-title">Estatística Descritiva Aplicada</div>
+        <div class="card-desc">Medidas de tendência central e dispersão. Histogramas e boxplots no Planilhas. Correlação e dispersão entre variáveis agronômicas.</div>
+        <div class="card-topics">
+          <span class="pill">média / mediana</span><span class="pill">desvio padrão</span><span class="pill">histograma</span><span class="pill">correlação</span>
+        </div>
+        <div class="card-activity">🔬 Análise exploratória de dados de solo (pH, MO, N, P, K) de diferentes talhões.</div>
+      </div>
+    </div>
+
+    <div class="week-card">
+      <div class="card-top"><span class="card-week-num">Semana 10</span><span class="card-tag">Análise</span></div>
+      <div class="card-body">
+        <div class="card-title">O Formato CSV e o Ciclo do Dado</div>
+        <div class="card-desc">Anatomia de um CSV: encodings, delimitadores, aspas. Exportar, importar e combinar CSVs. Ciclo completo: coleta → limpeza → análise → visualização.</div>
+        <div class="card-topics">
+          <span class="pill">CSV</span><span class="pill">encoding UTF-8</span><span class="pill">delimitadores</span><span class="pill">ciclo do dado</span>
+        </div>
+        <div class="card-activity">💾 Baixar dados abertos do INMET/CONAB em CSV, inspecionar e importar ao Planilhas.</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- DATASETS -->
+  <div class="data-box">
+    <div class="data-box-label">📦 Datasets Sintéticos para a Disciplina</div>
+    <p class="data-box-desc">Todos os datasets abaixo podem ser gerados sinteticamente com valores realistas. Cada um serve a múltiplas fases — do Planilhas ao Python.</p>
+    <div class="datasets-grid">
+      <div class="ds-item"><span class="ds-icon">🌧</span><div class="ds-name">Dados Climáticos</div><div class="ds-desc">Temp. máx/mín, precipitação, umidade e radiação — 5 anos, 3 municípios.</div></div>
+      <div class="ds-item"><span class="ds-icon">🌱</span><div class="ds-name">Análise de Solo</div><div class="ds-desc">pH, MO, P, K, Ca, Mg, textura e CTC — 80 amostras de diferentes talhões.</div></div>
+      <div class="ds-item"><span class="ds-icon">🌾</span><div class="ds-name">Produtividade</div><div class="ds-desc">Soja, milho, trigo — talhão, área, safra, sc/ha, receita e custo.</div></div>
+      <div class="ds-item"><span class="ds-icon">🐄</span><div class="ds-name">Pecuária Leiteira</div><div class="ds-desc">Produção diária por animal, raça, alimentação, escore corporal — 12 meses.</div></div>
+      <div class="ds-item"><span class="ds-icon">🦗</span><div class="ds-name">Monitoramento de Pragas</div><div class="ds-desc">Data, talhão, cultura, praga, nível de infestação e intervenção aplicada.</div></div>
+      <div class="ds-item"><span class="ds-icon">💰</span><div class="ds-name">Custo de Produção</div><div class="ds-desc">Insumo, categoria, quantidade, valor unitário e safra para análise de custeio.</div></div>
+    </div>
+  </div>
+
+  <div class="divider">· · ·</div>
+
+  <!-- FASE 3 -->
+  <div class="phase ph-laranja">
+    <div class="phase-header">
+      <div class="phase-badge">Fase 3 · Sem. 11–17</div>
+      <div class="phase-meta">
+        <div class="phase-title">Google <span class="accent">Looker Studio</span></div>
+        <div class="phase-subtitle">Dashboards interativos a partir de CSVs com dados agronômicos</div>
+      </div>
+    </div>
+
+    <div class="week-card">
+      <div class="card-top"><span class="card-week-num">Semana 11</span><span class="card-tag">Looker</span></div>
+      <div class="card-body">
+        <div class="card-title">Introdução ao Looker Studio</div>
+        <div class="card-desc">Interface, conceitos de fonte de dados, dimensões vs. métricas. Conectar um CSV de produtividade. Criar o primeiro gráfico de barras.</div>
+        <div class="card-topics">
+          <span class="pill">interface</span><span class="pill">fonte de dados</span><span class="pill">dimensão / métrica</span><span class="pill">upload CSV</span>
+        </div>
+        <div class="card-activity">🖥 Conectar dataset de produtividade e construir gráfico de barras por cultura/safra.</div>
+      </div>
+    </div>
+
+    <div class="week-card">
+      <div class="card-top"><span class="card-week-num">Semana 12</span><span class="card-tag">Looker</span></div>
+      <div class="card-body">
+        <div class="card-title">Tipos de Gráfico e Scorecard</div>
+        <div class="card-desc">Scorecards, séries temporais, gráfico de dispersão, tabelas. Escolher o gráfico certo para cada pergunta de negócio agronômico.</div>
+        <div class="card-topics">
+          <span class="pill">scorecard</span><span class="pill">série temporal</span><span class="pill">dispersão</span><span class="pill">escolha do gráfico</span>
+        </div>
+        <div class="card-activity">🌡 Painel climático: scorecard de chuva acumulada, série temporal de temperatura e dispersão chuva × produtividade.</div>
+      </div>
+    </div>
+
+    <div class="week-card">
+      <div class="card-top"><span class="card-week-num">Semana 13</span><span class="card-tag">Looker</span></div>
+      <div class="card-body">
+        <div class="card-title">Filtros, Controles e Interatividade</div>
+        <div class="card-desc">Filtros de período, filtros de categoria, seletores de lista. Como criar dashboards que o usuário explora sem editar o relatório.</div>
+        <div class="card-topics">
+          <span class="pill">filtro de data</span><span class="pill">seletor</span><span class="pill">controles</span><span class="pill">interatividade</span>
+        </div>
+        <div class="card-activity">🎛 Adicionar seletor de safra e de município ao painel e testar como muda a visualização.</div>
+      </div>
+    </div>
+
+    <div class="week-card">
+      <div class="card-top"><span class="card-week-num">Semana 14</span><span class="card-tag">Looker</span></div>
+      <div class="card-body">
+        <div class="card-title">Campos Calculados</div>
+        <div class="card-desc">Criar métricas derivadas: receita bruta, custo por hectare, produtividade relativa. Uso de fórmulas e CASE WHEN no Looker Studio.</div>
+        <div class="card-topics">
+          <span class="pill">campos calculados</span><span class="pill">métricas derivadas</span><span class="pill">CASE WHEN</span><span class="pill">razões</span>
+        </div>
+        <div class="card-activity">🧮 Calcular margem bruta por talhão e criar scorecard de "melhor talhão do semestre".</div>
+      </div>
+    </div>
+
+    <div class="week-card">
+      <div class="card-top"><span class="card-week-num">Semana 15</span><span class="card-tag">Looker</span></div>
+      <div class="card-body">
+        <div class="card-title">Design de Dashboard</div>
+        <div class="card-desc">Princípios de visualização de dados: hierarquia visual, uso de cor, legibilidade, storytelling. Layouts para público técnico vs. gestores rurais.</div>
+        <div class="card-topics">
+          <span class="pill">hierarquia visual</span><span class="pill">cor semântica</span><span class="pill">storytelling</span><span class="pill">layout</span>
+        </div>
+        <div class="card-activity">🎨 Redesenhar um dashboard mal feito e justificar as escolhas com princípios de design.</div>
+      </div>
+    </div>
+
+    <div class="week-card">
+      <div class="card-top"><span class="card-week-num">Semana 16</span><span class="card-tag">Looker</span></div>
+      <div class="card-body">
+        <div class="card-title">Múltiplas Fontes de Dados</div>
+        <div class="card-desc">Combinar CSVs de clima + produção + solo no mesmo relatório. Blending de dados e chaves de junção entre datasets distintos.</div>
+        <div class="card-topics">
+          <span class="pill">data blending</span><span class="pill">múltiplos CSVs</span><span class="pill">chave de junção</span><span class="pill">join</span>
+        </div>
+        <div class="card-activity">🔀 Cruzar dados de solo com dados de produção por talhão — existe correlação entre pH e produtividade?</div>
+      </div>
+    </div>
+
+    <div class="week-card">
+      <div class="card-top"><span class="card-week-num">Semana 17</span><span class="card-tag">Looker</span></div>
+      <div class="card-body">
+        <div class="card-title">Dashboard Completo — Projeto Intermediário</div>
+        <div class="card-desc">Entrega de um painel agronômico completo com pelo menos 3 fontes, 6 visualizações, filtros e campos calculados. Apresentação de 5 min por grupo.</div>
+        <div class="card-topics">
+          <span class="pill">entrega</span><span class="pill">apresentação</span><span class="pill">avaliação</span>
+        </div>
+        <div class="card-activity">🏆 Painel "Monitoramento da Fazenda São João" — dados climáticos, solo e produção integrados.</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="divider">· · ·</div>
+
+  <!-- FASE 4 -->
+  <div class="phase ph-azul">
+    <div class="phase-header">
+      <div class="phase-badge">Fase 4 · Sem. 18–22</div>
+      <div class="phase-meta">
+        <div class="phase-title">Python no <span class="accent">Google Colab</span></div>
+        <div class="phase-subtitle">Introdução à programação para análise de dados agronômicos</div>
+      </div>
+    </div>
+
+    <div class="week-card">
+      <div class="card-top"><span class="card-week-num">Semana 18</span><span class="card-tag">Python</span></div>
+      <div class="card-body">
+        <div class="card-title">Por que Python? Intro ao Colab</div>
+        <div class="card-desc">Contexto: onde o Python é usado na agronomia (sensoriamento remoto, modelos preditivos, automação). Interface do Colab, células de código e texto Markdown.</div>
+        <div class="card-topics">
+          <span class="pill">Google Colab</span><span class="pill">Jupyter notebook</span><span class="pill">células de código</span><span class="pill">motivação</span>
+        </div>
+        <div class="card-activity">🐍 Rodar primeiros comandos Python: print, variáveis e comentários. "Olá, Agronomia!"</div>
+      </div>
+    </div>
+
+    <div class="week-card">
+      <div class="card-top"><span class="card-week-num">Semana 19</span><span class="card-tag">Python</span></div>
+      <div class="card-body">
+        <div class="card-title">Python Básico e Estruturas de Dados</div>
+        <div class="card-desc">Variáveis, tipos (int, float, str, bool), listas e dicionários. Operações aritméticas. Primeiro contato com bibliotecas via import.</div>
+        <div class="card-topics">
+          <span class="pill">variáveis</span><span class="pill">listas</span><span class="pill">dicionários</span><span class="pill">import</span>
+        </div>
+        <div class="card-activity">📐 Calcular área de talhões (lista de larguras × comprimentos), média e total usando Python puro.</div>
+      </div>
+    </div>
+
+    <div class="week-card">
+      <div class="card-top"><span class="card-week-num">Semana 20</span><span class="card-tag">Python</span></div>
+      <div class="card-body">
+        <div class="card-title">Pandas: Lendo e Explorando CSVs</div>
+        <div class="card-desc">Carregar CSV com pd.read_csv(). Explorar com head(), describe(), info(). Selecionar colunas e filtrar linhas. Comparar com o que faziam no Planilhas.</div>
+        <div class="card-topics">
+          <span class="pill">pandas</span><span class="pill">read_csv</span><span class="pill">head / describe</span><span class="pill">filtros</span>
+        </div>
+        <div class="card-activity">🗄 Carregar o mesmo dataset de produtividade do Looker e reproduzir os filtros em pandas.</div>
+      </div>
+    </div>
+
+    <div class="week-card">
+      <div class="card-top"><span class="card-week-num">Semana 21</span><span class="card-tag">Python</span></div>
+      <div class="card-body">
+        <div class="card-title">Visualização com Matplotlib e Seaborn</div>
+        <div class="card-desc">Criar gráficos de linha, barra e dispersão com Python. Personalizar títulos e eixos. Exportar imagens PNG. Vantagem central: automação e repetibilidade.</div>
+        <div class="card-topics">
+          <span class="pill">matplotlib</span><span class="pill">seaborn</span><span class="pill">plt.show()</span><span class="pill">exportar PNG</span>
+        </div>
+        <div class="card-activity">📉 Recriar os gráficos do dashboard do Looker em Python — comparar as duas abordagens.</div>
+      </div>
+    </div>
+
+    <div class="week-card">
+      <div class="card-top"><span class="card-week-num">Semana 22</span><span class="card-tag">Python</span></div>
+      <div class="card-body">
+        <div class="card-title">Análise Real: Chuva × Produtividade</div>
+        <div class="card-desc">Projeto guiado: calcular correlação de Pearson entre precipitação e produtividade de soja. Regressão linear simples. Interpretar r² de forma agronômica.</div>
+        <div class="card-topics">
+          <span class="pill">correlação de Pearson</span><span class="pill">regressão linear</span><span class="pill">scipy / numpy</span><span class="pill">r²</span>
+        </div>
+        <div class="card-activity">🌦 Analisar dataset de 10 anos e identificar qual mês de chuva mais impacta a produtividade final da soja.</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="divider">· · ·</div>
+
+  <!-- FASE 5 -->
+  <div class="phase ph-roxo">
+    <div class="phase-header">
+      <div class="phase-badge">Fase 5 · Sem. 23–24</div>
+      <div class="phase-meta">
+        <div class="phase-title">Projeto <span class="accent">Final</span> &amp; Síntese</div>
+        <div class="phase-subtitle">Integração de todas as ferramentas em um projeto real</div>
+      </div>
+    </div>
+
+    <div class="week-card">
+      <div class="card-top"><span class="card-week-num">Semana 23</span><span class="card-tag">Capstone</span></div>
+      <div class="card-body">
+        <div class="card-title">Projeto Integrador — Desenvolvimento</div>
+        <div class="card-desc">Grupos escolhem um cenário fictício de propriedade rural e realizam análise completa: limpeza no Planilhas → análise em Python → dashboard no Looker Studio.</div>
+        <div class="card-topics">
+          <span class="pill">projeto em grupo</span><span class="pill">fluxo completo</span><span class="pill">orientação</span>
+        </div>
+        <div class="card-activity">🌍 Entregável: planilha limpa, notebook Python comentado e link para dashboard no Looker.</div>
+      </div>
+    </div>
+
+    <div class="week-card">
+      <div class="card-top"><span class="card-week-num">Semana 24</span><span class="card-tag">Capstone</span></div>
+      <div class="card-body">
+        <div class="card-title">Apresentações Finais e Encerramento</div>
+        <div class="card-desc">Cada grupo apresenta 10 min + 5 de perguntas. Reflexão sobre o percurso. Próximos passos: R, SQL, Power BI, sensoriamento remoto com Python.</div>
+        <div class="card-topics">
+          <span class="pill">apresentação</span><span class="pill">avaliação por pares</span><span class="pill">próximos passos</span>
+        </div>
+        <div class="card-activity">🎓 Encerramento: mapa mental coletivo "O que aprendi e onde posso aplicar na minha fazenda ou pesquisa".</div>
+      </div>
+    </div>
+  </div>
+
+  <footer>Informática para Agronomia · Roadmap 6 meses · 24 semanas</footer>
+
+</div>
+</body>
+</html>
