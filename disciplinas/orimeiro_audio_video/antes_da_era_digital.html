@@ -1,0 +1,1646 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Antes da Era Digital — Educação Digital</title>
+<link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Sans:wght@300;400;500;600&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --green-deep: #1a3a2a;
+    --green-mid: #2d5a3d;
+    --green-light: #4a8c5c;
+    --green-bright: #6bbf7a;
+    --amber: #d4a843;
+    --amber-light: #f0c96a;
+    --soil: #5c3d1e;
+    --cream: #f5f0e8;
+    --cream-light: #faf8f3;
+    --white: #ffffff;
+    --text-dark: #1a2a1e;
+    --text-mid: #3a5a42;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    font-family: 'DM Sans', sans-serif;
+    background: var(--green-deep);
+    color: var(--cream);
+    height: 100vh;
+    overflow: hidden;
+    cursor: default;
+  }
+
+  .presentation {
+    width: 100vw;
+    height: 100vh;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .slide {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    flex-direction: column;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.6s ease, transform 0.6s ease;
+    transform: translateX(60px);
+  }
+
+  .slide.active {
+    opacity: 1;
+    pointer-events: all;
+    transform: translateX(0);
+  }
+
+  .slide.exit {
+    opacity: 0;
+    transform: translateX(-60px);
+    transition: opacity 0.4s ease, transform 0.4s ease;
+  }
+
+  .bg-pattern {
+    position: absolute;
+    inset: 0;
+    background-image:
+      radial-gradient(circle at 80% 20%, rgba(107,191,122,0.08) 0%, transparent 50%),
+      radial-gradient(circle at 10% 80%, rgba(212,168,67,0.06) 0%, transparent 40%);
+    pointer-events: none;
+  }
+
+  /* ===== COVER ===== */
+  .slide-cover {
+    background: linear-gradient(135deg, var(--green-deep) 0%, #0e2218 60%, var(--soil) 100%);
+    justify-content: center;
+    align-items: flex-start;
+    padding: 0;
+  }
+
+  .cover-left {
+    position: absolute;
+    left: 0; top: 0; bottom: 0;
+    width: 55%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    padding: 80px 70px;
+    z-index: 2;
+  }
+
+  .cover-eyebrow {
+    font-family: 'Space Mono', monospace;
+    font-size: 11px;
+    letter-spacing: 0.3em;
+    text-transform: uppercase;
+    color: var(--amber);
+    margin-bottom: 28px;
+    opacity: 0;
+    animation: fadeUp 0.8s 0.3s forwards;
+  }
+
+  .cover-title {
+    font-family: 'DM Serif Display', serif;
+    font-size: clamp(36px, 5vw, 62px);
+    line-height: 1.1;
+    color: var(--cream);
+    margin-bottom: 20px;
+    opacity: 0;
+    animation: fadeUp 0.8s 0.5s forwards;
+  }
+
+  .cover-title span {
+    color: var(--green-bright);
+    font-style: italic;
+  }
+
+  .cover-subtitle {
+    font-size: 16px;
+    font-weight: 300;
+    color: rgba(245,240,232,0.65);
+    line-height: 1.7;
+    margin-bottom: 50px;
+    max-width: 420px;
+    opacity: 0;
+    animation: fadeUp 0.8s 0.7s forwards;
+  }
+
+  .cover-unit-tag {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    background: rgba(107,191,122,0.15);
+    border: 1px solid rgba(107,191,122,0.3);
+    border-radius: 40px;
+    padding: 10px 20px;
+    font-size: 13px;
+    color: var(--green-bright);
+    font-weight: 500;
+    opacity: 0;
+    animation: fadeUp 0.8s 0.9s forwards;
+  }
+
+  .cover-unit-tag::before {
+    content: '';
+    width: 8px; height: 8px;
+    background: var(--green-bright);
+    border-radius: 50%;
+    animation: pulse 2s infinite;
+  }
+
+  .cover-right {
+    position: absolute;
+    right: 0; top: 0; bottom: 0;
+    width: 45%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 1;
+    overflow: hidden;
+  }
+
+  .cover-visual {
+    position: relative;
+    width: 380px;
+    height: 380px;
+  }
+
+  .ring {
+    position: absolute;
+    border-radius: 50%;
+    border: 1px solid rgba(107,191,122,0.2);
+    animation: rotate 20s linear infinite;
+  }
+
+  .ring-1 { inset: 0; animation-duration: 25s; }
+  .ring-2 { inset: 30px; animation-duration: 18s; animation-direction: reverse; border-color: rgba(212,168,67,0.15); }
+  .ring-3 { inset: 70px; animation-duration: 30s; border-color: rgba(107,191,122,0.1); }
+
+  .ring-dot {
+    position: absolute;
+    width: 8px; height: 8px;
+    background: var(--green-bright);
+    border-radius: 50%;
+    top: 50%;
+    right: -4px;
+    margin-top: -4px;
+    box-shadow: 0 0 12px var(--green-bright);
+  }
+
+  .ring-dot-amber {
+    background: var(--amber);
+    box-shadow: 0 0 12px var(--amber);
+    right: auto;
+    left: -4px;
+  }
+
+  .ring-icon {
+    position: absolute;
+    inset: 110px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 72px;
+    filter: drop-shadow(0 0 30px rgba(107,191,122,0.3));
+  }
+
+  .cover-footer {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    background: rgba(0,0,0,0.25);
+    backdrop-filter: blur(10px);
+    border-top: 1px solid rgba(107,191,122,0.15);
+    padding: 18px 70px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    z-index: 10;
+    opacity: 0;
+    animation: fadeUp 0.8s 1.1s forwards;
+  }
+
+  .footer-author { display: flex; align-items: center; gap: 14px; }
+
+  .author-avatar {
+    width: 38px; height: 38px;
+    background: linear-gradient(135deg, var(--green-light), var(--green-bright));
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 700;
+    font-size: 14px;
+    color: var(--green-deep);
+  }
+
+  .author-info { font-size: 13px; }
+  .author-name { font-weight: 600; color: var(--cream); }
+  .author-email {
+    font-family: 'Space Mono', monospace;
+    font-size: 10px;
+    color: var(--amber);
+    margin-top: 2px;
+  }
+
+  .footer-duration {
+    font-family: 'Space Mono', monospace;
+    font-size: 11px;
+    color: rgba(245,240,232,0.4);
+    letter-spacing: 0.1em;
+  }
+
+  /* ===== CONTENT SLIDES ===== */
+  .slide-content {
+    background: var(--cream-light);
+    color: var(--text-dark);
+  }
+
+  .slide-header {
+    background: var(--green-deep);
+    padding: 28px 60px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-shrink: 0;
+  }
+
+  .slide-number {
+    font-family: 'Space Mono', monospace;
+    font-size: 11px;
+    color: var(--green-bright);
+    letter-spacing: 0.2em;
+  }
+
+  .slide-title-bar {
+    font-family: 'DM Serif Display', serif;
+    font-size: clamp(20px, 3vw, 32px);
+    color: var(--cream);
+    flex: 1;
+    text-align: center;
+  }
+
+  .slide-category {
+    font-size: 11px;
+    color: rgba(245,240,232,0.4);
+    font-weight: 500;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    min-width: 80px;
+    text-align: right;
+  }
+
+  .slide-body {
+    flex: 1;
+    padding: 40px 60px;
+    display: flex;
+    gap: 50px;
+    overflow: hidden;
+  }
+
+  .content-main { flex: 1; }
+
+  /* Bullets */
+  .bullet-list { list-style: none; display: flex; flex-direction: column; gap: 14px; }
+
+  .bullet-item {
+    display: flex;
+    align-items: flex-start;
+    gap: 16px;
+    opacity: 0;
+    transform: translateX(-20px);
+    animation: slideIn 0.5s forwards;
+  }
+
+  .bullet-icon {
+    width: 28px; height: 28px;
+    background: var(--green-light);
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 12px;
+    flex-shrink: 0;
+    margin-top: 2px;
+  }
+
+  .bullet-text {
+    font-size: 16px;
+    line-height: 1.5;
+    color: var(--text-dark);
+    font-weight: 400;
+  }
+
+  .bullet-detail {
+    font-size: 13px;
+    color: var(--text-mid);
+    margin-top: 4px;
+    line-height: 1.5;
+    font-weight: 300;
+  }
+
+  /* Concept box */
+  .concept-box {
+    background: var(--green-deep);
+    border-radius: 16px;
+    padding: 24px 28px;
+    margin-top: 20px;
+    border-left: 4px solid var(--amber);
+  }
+
+  .concept-label {
+    font-family: 'Space Mono', monospace;
+    font-size: 9px;
+    text-transform: uppercase;
+    letter-spacing: 0.3em;
+    color: var(--amber);
+    margin-bottom: 8px;
+  }
+
+  .concept-text {
+    font-size: 15px;
+    color: var(--cream);
+    line-height: 1.6;
+    font-weight: 300;
+  }
+
+  /* Highlight box */
+  .highlight-box {
+    background: linear-gradient(135deg, var(--amber), var(--amber-light));
+    border-radius: 16px;
+    padding: 20px 24px;
+    margin-top: 20px;
+  }
+
+  .highlight-text {
+    font-family: 'DM Serif Display', serif;
+    font-size: 18px;
+    color: var(--green-deep);
+    line-height: 1.5;
+  }
+
+  /* Side panel */
+  .side-panel {
+    width: 280px;
+    flex-shrink: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+  }
+
+  .panel-card {
+    background: var(--green-deep);
+    border-radius: 16px;
+    padding: 20px;
+    color: var(--cream);
+  }
+
+  .panel-title {
+    font-family: 'Space Mono', monospace;
+    font-size: 10px;
+    text-transform: uppercase;
+    letter-spacing: 0.2em;
+    color: var(--green-bright);
+    margin-bottom: 12px;
+  }
+
+  .panel-item {
+    font-size: 13px;
+    padding: 6px 0;
+    border-bottom: 1px solid rgba(107,191,122,0.1);
+    color: rgba(245,240,232,0.8);
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  .panel-item:last-child { border-bottom: none; }
+
+  .panel-dot {
+    width: 6px; height: 6px;
+    background: var(--green-bright);
+    border-radius: 50%;
+    flex-shrink: 0;
+  }
+
+  /* Question box */
+  .question-box {
+    background: linear-gradient(135deg, rgba(107,191,122,0.15), rgba(212,168,67,0.1));
+    border: 1px solid rgba(107,191,122,0.3);
+    border-radius: 16px;
+    padding: 20px 24px;
+    margin-top: 20px;
+  }
+
+  .question-icon { font-size: 24px; margin-bottom: 8px; }
+
+  .question-text {
+    font-family: 'DM Serif Display', serif;
+    font-size: 16px;
+    color: var(--text-dark);
+    font-style: italic;
+    line-height: 1.6;
+  }
+
+  /* Timeline */
+  .timeline { display: flex; flex-direction: column; gap: 10px; }
+
+  .timeline-item {
+    display: flex;
+    align-items: flex-start;
+    gap: 16px;
+    opacity: 0;
+    animation: slideIn 0.5s forwards;
+  }
+
+  .timeline-year {
+    font-family: 'Space Mono', monospace;
+    font-size: 11px;
+    color: var(--amber);
+    min-width: 55px;
+    padding-top: 2px;
+    font-weight: 700;
+  }
+
+  .timeline-dot {
+    width: 10px; height: 10px;
+    background: var(--green-bright);
+    border-radius: 50%;
+    margin-top: 4px;
+    flex-shrink: 0;
+    box-shadow: 0 0 8px rgba(107,191,122,0.4);
+  }
+
+  .timeline-content { flex: 1; }
+
+  .timeline-title {
+    font-size: 14px;
+    font-weight: 600;
+    color: var(--text-dark);
+    margin-bottom: 2px;
+  }
+
+  .timeline-text {
+    font-size: 13px;
+    color: var(--text-mid);
+    line-height: 1.4;
+  }
+
+  /* Compare grid */
+  .compare-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 20px;
+    margin-top: 10px;
+  }
+
+  .compare-col {
+    border-radius: 16px;
+    padding: 22px;
+  }
+
+  .compare-col.analog {
+    background: rgba(92,61,30,0.12);
+    border: 1px solid rgba(92,61,30,0.25);
+  }
+
+  .compare-col.digital {
+    background: rgba(107,191,122,0.12);
+    border: 1px solid rgba(107,191,122,0.25);
+  }
+
+  .compare-header {
+    font-family: 'Space Mono', monospace;
+    font-size: 10px;
+    text-transform: uppercase;
+    letter-spacing: 0.25em;
+    margin-bottom: 14px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  .compare-header.analog { color: var(--soil); }
+  .compare-header.digital { color: var(--green-bright); }
+
+  .compare-item {
+    font-size: 13px;
+    color: var(--text-dark);
+    padding: 5px 0;
+    border-bottom: 1px solid rgba(0,0,0,0.06);
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  .compare-item:last-child { border-bottom: none; }
+
+  /* App grid */
+  .apps-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 12px;
+    margin-top: 10px;
+  }
+
+  .app-card {
+    background: var(--green-deep);
+    border-radius: 14px;
+    padding: 14px;
+    text-align: center;
+    border: 1px solid rgba(107,191,122,0.15);
+    transition: transform 0.2s, border-color 0.2s;
+    cursor: default;
+  }
+
+  .app-card:hover {
+    transform: translateY(-3px);
+    border-color: rgba(107,191,122,0.4);
+  }
+
+  .app-icon { font-size: 24px; margin-bottom: 6px; }
+
+  .app-name {
+    font-size: 11px;
+    color: var(--cream);
+    font-weight: 500;
+    line-height: 1.4;
+  }
+
+  /* Binary table */
+  .binary-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 10px;
+    font-size: 13px;
+  }
+
+  .binary-table th {
+    background: var(--green-deep);
+    color: var(--green-bright);
+    font-family: 'Space Mono', monospace;
+    font-size: 10px;
+    text-transform: uppercase;
+    letter-spacing: 0.2em;
+    padding: 10px 14px;
+    text-align: left;
+  }
+
+  .binary-table td {
+    padding: 9px 14px;
+    border-bottom: 1px solid rgba(0,0,0,0.06);
+    color: var(--text-dark);
+  }
+
+  .binary-table tr:nth-child(even) td { background: rgba(107,191,122,0.05); }
+
+  .binary-table td.mono {
+    font-family: 'Space Mono', monospace;
+    color: var(--green-light);
+  }
+
+  /* Comp cards */
+  .comp-list { display: flex; flex-direction: column; gap: 10px; }
+
+  .comp-card {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    background: white;
+    border-radius: 12px;
+    padding: 14px 18px;
+    border: 1px solid rgba(0,0,0,0.06);
+    opacity: 0;
+    animation: slideIn 0.5s forwards;
+  }
+
+  .comp-num {
+    font-family: 'Space Mono', monospace;
+    font-size: 20px;
+    font-weight: 700;
+    color: rgba(0,0,0,0.08);
+    min-width: 30px;
+  }
+
+  .comp-text { font-size: 15px; color: var(--text-dark); font-weight: 500; }
+  .comp-detail { font-size: 12px; color: var(--text-mid); margin-top: 2px; }
+
+  /* Slide footer */
+  .slide-footer {
+    background: var(--green-deep);
+    padding: 12px 60px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-top: 1px solid rgba(107,191,122,0.15);
+    flex-shrink: 0;
+  }
+
+  .footer-logo {
+    font-family: 'DM Serif Display', serif;
+    font-size: 14px;
+    color: var(--green-bright);
+  }
+
+  .footer-contact {
+    font-family: 'Space Mono', monospace;
+    font-size: 10px;
+    color: rgba(245,240,232,0.35);
+  }
+
+  /* ===== NAVIGATION ===== */
+  .nav {
+    position: fixed;
+    bottom: 28px;
+    left: 50%;
+    transform: translateX(-50%);
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    z-index: 1000;
+    background: rgba(10,25,16,0.85);
+    backdrop-filter: blur(20px);
+    border: 1px solid rgba(107,191,122,0.2);
+    border-radius: 50px;
+    padding: 10px 20px;
+  }
+
+  .nav-btn {
+    background: transparent;
+    border: none;
+    color: var(--cream);
+    cursor: pointer;
+    padding: 8px 16px;
+    border-radius: 30px;
+    font-size: 13px;
+    font-family: 'DM Sans', sans-serif;
+    font-weight: 500;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    transition: background 0.2s, color 0.2s;
+  }
+
+  .nav-btn:hover:not(:disabled) {
+    background: rgba(107,191,122,0.2);
+    color: var(--green-bright);
+  }
+
+  .nav-btn:disabled { opacity: 0.3; cursor: not-allowed; }
+
+  .nav-counter {
+    font-family: 'Space Mono', monospace;
+    font-size: 12px;
+    color: var(--amber);
+    min-width: 55px;
+    text-align: center;
+  }
+
+  .nav-dots { display: flex; gap: 5px; align-items: center; }
+
+  .nav-dot {
+    width: 6px; height: 6px;
+    border-radius: 50%;
+    background: rgba(245,240,232,0.2);
+    cursor: pointer;
+    transition: all 0.2s;
+  }
+
+  .nav-dot.active {
+    background: var(--green-bright);
+    width: 20px;
+    border-radius: 3px;
+  }
+
+  .nav-dot:hover:not(.active) { background: rgba(245,240,232,0.5); }
+
+  /* ===== ANIMATIONS ===== */
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(20px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  @keyframes slideIn {
+    to { opacity: 1; transform: translateX(0); }
+  }
+
+  @keyframes rotate {
+    to { transform: rotate(360deg); }
+  }
+
+  @keyframes pulse {
+    0%, 100% { opacity: 1; transform: scale(1); }
+    50% { opacity: 0.5; transform: scale(0.8); }
+  }
+
+  .slide.active .bullet-item:nth-child(1) { animation-delay: 0.1s; }
+  .slide.active .bullet-item:nth-child(2) { animation-delay: 0.22s; }
+  .slide.active .bullet-item:nth-child(3) { animation-delay: 0.34s; }
+  .slide.active .bullet-item:nth-child(4) { animation-delay: 0.46s; }
+  .slide.active .bullet-item:nth-child(5) { animation-delay: 0.58s; }
+  .slide.active .bullet-item:nth-child(6) { animation-delay: 0.7s; }
+  .slide.active .bullet-item:nth-child(7) { animation-delay: 0.82s; }
+  .slide.active .bullet-item:nth-child(8) { animation-delay: 0.94s; }
+
+  .slide.active .timeline-item:nth-child(1) { animation-delay: 0.1s; }
+  .slide.active .timeline-item:nth-child(2) { animation-delay: 0.22s; }
+  .slide.active .timeline-item:nth-child(3) { animation-delay: 0.34s; }
+  .slide.active .timeline-item:nth-child(4) { animation-delay: 0.46s; }
+  .slide.active .timeline-item:nth-child(5) { animation-delay: 0.58s; }
+  .slide.active .timeline-item:nth-child(6) { animation-delay: 0.7s; }
+  .slide.active .timeline-item:nth-child(7) { animation-delay: 0.82s; }
+
+  .slide.active .comp-card:nth-child(1) { animation-delay: 0.1s; }
+  .slide.active .comp-card:nth-child(2) { animation-delay: 0.2s; }
+  .slide.active .comp-card:nth-child(3) { animation-delay: 0.3s; }
+  .slide.active .comp-card:nth-child(4) { animation-delay: 0.4s; }
+  .slide.active .comp-card:nth-child(5) { animation-delay: 0.5s; }
+
+  .kbd-hint {
+    position: fixed;
+    top: 20px;
+    right: 24px;
+    font-family: 'Space Mono', monospace;
+    font-size: 10px;
+    color: rgba(245,240,232,0.25);
+    letter-spacing: 0.1em;
+    z-index: 100;
+  }
+
+  /* Dark slide variant */
+  .slide-dark {
+    background: linear-gradient(135deg, var(--green-deep), #0e2218);
+    color: var(--cream);
+  }
+
+  .slide-dark .slide-body {
+    color: var(--cream);
+  }
+
+  .slide-dark .question-text { color: var(--cream); }
+</style>
+</head>
+<body>
+
+<div class="presentation" id="presentation">
+
+  <!-- SLIDE 0: CAPA -->
+  <div class="slide slide-cover active" data-slide="0">
+    <div class="bg-pattern"></div>
+    <div class="cover-left">
+      <div class="cover-eyebrow">Técnico em Agroecologia — 1º Ano</div>
+      <h1 class="cover-title">Antes da<br><span>Era Digital</span></h1>
+      <p class="cover-subtitle">Como a tecnologia transformou o cotidiano e o que significa viver numa sociedade digital — do mundo analógico à revolução dos computadores.</p>
+      <div class="cover-unit-tag">Unidade 1 — Educação Digital</div>
+    </div>
+    <div class="cover-right">
+      <div class="cover-visual">
+        <div class="ring ring-1"><div class="ring-dot"></div></div>
+        <div class="ring ring-2"><div class="ring-dot ring-dot-amber"></div></div>
+        <div class="ring ring-3"></div>
+        <div class="ring-icon">💻</div>
+      </div>
+    </div>
+    <div class="cover-footer">
+      <div class="footer-author">
+        <div class="author-avatar">ED</div>
+        <div class="author-info">
+          <div class="author-name">Educação Digital</div>
+          <div class="author-email">1º Ano · Técnico em Agroecologia</div>
+        </div>
+      </div>
+      <div class="footer-duration">⏱ 90 min · 14 slides</div>
+    </div>
+  </div>
+
+  <!-- SLIDE 1: OBJETIVOS -->
+  <div class="slide slide-content" data-slide="1">
+    <div class="slide-header">
+      <div class="slide-number">01 / 14</div>
+      <div class="slide-title-bar">Objetivos da Aula</div>
+      <div class="slide-category">Introdução</div>
+    </div>
+    <div class="slide-body">
+      <div class="content-main">
+        <ul class="bullet-list">
+          <li class="bullet-item">
+            <div class="bullet-icon">📱</div>
+            <div>
+              <div class="bullet-text">Compreender a diferença entre os mundos analógico e digital</div>
+              <div class="bullet-detail">Entender o que mudou na vida das pessoas com a chegada dos computadores e da internet.</div>
+            </div>
+          </li>
+          <li class="bullet-item">
+            <div class="bullet-icon">📷</div>
+            <div>
+              <div class="bullet-text">Refletir sobre a fotografia como fonte histórica</div>
+              <div class="bullet-detail">Compreender o valor das imagens para preservar memórias e registrar a história de povos e culturas.</div>
+            </div>
+          </li>
+          <li class="bullet-item">
+            <div class="bullet-icon">🖥️</div>
+            <div>
+              <div class="bullet-text">Conhecer a revolução tecnológica dos computadores</div>
+              <div class="bullet-detail">Situar o surgimento dos computadores no contexto histórico e geográfico, relacionando com impactos sociais e econômicos.</div>
+            </div>
+          </li>
+          <li class="bullet-item">
+            <div class="bullet-icon">🌿</div>
+            <div>
+              <div class="bullet-text">Relacionar tecnologia ao futuro da Agroecologia</div>
+              <div class="bullet-detail">Perceber que o técnico em Agroecologia do século XXI precisa dominar ferramentas digitais para trabalhar no campo.</div>
+            </div>
+          </li>
+        </ul>
+      </div>
+      <div class="side-panel">
+        <div class="concept-box" style="margin-top:0;">
+          <div class="concept-label">💡 Para refletir</div>
+          <div class="concept-text">O que você conseguiria fazer hoje sem o celular ou sem a internet? Quais seriam as alternativas "analógicas"?</div>
+        </div>
+      </div>
+    </div>
+    <div class="slide-footer">
+      <div class="footer-logo">Antes da Era Digital</div>
+      <div class="footer-contact">Educação Digital · 1º Ano Técnico em Agroecologia</div>
+    </div>
+  </div>
+
+  <!-- SLIDE 2: MUNDO ANALÓGICO x DIGITAL -->
+  <div class="slide slide-content" data-slide="2">
+    <div class="slide-header">
+      <div class="slide-number">02 / 14</div>
+      <div class="slide-title-bar">Analógico × Digital</div>
+      <div class="slide-category">Conceitos</div>
+    </div>
+    <div class="slide-body">
+      <div class="content-main">
+        <div class="compare-grid">
+          <div class="compare-col analog">
+            <div class="compare-header analog">📼 Mundo Analógico</div>
+            <div class="compare-item"><span>✉️</span> Cartas físicas para se comunicar</div>
+            <div class="compare-item"><span>🗺️</span> Guias de rua e mapas impressos</div>
+            <div class="compare-item"><span>📚</span> Enciclopédias e jornais impressos</div>
+            <div class="compare-item"><span>📞</span> Listas telefônicas</div>
+            <div class="compare-item"><span>💿</span> CD-players e fitas cassete</div>
+            <div class="compare-item"><span>🏧</span> Caixas eletrônicos físicos</div>
+            <div class="compare-item"><span>📼</span> Videolocadoras</div>
+            <div class="compare-item"><span>🎞️</span> Fotos reveladas em laboratório</div>
+          </div>
+          <div class="compare-col digital">
+            <div class="compare-header digital">📲 Mundo Digital</div>
+            <div class="compare-item"><span>💬</span> Aplicativos de mensagem instantânea</div>
+            <div class="compare-item"><span>🗺️</span> GPS e mapas virtuais em tempo real</div>
+            <div class="compare-item"><span>🔍</span> Buscadores e enciclopédias on-line</div>
+            <div class="compare-item"><span>📱</span> Contatos salvos no smartphone</div>
+            <div class="compare-item"><span>🎵</span> Streaming de músicas e podcasts</div>
+            <div class="compare-item"><span>💳</span> Transações bancárias pelo celular</div>
+            <div class="compare-item"><span>🎬</span> Streaming de filmes e séries</div>
+            <div class="compare-item"><span>📸</span> Fotos digitais ilimitadas na nuvem</div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="slide-footer">
+      <div class="footer-logo">Antes da Era Digital</div>
+      <div class="footer-contact">Educação Digital · 1º Ano Técnico em Agroecologia</div>
+    </div>
+  </div>
+
+  <!-- SLIDE 3: O CELULAR E SUAS TRANSFORMAÇÕES -->
+  <div class="slide slide-content" data-slide="3">
+    <div class="slide-header">
+      <div class="slide-number">03 / 14</div>
+      <div class="slide-title-bar">A Evolução do Celular</div>
+      <div class="slide-category">Tecnologia</div>
+    </div>
+    <div class="slide-body">
+      <div class="content-main">
+        <ul class="bullet-list">
+          <li class="bullet-item">
+            <div class="bullet-icon">📅</div>
+            <div>
+              <div class="bullet-text">1973 — O primeiro celular</div>
+              <div class="bullet-detail">O primeiro aparelho de telefonia celular foi lançado em 1973. Por ter custo extremamente elevado, era acessível a pouquíssimas pessoas.</div>
+            </div>
+          </li>
+          <li class="bullet-item">
+            <div class="bullet-icon">📱</div>
+            <div>
+              <div class="bullet-text">Popularização nos anos 2000</div>
+              <div class="bullet-detail">Cerca de 40 anos depois, os celulares se popularizaram e passaram a ter novas finalidades além da telefonia — câmera, agenda, música.</div>
+            </div>
+          </li>
+          <li class="bullet-item">
+            <div class="bullet-icon">🤳</div>
+            <div>
+              <div class="bullet-text">Smartphones — o celular inteligente</div>
+              <div class="bullet-detail"><em>Smart</em> = inteligente; <em>phone</em> = telefone. Os smartphones se conectam à internet e concentram dezenas de funções em um único aparelho.</div>
+            </div>
+          </li>
+          <li class="bullet-item">
+            <div class="bullet-icon">🌿</div>
+            <div>
+              <div class="bullet-text">Celular no campo: uma ferramenta de trabalho</div>
+              <div class="bullet-detail">Para o técnico em Agroecologia, o smartphone serve para monitorar clima, acessar dados de solo, registrar pragas e consultar receituários.</div>
+            </div>
+          </li>
+        </ul>
+        <div class="concept-box">
+          <div class="concept-label">📊 Brasil — Dados IBGE (2022)</div>
+          <div class="concept-text">96,6% dos domicílios brasileiros com internet têm ao menos um celular. O telefone celular é o principal meio de acesso à internet no país (98,9% dos usuários).</div>
+        </div>
+      </div>
+    </div>
+    <div class="slide-footer">
+      <div class="footer-logo">Antes da Era Digital</div>
+      <div class="footer-contact">Educação Digital · 1º Ano Técnico em Agroecologia</div>
+    </div>
+  </div>
+
+  <!-- SLIDE 4: POSSIBILIDADES DIGITAIS -->
+  <div class="slide slide-content" data-slide="4">
+    <div class="slide-header">
+      <div class="slide-number">04 / 14</div>
+      <div class="slide-title-bar">O que o Celular Conectado Oferece</div>
+      <div class="slide-category">Aplicações</div>
+    </div>
+    <div class="slide-body">
+      <div class="content-main">
+        <div class="apps-grid">
+          <div class="app-card">
+            <div class="app-icon">💬</div>
+            <div class="app-name">Comunicação por mensagens</div>
+          </div>
+          <div class="app-card">
+            <div class="app-icon">🔍</div>
+            <div class="app-name">Busca de informações</div>
+          </div>
+          <div class="app-card">
+            <div class="app-icon">🗺️</div>
+            <div class="app-name">GPS e mapas virtuais</div>
+          </div>
+          <div class="app-card">
+            <div class="app-icon">📹</div>
+            <div class="app-name">Chamadas de vídeo</div>
+          </div>
+          <div class="app-card">
+            <div class="app-icon">🎵</div>
+            <div class="app-name">Streaming de música</div>
+          </div>
+          <div class="app-card">
+            <div class="app-icon">🏦</div>
+            <div class="app-name">Transações bancárias</div>
+          </div>
+          <div class="app-card">
+            <div class="app-icon">🛒</div>
+            <div class="app-name">Compras on-line</div>
+          </div>
+          <div class="app-card">
+            <div class="app-icon">🎬</div>
+            <div class="app-name">Filmes e séries</div>
+          </div>
+          <div class="app-card">
+            <div class="app-icon">🌦️</div>
+            <div class="app-name">Previsão do tempo</div>
+          </div>
+          <div class="app-card">
+            <div class="app-icon">📸</div>
+            <div class="app-name">Fotografia digital</div>
+          </div>
+          <div class="app-card">
+            <div class="app-icon">📡</div>
+            <div class="app-name">Acesso a notícias</div>
+          </div>
+          <div class="app-card">
+            <div class="app-icon">🌱</div>
+            <div class="app-name">Apps de agricultura</div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="slide-footer">
+      <div class="footer-logo">Antes da Era Digital</div>
+      <div class="footer-contact">Educação Digital · 1º Ano Técnico em Agroecologia</div>
+    </div>
+  </div>
+
+  <!-- SLIDE 5: FOTOGRAFIA COMO FONTE HISTÓRICA -->
+  <div class="slide slide-content" data-slide="5">
+    <div class="slide-header">
+      <div class="slide-number">05 / 14</div>
+      <div class="slide-title-bar">Fotografia como Fonte Histórica</div>
+      <div class="slide-category">Memória</div>
+    </div>
+    <div class="slide-body">
+      <div class="content-main">
+        <ul class="bullet-list">
+          <li class="bullet-item">
+            <div class="bullet-icon">🖼️</div>
+            <div>
+              <div class="bullet-text">Fotografias revelam aspectos culturais e simbólicos</div>
+              <div class="bullet-detail">Por meio de fotos, conhecemos costumes, vestimentas, modos de vida e eventos marcantes de diferentes épocas e povos.</div>
+            </div>
+          </li>
+          <li class="bullet-item">
+            <div class="bullet-icon">📸</div>
+            <div>
+              <div class="bullet-text">A fotografia analógica era limitada e cara</div>
+              <div class="bullet-detail">Cada rolo de filme comportava 24 ou 36 poses. Após usar o rolo, era preciso levá-lo a um laboratório para revelar — sem saber se a foto ficou boa.</div>
+            </div>
+          </li>
+          <li class="bullet-item">
+            <div class="bullet-icon">📘</div>
+            <div>
+              <div class="bullet-text">O álbum de família como memória física</div>
+              <div class="bullet-detail">Álbuns podiam ser passados de pais para filhos. Esse hábito está se perdendo, pois as novas gerações têm acesso apenas a fotos digitais no celular.</div>
+            </div>
+          </li>
+          <li class="bullet-item">
+            <div class="bullet-icon">☁️</div>
+            <div>
+              <div class="bullet-text">Como preservar fotos digitais para o futuro?</div>
+              <div class="bullet-detail">Use a nuvem (Google Fotos, iCloud), HDs externos e pendrives. Considere também revelar fotos importantes em papel para garantir a memória física.</div>
+            </div>
+          </li>
+        </ul>
+      </div>
+      <div class="side-panel">
+        <div class="question-box">
+          <div class="question-icon">🤔</div>
+          <div class="question-text">Se seu celular quebrasse agora, quantas fotos e memórias você perderia para sempre?</div>
+        </div>
+        <div class="panel-card" style="margin-top:0;">
+          <div class="panel-title">Dica prática</div>
+          <div class="panel-item"><div class="panel-dot"></div>Ative o backup automático</div>
+          <div class="panel-item"><div class="panel-dot"></div>Use o Google Fotos</div>
+          <div class="panel-item"><div class="panel-dot"></div>Tenha um HD externo</div>
+          <div class="panel-item"><div class="panel-dot"></div>Revele fotos especiais</div>
+        </div>
+      </div>
+    </div>
+    <div class="slide-footer">
+      <div class="footer-logo">Antes da Era Digital</div>
+      <div class="footer-contact">Educação Digital · 1º Ano Técnico em Agroecologia</div>
+    </div>
+  </div>
+
+  <!-- SLIDE 6: O QUE É UMA REVOLUÇÃO? -->
+  <div class="slide slide-content" data-slide="6">
+    <div class="slide-header">
+      <div class="slide-number">06 / 14</div>
+      <div class="slide-title-bar">O que é uma Revolução?</div>
+      <div class="slide-category">Conceito</div>
+    </div>
+    <div class="slide-body">
+      <div class="content-main">
+        <div class="concept-box" style="margin-bottom:24px;">
+          <div class="concept-label">📖 Definição</div>
+          <div class="concept-text">Revolução é uma transformação profunda da realidade social, econômica, política e cultural de um povo. Há sempre um "antes" e um "depois".</div>
+        </div>
+        <ul class="bullet-list">
+          <li class="bullet-item">
+            <div class="bullet-icon">🌾</div>
+            <div>
+              <div class="bullet-text">Revolução Agrícola</div>
+              <div class="bullet-detail">Quando os seres humanos deixaram de ser nômades e passaram a cultivar alimentos — transformação fundamental para a civilização.</div>
+            </div>
+          </li>
+          <li class="bullet-item">
+            <div class="bullet-icon">⚙️</div>
+            <div>
+              <div class="bullet-text">Revolução Industrial (séc. XVIII–XIX)</div>
+              <div class="bullet-detail">Substituição do trabalho manual por máquinas movidas a vapor, transformando a produção e o trabalho humano.</div>
+            </div>
+          </li>
+          <li class="bullet-item">
+            <div class="bullet-icon">💻</div>
+            <div>
+              <div class="bullet-text">Revolução Tecnológica (séc. XX–XXI)</div>
+              <div class="bullet-detail">Invenção dos computadores e da internet que modificou profundamente o cotidiano, o trabalho, a comunicação e as relações sociais.</div>
+            </div>
+          </li>
+        </ul>
+        <div class="highlight-box">
+          <div class="highlight-text">Cada revolução tecnológica criou novas profissões — incluindo novas formas de trabalhar no campo. O técnico em Agroecologia digital é fruto desta última revolução.</div>
+        </div>
+      </div>
+    </div>
+    <div class="slide-footer">
+      <div class="footer-logo">Antes da Era Digital</div>
+      <div class="footer-contact">Educação Digital · 1º Ano Técnico em Agroecologia</div>
+    </div>
+  </div>
+
+  <!-- SLIDE 7: A REVOLUÇÃO TECNOLÓGICA -->
+  <div class="slide slide-content" data-slide="7">
+    <div class="slide-header">
+      <div class="slide-number">07 / 14</div>
+      <div class="slide-title-bar">A Revolução Tecnológica</div>
+      <div class="slide-category">História</div>
+    </div>
+    <div class="slide-body">
+      <div class="content-main">
+        <ul class="bullet-list">
+          <li class="bullet-item">
+            <div class="bullet-icon">🌍</div>
+            <div>
+              <div class="bullet-text">Origem concentrada em poucos países</div>
+              <div class="bullet-detail">A invenção dos computadores ficou restrita a EUA, Inglaterra, Japão e União Soviética — especialmente entre a 2ª Guerra Mundial e a Guerra Fria.</div>
+            </div>
+          </li>
+          <li class="bullet-item">
+            <div class="bullet-icon">📡</div>
+            <div>
+              <div class="bullet-text">Difusão global no final do século XX</div>
+              <div class="bullet-detail">As transformações sociais e econômicas geradas pela tecnologia se espalharam para o mundo inteiro a partir dos anos 1990.</div>
+            </div>
+          </li>
+          <li class="bullet-item">
+            <div class="bullet-icon">🏭</div>
+            <div>
+              <div class="bullet-text">Impacto na organização do trabalho</div>
+              <div class="bullet-detail">Alterou laços de convivência, modos de produção, relações entre empregadores e empregados, e o consumo de informações e notícias.</div>
+            </div>
+          </li>
+          <li class="bullet-item">
+            <div class="bullet-icon">⚡</div>
+            <div>
+              <div class="bullet-text">Há um "antes" e um "depois"</div>
+              <div class="bullet-detail">A invenção e a popularização dos computadores — e depois da internet — criaram uma ruptura definitiva na forma como vivemos e trabalhamos.</div>
+            </div>
+          </li>
+        </ul>
+      </div>
+      <div class="side-panel">
+        <div class="concept-box" style="margin-top:0;">
+          <div class="concept-label">🧠 Conexão com Agroecologia</div>
+          <div class="concept-text">A tecnologia também revolucionou o campo: manejo integrado de pragas, sistemas agroflorestais digitalizados, sensores de solo — tudo conectado à internet.</div>
+        </div>
+      </div>
+    </div>
+    <div class="slide-footer">
+      <div class="footer-logo">Antes da Era Digital</div>
+      <div class="footer-contact">Educação Digital · 1º Ano Técnico em Agroecologia</div>
+    </div>
+  </div>
+
+  <!-- SLIDE 8: LINHA DO TEMPO (1822–1946) -->
+  <div class="slide slide-content" data-slide="8">
+    <div class="slide-header">
+      <div class="slide-number">08 / 14</div>
+      <div class="slide-title-bar">Linha do Tempo da Computação — Parte 1</div>
+      <div class="slide-category">História</div>
+    </div>
+    <div class="slide-body">
+      <div class="content-main">
+        <div class="timeline">
+          <div class="timeline-item">
+            <div class="timeline-year">1822</div>
+            <div class="timeline-dot"></div>
+            <div class="timeline-content">
+              <div class="timeline-title">Máquina Diferencial de Babbage</div>
+              <div class="timeline-text">Charles Babbage projetou um dispositivo mecânico para calcular tabelas matemáticas. É considerado por alguns historiadores como o "pai do computador".</div>
+            </div>
+          </div>
+          <div class="timeline-item">
+            <div class="timeline-year">1843</div>
+            <div class="timeline-dot"></div>
+            <div class="timeline-content">
+              <div class="timeline-title">Invenção da Programação — Ada Lovelace</div>
+              <div class="timeline-text">Ada Lovelace escreveu o primeiro algoritmo destinado a ser processado por uma máquina. É considerada a primeira programadora de computadores da história.</div>
+            </div>
+          </div>
+          <div class="timeline-item">
+            <div class="timeline-year">1890</div>
+            <div class="timeline-dot"></div>
+            <div class="timeline-content">
+              <div class="timeline-title">Cartão Perfurado — Herman Hollerith</div>
+              <div class="timeline-text">Inventou uma máquina para tabular dados usando cartões perfurados, acelerando o censo dos EUA. Os cartões foram usados até a década de 1980.</div>
+            </div>
+          </div>
+          <div class="timeline-item">
+            <div class="timeline-year">1934</div>
+            <div class="timeline-dot"></div>
+            <div class="timeline-content">
+              <div class="timeline-title">Z1 — Konrad Zuse (Alemanha)</div>
+              <div class="timeline-text">Primeira máquina binária programável do mundo, destruída por ataque aéreo na 2ª Guerra. Usava o sistema binário — a linguagem dos computadores até hoje.</div>
+            </div>
+          </div>
+          <div class="timeline-item">
+            <div class="timeline-year">1936</div>
+            <div class="timeline-dot"></div>
+            <div class="timeline-content">
+              <div class="timeline-title">Máquina de Turing — Alan Turing</div>
+              <div class="timeline-text">Modelo teórico de um computador que poderia executar qualquer cálculo matemático — lançou as bases para a ciência da computação moderna.</div>
+            </div>
+          </div>
+          <div class="timeline-item">
+            <div class="timeline-year">1946</div>
+            <div class="timeline-dot"></div>
+            <div class="timeline-content">
+              <div class="timeline-title">ENIAC — Primeiro computador eletrônico de uso geral</div>
+              <div class="timeline-text">Criado nos EUA, pesava 30 toneladas e financiado pelo exército para calcular trajetórias balísticas. Realizava milhares de cálculos por segundo.</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="slide-footer">
+      <div class="footer-logo">Antes da Era Digital</div>
+      <div class="footer-contact">Educação Digital · 1º Ano Técnico em Agroecologia</div>
+    </div>
+  </div>
+
+  <!-- SLIDE 9: LINHA DO TEMPO (1947–2010) -->
+  <div class="slide slide-content" data-slide="9">
+    <div class="slide-header">
+      <div class="slide-number">09 / 14</div>
+      <div class="slide-title-bar">Linha do Tempo da Computação — Parte 2</div>
+      <div class="slide-category">História</div>
+    </div>
+    <div class="slide-body">
+      <div class="content-main">
+        <div class="timeline">
+          <div class="timeline-item">
+            <div class="timeline-year">1947</div>
+            <div class="timeline-dot"></div>
+            <div class="timeline-content">
+              <div class="timeline-title">Invenção do Transistor</div>
+              <div class="timeline-text">Pesquisadores estadunidenses inventaram o transistor (semicondutor), que permitiu a comunicação entre computadores usando código binário.</div>
+            </div>
+          </div>
+          <div class="timeline-item">
+            <div class="timeline-year">1970s</div>
+            <div class="timeline-dot"></div>
+            <div class="timeline-content">
+              <div class="timeline-title">Microprocessador — Vale do Silício</div>
+              <div class="timeline-text">Criado por empresa do Vale do Silício: um único chip com 2.300 transistores. Hoje, um smartphone tem cerca de 20 bilhões de transistores.</div>
+            </div>
+          </div>
+          <div class="timeline-item">
+            <div class="timeline-year">1977</div>
+            <div class="timeline-dot"></div>
+            <div class="timeline-content">
+              <div class="timeline-title">Computador Pessoal — Jobs e Wozniak</div>
+              <div class="timeline-text">Steve Jobs e Steve Wozniak lançam os primeiros computadores pessoais de sucesso, populares nas casas e escolas de todo o mundo.</div>
+            </div>
+          </div>
+          <div class="timeline-item">
+            <div class="timeline-year">1994</div>
+            <div class="timeline-dot"></div>
+            <div class="timeline-content">
+              <div class="timeline-title">Primeiro Smartphone</div>
+              <div class="timeline-text">Lançado combinando funções de telefone celular e agenda digital (PDA). Oferecia calendário, calculadora e envio de e-mail.</div>
+            </div>
+          </div>
+          <div class="timeline-item">
+            <div class="timeline-year">1995</div>
+            <div class="timeline-dot"></div>
+            <div class="timeline-content">
+              <div class="timeline-title">Privatização da Internet</div>
+              <div class="timeline-text">O governo dos EUA privatizou a infraestrutura da internet, que havia sido criada durante a Guerra Fria pelo Departamento de Defesa americano.</div>
+            </div>
+          </div>
+          <div class="timeline-item">
+            <div class="timeline-year">2010</div>
+            <div class="timeline-dot"></div>
+            <div class="timeline-content">
+              <div class="timeline-title">Primeiro Tablet Popular</div>
+              <div class="timeline-text">Uma multinacional de tecnologia popularizou os tablets como dispositivos para consumir mídia, navegar na web e realizar tarefas cotidianas.</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="slide-footer">
+      <div class="footer-logo">Antes da Era Digital</div>
+      <div class="footer-contact">Educação Digital · 1º Ano Técnico em Agroecologia</div>
+    </div>
+  </div>
+
+  <!-- SLIDE 10: CÓDIGO BINÁRIO -->
+  <div class="slide slide-content" data-slide="10">
+    <div class="slide-header">
+      <div class="slide-number">10 / 14</div>
+      <div class="slide-title-bar">Código Binário — A Linguagem dos Computadores</div>
+      <div class="slide-category">Fundamentos</div>
+    </div>
+    <div class="slide-body">
+      <div class="content-main">
+        <div class="concept-box" style="margin-bottom:20px;">
+          <div class="concept-label">⚡ Como funciona</div>
+          <div class="concept-text">O código binário usa apenas dois dígitos: <strong style="color:var(--green-bright)">1</strong> (ligado) e <strong style="color:var(--amber)">0</strong> (desligado). Com sequências de zeros e uns, os computadores executam todos os seus comandos — da calculadora ao GPS agrícola.</div>
+        </div>
+        <table class="binary-table">
+          <thead>
+            <tr>
+              <th>Letra / Número</th>
+              <th>Código ASCII</th>
+              <th>Código Binário</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr><td>A</td><td>65</td><td class="mono">0100 0001</td></tr>
+            <tr><td>E</td><td>69</td><td class="mono">0100 0101</td></tr>
+            <tr><td>I</td><td>73</td><td class="mono">0100 1001</td></tr>
+            <tr><td>O</td><td>79</td><td class="mono">0100 0111</td></tr>
+            <tr><td>0 (zero)</td><td>48</td><td class="mono">0011 0000</td></tr>
+            <tr><td>1 (um)</td><td>49</td><td class="mono">0011 0001</td></tr>
+            <tr><td>5 (cinco)</td><td>53</td><td class="mono">0011 0101</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <div class="side-panel">
+        <div class="panel-card">
+          <div class="panel-title">O que é um BIT?</div>
+          <div style="font-size:13px;color:rgba(245,240,232,0.8);line-height:1.6;">
+            <strong style="color:var(--amber)">BIT</strong> = <em>Binary Digit</em> (dígito binário). É a menor unidade de informação digital — pode ser apenas <strong>0</strong> ou <strong>1</strong>.
+          </div>
+        </div>
+        <div class="question-box" style="margin-top:0;">
+          <div class="question-icon">🌿</div>
+          <div class="question-text">Sabia que o sensor de umidade do solo no campo também envia dados em código binário para o computador ou app do celular?</div>
+        </div>
+      </div>
+    </div>
+    <div class="slide-footer">
+      <div class="footer-logo">Antes da Era Digital</div>
+      <div class="footer-contact">Educação Digital · 1º Ano Técnico em Agroecologia</div>
+    </div>
+  </div>
+
+  <!-- SLIDE 11: A INTERNET -->
+  <div class="slide slide-content" data-slide="11">
+    <div class="slide-header">
+      <div class="slide-number">11 / 14</div>
+      <div class="slide-title-bar">A Internet e sua Onipresença</div>
+      <div class="slide-category">Internet</div>
+    </div>
+    <div class="slide-body">
+      <div class="content-main">
+        <ul class="bullet-list">
+          <li class="bullet-item">
+            <div class="bullet-icon">🔗</div>
+            <div>
+              <div class="bullet-text">Origem militar — Arpanet (anos 1960)</div>
+              <div class="bullet-detail">Antes da internet, a Arpanet conectava computadores de universidades e instalações militares dos EUA durante a Guerra Fria.</div>
+            </div>
+          </li>
+          <li class="bullet-item">
+            <div class="bullet-icon">📧</div>
+            <div>
+              <div class="bullet-text">1971 — E-mail, o primeiro serviço digital de mensagens</div>
+              <div class="bullet-detail">Criado por funcionário do Departamento de Defesa dos EUA, o e-mail foi o precursor de todos os aplicativos de comunicação digital.</div>
+            </div>
+          </li>
+          <li class="bullet-item">
+            <div class="bullet-icon">🌐</div>
+            <div>
+              <div class="bullet-text">1990 — Surgimento da Web (www)</div>
+              <div class="bullet-detail">Com o protocolo HTTP e as URLs, qualquer pessoa passou a poder navegar e compartilhar informações na internet sem ser especialista em computação.</div>
+            </div>
+          </li>
+          <li class="bullet-item">
+            <div class="bullet-icon">📶</div>
+            <div>
+              <div class="bullet-text">Banda larga e 3G/4G — internet em todo lugar</div>
+              <div class="bullet-detail">Com antenas móveis e tecnologias 3G, 4G e 5G, tornou-se possível acessar a internet a qualquer hora e em qualquer lugar — inclusive no campo.</div>
+            </div>
+          </li>
+        </ul>
+      </div>
+      <div class="side-panel">
+        <div class="panel-card">
+          <div class="panel-title">Glossário Básico</div>
+          <div class="panel-item"><div class="panel-dot"></div><strong>HTTP</strong> — protocolo da web</div>
+          <div class="panel-item"><div class="panel-dot"></div><strong>URL</strong> — endereço de um site</div>
+          <div class="panel-item"><div class="panel-dot"></div><strong>IP</strong> — identidade da máquina</div>
+          <div class="panel-item"><div class="panel-dot"></div><strong>Web</strong> — rede mundial (www)</div>
+          <div class="panel-item"><div class="panel-dot"></div><strong>Banda larga</strong> — internet rápida</div>
+        </div>
+      </div>
+    </div>
+    <div class="slide-footer">
+      <div class="footer-logo">Antes da Era Digital</div>
+      <div class="footer-contact">Educação Digital · 1º Ano Técnico em Agroecologia</div>
+    </div>
+  </div>
+
+  <!-- SLIDE 12: INTERNET NO BRASIL -->
+  <div class="slide slide-content" data-slide="12">
+    <div class="slide-header">
+      <div class="slide-number">12 / 14</div>
+      <div class="slide-title-bar">A Internet no Brasil e no Campo</div>
+      <div class="slide-category">Brasil</div>
+    </div>
+    <div class="slide-body">
+      <div class="content-main">
+        <div class="concept-box" style="margin-bottom:20px;">
+          <div class="concept-label">📊 IBGE — PNAD 2022</div>
+          <div class="concept-text">A internet está presente em <strong style="color:var(--green-bright)">91,5%</strong> dos domicílios brasileiros. O celular é o principal meio de acesso: <strong style="color:var(--amber)">98,9%</strong> dos usuários navegam pelo smartphone.</div>
+        </div>
+        <div class="comp-list">
+          <div class="comp-card">
+            <div class="comp-num">📱</div>
+            <div>
+              <div class="comp-text">Celular — 98,9% dos acessos</div>
+              <div class="comp-detail">Principal dispositivo de acesso à internet no Brasil, presente em quase todos os lares com conexão.</div>
+            </div>
+          </div>
+          <div class="comp-card">
+            <div class="comp-num">📺</div>
+            <div>
+              <div class="comp-text">Televisor — 47,5%</div>
+              <div class="comp-detail">Smart TVs tornaram-se o segundo dispositivo mais usado para acessar internet nos domicílios brasileiros.</div>
+            </div>
+          </div>
+          <div class="comp-card">
+            <div class="comp-num">💻</div>
+            <div>
+              <div class="comp-text">Computador Pessoal — 35,5%</div>
+              <div class="comp-detail">Ainda relevante para trabalho e estudos, mas perdeu espaço para smartphones e tablets.</div>
+            </div>
+          </div>
+          <div class="comp-card">
+            <div class="comp-num">🌿</div>
+            <div>
+              <div class="comp-text">Internet rural: desafio e oportunidade</div>
+              <div class="comp-detail">Comunidades rurais ainda enfrentam dificuldades de acesso, mas a conectividade no campo cresce com programas como o Conecta Rural.</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="slide-footer">
+      <div class="footer-logo">Antes da Era Digital</div>
+      <div class="footer-contact">Educação Digital · 1º Ano Técnico em Agroecologia</div>
+    </div>
+  </div>
+
+  <!-- SLIDE 13: ATIVIDADE -->
+  <div class="slide slide-content" data-slide="13">
+    <div class="slide-header">
+      <div class="slide-number">13 / 14</div>
+      <div class="slide-title-bar">Atividades e Reflexões</div>
+      <div class="slide-category">Prática</div>
+    </div>
+    <div class="slide-body">
+      <div class="content-main">
+        <div class="comp-list">
+          <div class="comp-card">
+            <div class="comp-num">01</div>
+            <div>
+              <div class="comp-text">Mundo analógico × mundo digital</div>
+              <div class="comp-detail">Descreva as principais características do cotidiano no mundo analógico. Em seguida, indique as principais alterações trazidas pelo mundo digital com a popularização dos computadores e da internet.</div>
+            </div>
+          </div>
+          <div class="comp-card">
+            <div class="comp-num">02</div>
+            <div>
+              <div class="comp-text">Fotografia como fonte histórica</div>
+              <div class="comp-detail">Converse com colegas sobre a importância da fotografia como fonte histórica e escreva um texto breve com as conclusões. Como preservar fotos digitais para as próximas gerações?</div>
+            </div>
+          </div>
+          <div class="comp-card">
+            <div class="comp-num">03</div>
+            <div>
+              <div class="comp-text">Investigação: uso da internet</div>
+              <div class="comp-detail">Pesquise com colegas e familiares quantas horas por dia se conectam à internet (profissional, educacional, lazer). Apresente os dados em um gráfico.</div>
+            </div>
+          </div>
+          <div class="comp-card">
+            <div class="comp-num">04</div>
+            <div>
+              <div class="comp-text">Código binário na prática</div>
+              <div class="comp-detail">Pesquise uma tabela de código binário para todas as letras do alfabeto. Escreva uma mensagem curta em binário e troque com um colega para decodificar.</div>
+            </div>
+          </div>
+          <div class="comp-card">
+            <div class="comp-num">05</div>
+            <div>
+              <div class="comp-text">Tecnologia no campo — conexão com Agroecologia</div>
+              <div class="comp-detail">Pesquise um exemplo de uso de tecnologia digital na Agroecologia (app, sensor, drone, SIG). Explique como essa ferramenta pode beneficiar práticas sustentáveis.</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="slide-footer">
+      <div class="footer-logo">Antes da Era Digital</div>
+      <div class="footer-contact">Educação Digital · 1º Ano Técnico em Agroecologia</div>
+    </div>
+  </div>
+
+  <!-- SLIDE 14: ENCERRAMENTO -->
+  <div class="slide slide-cover" data-slide="14" style="background:linear-gradient(135deg,#0e2218 0%,var(--green-deep) 50%,#1a3015 100%);">
+    <div class="bg-pattern"></div>
+    <div class="cover-left">
+      <div class="cover-eyebrow">Síntese da Aula</div>
+      <h1 class="cover-title">Há um "antes"<br>e um <span>"depois"</span></h1>
+      <p class="cover-subtitle">A revolução tecnológica transformou como vivemos, trabalhamos e cultivamos. O técnico em Agroecologia do século XXI precisa dominar as ferramentas digitais para atuar com mais eficiência, sustentabilidade e precisão.</p>
+      <div style="display:flex;flex-direction:column;gap:12px;opacity:0;animation:fadeUp 0.8s 0.9s forwards;">
+        <div style="display:flex;align-items:center;gap:12px;font-size:14px;color:var(--cream);">
+          <span style="font-size:20px;">🌱</span> Tecnologia a serviço da vida e do campo
+        </div>
+        <div style="display:flex;align-items:center;gap:12px;font-size:14px;color:rgba(245,240,232,0.6);">
+          <span style="font-size:20px;">💡</span> Conhecimento digital = mais autonomia no trabalho
+        </div>
+        <div style="display:flex;align-items:center;gap:12px;font-size:14px;color:rgba(245,240,232,0.6);">
+          <span style="font-size:20px;">🤝</span> Agroecologia + Tecnologia = futuro sustentável
+        </div>
+      </div>
+    </div>
+    <div class="cover-right">
+      <div class="cover-visual">
+        <div class="ring ring-1"><div class="ring-dot"></div></div>
+        <div class="ring ring-2"><div class="ring-dot ring-dot-amber"></div></div>
+        <div class="ring ring-3"></div>
+        <div class="ring-icon">🌿</div>
+      </div>
+    </div>
+    <div class="cover-footer">
+      <div class="footer-author">
+        <div class="author-avatar">ED</div>
+        <div class="author-info">
+          <div class="author-name">Educação Digital</div>
+          <div class="author-email">1º Ano · Técnico em Agroecologia</div>
+        </div>
+      </div>
+      <div style="font-family:'DM Serif Display',serif;font-size:13px;color:var(--green-bright);font-style:italic;">Antes da Era Digital — Unidade 1</div>
+    </div>
+  </div>
+
+</div><!-- end presentation -->
+
+<!-- NAVIGATION -->
+<nav class="nav" id="nav">
+  <button class="nav-btn" id="prevBtn" onclick="navigate(-1)" disabled>← Anterior</button>
+  <div class="nav-dots" id="navDots"></div>
+  <span class="nav-counter" id="navCounter">1 / 15</span>
+  <button class="nav-btn" id="nextBtn" onclick="navigate(1)">Próximo →</button>
+</nav>
+
+<div class="kbd-hint">← → SETAS PARA NAVEGAR</div>
+
+<script>
+  const slides = document.querySelectorAll('.slide');
+  const navDots = document.getElementById('navDots');
+  const navCounter = document.getElementById('navCounter');
+  const prevBtn = document.getElementById('prevBtn');
+  const nextBtn = document.getElementById('nextBtn');
+  const total = slides.length;
+  let current = 0;
+
+  // Build dots
+  slides.forEach((_, i) => {
+    const dot = document.createElement('div');
+    dot.className = 'nav-dot' + (i === 0 ? ' active' : '');
+    dot.onclick = () => goTo(i);
+    navDots.appendChild(dot);
+  });
+
+  function goTo(n) {
+    if (n < 0 || n >= total) return;
+    slides[current].classList.remove('active');
+    slides[current].classList.add('exit');
+    setTimeout(() => slides[current < n ? current : n].classList.remove('exit'), 500);
+    // reflow for animations
+    slides[n].querySelectorAll('.bullet-item, .timeline-item, .comp-card').forEach(el => {
+      el.style.animation = 'none';
+      el.offsetHeight;
+      el.style.animation = '';
+    });
+    current = n;
+    slides[current].classList.add('active');
+    setTimeout(() => {
+      slides.forEach(s => s.classList.remove('exit'));
+    }, 600);
+    updateUI();
+  }
+
+  function navigate(dir) {
+    goTo(current + dir);
+  }
+
+  function updateUI() {
+    navCounter.textContent = (current + 1) + ' / ' + total;
+    prevBtn.disabled = current === 0;
+    nextBtn.disabled = current === total - 1;
+    document.querySelectorAll('.nav-dot').forEach((dot, i) => {
+      dot.classList.toggle('active', i === current);
+    });
+  }
+
+  document.addEventListener('keydown', e => {
+    if (e.key === 'ArrowRight' || e.key === 'ArrowDown') navigate(1);
+    if (e.key === 'ArrowLeft' || e.key === 'ArrowUp') navigate(-1);
+  });
+
+  updateUI();
+</script>
+</body>
+</html>
