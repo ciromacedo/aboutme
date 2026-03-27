@@ -1,0 +1,1024 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>GPS & Coordenadas — Latitude & Longitude</title>
+<link href="https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&family=DM+Sans:wght@300;400;600;800&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #0a0f1e;
+    --panel: #111827;
+    --panel2: #1a2236;
+    --accent: #00e5ff;
+    --accent2: #ff6b35;
+    --accent3: #7cf56e;
+    --text: #e8f4f8;
+    --muted: #6b8097;
+    --lat-color: #ff6b35;
+    --lon-color: #00e5ff;
+    --grid: rgba(0,229,255,0.08);
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: 'DM Sans', sans-serif;
+    min-height: 100vh;
+    overflow-x: hidden;
+  }
+
+  /* ── HEADER ── */
+  header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 18px 36px;
+    border-bottom: 1px solid rgba(0,229,255,0.15);
+    background: rgba(10,15,30,0.9);
+    position: sticky; top: 0; z-index: 100;
+    backdrop-filter: blur(12px);
+  }
+  header h1 {
+    font-family: 'Space Mono', monospace;
+    font-size: 1.1rem;
+    color: var(--accent);
+    letter-spacing: 2px;
+    text-transform: uppercase;
+  }
+  .badge {
+    font-family: 'Space Mono', monospace;
+    font-size: 0.65rem;
+    background: rgba(0,229,255,0.1);
+    border: 1px solid rgba(0,229,255,0.3);
+    color: var(--accent);
+    padding: 4px 12px;
+    border-radius: 20px;
+    letter-spacing: 1px;
+  }
+
+  /* ── TABS ── */
+  .tabs {
+    display: flex;
+    gap: 6px;
+    padding: 20px 36px 0;
+    border-bottom: 1px solid rgba(255,255,255,0.06);
+  }
+  .tab {
+    padding: 10px 22px;
+    border-radius: 8px 8px 0 0;
+    background: var(--panel);
+    border: 1px solid rgba(255,255,255,0.06);
+    border-bottom: none;
+    color: var(--muted);
+    cursor: pointer;
+    font-weight: 600;
+    font-size: 0.85rem;
+    transition: all 0.2s;
+    position: relative; bottom: -1px;
+  }
+  .tab.active {
+    background: var(--panel2);
+    color: var(--text);
+    border-color: rgba(0,229,255,0.25);
+    border-bottom: 1px solid var(--panel2);
+  }
+  .tab:hover:not(.active) { color: var(--text); }
+
+  /* ── SECTIONS ── */
+  .section { display: none; padding: 36px; }
+  .section.active { display: block; }
+
+  /* ── GLOBE SECTION ── */
+  .globe-layout {
+    display: grid;
+    grid-template-columns: 1fr 340px;
+    gap: 28px;
+    align-items: start;
+  }
+
+  .globe-card {
+    background: var(--panel);
+    border: 1px solid rgba(0,229,255,0.12);
+    border-radius: 20px;
+    padding: 28px;
+  }
+
+  .globe-card h2 {
+    font-size: 1.2rem;
+    font-weight: 800;
+    margin-bottom: 6px;
+  }
+  .globe-card p {
+    color: var(--muted);
+    font-size: 0.9rem;
+    line-height: 1.6;
+    margin-bottom: 20px;
+  }
+
+  /* SVG Globe */
+  #globe-svg {
+    width: 100%;
+    max-width: 520px;
+    margin: 0 auto;
+    display: block;
+    cursor: crosshair;
+  }
+
+  .coords-display {
+    display: flex;
+    gap: 16px;
+    margin-top: 20px;
+  }
+  .coord-box {
+    flex: 1;
+    padding: 14px 18px;
+    border-radius: 12px;
+    border: 2px solid;
+  }
+  .coord-box.lat { border-color: var(--lat-color); background: rgba(255,107,53,0.08); }
+  .coord-box.lon { border-color: var(--lon-color); background: rgba(0,229,255,0.08); }
+  .coord-box label {
+    font-family: 'Space Mono', monospace;
+    font-size: 0.65rem;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    opacity: 0.7;
+    display: block;
+    margin-bottom: 4px;
+  }
+  .coord-box .val {
+    font-family: 'Space Mono', monospace;
+    font-size: 1.3rem;
+    font-weight: 700;
+  }
+  .coord-box.lat .val { color: var(--lat-color); }
+  .coord-box.lon .val { color: var(--lon-color); }
+
+  /* Sidebar info */
+  .info-panel {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+  }
+  .info-card {
+    background: var(--panel);
+    border-radius: 16px;
+    padding: 20px;
+    border: 1px solid rgba(255,255,255,0.06);
+  }
+  .info-card h3 {
+    font-size: 0.85rem;
+    font-weight: 800;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    margin-bottom: 10px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  .dot {
+    width: 10px; height: 10px;
+    border-radius: 50%;
+    display: inline-block;
+  }
+  .dot.lat { background: var(--lat-color); }
+  .dot.lon { background: var(--lon-color); }
+  .dot.gps { background: var(--accent3); }
+
+  .info-card p {
+    font-size: 0.85rem;
+    color: var(--muted);
+    line-height: 1.65;
+  }
+  .info-card strong { color: var(--text); }
+
+  .range-group { margin-top: 12px; }
+  .range-group label {
+    font-size: 0.8rem;
+    color: var(--muted);
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 6px;
+  }
+  input[type=range] {
+    width: 100%;
+    -webkit-appearance: none;
+    height: 6px;
+    border-radius: 4px;
+    background: rgba(255,255,255,0.1);
+    outline: none;
+    cursor: pointer;
+  }
+  input[type=range].lat-range::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    width: 18px; height: 18px;
+    border-radius: 50%;
+    background: var(--lat-color);
+    box-shadow: 0 0 8px var(--lat-color);
+  }
+  input[type=range].lon-range::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    width: 18px; height: 18px;
+    border-radius: 50%;
+    background: var(--lon-color);
+    box-shadow: 0 0 8px var(--lon-color);
+  }
+
+  /* ── GPS SECTION ── */
+  #gps-canvas-wrap {
+    background: var(--panel);
+    border-radius: 20px;
+    padding: 28px;
+    border: 1px solid rgba(0,229,255,0.12);
+  }
+  #gps-canvas-wrap h2 { font-size: 1.2rem; font-weight: 800; margin-bottom: 6px; }
+  #gps-canvas-wrap p { color: var(--muted); font-size: 0.9rem; margin-bottom: 20px; line-height: 1.6; }
+
+  #gps-canvas {
+    width: 100%;
+    border-radius: 12px;
+    background: #060d1f;
+    display: block;
+  }
+
+  .gps-controls {
+    display: flex;
+    gap: 12px;
+    margin-top: 20px;
+    flex-wrap: wrap;
+  }
+  .btn {
+    padding: 10px 22px;
+    border-radius: 10px;
+    border: none;
+    font-family: 'DM Sans', sans-serif;
+    font-weight: 700;
+    font-size: 0.85rem;
+    cursor: pointer;
+    transition: all 0.2s;
+  }
+  .btn-primary {
+    background: var(--accent);
+    color: var(--bg);
+  }
+  .btn-primary:hover { background: #33ecff; transform: translateY(-1px); }
+  .btn-ghost {
+    background: rgba(255,255,255,0.05);
+    color: var(--text);
+    border: 1px solid rgba(255,255,255,0.1);
+  }
+  .btn-ghost:hover { background: rgba(255,255,255,0.1); }
+
+  .sat-count {
+    font-family: 'Space Mono', monospace;
+    font-size: 0.8rem;
+    padding: 10px 18px;
+    background: rgba(124,245,110,0.1);
+    border: 1px solid rgba(124,245,110,0.3);
+    border-radius: 10px;
+    color: var(--accent3);
+  }
+
+  .trilateration-info {
+    margin-top: 20px;
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 12px;
+  }
+  .tri-card {
+    background: var(--panel2);
+    border-radius: 12px;
+    padding: 14px;
+    border: 1px solid rgba(255,255,255,0.05);
+    text-align: center;
+  }
+  .tri-card .num {
+    font-family: 'Space Mono', monospace;
+    font-size: 1.1rem;
+    font-weight: 700;
+    margin-bottom: 4px;
+  }
+  .tri-card .lbl {
+    font-size: 0.72rem;
+    color: var(--muted);
+    text-transform: uppercase;
+    letter-spacing: 1px;
+  }
+
+  /* ── QUIZ SECTION ── */
+  .quiz-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 20px;
+  }
+  .quiz-card {
+    background: var(--panel);
+    border-radius: 16px;
+    padding: 24px;
+    border: 1px solid rgba(255,255,255,0.06);
+  }
+  .quiz-card h3 {
+    font-size: 1rem;
+    font-weight: 800;
+    margin-bottom: 8px;
+  }
+  .quiz-card p { font-size: 0.85rem; color: var(--muted); line-height: 1.6; margin-bottom: 16px; }
+
+  .quiz-options { display: flex; flex-direction: column; gap: 8px; }
+  .quiz-opt {
+    padding: 10px 16px;
+    border-radius: 8px;
+    border: 1px solid rgba(255,255,255,0.1);
+    background: rgba(255,255,255,0.03);
+    cursor: pointer;
+    font-size: 0.85rem;
+    transition: all 0.2s;
+    text-align: left;
+  }
+  .quiz-opt:hover { border-color: var(--accent); color: var(--accent); }
+  .quiz-opt.correct { border-color: var(--accent3) !important; background: rgba(124,245,110,0.1) !important; color: var(--accent3) !important; }
+  .quiz-opt.wrong { border-color: #ff4444 !important; background: rgba(255,68,68,0.1) !important; color: #ff4444 !important; }
+  .quiz-feedback {
+    margin-top: 12px;
+    font-size: 0.82rem;
+    line-height: 1.5;
+    min-height: 20px;
+  }
+
+  /* scrollbar */
+  ::-webkit-scrollbar { width: 6px; }
+  ::-webkit-scrollbar-track { background: var(--bg); }
+  ::-webkit-scrollbar-thumb { background: rgba(0,229,255,0.2); border-radius: 4px; }
+
+  @media (max-width: 820px) {
+    .globe-layout { grid-template-columns: 1fr; }
+    .quiz-grid { grid-template-columns: 1fr; }
+    .tabs { padding: 16px 16px 0; }
+    .section { padding: 20px 16px; }
+    header { padding: 14px 16px; }
+    .trilateration-info { grid-template-columns: 1fr 1fr; }
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <h1>🌍 GPS &amp; Coordenadas</h1>
+  <span class="badge">1° ANO · GEOGRAFIA</span>
+</header>
+
+<div class="tabs">
+  <div class="tab active" onclick="switchTab('globe')">🌐 Latitude &amp; Longitude</div>
+  <div class="tab" onclick="switchTab('gps')">📡 Como o GPS Funciona</div>
+  <div class="tab" onclick="switchTab('quiz')">🧠 Quiz</div>
+</div>
+
+<!-- ══ TAB 1: GLOBE ══ -->
+<div class="section active" id="tab-globe">
+  <div class="globe-layout">
+    <div class="globe-card">
+      <h2>Explore as Coordenadas</h2>
+      <p>Mova os controles ou clique no globo para posicionar o ponto vermelho e ver as coordenadas. A <span style="color:var(--lat-color)">latitude</span> mede distância do Equador; a <span style="color:var(--lon-color)">longitude</span> mede distância do Meridiano de Greenwich.</p>
+
+      <svg id="globe-svg" viewBox="0 0 520 520" xmlns="http://www.w3.org/2000/svg">
+        <defs>
+          <radialGradient id="globeGrad" cx="38%" cy="35%">
+            <stop offset="0%" stop-color="#1a3a6e"/>
+            <stop offset="100%" stop-color="#060d22"/>
+          </radialGradient>
+          <radialGradient id="glowGrad" cx="50%" cy="50%">
+            <stop offset="60%" stop-color="transparent"/>
+            <stop offset="100%" stop-color="rgba(0,229,255,0.15)"/>
+          </radialGradient>
+          <clipPath id="globeClip">
+            <circle cx="260" cy="260" r="220"/>
+          </clipPath>
+          <filter id="glow">
+            <feGaussianBlur stdDeviation="3" result="blur"/>
+            <feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge>
+          </filter>
+        </defs>
+
+        <!-- Globe base -->
+        <circle cx="260" cy="260" r="220" fill="url(#globeGrad)" stroke="rgba(0,229,255,0.25)" stroke-width="1.5"/>
+        <circle cx="260" cy="260" r="220" fill="url(#glowGrad)"/>
+
+        <!-- Grid lines group (clipped) -->
+        <g id="grid-group" clip-path="url(#globeClip)">
+          <!-- Latitude lines (horizontais) -->
+          <g id="lat-lines" stroke="rgba(255,107,53,0.2)" stroke-width="1" fill="none">
+            <!-- generated by JS -->
+          </g>
+          <!-- Longitude lines (verticais) -->
+          <g id="lon-lines" stroke="rgba(0,229,255,0.2)" stroke-width="1" fill="none">
+            <!-- generated by JS -->
+          </g>
+          <!-- Equador highlight -->
+          <line id="equator" x1="40" y1="260" x2="480" y2="260" stroke="rgba(255,107,53,0.6)" stroke-width="2" stroke-dasharray="6,3"/>
+          <!-- Greenwich -->
+          <line id="greenwich" x1="260" y1="40" x2="260" y2="480" stroke="rgba(0,229,255,0.5)" stroke-width="2" stroke-dasharray="6,3"/>
+        </g>
+
+        <!-- Continentes simplificados -->
+        <g clip-path="url(#globeClip)" fill="rgba(30,80,50,0.7)" stroke="rgba(50,150,80,0.4)" stroke-width="0.8" id="continents">
+          <!-- América do Sul -->
+          <ellipse cx="200" cy="310" rx="50" ry="75" transform="rotate(-8 200 310)"/>
+          <!-- América do Norte -->
+          <ellipse cx="180" cy="190" rx="55" ry="60" transform="rotate(5 180 190)"/>
+          <!-- Europa/África -->
+          <ellipse cx="290" cy="220" rx="30" ry="40"/>
+          <ellipse cx="295" cy="310" rx="38" ry="60"/>
+          <!-- Ásia -->
+          <ellipse cx="380" cy="195" rx="60" ry="50" transform="rotate(-5 380 195)"/>
+          <!-- Oceania -->
+          <ellipse cx="405" cy="335" rx="35" ry="25" transform="rotate(5 405 335)"/>
+        </g>
+
+        <!-- Equator & Greenwich labels -->
+        <text x="46" y="253" fill="rgba(255,107,53,0.8)" font-size="10" font-family="Space Mono" clip-path="url(#globeClip)">EQUADOR</text>
+        <text x="263" y="55" fill="rgba(0,229,255,0.8)" font-size="10" font-family="Space Mono" transform="rotate(90 263 55)">GREENWICH</text>
+
+        <!-- Lat/Lon arc indicators (animated) -->
+        <g id="lat-arc" clip-path="url(#globeClip)"></g>
+        <g id="lon-arc" clip-path="url(#globeClip)"></g>
+
+        <!-- Point marker -->
+        <g id="marker" clip-path="url(#globeClip)">
+          <circle id="marker-outer" cx="260" cy="190" r="14" fill="rgba(255,50,50,0.15)" stroke="#ff3333" stroke-width="1.5">
+            <animate attributeName="r" values="14;20;14" dur="2s" repeatCount="indefinite"/>
+            <animate attributeName="opacity" values="1;0.3;1" dur="2s" repeatCount="indefinite"/>
+          </circle>
+          <circle id="marker-dot" cx="260" cy="190" r="6" fill="#ff3333" filter="url(#glow)"/>
+          <line id="marker-v" x1="260" y1="40" x2="260" y2="190" stroke="#ff333388" stroke-width="1.5" stroke-dasharray="4,3"/>
+          <line id="marker-h" x1="40" y1="190" x2="260" y2="190" stroke="#ff333388" stroke-width="1.5" stroke-dasharray="4,3"/>
+        </g>
+
+        <!-- Legend -->
+        <g transform="translate(20, 440)">
+          <line x1="0" y1="8" x2="24" y2="8" stroke="rgba(255,107,53,0.7)" stroke-width="2" stroke-dasharray="5,3"/>
+          <text x="30" y="13" fill="rgba(255,107,53,0.9)" font-size="11" font-family="DM Sans">Latitude (horizontal)</text>
+          <line x1="0" y1="26" x2="24" y2="26" stroke="rgba(0,229,255,0.7)" stroke-width="2" stroke-dasharray="5,3"/>
+          <text x="30" y="31" fill="rgba(0,229,255,0.9)" font-size="11" font-family="DM Sans">Longitude (vertical)</text>
+        </g>
+      </svg>
+
+      <div class="coords-display">
+        <div class="coord-box lat">
+          <label>Latitude</label>
+          <div class="val" id="lat-val">0.0°</div>
+        </div>
+        <div class="coord-box lon">
+          <label>Longitude</label>
+          <div class="val" id="lon-val">0.0°</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Sidebar -->
+    <div class="info-panel">
+      <div class="info-card">
+        <h3><span class="dot lat"></span> Latitude</h3>
+        <p>Mede a distância ao <strong>Equador</strong> (linha imaginária no meio da Terra).<br><br>
+        Vai de <strong>–90° (Polo Sul)</strong> a <strong>+90° (Polo Norte)</strong>.<br><br>
+        Linhas de latitude são chamadas de <strong>paralelos</strong>.</p>
+        <div class="range-group">
+          <label><span>Latitude</span><span id="lat-label">0°</span></label>
+          <input type="range" class="lat-range" id="lat-range" min="-85" max="85" value="0" step="0.5">
+        </div>
+      </div>
+
+      <div class="info-card">
+        <h3><span class="dot lon"></span> Longitude</h3>
+        <p>Mede a distância ao <strong>Meridiano de Greenwich</strong> (linha que passa pela Inglaterra).<br><br>
+        Vai de <strong>–180°</strong> a <strong>+180°</strong>.<br><br>
+        Linhas de longitude são chamadas de <strong>meridianos</strong>.</p>
+        <div class="range-group">
+          <label><span>Longitude</span><span id="lon-label">0°</span></label>
+          <input type="range" class="lon-range" id="lon-range" min="-170" max="170" value="0" step="1">
+        </div>
+      </div>
+
+      <div class="info-card">
+        <h3><span class="dot gps"></span> Coordenadas famosas</h3>
+        <p>Clique para navegar até:</p>
+        <div style="display:flex;flex-direction:column;gap:6px;margin-top:8px">
+          <button class="btn btn-ghost" style="font-size:0.78rem;text-align:left;padding:8px 12px" onclick="goTo(-15.78,-47.93)">📍 Brasília → 15.8°S, 47.9°O</button>
+          <button class="btn btn-ghost" style="font-size:0.78rem;text-align:left;padding:8px 12px" onclick="goTo(-22.9,-43.17)">📍 Rio de Janeiro → 22.9°S, 43.2°O</button>
+          <button class="btn btn-ghost" style="font-size:0.78rem;text-align:left;padding:8px 12px" onclick="goTo(0,0)">📍 Equador + Greenwich → 0°, 0°</button>
+          <button class="btn btn-ghost" style="font-size:0.78rem;text-align:left;padding:8px 12px" onclick="goTo(90,0)">📍 Polo Norte → 90°N</button>
+          <button class="btn btn-ghost" style="font-size:0.78rem;text-align:left;padding:8px 12px" onclick="goTo(-90,0)">📍 Polo Sul → 90°S</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ══ TAB 2: GPS ══ -->
+<div class="section" id="tab-gps">
+  <div style="display:grid;grid-template-columns:1fr 320px;gap:28px;align-items:start">
+    <div id="gps-canvas-wrap">
+      <h2>Trilateração — Como o GPS encontra você</h2>
+      <p>O GPS usa pelo menos <strong>3 satélites</strong> para calcular sua posição. Cada satélite envia um sinal; a distância de cada um forma um círculo. Onde os 3 círculos se cruzam = <strong>sua localização!</strong></p>
+      <canvas id="gps-canvas" width="700" height="420"></canvas>
+      <div class="gps-controls">
+        <button class="btn btn-primary" onclick="startGpsAnim()">▶ Animar</button>
+        <button class="btn btn-ghost" onclick="resetGps()">↺ Reiniciar</button>
+        <button class="btn btn-ghost" onclick="addSatellite()">+ Satélite</button>
+        <div class="sat-count" id="sat-count">🛰 3 satélites</div>
+      </div>
+      <div class="trilateration-info">
+        <div class="tri-card">
+          <div class="num" id="tri-sats" style="color:var(--accent3)">3</div>
+          <div class="lbl">Satélites</div>
+        </div>
+        <div class="tri-card">
+          <div class="num" id="tri-acc" style="color:var(--accent)">~5m</div>
+          <div class="lbl">Precisão</div>
+        </div>
+        <div class="tri-card">
+          <div class="num" id="tri-time" style="color:var(--lat-color)">~50ms</div>
+          <div class="lbl">Tempo de cálculo</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="info-panel">
+      <div class="info-card">
+        <h3><span class="dot gps"></span> Como funciona?</h3>
+        <p>
+          <strong>1.</strong> Satélites orbitam a Terra a ~20.000 km de altitude.<br><br>
+          <strong>2.</strong> Cada satélite envia um sinal de rádio com o <strong>horário exato</strong> do envio.<br><br>
+          <strong>3.</strong> Seu GPS mede quanto tempo o sinal levou.<br><br>
+          <strong>4.</strong> Tempo × velocidade da luz = distância ao satélite.<br><br>
+          <strong>5.</strong> Com 3 distâncias, o GPS calcula sua posição exata.
+        </p>
+      </div>
+      <div class="info-card">
+        <h3>⚡ Dados curiosos</h3>
+        <p>
+          • Sinais viajam na <strong>velocidade da luz</strong> (~300.000 km/s)<br><br>
+          • O sistema GPS tem <strong>30+ satélites</strong> em órbita<br><br>
+          • Relógios atômicos dos satélites têm precisão de <strong>nanosegundos</strong><br><br>
+          • Sem correção pela <strong>Relatividade</strong> (Einstein), o GPS erraria ~10km/dia!
+        </p>
+      </div>
+      <div class="info-card">
+        <h3>🌍 Outros sistemas</h3>
+        <p>
+          <strong>GPS</strong> — EUA 🇺🇸<br>
+          <strong>GLONASS</strong> — Rússia 🇷🇺<br>
+          <strong>Galileo</strong> — Europa 🇪🇺<br>
+          <strong>BeiDou</strong> — China 🇨🇳<br><br>
+          Seu celular usa todos ao mesmo tempo!
+        </p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ══ TAB 3: QUIZ ══ -->
+<div class="section" id="tab-quiz">
+  <div class="quiz-grid">
+
+    <div class="quiz-card">
+      <h3>Questão 1</h3>
+      <p>A latitude do Equador é:</p>
+      <div class="quiz-options">
+        <button class="quiz-opt" onclick="answer(this, false)">A) 180°</button>
+        <button class="quiz-opt" onclick="answer(this, true)">B) 0°</button>
+        <button class="quiz-opt" onclick="answer(this, false)">C) 90°</button>
+        <button class="quiz-opt" onclick="answer(this, false)">D) 45°</button>
+      </div>
+      <div class="quiz-feedback" id="fb1"></div>
+    </div>
+
+    <div class="quiz-card">
+      <h3>Questão 2</h3>
+      <p>As linhas verticais do mapa (meridianos) representam:</p>
+      <div class="quiz-options">
+        <button class="quiz-opt" onclick="answer2(this, false)">A) Latitude</button>
+        <button class="quiz-opt" onclick="answer2(this, true)">B) Longitude</button>
+        <button class="quiz-opt" onclick="answer2(this, false)">C) Altitude</button>
+        <button class="quiz-opt" onclick="answer2(this, false)">D) Paralelos</button>
+      </div>
+      <div class="quiz-feedback" id="fb2"></div>
+    </div>
+
+    <div class="quiz-card">
+      <h3>Questão 3</h3>
+      <p>Quantos satélites são necessários no mínimo para o GPS calcular sua posição em 2D?</p>
+      <div class="quiz-options">
+        <button class="quiz-opt" onclick="answer3(this, false)">A) 1</button>
+        <button class="quiz-opt" onclick="answer3(this, false)">B) 2</button>
+        <button class="quiz-opt" onclick="answer3(this, true)">C) 3</button>
+        <button class="quiz-opt" onclick="answer3(this, false)">D) 10</button>
+      </div>
+      <div class="quiz-feedback" id="fb3"></div>
+    </div>
+
+    <div class="quiz-card">
+      <h3>Questão 4</h3>
+      <p>O Meridiano de Greenwich tem longitude:</p>
+      <div class="quiz-options">
+        <button class="quiz-opt" onclick="answer4(this, false)">A) 90° Leste</button>
+        <button class="quiz-opt" onclick="answer4(this, false)">B) 180°</button>
+        <button class="quiz-opt" onclick="answer4(this, true)">C) 0°</button>
+        <button class="quiz-opt" onclick="answer4(this, false)">D) 45° Oeste</button>
+      </div>
+      <div class="quiz-feedback" id="fb4"></div>
+    </div>
+
+    <div class="quiz-card">
+      <h3>Questão 5</h3>
+      <p>Brasília está no hemisfério:</p>
+      <div class="quiz-options">
+        <button class="quiz-opt" onclick="answer5(this, false)">A) Norte e Leste</button>
+        <button class="quiz-opt" onclick="answer5(this, true)">B) Sul e Oeste</button>
+        <button class="quiz-opt" onclick="answer5(this, false)">C) Norte e Oeste</button>
+        <button class="quiz-opt" onclick="answer5(this, false)">D) Sul e Leste</button>
+      </div>
+      <div class="quiz-feedback" id="fb5"></div>
+    </div>
+
+    <div class="quiz-card">
+      <h3>Questão 6</h3>
+      <p>Na trilateração do GPS, o que representa cada círculo ao redor de um satélite?</p>
+      <div class="quiz-options">
+        <button class="quiz-opt" onclick="answer6(this, false)">A) A área de cobertura do sinal</button>
+        <button class="quiz-opt" onclick="answer6(this, true)">B) A distância calculada ao receptor</button>
+        <button class="quiz-opt" onclick="answer6(this, false)">C) A velocidade do satélite</button>
+        <button class="quiz-opt" onclick="answer6(this, false)">D) O ângulo de órbita</button>
+      </div>
+      <div class="quiz-feedback" id="fb6"></div>
+    </div>
+
+  </div>
+</div>
+
+<script>
+// ══════════════════════════════════
+//  TABS
+// ══════════════════════════════════
+function switchTab(name) {
+  document.querySelectorAll('.tab').forEach((t,i) => {
+    const names = ['globe','gps','quiz'];
+    t.classList.toggle('active', names[i] === name);
+  });
+  document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
+  document.getElementById('tab-' + name).classList.add('active');
+  if (name === 'gps') initGps();
+}
+
+// ══════════════════════════════════
+//  GLOBE
+// ══════════════════════════════════
+const cx = 260, cy = 260, R = 220;
+let curLat = 0, curLon = 0;
+
+function latLonToXY(lat, lon) {
+  const x = cx + R * Math.cos(lat * Math.PI/180) * Math.sin(lon * Math.PI/180);
+  const y = cy - R * Math.sin(lat * Math.PI/180);
+  return { x, y };
+}
+
+function updateGlobe(lat, lon) {
+  curLat = lat; curLon = lon;
+  const pt = latLonToXY(lat, lon);
+
+  document.getElementById('marker-dot').setAttribute('cx', pt.x);
+  document.getElementById('marker-dot').setAttribute('cy', pt.y);
+  document.getElementById('marker-outer').setAttribute('cx', pt.x);
+  document.getElementById('marker-outer').setAttribute('cy', pt.y);
+  document.getElementById('marker-v').setAttribute('x1', pt.x);
+  document.getElementById('marker-v').setAttribute('x2', pt.x);
+  document.getElementById('marker-v').setAttribute('y1', 40);
+  document.getElementById('marker-v').setAttribute('y2', pt.y);
+  document.getElementById('marker-h').setAttribute('y1', pt.y);
+  document.getElementById('marker-h').setAttribute('y2', pt.y);
+
+  const latDir = lat >= 0 ? 'N' : 'S';
+  const lonDir = lon >= 0 ? 'L' : 'O';
+  document.getElementById('lat-val').textContent = Math.abs(lat).toFixed(1) + '° ' + latDir;
+  document.getElementById('lon-val').textContent = Math.abs(lon).toFixed(1) + '° ' + lonDir;
+  document.getElementById('lat-label').textContent = lat.toFixed(0) + '°';
+  document.getElementById('lon-label').textContent = lon.toFixed(0) + '°';
+  document.getElementById('lat-range').value = lat;
+  document.getElementById('lon-range').value = lon;
+}
+
+// Draw grid lines on SVG
+function buildGrid() {
+  const latG = document.getElementById('lat-lines');
+  const lonG = document.getElementById('lon-lines');
+  latG.innerHTML = ''; lonG.innerHTML = '';
+  // latitude parallels
+  for (let lat = -75; lat <= 75; lat += 15) {
+    const pts = [];
+    for (let lon = -180; lon <= 180; lon += 10) {
+      const p = latLonToXY(lat, lon);
+      pts.push(p.x + ',' + p.y);
+    }
+    const el = document.createElementNS('http://www.w3.org/2000/svg', 'polyline');
+    el.setAttribute('points', pts.join(' '));
+    latG.appendChild(el);
+  }
+  // longitude meridians
+  for (let lon = -165; lon <= 165; lon += 15) {
+    const pts = [];
+    for (let lat = -85; lat <= 85; lat += 5) {
+      const p = latLonToXY(lat, lon);
+      pts.push(p.x + ',' + p.y);
+    }
+    const el = document.createElementNS('http://www.w3.org/2000/svg', 'polyline');
+    el.setAttribute('points', pts.join(' '));
+    lonG.appendChild(el);
+  }
+}
+buildGrid();
+updateGlobe(0, 0);
+
+document.getElementById('lat-range').addEventListener('input', e => {
+  updateGlobe(parseFloat(e.target.value), curLon);
+});
+document.getElementById('lon-range').addEventListener('input', e => {
+  updateGlobe(curLat, parseFloat(e.target.value));
+});
+
+// Click on globe
+document.getElementById('globe-svg').addEventListener('click', e => {
+  const rect = e.currentTarget.getBoundingClientRect();
+  const svgW = 520, svgH = 520;
+  const scaleX = svgW / rect.width;
+  const scaleY = svgH / rect.height;
+  const sx = (e.clientX - rect.left) * scaleX;
+  const sy = (e.clientY - rect.top) * scaleY;
+  const dx = sx - cx, dy = sy - cy;
+  if (Math.sqrt(dx*dx + dy*dy) > R) return;
+  const lat = Math.max(-85, Math.min(85, -Math.asin(dy / R) * 180 / Math.PI));
+  const lon = Math.max(-170, Math.min(170, Math.atan2(dx, Math.cos(lat * Math.PI/180) * R) * 180 / Math.PI));
+  updateGlobe(lat, lon);
+});
+
+function goTo(lat, lon) {
+  updateGlobe(lat, lon);
+}
+
+// ══════════════════════════════════
+//  GPS CANVAS
+// ══════════════════════════════════
+let gpsCtx, gpsW, gpsH;
+let satellites = [], target = {}, animFrame = null, animRunning = false, animT = 0;
+
+const SAT_COLORS = ['#00e5ff', '#7cf56e', '#ff6b35', '#ffcc00', '#cc44ff'];
+
+function initGps() {
+  const canvas = document.getElementById('gps-canvas');
+  gpsCtx = canvas.getContext('2d');
+  gpsW = canvas.width; gpsH = canvas.height;
+  resetGps();
+}
+
+function resetGps() {
+  cancelAnimationFrame(animFrame);
+  animRunning = false;
+  animT = 0;
+  target = { x: gpsW * 0.52, y: gpsH * 0.5 };
+  satellites = [
+    { x: gpsW * 0.15, y: gpsH * 0.18, label: 'SAT-1', r: 0 },
+    { x: gpsW * 0.82, y: gpsH * 0.15, label: 'SAT-2', r: 0 },
+    { x: gpsW * 0.6,  y: gpsH * 0.82, label: 'SAT-3', r: 0 },
+  ];
+  computeRadii();
+  updateSatCount();
+  drawGps(0);
+}
+
+function computeRadii() {
+  satellites.forEach(s => {
+    s.r = Math.sqrt((s.x - target.x)**2 + (s.y - target.y)**2);
+  });
+}
+
+function updateSatCount() {
+  const n = satellites.length;
+  document.getElementById('sat-count').textContent = '🛰 ' + n + ' satélites';
+  document.getElementById('tri-sats').textContent = n;
+  document.getElementById('tri-acc').textContent = n >= 4 ? '~3m' : n >= 3 ? '~5m' : '~50m';
+  document.getElementById('tri-time').textContent = '~' + (n * 15) + 'ms';
+}
+
+function addSatellite() {
+  if (satellites.length >= 5) return;
+  const angle = Math.random() * Math.PI * 2;
+  const dist = 180 + Math.random() * 100;
+  satellites.push({
+    x: target.x + Math.cos(angle) * dist,
+    y: target.y + Math.sin(angle) * dist,
+    label: 'SAT-' + (satellites.length + 1),
+    r: 0
+  });
+  // keep inside canvas
+  const s = satellites[satellites.length-1];
+  s.x = Math.max(50, Math.min(gpsW - 50, s.x));
+  s.y = Math.max(50, Math.min(gpsH - 50, s.y));
+  computeRadii();
+  updateSatCount();
+  if (animRunning) return;
+  drawGps(0);
+}
+
+function startGpsAnim() {
+  if (animRunning) return;
+  animRunning = true;
+  animT = 0;
+  satellites.forEach(s => s._r = s.r);
+  function step() {
+    animT = Math.min(animT + 0.016, 1);
+    const ease = 1 - Math.pow(1 - animT, 3);
+    drawGps(ease);
+    if (animT < 1) animFrame = requestAnimationFrame(step);
+    else animRunning = false;
+  }
+  requestAnimationFrame(step);
+}
+
+function drawGps(progress) {
+  const ctx = gpsCtx;
+  ctx.clearRect(0, 0, gpsW, gpsH);
+
+  // Background
+  ctx.fillStyle = '#060d1f';
+  ctx.fillRect(0, 0, gpsW, gpsH);
+
+  // Grid
+  ctx.strokeStyle = 'rgba(0,229,255,0.05)';
+  ctx.lineWidth = 1;
+  for (let x = 0; x < gpsW; x += 40) { ctx.beginPath(); ctx.moveTo(x, 0); ctx.lineTo(x, gpsH); ctx.stroke(); }
+  for (let y = 0; y < gpsH; y += 40) { ctx.beginPath(); ctx.moveTo(0, y); ctx.lineTo(gpsW, y); ctx.stroke(); }
+
+  // Draw circles (range rings)
+  satellites.forEach((s, i) => {
+    const color = SAT_COLORS[i % SAT_COLORS.length];
+    const currentR = s.r * progress;
+    // Dashed circle
+    ctx.save();
+    ctx.setLineDash([8, 5]);
+    ctx.strokeStyle = color;
+    ctx.lineWidth = 2;
+    ctx.globalAlpha = 0.5;
+    ctx.beginPath();
+    ctx.arc(s.x, s.y, currentR, 0, Math.PI * 2);
+    ctx.stroke();
+    ctx.restore();
+
+    // Glow circle
+    if (progress > 0.3) {
+      ctx.save();
+      ctx.globalAlpha = 0.08 * progress;
+      ctx.fillStyle = color;
+      ctx.beginPath();
+      ctx.arc(s.x, s.y, currentR, 0, Math.PI * 2);
+      ctx.fill();
+      ctx.restore();
+    }
+
+    // Signal beam line
+    if (progress > 0) {
+      ctx.save();
+      ctx.globalAlpha = 0.4 * progress;
+      ctx.strokeStyle = color;
+      ctx.lineWidth = 1.5;
+      ctx.setLineDash([4, 8]);
+      ctx.beginPath();
+      ctx.moveTo(s.x, s.y);
+      const dx = target.x - s.x, dy = target.y - s.y;
+      const len = Math.sqrt(dx*dx+dy*dy);
+      ctx.lineTo(s.x + dx/len * currentR, s.y + dy/len * currentR);
+      ctx.stroke();
+      ctx.restore();
+    }
+  });
+
+  // Intersection highlight
+  if (progress > 0.8 && satellites.length >= 3) {
+    const alpha = (progress - 0.8) / 0.2;
+    ctx.save();
+    ctx.globalAlpha = alpha * 0.4;
+    const grad = ctx.createRadialGradient(target.x, target.y, 0, target.x, target.y, 30);
+    grad.addColorStop(0, 'rgba(255,255,255,0.9)');
+    grad.addColorStop(1, 'rgba(255,255,255,0)');
+    ctx.fillStyle = grad;
+    ctx.beginPath(); ctx.arc(target.x, target.y, 30, 0, Math.PI*2); ctx.fill();
+    ctx.restore();
+  }
+
+  // Satellites
+  satellites.forEach((s, i) => {
+    const color = SAT_COLORS[i % SAT_COLORS.length];
+    // Glow
+    ctx.save();
+    ctx.shadowColor = color;
+    ctx.shadowBlur = 16;
+    ctx.fillStyle = color;
+    ctx.beginPath(); ctx.arc(s.x, s.y, 12, 0, Math.PI*2); ctx.fill();
+    ctx.restore();
+
+    // Icon (simple satellite shape)
+    ctx.fillStyle = '#fff';
+    ctx.font = 'bold 14px DM Sans';
+    ctx.textAlign = 'center';
+    ctx.textBaseline = 'middle';
+    ctx.fillText('🛰', s.x, s.y);
+
+    // Label
+    ctx.fillStyle = color;
+    ctx.font = 'bold 11px Space Mono';
+    ctx.textAlign = 'center';
+    ctx.fillText(s.label, s.x, s.y + 24);
+
+    // Distance label
+    if (progress > 0.3) {
+      const currentR = s.r * progress;
+      ctx.globalAlpha = progress;
+      ctx.fillStyle = color;
+      ctx.font = '10px Space Mono';
+      const mx = s.x + (target.x - s.x) * 0.45;
+      const my = s.y + (target.y - s.y) * 0.45;
+      ctx.fillText((currentR / 50).toFixed(1) + ' km', mx, my - 8);
+      ctx.globalAlpha = 1;
+    }
+  });
+
+  // Target "You"
+  if (progress > 0.5) {
+    const alpha2 = Math.min(1, (progress - 0.5) / 0.3);
+    ctx.save();
+    ctx.globalAlpha = alpha2;
+    ctx.shadowColor = '#ff3333';
+    ctx.shadowBlur = 20;
+    ctx.fillStyle = '#ff3333';
+    ctx.beginPath(); ctx.arc(target.x, target.y, 10, 0, Math.PI*2); ctx.fill();
+    ctx.shadowBlur = 0;
+    ctx.fillStyle = '#fff';
+    ctx.font = 'bold 12px DM Sans';
+    ctx.textAlign = 'center';
+    ctx.textBaseline = 'middle';
+    ctx.fillText('📍', target.x, target.y);
+    ctx.fillStyle = '#ff3333';
+    ctx.font = 'bold 13px Space Mono';
+    ctx.fillText('VOCÊ', target.x, target.y + 24);
+    ctx.restore();
+  } else {
+    // Show target before animation
+    ctx.save();
+    ctx.globalAlpha = 0.3;
+    ctx.fillStyle = '#ffffff';
+    ctx.beginPath(); ctx.arc(target.x, target.y, 6, 0, Math.PI*2); ctx.fill();
+    ctx.restore();
+  }
+
+  // Label top
+  ctx.fillStyle = 'rgba(255,255,255,0.4)';
+  ctx.font = '11px Space Mono';
+  ctx.textAlign = 'left';
+  ctx.textBaseline = 'top';
+  ctx.fillText('TRILATERAÇÃO GPS', 12, 10);
+}
+
+// ══════════════════════════════════
+//  QUIZ
+// ══════════════════════════════════
+function makeAnswerFn(idx, feedbacks) {
+  return function(btn, correct) {
+    const card = btn.closest('.quiz-card');
+    if (card.dataset.answered) return;
+    card.dataset.answered = '1';
+    const opts = card.querySelectorAll('.quiz-opt');
+    opts.forEach(o => o.disabled = true);
+    btn.classList.add(correct ? 'correct' : 'wrong');
+    if (!correct) opts[feedbacks.correctIdx].classList.add('correct');
+    const fb = card.querySelector('.quiz-feedback');
+    fb.style.color = correct ? 'var(--accent3)' : '#ff6666';
+    fb.textContent = correct ? '✓ Correto! ' + feedbacks.ok : '✗ Errado. ' + feedbacks.err;
+  };
+}
+
+const fb1 = { correctIdx: 1, ok: 'O Equador é a linha de 0° de latitude.', err: 'A resposta correta é 0°. O Equador divide a Terra em norte e sul.' };
+const fb2 = { correctIdx: 1, ok: 'Meridianos medem longitude (leste-oeste).', err: 'Correto seria Longitude. Paralelos = latitude; Meridianos = longitude.' };
+const fb3 = { correctIdx: 2, ok: 'Com 3 satélites, calculamos posição em 2D (lat + lon).', err: 'Precisa de pelo menos 3 satélites para trilateração 2D.' };
+const fb4 = { correctIdx: 2, ok: 'Greenwich é o meridiano de referência: 0°.', err: 'Longitude 0° é o Meridiano de Greenwich, em Londres/Inglaterra.' };
+const fb5 = { correctIdx: 1, ok: 'Brasília: lat ≈ –15.8° (Sul) e lon ≈ –47.9° (Oeste).', err: 'Brasília tem latitude Sul e longitude Oeste.' };
+const fb6 = { correctIdx: 1, ok: 'Cada círculo representa a distância calculada ao satélite.', err: 'O círculo mostra todos os pontos possíveis a uma certa distância do satélite.' };
+
+const answer  = makeAnswerFn(0, fb1);
+const answer2 = makeAnswerFn(1, fb2);
+const answer3 = makeAnswerFn(2, fb3);
+const answer4 = makeAnswerFn(3, fb4);
+const answer5 = makeAnswerFn(4, fb5);
+const answer6 = makeAnswerFn(5, fb6);
+</script>
+</body>
+</html>

@@ -1,0 +1,1541 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Números Binários — Como os Computadores Pensam</title>
+<link href="https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&family=DM+Sans:wght@300;400;600;800&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #0a0f1e;
+    --panel: #111827;
+    --panel2: #1a2236;
+    --accent: #00e5ff;
+    --accent2: #ff6b35;
+    --accent3: #7cf56e;
+    --accent4: #ffcc00;
+    --accent5: #cc44ff;
+    --text: #e8f4f8;
+    --muted: #6b8097;
+    --grid: rgba(0,229,255,0.08);
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: 'DM Sans', sans-serif;
+    min-height: 100vh;
+    overflow-x: hidden;
+  }
+
+  /* ── HEADER ── */
+  header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 18px 36px;
+    border-bottom: 1px solid rgba(0,229,255,0.15);
+    background: rgba(10,15,30,0.9);
+    position: sticky; top: 0; z-index: 100;
+    backdrop-filter: blur(12px);
+  }
+  header h1 {
+    font-family: 'Space Mono', monospace;
+    font-size: 1.1rem;
+    color: var(--accent);
+    letter-spacing: 2px;
+    text-transform: uppercase;
+  }
+  .badge {
+    font-family: 'Space Mono', monospace;
+    font-size: 0.65rem;
+    background: rgba(0,229,255,0.1);
+    border: 1px solid rgba(0,229,255,0.3);
+    color: var(--accent);
+    padding: 4px 12px;
+    border-radius: 20px;
+    letter-spacing: 1px;
+  }
+
+  /* ── TABS ── */
+  .tabs {
+    display: flex;
+    gap: 6px;
+    padding: 20px 36px 0;
+    border-bottom: 1px solid rgba(255,255,255,0.06);
+    flex-wrap: wrap;
+  }
+  .tab {
+    padding: 10px 22px;
+    border-radius: 8px 8px 0 0;
+    background: var(--panel);
+    border: 1px solid rgba(255,255,255,0.06);
+    border-bottom: none;
+    color: var(--muted);
+    cursor: pointer;
+    font-weight: 600;
+    font-size: 0.85rem;
+    transition: all 0.2s;
+    position: relative; bottom: -1px;
+  }
+  .tab.active {
+    background: var(--panel2);
+    color: var(--text);
+    border-color: rgba(0,229,255,0.25);
+    border-bottom: 1px solid var(--panel2);
+  }
+  .tab:hover:not(.active) { color: var(--text); }
+
+  /* ── SECTIONS ── */
+  .section { display: none; padding: 36px; }
+  .section.active { display: block; }
+
+  /* ── CARDS ── */
+  .panel-card {
+    background: var(--panel);
+    border: 1px solid rgba(0,229,255,0.12);
+    border-radius: 20px;
+    padding: 28px;
+  }
+  .panel-card h2 {
+    font-size: 1.2rem;
+    font-weight: 800;
+    margin-bottom: 6px;
+  }
+  .panel-card > p {
+    color: var(--muted);
+    font-size: 0.9rem;
+    line-height: 1.6;
+    margin-bottom: 24px;
+  }
+
+  .info-card {
+    background: var(--panel);
+    border-radius: 16px;
+    padding: 20px;
+    border: 1px solid rgba(255,255,255,0.06);
+  }
+  .info-card h3 {
+    font-size: 0.85rem;
+    font-weight: 800;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    margin-bottom: 10px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  .info-card p {
+    font-size: 0.85rem;
+    color: var(--muted);
+    line-height: 1.65;
+  }
+  .info-card strong { color: var(--text); }
+
+  .dot {
+    width: 10px; height: 10px;
+    border-radius: 50%;
+    display: inline-block;
+  }
+  .dot-green { background: var(--accent3); }
+  .dot-orange { background: var(--accent2); }
+  .dot-cyan { background: var(--accent); }
+  .dot-yellow { background: var(--accent4); }
+  .dot-purple { background: var(--accent5); }
+
+  /* ── BUTTONS ── */
+  .btn {
+    padding: 10px 22px;
+    border-radius: 10px;
+    border: none;
+    font-family: 'DM Sans', sans-serif;
+    font-weight: 700;
+    font-size: 0.85rem;
+    cursor: pointer;
+    transition: all 0.2s;
+  }
+  .btn-primary { background: var(--accent); color: var(--bg); }
+  .btn-primary:hover { background: #33ecff; transform: translateY(-1px); }
+  .btn-secondary { background: var(--accent2); color: var(--bg); }
+  .btn-secondary:hover { background: #ff8a5e; transform: translateY(-1px); }
+  .btn-ghost {
+    background: rgba(255,255,255,0.05);
+    color: var(--text);
+    border: 1px solid rgba(255,255,255,0.1);
+  }
+  .btn-ghost:hover { background: rgba(255,255,255,0.1); }
+  .btn-green { background: var(--accent3); color: var(--bg); }
+  .btn-green:hover { background: #9cfb8e; transform: translateY(-1px); }
+
+  /* ── FLASHCARD LAYOUT ── */
+  .flashcard-nav {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 28px;
+  }
+  .fc-progress {
+    font-family: 'Space Mono', monospace;
+    font-size: 0.8rem;
+    color: var(--muted);
+  }
+  .fc-dots {
+    display: flex;
+    gap: 8px;
+  }
+  .fc-dot {
+    width: 8px; height: 8px;
+    border-radius: 50%;
+    background: rgba(255,255,255,0.1);
+    transition: background 0.3s;
+    cursor: pointer;
+  }
+  .fc-dot.active { background: var(--accent); box-shadow: 0 0 8px var(--accent); }
+  .fc-dot.done { background: var(--accent3); }
+
+  .flashcard-wrapper {
+    perspective: 1200px;
+    min-height: 420px;
+    position: relative;
+  }
+  .flashcard {
+    width: 100%;
+    min-height: 420px;
+    position: relative;
+    transform-style: preserve-3d;
+    transition: transform 0.7s cubic-bezier(0.4,0,0.2,1);
+  }
+  .flashcard.flipped { transform: rotateY(180deg); }
+  .card-face {
+    position: absolute;
+    width: 100%; min-height: 420px;
+    backface-visibility: hidden;
+    border-radius: 20px;
+    padding: 36px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+  }
+  .card-front {
+    background: linear-gradient(135deg, #111827 0%, #1a2236 100%);
+    border: 1px solid rgba(0,229,255,0.2);
+  }
+  .card-back {
+    background: linear-gradient(135deg, #1a2236 0%, #0f1e10 100%);
+    border: 1px solid rgba(124,245,110,0.3);
+    transform: rotateY(180deg);
+  }
+
+  .card-icon { font-size: 3rem; margin-bottom: 16px; }
+  .card-title {
+    font-family: 'Space Mono', monospace;
+    font-size: 0.7rem;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    color: var(--accent);
+    margin-bottom: 12px;
+  }
+  .card-heading {
+    font-size: 1.6rem;
+    font-weight: 800;
+    text-align: center;
+    margin-bottom: 16px;
+    line-height: 1.3;
+  }
+  .card-body {
+    font-size: 0.92rem;
+    color: var(--muted);
+    line-height: 1.7;
+    text-align: center;
+    max-width: 600px;
+  }
+  .card-body strong { color: var(--text); }
+  .card-body .highlight {
+    font-family: 'Space Mono', monospace;
+    background: rgba(0,229,255,0.1);
+    border: 1px solid rgba(0,229,255,0.3);
+    color: var(--accent);
+    padding: 2px 8px;
+    border-radius: 6px;
+    font-size: 0.9em;
+  }
+  .card-body .highlight-green {
+    font-family: 'Space Mono', monospace;
+    background: rgba(124,245,110,0.1);
+    border: 1px solid rgba(124,245,110,0.3);
+    color: var(--accent3);
+    padding: 2px 8px;
+    border-radius: 6px;
+    font-size: 0.9em;
+  }
+  .card-body .highlight-orange {
+    font-family: 'Space Mono', monospace;
+    background: rgba(255,107,53,0.1);
+    border: 1px solid rgba(255,107,53,0.3);
+    color: var(--accent2);
+    padding: 2px 8px;
+    border-radius: 6px;
+    font-size: 0.9em;
+  }
+
+  .flip-hint {
+    font-family: 'Space Mono', monospace;
+    font-size: 0.65rem;
+    letter-spacing: 1px;
+    color: var(--muted);
+    margin-top: 24px;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    cursor: pointer;
+    transition: color 0.2s;
+  }
+  .flip-hint:hover { color: var(--accent); }
+
+  .card-nav-btns {
+    display: flex;
+    gap: 12px;
+    justify-content: center;
+    margin-top: 24px;
+  }
+
+  /* ── BINARY VISUALIZER ── */
+  .two-col {
+    display: grid;
+    grid-template-columns: 1fr 340px;
+    gap: 28px;
+    align-items: start;
+  }
+  .three-col {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    gap: 20px;
+  }
+
+  .bit-row {
+    display: flex;
+    gap: 8px;
+    justify-content: center;
+    flex-wrap: wrap;
+    margin: 20px 0;
+  }
+  .bit-cell {
+    width: 64px; height: 64px;
+    border-radius: 12px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: all 0.25s;
+    border: 2px solid;
+    user-select: none;
+    position: relative;
+  }
+  .bit-cell.off {
+    background: rgba(255,255,255,0.03);
+    border-color: rgba(255,255,255,0.1);
+  }
+  .bit-cell.on {
+    background: rgba(0,229,255,0.12);
+    border-color: var(--accent);
+    box-shadow: 0 0 16px rgba(0,229,255,0.3);
+  }
+  .bit-val {
+    font-family: 'Space Mono', monospace;
+    font-size: 1.5rem;
+    font-weight: 700;
+    transition: color 0.25s;
+  }
+  .bit-cell.off .bit-val { color: rgba(255,255,255,0.2); }
+  .bit-cell.on .bit-val { color: var(--accent); }
+  .bit-power {
+    font-family: 'Space Mono', monospace;
+    font-size: 0.58rem;
+    color: var(--muted);
+    margin-top: 2px;
+  }
+  .bit-cell.on .bit-power { color: rgba(0,229,255,0.6); }
+
+  .result-display {
+    background: var(--panel2);
+    border-radius: 14px;
+    padding: 20px 28px;
+    text-align: center;
+    border: 1px solid rgba(0,229,255,0.15);
+    margin-top: 8px;
+  }
+  .result-display .res-label {
+    font-family: 'Space Mono', monospace;
+    font-size: 0.65rem;
+    letter-spacing: 2px;
+    color: var(--muted);
+    text-transform: uppercase;
+    margin-bottom: 6px;
+  }
+  .result-display .res-val {
+    font-family: 'Space Mono', monospace;
+    font-size: 2rem;
+    font-weight: 700;
+    color: var(--accent3);
+  }
+  .result-display .res-formula {
+    font-family: 'Space Mono', monospace;
+    font-size: 0.72rem;
+    color: var(--muted);
+    margin-top: 8px;
+    word-break: break-all;
+  }
+
+  .sidebar-stack {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+  }
+
+  /* ── UNITS TABLE ── */
+  .units-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 14px;
+    margin: 20px 0;
+  }
+  .unit-card {
+    border-radius: 14px;
+    padding: 18px;
+    border: 1px solid;
+    text-align: center;
+    position: relative;
+    overflow: hidden;
+  }
+  .unit-card::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    opacity: 0.06;
+  }
+  .unit-card .u-name {
+    font-size: 1.1rem;
+    font-weight: 800;
+    margin-bottom: 4px;
+  }
+  .unit-card .u-abbr {
+    font-family: 'Space Mono', monospace;
+    font-size: 0.7rem;
+    letter-spacing: 2px;
+    margin-bottom: 10px;
+    opacity: 0.7;
+  }
+  .unit-card .u-val {
+    font-family: 'Space Mono', monospace;
+    font-size: 0.8rem;
+    line-height: 1.6;
+  }
+  .unit-card .u-pow {
+    font-size: 1.4rem;
+    font-weight: 800;
+    margin-top: 8px;
+    font-family: 'Space Mono', monospace;
+  }
+  .unit-card .u-agro {
+    font-size: 0.75rem;
+    color: var(--muted);
+    margin-top: 8px;
+    line-height: 1.4;
+  }
+
+  /* Color sets for units */
+  .uc-bit    { border-color: rgba(255,255,255,0.15); color: var(--text); }
+  .uc-byte   { border-color: rgba(0,229,255,0.4);   color: var(--accent); }
+  .uc-kb     { border-color: rgba(124,245,110,0.4); color: var(--accent3); }
+  .uc-mb     { border-color: rgba(255,107,53,0.4);  color: var(--accent2); }
+  .uc-gb     { border-color: rgba(255,204,0,0.4);   color: var(--accent4); }
+  .uc-tb     { border-color: rgba(204,68,255,0.4);  color: var(--accent5); }
+
+  /* ── POWERS VISUAL ── */
+  .power-bar-wrap {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    margin: 20px 0;
+  }
+  .power-row {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+  .power-label {
+    font-family: 'Space Mono', monospace;
+    font-size: 0.75rem;
+    color: var(--muted);
+    width: 80px;
+    text-align: right;
+    flex-shrink: 0;
+  }
+  .power-bar {
+    height: 28px;
+    border-radius: 6px;
+    display: flex;
+    align-items: center;
+    padding-left: 10px;
+    font-family: 'Space Mono', monospace;
+    font-size: 0.75rem;
+    font-weight: 700;
+    transition: width 1s ease;
+    min-width: 40px;
+  }
+  .power-note {
+    font-size: 0.72rem;
+    color: var(--muted);
+    white-space: nowrap;
+  }
+
+  /* ── QUIZ ── */
+  .quiz-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 20px;
+  }
+  .quiz-card {
+    background: var(--panel);
+    border-radius: 16px;
+    padding: 24px;
+    border: 1px solid rgba(255,255,255,0.06);
+  }
+  .quiz-card h3 { font-size: 1rem; font-weight: 800; margin-bottom: 8px; }
+  .quiz-card p { font-size: 0.85rem; color: var(--muted); line-height: 1.6; margin-bottom: 16px; }
+  .quiz-options { display: flex; flex-direction: column; gap: 8px; }
+  .quiz-opt {
+    padding: 10px 16px;
+    border-radius: 8px;
+    border: 1px solid rgba(255,255,255,0.1);
+    background: rgba(255,255,255,0.03);
+    color: var(--text);
+    cursor: pointer;
+    font-size: 0.85rem;
+    font-family: 'DM Sans', sans-serif;
+    transition: all 0.2s;
+    text-align: left;
+  }
+  .quiz-opt:hover:not(:disabled) { border-color: var(--accent); color: var(--accent); }
+  .quiz-opt.correct { border-color: var(--accent3) !important; background: rgba(124,245,110,0.1) !important; color: var(--accent3) !important; }
+  .quiz-opt.wrong { border-color: #ff4444 !important; background: rgba(255,68,68,0.1) !important; color: #ff4444 !important; }
+  .quiz-feedback { margin-top: 12px; font-size: 0.82rem; line-height: 1.5; min-height: 20px; }
+
+  /* ── LAMP ANIMATION ── */
+  @keyframes pulse-glow {
+    0%, 100% { box-shadow: 0 0 12px rgba(0,229,255,0.4); }
+    50% { box-shadow: 0 0 30px rgba(0,229,255,0.8); }
+  }
+  @keyframes bounce-in {
+    0% { transform: scale(0.8); opacity: 0; }
+    60% { transform: scale(1.05); }
+    100% { transform: scale(1); opacity: 1; }
+  }
+  @keyframes slide-up {
+    from { transform: translateY(20px); opacity: 0; }
+    to { transform: translateY(0); opacity: 1; }
+  }
+  @keyframes binary-rain {
+    0% { transform: translateY(-20px); opacity: 0; }
+    10% { opacity: 1; }
+    90% { opacity: 1; }
+    100% { transform: translateY(100vh); opacity: 0; }
+  }
+
+  .animated-in { animation: slide-up 0.5s ease forwards; }
+
+  /* ── BINARY RAIN BG ── */
+  #binary-rain-canvas {
+    position: fixed;
+    top: 0; left: 0;
+    width: 100%; height: 100%;
+    pointer-events: none;
+    z-index: 0;
+    opacity: 0.04;
+  }
+
+  /* ── DECIMAL CONVERTER ── */
+  .converter-box {
+    background: var(--panel2);
+    border-radius: 16px;
+    padding: 24px;
+    border: 1px solid rgba(0,229,255,0.15);
+  }
+  .converter-box label {
+    font-family: 'Space Mono', monospace;
+    font-size: 0.65rem;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    color: var(--muted);
+    display: block;
+    margin-bottom: 8px;
+  }
+  .converter-box input[type=number] {
+    width: 100%;
+    background: rgba(0,0,0,0.3);
+    border: 1px solid rgba(0,229,255,0.3);
+    border-radius: 10px;
+    padding: 12px 16px;
+    font-family: 'Space Mono', monospace;
+    font-size: 1.4rem;
+    color: var(--accent);
+    outline: none;
+    transition: border-color 0.2s;
+  }
+  .converter-box input[type=number]:focus {
+    border-color: var(--accent);
+    box-shadow: 0 0 0 3px rgba(0,229,255,0.1);
+  }
+  .converter-box input[type=number]::-webkit-outer-spin-button,
+  .converter-box input[type=number]::-webkit-inner-spin-button { -webkit-appearance: none; }
+
+  .conv-result {
+    margin-top: 16px;
+    padding: 14px 18px;
+    background: rgba(124,245,110,0.05);
+    border: 1px solid rgba(124,245,110,0.2);
+    border-radius: 10px;
+  }
+  .conv-result .cr-label {
+    font-family: 'Space Mono', monospace;
+    font-size: 0.6rem;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    color: var(--muted);
+    margin-bottom: 6px;
+  }
+  .conv-result .cr-val {
+    font-family: 'Space Mono', monospace;
+    font-size: 1.6rem;
+    font-weight: 700;
+    color: var(--accent3);
+    word-break: break-all;
+    letter-spacing: 4px;
+  }
+  .conv-steps {
+    margin-top: 12px;
+    font-family: 'Space Mono', monospace;
+    font-size: 0.72rem;
+    color: var(--muted);
+    line-height: 1.8;
+  }
+
+  /* scrollbar */
+  ::-webkit-scrollbar { width: 6px; }
+  ::-webkit-scrollbar-track { background: var(--bg); }
+  ::-webkit-scrollbar-thumb { background: rgba(0,229,255,0.2); border-radius: 4px; }
+
+  /* content above canvas */
+  .section, header, .tabs { position: relative; z-index: 1; }
+
+  @media (max-width: 900px) {
+    .two-col { grid-template-columns: 1fr; }
+    .three-col { grid-template-columns: 1fr; }
+    .quiz-grid { grid-template-columns: 1fr; }
+    .tabs { padding: 16px 16px 0; gap: 4px; }
+    .tab { padding: 8px 14px; font-size: 0.78rem; }
+    .section { padding: 20px 16px; }
+    header { padding: 14px 16px; }
+    header h1 { font-size: 0.9rem; }
+    .bit-cell { width: 52px; height: 52px; }
+  }
+</style>
+</head>
+<body>
+
+<canvas id="binary-rain-canvas"></canvas>
+
+<header>
+  <h1>💻 Números Binários</h1>
+  <span class="badge">1° ANO · AGROECOLOGIA &amp; TI</span>
+</header>
+
+<div class="tabs">
+  <div class="tab active" onclick="switchTab('flashcards')">📚 Flash-cards</div>
+  <div class="tab" onclick="switchTab('binario')">🔢 Calculadora Binária</div>
+  <div class="tab" onclick="switchTab('unidades')">💾 Unidades de Memória</div>
+  <div class="tab" onclick="switchTab('potencias')">⚡ Potências de 2</div>
+  <div class="tab" onclick="switchTab('quiz')">🌱 Quiz Agro</div>
+</div>
+
+<!-- ══════════════════════════════════════
+     TAB 1 — FLASH-CARDS
+══════════════════════════════════════ -->
+<div class="section active" id="tab-flashcards">
+
+  <div class="flashcard-nav">
+    <button class="btn btn-ghost" id="btn-prev" onclick="prevCard()">← Anterior</button>
+    <div style="text-align:center">
+      <div class="fc-progress" id="fc-progress">Card 1 de 8</div>
+      <div class="fc-dots" id="fc-dots"></div>
+    </div>
+    <button class="btn btn-primary" id="btn-next" onclick="nextCard()">Próximo →</button>
+  </div>
+
+  <div class="flashcard-wrapper">
+    <div class="flashcard" id="flashcard" onclick="flipCard()">
+
+      <!-- ── CARD FRONTS ── -->
+      <div class="card-face card-front" id="cf-0">
+        <div class="card-icon">🌾</div>
+        <div class="card-title">Conceito Fundamental</div>
+        <div class="card-heading">Por que o computador<br>usa <span style="color:var(--accent)">0</span> e <span style="color:var(--accent3)">1</span>?</div>
+        <div class="card-body">
+          Pense em um <strong>interruptor de luz</strong> na fazenda.<br>
+          Ele só tem dois estados: <strong>ligado</strong> ou <strong>desligado</strong>.
+          <br><br>
+          O computador funciona da mesma forma!<br>Clique no card para ver a explicação completa →
+        </div>
+        <div class="flip-hint">↩ Clique para revelar</div>
+      </div>
+      <div class="card-face card-back" id="cb-0">
+        <div class="card-icon">⚡</div>
+        <div class="card-title">Explicação</div>
+        <div class="card-heading">Eletricidade = Linguagem<br>do Computador</div>
+        <div class="card-body">
+          Computadores são feitos de <strong>bilhões de transistores</strong> — minúsculos interruptores eletrônicos.<br><br>
+          Cada transistor só pode estar:<br>
+          <span class="highlight-orange">0 = sem corrente elétrica = DESLIGADO</span><br><br>
+          <span class="highlight">1 = com corrente elétrica = LIGADO</span><br><br>
+          Por isso usamos <strong>base 2</strong> (binário): apenas dois estados possíveis, como ligar/desligar uma bomba d'água ou uma estufa.
+        </div>
+        <div class="flip-hint">↩ Clique para voltar</div>
+      </div>
+
+      <!-- ── CARD 1 ── -->
+      <div class="card-face card-front" id="cf-1" style="display:none">
+        <div class="card-icon">🔢</div>
+        <div class="card-title">Sistema Numérico</div>
+        <div class="card-heading">Base 10 × Base 2:<br>Qual a diferença?</div>
+        <div class="card-body">
+          Você já conta no sistema <strong>decimal</strong> desde criança.<br>
+          Mas o computador precisa do <strong>binário</strong>.<br><br>
+          Qual a relação entre eles?
+        </div>
+        <div class="flip-hint">↩ Clique para revelar</div>
+      </div>
+      <div class="card-face card-back" id="cb-1" style="display:none">
+        <div class="card-icon">🔄</div>
+        <div class="card-title">Comparação de Bases</div>
+        <div class="card-heading">Mesma ideia,<br>dígitos diferentes</div>
+        <div class="card-body">
+          <strong>Decimal (base 10):</strong> usamos 10 dígitos — 0 a 9<br>
+          Quando acaba, acrescentamos uma coluna: <span class="highlight">9 → 10</span><br><br>
+          <strong>Binário (base 2):</strong> usamos 2 dígitos — 0 e 1<br>
+          Quando acaba, acrescentamos uma coluna: <span class="highlight-green">1 → 10</span><br><br>
+          Na roça: decimal = contar dedos das mãos (10); binário = contar só <em>presente ou ausente</em> (2).
+        </div>
+        <div class="flip-hint">↩ Clique para voltar</div>
+      </div>
+
+      <!-- ── CARD 2 ── -->
+      <div class="card-face card-front" id="cf-2" style="display:none">
+        <div class="card-icon">💡</div>
+        <div class="card-title">O Bit</div>
+        <div class="card-heading">O que é um <span style="color:var(--accent4)">BIT</span>?</div>
+        <div class="card-body">
+          É a menor unidade de informação que existe.<br>
+          Como se chama? De onde vem essa palavra?
+        </div>
+        <div class="flip-hint">↩ Clique para revelar</div>
+      </div>
+      <div class="card-face card-back" id="cb-2" style="display:none">
+        <div class="card-icon">🧬</div>
+        <div class="card-title">A Menor Unidade</div>
+        <div class="card-heading">BIT = <span style="color:var(--accent4)">BI</span>nary digi<span style="color:var(--accent4)">T</span></div>
+        <div class="card-body">
+          <strong>Bit</strong> vem do inglês <em><strong>Bi</strong>nary digi<strong>T</strong></em> = dígito binário.<br><br>
+          Um único bit só pode armazenar:<br>
+          <span class="highlight-orange">0</span> ou <span class="highlight">1</span><br><br>
+          Analogia agrícola: imagine um sensor de presença de chuva.<br>
+          Chuva = <span class="highlight">1</span> · Sem chuva = <span class="highlight-orange">0</span><br><br>
+          Um sensor como esse usa apenas <strong>1 bit</strong> de informação!
+        </div>
+        <div class="flip-hint">↩ Clique para voltar</div>
+      </div>
+
+      <!-- ── CARD 3 ── -->
+      <div class="card-face card-front" id="cf-3" style="display:none">
+        <div class="card-icon">📦</div>
+        <div class="card-title">O Byte</div>
+        <div class="card-heading">Por que 1 Byte = <span style="color:var(--accent)">8 bits</span>?</div>
+        <div class="card-body">
+          Se um bit é tão pequeno, por que agrupamos em 8?<br>
+          O número 8 não é aleatório — tem uma razão matemática.
+        </div>
+        <div class="flip-hint">↩ Clique para revelar</div>
+      </div>
+      <div class="card-face card-back" id="cb-3" style="display:none">
+        <div class="card-icon">🔬</div>
+        <div class="card-title">Potência de 2</div>
+        <div class="card-heading">8 = 2³ + 2³<br>é a escolha perfeita</div>
+        <div class="card-body">
+          Com <strong>8 bits</strong> conseguimos representar <span class="highlight">2⁸ = 256 valores</span> diferentes (0 a 255).<br><br>
+          Isso é suficiente para representar <strong>todos os caracteres</strong> do teclado: letras, números, símbolos.<br><br>
+          Além disso, 8 é potência de 2 (2³), o que facilita cálculos eletrônicos.<br><br>
+          Historicamente, os primeiros PCs usavam processadores de 8 bits — esse padrão ficou para sempre.
+        </div>
+        <div class="flip-hint">↩ Clique para voltar</div>
+      </div>
+
+      <!-- ── CARD 4 ── -->
+      <div class="card-face card-front" id="cf-4" style="display:none">
+        <div class="card-icon">📐</div>
+        <div class="card-title">Potências de 2</div>
+        <div class="card-heading">Por que <span style="color:var(--accent3)">2¹⁰ = 1024</span><br>vira "1 Kilo"?</div>
+        <div class="card-body">
+          No mundo decimal, 1 quilograma = 1.000 gramas exatos.<br>
+          Mas em informática, 1 Kilobyte = 1.024 bytes.<br><br>
+          Por quê essa diferença estranha?
+        </div>
+        <div class="flip-hint">↩ Clique para revelar</div>
+      </div>
+      <div class="card-face card-back" id="cb-4" style="display:none">
+        <div class="card-icon">🌿</div>
+        <div class="card-title">O Segredo do 1024</div>
+        <div class="card-heading">2¹⁰ = 1024 ≈ 1000<br>a fronteira natural</div>
+        <div class="card-body">
+          Computadores só "entendem" potências de 2.<br>
+          A potência de 2 mais próxima de 1.000 é:<br>
+          <span class="highlight">2¹⁰ = 1.024</span><br><br>
+          Por convenção, chamamos isso de <strong>"1 Kilo"</strong> em informática.<br><br>
+          Cada vez que subimos uma unidade, <strong>multiplicamos por 1.024</strong> (≈ por mil):<br>
+          KB → MB → GB → TB → PB…<br><br>
+          É como subir degraus em uma escada — cada degrau é ×1024!
+        </div>
+        <div class="flip-hint">↩ Clique para voltar</div>
+      </div>
+
+      <!-- ── CARD 5 ── -->
+      <div class="card-face card-front" id="cf-5" style="display:none">
+        <div class="card-icon">🌐</div>
+        <div class="card-title">Aplicação no Agronegócio</div>
+        <div class="card-heading">Quanto dado<br>uma fazenda gera?</div>
+        <div class="card-body">
+          Sensores de solo, câmeras de drone, estações meteorológicas,<br>GPS de máquinas...<br><br>
+          Você sabe estimar a quantidade de dados gerados?
+        </div>
+        <div class="flip-hint">↩ Clique para revelar</div>
+      </div>
+      <div class="card-face card-back" id="cb-5" style="display:none">
+        <div class="card-icon">🚜</div>
+        <div class="card-title">Dados no Campo</div>
+        <div class="card-heading">Agro 4.0 = Dados<br>em quantidade real</div>
+        <div class="card-body">
+          📡 <strong>Sensor de umidade:</strong> ~1 KB por hora<br>
+          🌦 <strong>Estação meteorológica:</strong> ~100 KB por dia<br>
+          📷 <strong>Câmera de drone (imagem):</strong> ~20 MB por foto<br>
+          🛩 <strong>Voo de drone (vídeo):</strong> ~4 GB por hora<br>
+          🗺 <strong>Mapa de precisão (NDVI):</strong> ~500 MB por talhão<br><br>
+          Uma fazenda de 1.000 ha pode gerar <span class="highlight-green">1 TB por safra</span> — por isso o armazenamento em nuvem é essencial no agro moderno!
+        </div>
+        <div class="flip-hint">↩ Clique para voltar</div>
+      </div>
+
+      <!-- ── CARD 6 ── -->
+      <div class="card-face card-front" id="cf-6" style="display:none">
+        <div class="card-icon">🔄</div>
+        <div class="card-title">Conversão</div>
+        <div class="card-heading">Como converter<br>decimal → binário?</div>
+        <div class="card-body">
+          Você sabe transformar o número 13 (decimal)<br>no equivalente binário?<br><br>
+          Existe um método simples chamado <strong>divisões sucessivas</strong>.
+        </div>
+        <div class="flip-hint">↩ Clique para revelar</div>
+      </div>
+      <div class="card-face card-back" id="cb-6" style="display:none">
+        <div class="card-icon">📝</div>
+        <div class="card-title">Passo a Passo</div>
+        <div class="card-heading">Divisões por 2<br>→ leia o resto de baixo pra cima</div>
+        <div class="card-body">
+          Exemplo: converter <strong>13</strong> para binário<br><br>
+          <span class="highlight-orange">13 ÷ 2 = 6, resto 1</span><br>
+          <span class="highlight-orange">6 ÷ 2 = 3, resto 0</span><br>
+          <span class="highlight-orange">3 ÷ 2 = 1, resto 1</span><br>
+          <span class="highlight-orange">1 ÷ 2 = 0, resto 1</span><br><br>
+          Lendo os restos de baixo para cima:<br>
+          <span class="highlight">1 3 = 1101 em binário</span><br><br>
+          Verificação: 1×2³ + 1×2² + 0×2¹ + 1×2⁰ = 8+4+0+1 = <strong>13 ✓</strong>
+        </div>
+        <div class="flip-hint">↩ Clique para voltar</div>
+      </div>
+
+      <!-- ── CARD 7 ── -->
+      <div class="card-face card-front" id="cf-7" style="display:none">
+        <div class="card-icon">🏆</div>
+        <div class="card-title">Revisão Final</div>
+        <div class="card-heading">Resumão:<br>o que aprendemos?</div>
+        <div class="card-body">
+          Tudo o que seu computador, tablet ou smartphone faz,<br>começa com <strong>0s e 1s</strong>.<br><br>
+          Vamos revisar os conceitos principais?
+        </div>
+        <div class="flip-hint">↩ Clique para revelar</div>
+      </div>
+      <div class="card-face card-back" id="cb-7" style="display:none">
+        <div class="card-icon">🌟</div>
+        <div class="card-title">Revisão Completa</div>
+        <div class="card-heading">Fundamentos<br>da Computação</div>
+        <div class="card-body" style="text-align:left; max-width:580px">
+          <strong>🔹 Bit</strong> = menor unidade (0 ou 1) — Binary digiT<br>
+          <strong>🔹 Byte</strong> = 8 bits = 2⁸ = 256 combinações<br>
+          <strong>🔹 KB</strong> = 1.024 bytes = 2¹⁰ bytes<br>
+          <strong>🔹 MB</strong> = 1.024 KB = 2²⁰ bytes<br>
+          <strong>🔹 GB</strong> = 1.024 MB = 2³⁰ bytes<br>
+          <strong>🔹 TB</strong> = 1.024 GB = 2⁴⁰ bytes<br><br>
+          <strong>Regra de ouro:</strong> cada unidade = a anterior × 2¹⁰ (≈ ×1000)<br>
+          A fronteira é sempre uma <strong>potência de 2</strong>!
+        </div>
+        <div class="flip-hint">↩ Clique para voltar</div>
+      </div>
+
+    </div><!-- end .flashcard -->
+  </div><!-- end .flashcard-wrapper -->
+
+</div><!-- end tab-flashcards -->
+
+
+<!-- ══════════════════════════════════════
+     TAB 2 — CALCULADORA BINÁRIA
+══════════════════════════════════════ -->
+<div class="section" id="tab-binario">
+  <div class="two-col">
+    <div class="panel-card">
+      <h2>🔢 Calculadora Binária Interativa</h2>
+      <p>Clique nos bits para ligá-los ou desligá-los. O valor decimal é calculado em tempo real. Explore como cada posição vale o dobro da anterior!</p>
+
+      <div id="bit-row" class="bit-row"></div>
+
+      <div class="result-display">
+        <div class="res-label">Valor Decimal</div>
+        <div class="res-val" id="dec-val">0</div>
+        <div class="res-formula" id="dec-formula">Nenhum bit ativo</div>
+      </div>
+
+      <div style="display:flex;gap:12px;margin-top:20px;flex-wrap:wrap">
+        <button class="btn btn-ghost" onclick="clearBits()">🗑 Limpar</button>
+        <button class="btn btn-secondary" onclick="randomBits()">🎲 Aleatório</button>
+        <button class="btn btn-green" onclick="setByte(65)">Letra 'A' (65)</button>
+        <button class="btn btn-green" onclick="setByte(13)">Exemplo: 13</button>
+        <button class="btn btn-green" onclick="setByte(255)">Máximo (255)</button>
+      </div>
+
+      <div style="margin-top:24px" class="converter-box">
+        <label>Digite um número decimal (0–255) para ver em binário:</label>
+        <input type="number" id="dec-input" min="0" max="255" placeholder="0–255" oninput="convertDecToBin(this.value)">
+        <div class="conv-result" id="conv-result" style="display:none">
+          <div class="cr-label">Binário</div>
+          <div class="cr-val" id="conv-bin"></div>
+        </div>
+        <div class="conv-steps" id="conv-steps"></div>
+      </div>
+    </div>
+
+    <div class="sidebar-stack">
+      <div class="info-card">
+        <h3><span class="dot dot-cyan"></span> Como Funciona</h3>
+        <p>
+          Cada bit tem um <strong>peso</strong> igual a uma potência de 2.<br><br>
+          Bit da direita = 2⁰ = 1<br>
+          Próximo = 2¹ = 2<br>
+          Depois = 2² = 4<br>
+          ... e assim por diante.<br><br>
+          O valor decimal = <strong>soma dos pesos</strong> dos bits que estão em <strong>1</strong>.
+        </p>
+      </div>
+      <div class="info-card">
+        <h3><span class="dot dot-green"></span> Combinações possíveis</h3>
+        <p>
+          Com <strong>8 bits</strong> temos:<br>
+          <strong>2⁸ = 256</strong> combinações diferentes<br>(valores de 0 a 255)<br><br>
+          É isso que representa 1 byte — suficiente para todos os caracteres do teclado!
+        </p>
+      </div>
+      <div class="info-card">
+        <h3><span class="dot dot-orange"></span> Aplicação Agrícola</h3>
+        <p>
+          Sensores de <strong>monitoramento de solo</strong> usam binário para enviar leituras.<br><br>
+          Por exemplo, um sensor de <strong>irrigação automática</strong> envia:<br>
+          <strong>00000001</strong> = irrigar<br>
+          <strong>00000000</strong> = parar<br><br>
+          Simples, rápido e confiável!
+        </p>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+<!-- ══════════════════════════════════════
+     TAB 3 — UNIDADES DE MEMÓRIA
+══════════════════════════════════════ -->
+<div class="section" id="tab-unidades">
+
+  <div class="panel-card" style="margin-bottom:24px">
+    <h2>💾 Unidades de Medida da Informação</h2>
+    <p>Cada unidade é <strong>1.024× maior</strong> que a anterior — sempre uma potência de 2. Clique nas unidades para ver exemplos do agronegócio.</p>
+
+    <div class="units-grid" id="units-grid">
+      <!-- filled by JS -->
+    </div>
+  </div>
+
+  <div class="two-col">
+    <div class="panel-card">
+      <h2>📊 Comparação Visual</h2>
+      <p>O tamanho relativo de cada unidade — perceba o crescimento exponencial!</p>
+      <div class="power-bar-wrap" id="units-bars"></div>
+    </div>
+
+    <div class="sidebar-stack">
+      <div class="info-card">
+        <h3><span class="dot dot-cyan"></span> Regra de Ouro</h3>
+        <p>
+          Para subir uma unidade: <strong>× 1.024</strong><br>
+          Para descer: <strong>÷ 1.024</strong><br><br>
+          Aproximação prática:<br>
+          × 1.000 (mas o computador prefere 1.024!)
+        </p>
+      </div>
+      <div class="info-card">
+        <h3><span class="dot dot-yellow"></span> Bit vs Byte</h3>
+        <p>
+          <strong>Bit (b minúsculo)</strong> = usado para velocidade de internet (Mbps)<br><br>
+          <strong>Byte (B maiúsculo)</strong> = usado para tamanho de arquivo (MB, GB)<br><br>
+          ⚠️ 100 Mbps = 12,5 MB/s<br>(porque 100 ÷ 8 = 12,5)
+        </p>
+      </div>
+      <div class="info-card">
+        <h3><span class="dot dot-purple"></span> Curiosidade</h3>
+        <p>
+          O <strong>DNA humano</strong> armazena ~725 MB de dados.<br><br>
+          Uma planta de milho tem ~2,3 GB de informação genética.<br><br>
+          A natureza usa um sistema de <strong>4 bases</strong> (A, T, G, C) — parecido com o binário, mas em base 4!
+        </p>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+<!-- ══════════════════════════════════════
+     TAB 4 — POTÊNCIAS DE 2
+══════════════════════════════════════ -->
+<div class="section" id="tab-potencias">
+  <div class="two-col">
+    <div class="panel-card">
+      <h2>⚡ Potências de Base 2</h2>
+      <p>Cada potência duplica o valor anterior. A coluna destacada mostra as <strong>fronteiras entre unidades</strong>.</p>
+
+      <div id="powers-table" style="margin-top:16px; overflow-x:auto"></div>
+
+      <div style="margin-top:28px">
+        <h3 style="font-size:1rem;font-weight:800;margin-bottom:14px">🌱 Simulador de Crescimento Exponencial</h3>
+        <p style="font-size:0.85rem;color:var(--muted);margin-bottom:16px">
+          Imagine que você dobra a quantidade de sementes plantadas a cada dia.<br>
+          No dia 1 você planta 1 semente. Em quantos dias terá mais de 1 bilhão?
+        </p>
+        <div style="display:flex;gap:12px;align-items:center;flex-wrap:wrap">
+          <button class="btn btn-primary" onclick="runDoubling()">▶ Animar Dobramentos</button>
+          <button class="btn btn-ghost" onclick="resetDoubling()">↺ Resetar</button>
+          <span id="doubling-day" style="font-family:'Space Mono',monospace;font-size:0.85rem;color:var(--muted)"></span>
+        </div>
+        <div id="doubling-bars" style="margin-top:16px"></div>
+      </div>
+    </div>
+
+    <div class="sidebar-stack">
+      <div class="info-card">
+        <h3><span class="dot dot-cyan"></span> Por que potências de 2?</h3>
+        <p>
+          O transistor (componente básico do chip) é um <strong>interruptor binário</strong>.<br><br>
+          Por isso toda a matemática do computador é naturalmente em <strong>base 2</strong>.<br><br>
+          Potências de 2 são os números "naturais" do hardware.
+        </p>
+      </div>
+      <div class="info-card">
+        <h3><span class="dot dot-green"></span> As Fronteiras</h3>
+        <p>
+          <strong>2¹⁰ = 1.024 ≈ 1K</strong> (Kilo)<br>
+          <strong>2²⁰ = 1.048.576 ≈ 1M</strong> (Mega)<br>
+          <strong>2³⁰ = 1.073.741.824 ≈ 1G</strong> (Giga)<br>
+          <strong>2⁴⁰ ≈ 1T</strong> (Tera)<br><br>
+          Cada salto = 10 potências a mais = × 1.024
+        </p>
+      </div>
+      <div class="info-card">
+        <h3><span class="dot dot-orange"></span> Crescimento Exponencial</h3>
+        <p>
+          Assim como pragas na lavoura se espalham exponencialmente,<br>a memória dos computadores cresce em potências de 2.<br><br>
+          Em 1980, um HD tinha <strong>10 MB</strong>.<br>
+          Hoje, HDs chegam a <strong>20 TB</strong>.<br>
+          Crescimento de <strong>2.000.000×</strong> em 44 anos!
+        </p>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+<!-- ══════════════════════════════════════
+     TAB 5 — QUIZ
+══════════════════════════════════════ -->
+<div class="section" id="tab-quiz">
+  <div class="quiz-grid">
+
+    <div class="quiz-card">
+      <h3>🌾 Questão 1</h3>
+      <p>Um sensor de irrigação envia <strong>00000001</strong>. Qual é o valor decimal?</p>
+      <div class="quiz-options">
+        <button class="quiz-opt" onclick="answer(0, this, false)">A) 0</button>
+        <button class="quiz-opt" onclick="answer(0, this, true)">B) 1</button>
+        <button class="quiz-opt" onclick="answer(0, this, false)">C) 8</button>
+        <button class="quiz-opt" onclick="answer(0, this, false)">D) 255</button>
+      </div>
+      <div class="quiz-feedback" id="qf-0"></div>
+    </div>
+
+    <div class="quiz-card">
+      <h3>💾 Questão 2</h3>
+      <p>Quantos bits existem em 1 Byte?</p>
+      <div class="quiz-options">
+        <button class="quiz-opt" onclick="answer(1, this, false)">A) 2</button>
+        <button class="quiz-opt" onclick="answer(1, this, false)">B) 4</button>
+        <button class="quiz-opt" onclick="answer(1, this, true)">C) 8</button>
+        <button class="quiz-opt" onclick="answer(1, this, false)">D) 10</button>
+      </div>
+      <div class="quiz-feedback" id="qf-1"></div>
+    </div>
+
+    <div class="quiz-card">
+      <h3>📷 Questão 3</h3>
+      <p>Uma foto de drone tem 20 MB. Quantos KB isso representa?</p>
+      <div class="quiz-options">
+        <button class="quiz-opt" onclick="answer(2, this, false)">A) 200 KB</button>
+        <button class="quiz-opt" onclick="answer(2, this, false)">B) 2.000 KB</button>
+        <button class="quiz-opt" onclick="answer(2, this, true)">C) 20.480 KB</button>
+        <button class="quiz-opt" onclick="answer(2, this, false)">D) 20.000.000 KB</button>
+      </div>
+      <div class="quiz-feedback" id="qf-2"></div>
+    </div>
+
+    <div class="quiz-card">
+      <h3>⚡ Questão 4</h3>
+      <p>Qual potência de 2 representa a fronteira entre KB e MB?</p>
+      <div class="quiz-options">
+        <button class="quiz-opt" onclick="answer(3, this, false)">A) 2⁸</button>
+        <button class="quiz-opt" onclick="answer(3, this, false)">B) 2⁸</button>
+        <button class="quiz-opt" onclick="answer(3, this, true)">C) 2²⁰</button>
+        <button class="quiz-opt" onclick="answer(3, this, false)">D) 2³⁰</button>
+      </div>
+      <div class="quiz-feedback" id="qf-3"></div>
+    </div>
+
+    <div class="quiz-card">
+      <h3>🔢 Questão 5</h3>
+      <p>O número binário <strong>1010</strong> vale quanto em decimal?</p>
+      <div class="quiz-options">
+        <button class="quiz-opt" onclick="answer(4, this, false)">A) 5</button>
+        <button class="quiz-opt" onclick="answer(4, this, true)">B) 10</button>
+        <button class="quiz-opt" onclick="answer(4, this, false)">C) 12</button>
+        <button class="quiz-opt" onclick="answer(4, this, false)">D) 1010</button>
+      </div>
+      <div class="quiz-feedback" id="qf-4"></div>
+    </div>
+
+    <div class="quiz-card">
+      <h3>🚜 Questão 6</h3>
+      <p>Uma estação meteorológica gera ~100 KB/dia. Em 1 ano (~365 dias), quantos MB ela gera?</p>
+      <div class="quiz-options">
+        <button class="quiz-opt" onclick="answer(5, this, false)">A) 3,65 MB</button>
+        <button class="quiz-opt" onclick="answer(5, this, true)">B) ~35,6 MB</button>
+        <button class="quiz-opt" onclick="answer(5, this, false)">C) 365 MB</button>
+        <button class="quiz-opt" onclick="answer(5, this, false)">D) 3,65 GB</button>
+      </div>
+      <div class="quiz-feedback" id="qf-5"></div>
+    </div>
+
+  </div>
+</div>
+
+<script>
+// ══════════════════════════════════
+//  BINARY RAIN CANVAS
+// ══════════════════════════════════
+const rainCanvas = document.getElementById('binary-rain-canvas');
+const rainCtx = rainCanvas.getContext('2d');
+let drops = [];
+
+function initRain() {
+  rainCanvas.width = window.innerWidth;
+  rainCanvas.height = window.innerHeight;
+  drops = [];
+  const cols = Math.floor(rainCanvas.width / 20);
+  for (let i = 0; i < cols; i++) {
+    drops.push({ x: i * 20, y: Math.random() * -rainCanvas.height, speed: 0.5 + Math.random() * 1.5 });
+  }
+}
+
+function drawRain() {
+  rainCtx.clearRect(0, 0, rainCanvas.width, rainCanvas.height);
+  rainCtx.font = '14px Space Mono';
+  drops.forEach(d => {
+    rainCtx.fillStyle = '#00e5ff';
+    rainCtx.fillText(Math.random() > 0.5 ? '1' : '0', d.x, d.y);
+    d.y += d.speed;
+    if (d.y > rainCanvas.height) d.y = -20;
+  });
+}
+initRain();
+setInterval(drawRain, 80);
+window.addEventListener('resize', initRain);
+
+// ══════════════════════════════════
+//  TABS
+// ══════════════════════════════════
+function switchTab(name) {
+  document.querySelectorAll('.tab').forEach((t, i) => {
+    const names = ['flashcards','binario','unidades','potencias','quiz'];
+    t.classList.toggle('active', names[i] === name);
+  });
+  document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
+  document.getElementById('tab-' + name).classList.add('active');
+  if (name === 'binario') initBits();
+  if (name === 'unidades') initUnits();
+  if (name === 'potencias') initPowers();
+}
+
+// ══════════════════════════════════
+//  FLASH-CARDS
+// ══════════════════════════════════
+let currentCard = 0;
+const totalCards = 8;
+let flipped = false;
+const donecards = new Set();
+
+function initDots() {
+  const container = document.getElementById('fc-dots');
+  container.innerHTML = '';
+  for (let i = 0; i < totalCards; i++) {
+    const d = document.createElement('div');
+    d.className = 'fc-dot' + (i === 0 ? ' active' : '');
+    d.onclick = () => goToCard(i);
+    container.appendChild(d);
+  }
+}
+
+function updateDots() {
+  const dots = document.querySelectorAll('.fc-dot');
+  dots.forEach((d, i) => {
+    d.className = 'fc-dot';
+    if (donecards.has(i)) d.classList.add('done');
+    if (i === currentCard) d.classList.add('active');
+  });
+}
+
+function showCard(idx, fromDir) {
+  // Hide all faces
+  for (let i = 0; i < totalCards; i++) {
+    const cf = document.getElementById('cf-' + i);
+    const cb = document.getElementById('cb-' + i);
+    if (cf) cf.style.display = 'none';
+    if (cb) cb.style.display = 'none';
+  }
+  // Show current
+  const cf = document.getElementById('cf-' + idx);
+  const cb = document.getElementById('cb-' + idx);
+  if (cf) cf.style.display = 'flex';
+  if (cb) cb.style.display = 'flex';
+
+  // Reset flip
+  const fc = document.getElementById('flashcard');
+  fc.classList.remove('flipped');
+  flipped = false;
+
+  document.getElementById('fc-progress').textContent = `Card ${idx + 1} de ${totalCards}`;
+  document.getElementById('btn-prev').disabled = idx === 0;
+  updateDots();
+}
+
+function flipCard() {
+  const fc = document.getElementById('flashcard');
+  flipped = !flipped;
+  fc.classList.toggle('flipped', flipped);
+  if (flipped) donecards.add(currentCard);
+  updateDots();
+}
+
+function nextCard() {
+  if (currentCard < totalCards - 1) {
+    currentCard++;
+    showCard(currentCard, 1);
+  }
+}
+
+function prevCard() {
+  if (currentCard > 0) {
+    currentCard--;
+    showCard(currentCard, -1);
+  }
+}
+
+function goToCard(idx) {
+  currentCard = idx;
+  showCard(idx, 0);
+}
+
+initDots();
+showCard(0, 0);
+
+// ══════════════════════════════════
+//  BINARY CALCULATOR
+// ══════════════════════════════════
+const NBITS = 8;
+let bits = Array(NBITS).fill(0);
+
+function initBits() {
+  const row = document.getElementById('bit-row');
+  if (row.children.length > 0) return;
+  for (let i = NBITS - 1; i >= 0; i--) {
+    const cell = document.createElement('div');
+    cell.className = 'bit-cell off';
+    cell.dataset.idx = i;
+    cell.innerHTML = `<div class="bit-val">0</div><div class="bit-power">2<sup>${i}</sup>=${Math.pow(2,i)}</div>`;
+    cell.onclick = () => toggleBit(i);
+    row.appendChild(cell);
+  }
+  updateDisplay();
+}
+
+function toggleBit(idx) {
+  bits[idx] = bits[idx] ? 0 : 1;
+  renderBits();
+}
+
+function renderBits() {
+  const cells = document.querySelectorAll('.bit-cell');
+  cells.forEach(c => {
+    const i = parseInt(c.dataset.idx);
+    const on = bits[i];
+    c.className = 'bit-cell ' + (on ? 'on' : 'off');
+    c.querySelector('.bit-val').textContent = on ? '1' : '0';
+  });
+  updateDisplay();
+}
+
+function updateDisplay() {
+  const dec = bits.reduce((acc, b, i) => acc + b * Math.pow(2, i), 0);
+  document.getElementById('dec-val').textContent = dec;
+
+  const parts = [];
+  for (let i = NBITS - 1; i >= 0; i--) {
+    if (bits[i]) parts.push(`${Math.pow(2, i)}`);
+  }
+  document.getElementById('dec-formula').textContent = parts.length
+    ? parts.join(' + ') + ' = ' + dec
+    : 'Nenhum bit ativo';
+}
+
+function clearBits() {
+  bits = Array(NBITS).fill(0);
+  renderBits();
+}
+
+function randomBits() {
+  bits = Array.from({ length: NBITS }, () => Math.round(Math.random()));
+  renderBits();
+}
+
+function setByte(val) {
+  bits = Array(NBITS).fill(0);
+  for (let i = 0; i < NBITS; i++) {
+    bits[i] = (val >> i) & 1;
+  }
+  renderBits();
+}
+
+function convertDecToBin(val) {
+  const n = parseInt(val);
+  const res = document.getElementById('conv-result');
+  const binEl = document.getElementById('conv-bin');
+  const stepsEl = document.getElementById('conv-steps');
+  if (isNaN(n) || n < 0 || n > 255) {
+    res.style.display = 'none'; stepsEl.textContent = '';
+    return;
+  }
+  const bin = n.toString(2).padStart(8, '0');
+  binEl.textContent = bin;
+  res.style.display = 'block';
+  setByte(n);
+
+  let steps = '', rem = n;
+  const lines = [];
+  while (rem > 0) {
+    lines.push(`${rem} ÷ 2 = ${Math.floor(rem / 2)}, resto ${rem % 2}`);
+    rem = Math.floor(rem / 2);
+  }
+  stepsEl.textContent = lines.join('\n') + '\nLendo de baixo pra cima: ' + bin;
+}
+
+// ══════════════════════════════════
+//  UNITS
+// ══════════════════════════════════
+const UNITS = [
+  { name: 'Bit', abbr: 'b', pow: null, color: 'uc-bit', icon: '⚡',
+    val: '1 dígito binário (0 ou 1)',
+    pow_str: '—',
+    agro: 'Estado de um sensor: Ligado/Desligado' },
+  { name: 'Byte', abbr: 'B', pow: '2⁸ = 256 valores', color: 'uc-byte', icon: '📦',
+    val: '8 bits',
+    pow_str: '2⁸',
+    agro: 'Um caractere do teclado (letra, número)' },
+  { name: 'Kilobyte', abbr: 'KB', pow: '2¹⁰ bytes', color: 'uc-kb', icon: '📄',
+    val: '1.024 bytes',
+    pow_str: '2¹⁰',
+    agro: '1 leitura de sensor de umidade do solo' },
+  { name: 'Megabyte', abbr: 'MB', pow: '2²⁰ bytes', color: 'uc-mb', icon: '🖼',
+    val: '1.024 KB = 1.048.576 bytes',
+    pow_str: '2²⁰',
+    agro: 'Foto tirada por drone (~1-5 MB)' },
+  { name: 'Gigabyte', abbr: 'GB', pow: '2³⁰ bytes', color: 'uc-gb', icon: '🎬',
+    val: '1.024 MB = ~1 bilhão de bytes',
+    pow_str: '2³⁰',
+    agro: 'Vídeo de drone (1h ≈ 4 GB)' },
+  { name: 'Terabyte', abbr: 'TB', pow: '2⁴⁰ bytes', color: 'uc-tb', icon: '🌾',
+    val: '1.024 GB = ~1 trilhão de bytes',
+    pow_str: '2⁴⁰',
+    agro: 'Dados de 1 safra completa de 1.000 ha' },
+];
+
+function initUnits() {
+  const grid = document.getElementById('units-grid');
+  if (grid.children.length > 0) return;
+  UNITS.forEach(u => {
+    const c = document.createElement('div');
+    c.className = `unit-card ${u.color}`;
+    c.innerHTML = `
+      <div style="font-size:1.8rem;margin-bottom:6px">${u.icon}</div>
+      <div class="u-name">${u.name}</div>
+      <div class="u-abbr">${u.abbr}</div>
+      <div class="u-val">${u.val}</div>
+      <div class="u-pow">${u.pow_str}</div>
+      <div class="u-agro">🌱 ${u.agro}</div>
+    `;
+    grid.appendChild(c);
+  });
+
+  const barsEl = document.getElementById('units-bars');
+  const barColors = ['#ffffff30','#00e5ff','#7cf56e','#ff6b35','#ffcc00','#cc44ff'];
+  const maxLog = 40;
+  UNITS.forEach((u, i) => {
+    const logVal = i === 0 ? 0 : (i === 1 ? 3 : (i - 1) * 10);
+    const pct = Math.max(4, Math.round((logVal / maxLog) * 100));
+    const row = document.createElement('div');
+    row.className = 'power-row';
+    row.innerHTML = `
+      <div class="power-label">${u.abbr}</div>
+      <div class="power-bar" style="width:${pct}%;background:${barColors[i]};color:${i<2?'#000':'#fff'}">${u.pow_str}</div>
+      <div class="power-note">${i === 0 ? '1 bit' : i === 1 ? '8 bits' : u.val}</div>
+    `;
+    barsEl.appendChild(row);
+  });
+}
+
+// ══════════════════════════════════
+//  POWERS TABLE
+// ══════════════════════════════════
+const MILESTONES = new Set([0, 8, 10, 20, 30, 40]);
+
+function initPowers() {
+  const el = document.getElementById('powers-table');
+  if (el.innerHTML) return;
+  let html = `<table style="width:100%;border-collapse:collapse;font-family:'Space Mono',monospace;font-size:0.8rem">
+    <thead><tr>
+      <th style="padding:10px 8px;text-align:left;color:var(--muted);border-bottom:1px solid rgba(255,255,255,0.1)">Potência</th>
+      <th style="padding:10px 8px;text-align:right;color:var(--muted);border-bottom:1px solid rgba(255,255,255,0.1)">Valor</th>
+      <th style="padding:10px 8px;text-align:left;color:var(--muted);border-bottom:1px solid rgba(255,255,255,0.1)">Significado</th>
+    </tr></thead><tbody>`;
+  const labels = { 0:'1 bit (base)', 1:'2 estados', 2:'4 estados', 3:'8 estados', 7:'128', 8:'→ 1 BYTE', 10:'→ 1 KB', 16:'65.536', 20:'→ 1 MB', 30:'→ 1 GB', 32:'4 GB (endereços 32 bits)', 40:'→ 1 TB', 64:'limite teórico 64 bits' };
+  for (let p = 0; p <= 40; p++) {
+    const val = Math.pow(2, p);
+    const fmt = val >= 1e12 ? (val/1e12).toFixed(1)+'T' : val >= 1e9 ? (val/1e9).toFixed(1)+'G' : val >= 1e6 ? (val/1e6).toFixed(1)+'M' : val >= 1e3 ? (val/1e3).toFixed(1)+'K' : val;
+    const isMile = MILESTONES.has(p);
+    const bg = isMile ? 'rgba(0,229,255,0.08)' : (p % 2 === 0 ? 'rgba(255,255,255,0.02)' : 'transparent');
+    const accent = isMile ? 'color:var(--accent)' : '';
+    html += `<tr style="background:${bg}">
+      <td style="padding:8px;${accent}">2<sup>${p}</sup></td>
+      <td style="padding:8px;text-align:right;${accent}">${fmt}</td>
+      <td style="padding:8px;color:var(--muted)">${labels[p] || ''}</td>
+    </tr>`;
+  }
+  html += '</tbody></table>';
+  el.innerHTML = html;
+}
+
+// Doubling animation
+let dblInterval = null;
+let dblDay = 0;
+
+function resetDoubling() {
+  clearInterval(dblInterval);
+  dblDay = 0;
+  document.getElementById('doubling-bars').innerHTML = '';
+  document.getElementById('doubling-day').textContent = '';
+}
+
+function runDoubling() {
+  resetDoubling();
+  const container = document.getElementById('doubling-bars');
+  const dayEl = document.getElementById('doubling-day');
+  const maxVal = Math.pow(2, 30);
+  dblInterval = setInterval(() => {
+    if (dblDay > 30) { clearInterval(dblInterval); return; }
+    const val = Math.pow(2, dblDay);
+    const pct = Math.max(2, Math.round((dblDay / 30) * 100));
+    const colors = ['#00e5ff','#7cf56e','#ff6b35','#ffcc00','#cc44ff'];
+    const col = colors[Math.floor(dblDay / 7) % colors.length];
+    const fmt = val >= 1e9 ? (val/1e9).toFixed(1)+' bilhão' : val >= 1e6 ? (val/1e6).toFixed(1)+' milhões' : val >= 1e3 ? (val/1e3).toFixed(1)+' mil' : val;
+    const row = document.createElement('div');
+    row.className = 'power-row animated-in';
+    row.innerHTML = `<div class="power-label">Dia ${dblDay}</div>
+      <div class="power-bar" style="width:${pct}%;background:${col};color:#000">2<sup>${dblDay}</sup></div>
+      <div class="power-note">${fmt} sementes</div>`;
+    container.appendChild(row);
+    container.scrollTop = container.scrollHeight;
+    dayEl.textContent = `Dia ${dblDay}: ${fmt}`;
+    dblDay++;
+  }, 200);
+}
+
+// ══════════════════════════════════
+//  QUIZ
+// ══════════════════════════════════
+const quizAnswered = Array(6).fill(false);
+const quizFeedbacks = [
+  { ok: 'Correto! 00000001 = apenas o bit 0 = valor 2⁰ = 1.', err: 'O único bit ligado está na posição 0 = 2⁰ = 1.' },
+  { ok: 'Correto! 1 Byte = 8 bits = 2³ grupos de 2 bits.', err: '1 Byte sempre terá 8 bits — esse é o padrão universal.' },
+  { ok: 'Correto! 20 MB × 1.024 = 20.480 KB. Em informática, 1 MB = 1.024 KB (não 1.000!).', err: 'Lembre: 1 MB = 1.024 KB. Então 20 × 1.024 = 20.480 KB.' },
+  { ok: 'Correto! 2²⁰ ≈ 1 milhão = fronteira do Mega.', err: '2²⁰ é a fronteira Mega. 2¹⁰ é Kilo, 2³⁰ é Giga.' },
+  { ok: 'Correto! 1010 = 1×2³ + 0×2² + 1×2¹ + 0×2⁰ = 8+0+2+0 = 10.', err: '1010₂ = 8+0+2+0 = 10. Cada posição vale o dobro da anterior!' },
+  { ok: 'Correto! 365 × 100 KB = 36.500 KB ÷ 1.024 ≈ 35,6 MB.', err: '365 dias × 100 KB = 36.500 KB. 36.500 ÷ 1.024 ≈ 35,6 MB.' },
+];
+
+function answer(idx, btn, correct) {
+  if (quizAnswered[idx]) return;
+  quizAnswered[idx] = true;
+  const card = btn.closest('.quiz-card');
+  card.querySelectorAll('.quiz-opt').forEach(o => o.disabled = true);
+  btn.classList.add(correct ? 'correct' : 'wrong');
+  const fb = document.getElementById('qf-' + idx);
+  fb.style.color = correct ? 'var(--accent3)' : '#ff6666';
+  fb.textContent = correct ? '✓ ' + quizFeedbacks[idx].ok : '✗ ' + quizFeedbacks[idx].err;
+}
+
+// Init default tab
+initBits();
+</script>
+</body>
+</html>
