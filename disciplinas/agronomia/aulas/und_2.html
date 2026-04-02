@@ -1,0 +1,1573 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>📊 Planilhas Eletrônicas — Agronomia 1º Ano</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;900&family=DM+Sans:wght@300;400;500;600&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --earth: #3d2b1f;
+    --soil: #6b4226;
+    --wheat: #c8a84b;
+    --wheat-light: #f0d98a;
+    --green: #2d6a4f;
+    --green-light: #52b788;
+    --green-pale: #d8f3dc;
+    --sky: #e8f4f8;
+    --cream: #fdf6e3;
+    --white: #ffffff;
+    --text-dark: #1a1209;
+    --text-mid: #4a3728;
+    --text-light: #8a7060;
+    --card-bg: rgba(255,255,255,0.92);
+    --shadow: 0 8px 40px rgba(61,43,31,0.15);
+    --shadow-sm: 0 2px 12px rgba(61,43,31,0.10);
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    font-family: 'DM Sans', sans-serif;
+    background: var(--cream);
+    color: var(--text-dark);
+    overflow-x: hidden;
+    min-height: 100vh;
+  }
+
+  /* ── HEADER ── */
+  header {
+    background: var(--earth);
+    color: var(--cream);
+    padding: 1.2rem 2rem;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    box-shadow: 0 2px 20px rgba(0,0,0,0.3);
+  }
+  .header-title {
+    font-family: 'Playfair Display', serif;
+    font-size: 1.15rem;
+    letter-spacing: 0.02em;
+  }
+  .header-title span { color: var(--wheat); }
+  .progress-bar-wrap {
+    width: 200px;
+    height: 6px;
+    background: rgba(255,255,255,0.2);
+    border-radius: 10px;
+    overflow: hidden;
+  }
+  #progress-fill {
+    height: 100%;
+    background: linear-gradient(90deg, var(--wheat), var(--green-light));
+    border-radius: 10px;
+    transition: width 0.5s ease;
+    width: 12.5%;
+  }
+  .slide-counter {
+    font-family: 'DM Mono', monospace;
+    font-size: 0.8rem;
+    color: var(--wheat-light);
+    min-width: 60px;
+    text-align: right;
+  }
+
+  /* ── NAV DOTS ── */
+  .nav-dots {
+    display: flex;
+    justify-content: center;
+    gap: 8px;
+    padding: 1rem 0 0.5rem;
+  }
+  .dot {
+    width: 10px; height: 10px;
+    border-radius: 50%;
+    background: #d4c3b0;
+    cursor: pointer;
+    transition: all 0.3s;
+    border: none;
+  }
+  .dot.active { background: var(--green); transform: scale(1.3); }
+  .dot:hover { background: var(--wheat); }
+
+  /* ── SLIDES CONTAINER ── */
+  .slides-container {
+    position: relative;
+    min-height: calc(100vh - 120px);
+    overflow: hidden;
+  }
+
+  .slide {
+    display: none;
+    padding: 2rem 1.5rem 6rem;
+    max-width: 900px;
+    margin: 0 auto;
+    animation: slideIn 0.4s ease;
+  }
+  .slide.active { display: block; }
+
+  @keyframes slideIn {
+    from { opacity: 0; transform: translateY(20px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+
+  /* ── SLIDE HEADER ── */
+  .slide-header {
+    text-align: center;
+    margin-bottom: 2rem;
+  }
+  .slide-tag {
+    display: inline-block;
+    background: var(--green);
+    color: white;
+    font-size: 0.72rem;
+    font-weight: 600;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    padding: 0.3rem 0.9rem;
+    border-radius: 20px;
+    margin-bottom: 0.8rem;
+  }
+  .slide-title {
+    font-family: 'Playfair Display', serif;
+    font-size: clamp(1.6rem, 4vw, 2.4rem);
+    color: var(--earth);
+    line-height: 1.2;
+    margin-bottom: 0.5rem;
+  }
+  .slide-subtitle {
+    color: var(--text-light);
+    font-size: 1rem;
+    font-weight: 400;
+  }
+
+  /* ── CONTENT CARD ── */
+  .content-card {
+    background: var(--white);
+    border-radius: 20px;
+    padding: 2rem;
+    box-shadow: var(--shadow);
+    margin-bottom: 1.5rem;
+    border-left: 5px solid var(--green);
+  }
+  .content-card.wheat-border { border-left-color: var(--wheat); }
+  .content-card.red-border { border-left-color: #c0392b; }
+
+  /* ── TIMELINE ── */
+  .timeline {
+    position: relative;
+    padding-left: 2rem;
+  }
+  .timeline::before {
+    content: '';
+    position: absolute;
+    left: 0.5rem;
+    top: 0; bottom: 0;
+    width: 3px;
+    background: linear-gradient(180deg, var(--wheat), var(--green));
+    border-radius: 2px;
+  }
+  .timeline-item {
+    position: relative;
+    margin-bottom: 1.5rem;
+    padding-left: 1rem;
+  }
+  .timeline-item::before {
+    content: '';
+    position: absolute;
+    left: -1.6rem;
+    top: 0.4rem;
+    width: 12px; height: 12px;
+    background: var(--wheat);
+    border-radius: 50%;
+    border: 2px solid var(--earth);
+  }
+  .timeline-year {
+    font-family: 'DM Mono', monospace;
+    font-size: 0.78rem;
+    color: var(--wheat);
+    font-weight: 600;
+    letter-spacing: 0.05em;
+  }
+  .timeline-text {
+    font-size: 0.95rem;
+    color: var(--text-mid);
+    margin-top: 0.2rem;
+    line-height: 1.5;
+  }
+
+  /* ── TWO COLUMNS ── */
+  .two-col {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1rem;
+    margin-bottom: 1.5rem;
+  }
+  @media (max-width: 600px) { .two-col { grid-template-columns: 1fr; } }
+
+  .col-card {
+    background: var(--white);
+    border-radius: 16px;
+    padding: 1.4rem;
+    box-shadow: var(--shadow-sm);
+    border-top: 4px solid var(--green);
+  }
+  .col-card.alt { border-top-color: var(--wheat); }
+  .col-card h3 {
+    font-family: 'Playfair Display', serif;
+    font-size: 1rem;
+    margin-bottom: 0.6rem;
+    color: var(--earth);
+  }
+  .col-card p, .col-card li {
+    font-size: 0.88rem;
+    color: var(--text-mid);
+    line-height: 1.6;
+  }
+  .col-card ul { padding-left: 1.2rem; }
+
+  /* ── SOFTWARE GRID ── */
+  .software-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 1rem;
+    margin-bottom: 1.5rem;
+  }
+  @media (max-width: 500px) { .software-grid { grid-template-columns: 1fr; } }
+
+  .sw-card {
+    background: var(--white);
+    border-radius: 16px;
+    padding: 1.2rem 1.4rem;
+    box-shadow: var(--shadow-sm);
+    display: flex;
+    align-items: flex-start;
+    gap: 0.9rem;
+    transition: transform 0.2s;
+    cursor: default;
+  }
+  .sw-card:hover { transform: translateY(-3px); box-shadow: var(--shadow); }
+  .sw-icon {
+    font-size: 2rem;
+    flex-shrink: 0;
+    line-height: 1;
+    margin-top: 0.1rem;
+  }
+  .sw-name {
+    font-weight: 600;
+    color: var(--earth);
+    font-size: 0.92rem;
+  }
+  .sw-desc {
+    font-size: 0.8rem;
+    color: var(--text-light);
+    margin-top: 0.2rem;
+    line-height: 1.4;
+  }
+  .sw-badge {
+    display: inline-block;
+    font-size: 0.68rem;
+    padding: 0.15rem 0.5rem;
+    border-radius: 10px;
+    margin-top: 0.3rem;
+    font-weight: 600;
+  }
+  .badge-blue { background: #dbeafe; color: #1e40af; }
+  .badge-green { background: #d1fae5; color: #065f46; }
+  .badge-gray { background: #f1f5f9; color: #475569; }
+  .badge-silver { background: #f0f0f5; color: #6b7280; }
+
+  /* ── STEPS ── */
+  .steps {
+    counter-reset: step;
+  }
+  .step-item {
+    display: flex;
+    gap: 1rem;
+    margin-bottom: 1.2rem;
+    align-items: flex-start;
+  }
+  .step-num {
+    counter-increment: step;
+    flex-shrink: 0;
+    width: 36px; height: 36px;
+    background: var(--green);
+    color: white;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 700;
+    font-size: 0.85rem;
+    font-family: 'DM Mono', monospace;
+  }
+  .step-body h4 {
+    font-weight: 600;
+    color: var(--earth);
+    font-size: 0.95rem;
+    margin-bottom: 0.25rem;
+  }
+  .step-body p, .step-body li {
+    font-size: 0.86rem;
+    color: var(--text-mid);
+    line-height: 1.5;
+  }
+  .step-body ul { padding-left: 1.1rem; }
+
+  .formula-box {
+    background: var(--earth);
+    color: var(--wheat-light);
+    font-family: 'DM Mono', monospace;
+    font-size: 0.9rem;
+    padding: 0.7rem 1.2rem;
+    border-radius: 10px;
+    margin: 0.5rem 0;
+    display: inline-block;
+    letter-spacing: 0.05em;
+  }
+
+  /* ── DATA SECTION ── */
+  .data-compare {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1rem;
+    margin-bottom: 1.5rem;
+  }
+  @media (max-width: 500px) { .data-compare { grid-template-columns: 1fr; } }
+
+  .data-box {
+    border-radius: 16px;
+    padding: 1.4rem;
+    text-align: center;
+  }
+  .data-box.raw {
+    background: linear-gradient(135deg, #fef9e7, #fdebd0);
+    border: 2px solid var(--wheat);
+  }
+  .data-box.info {
+    background: linear-gradient(135deg, #eafaf1, #d5f5e3);
+    border: 2px solid var(--green-light);
+  }
+  .data-box .db-icon { font-size: 2.5rem; margin-bottom: 0.5rem; }
+  .data-box .db-title {
+    font-family: 'Playfair Display', serif;
+    font-size: 1.1rem;
+    color: var(--earth);
+    margin-bottom: 0.4rem;
+  }
+  .data-box .db-def {
+    font-size: 0.82rem;
+    color: var(--text-mid);
+    line-height: 1.5;
+  }
+  .data-box .db-ex {
+    margin-top: 0.8rem;
+    font-size: 0.78rem;
+    background: rgba(255,255,255,0.7);
+    border-radius: 8px;
+    padding: 0.5rem;
+    color: var(--text-mid);
+  }
+
+  /* ── AGRO REASONS ── */
+  .reason-list {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 0.8rem;
+    margin-bottom: 1.5rem;
+  }
+  @media (max-width: 500px) { .reason-list { grid-template-columns: 1fr; } }
+
+  .reason-item {
+    background: var(--white);
+    border-radius: 14px;
+    padding: 1rem 1.2rem;
+    box-shadow: var(--shadow-sm);
+    display: flex;
+    gap: 0.8rem;
+    align-items: flex-start;
+    border-left: 3px solid var(--green-light);
+    transition: transform 0.2s;
+  }
+  .reason-item:hover { transform: translateX(4px); }
+  .reason-icon { font-size: 1.5rem; flex-shrink: 0; }
+  .reason-title { font-weight: 600; font-size: 0.88rem; color: var(--earth); }
+  .reason-desc { font-size: 0.78rem; color: var(--text-light); margin-top: 0.2rem; line-height: 1.4; }
+
+  /* ── CRITICAL CARD ── */
+  .critical-card {
+    background: linear-gradient(135deg, #fff5f5, #ffeaea);
+    border: 2px solid #f08080;
+    border-radius: 20px;
+    padding: 1.8rem;
+    margin-bottom: 1.5rem;
+  }
+  .critical-card h3 {
+    font-family: 'Playfair Display', serif;
+    color: #c0392b;
+    margin-bottom: 0.8rem;
+    font-size: 1.15rem;
+  }
+  .myth-vs-fact {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1rem;
+    margin-top: 1rem;
+  }
+  @media (max-width: 500px) { .myth-vs-fact { grid-template-columns: 1fr; } }
+
+  .myth {
+    background: rgba(192,57,43,0.08);
+    border-radius: 12px;
+    padding: 1rem;
+    border-left: 3px solid #c0392b;
+  }
+  .fact {
+    background: rgba(45,106,79,0.08);
+    border-radius: 12px;
+    padding: 1rem;
+    border-left: 3px solid var(--green);
+  }
+  .myth-label, .fact-label {
+    font-size: 0.7rem;
+    font-weight: 700;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    margin-bottom: 0.4rem;
+  }
+  .myth-label { color: #c0392b; }
+  .fact-label { color: var(--green); }
+  .myth p, .fact p { font-size: 0.85rem; color: var(--text-mid); line-height: 1.5; }
+
+  /* ── FLASH CARDS ── */
+  .flashcards-section {
+    margin-top: 2rem;
+  }
+  .flashcards-title {
+    display: flex;
+    align-items: center;
+    gap: 0.6rem;
+    font-size: 0.85rem;
+    font-weight: 600;
+    color: var(--text-light);
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    margin-bottom: 1rem;
+  }
+  .flashcards-title::before, .flashcards-title::after {
+    content: '';
+    flex: 1;
+    height: 1px;
+    background: #ddd;
+  }
+
+  .cards-row {
+    display: flex;
+    gap: 1rem;
+    flex-wrap: wrap;
+  }
+
+  .flashcard {
+    perspective: 1000px;
+    width: 100%;
+    max-width: 260px;
+    height: 170px;
+    cursor: pointer;
+    flex: 1 1 220px;
+  }
+  .flashcard-inner {
+    position: relative;
+    width: 100%; height: 100%;
+    transform-style: preserve-3d;
+    transition: transform 0.55s cubic-bezier(0.4,0,0.2,1);
+    border-radius: 16px;
+  }
+  .flashcard.flipped .flashcard-inner { transform: rotateY(180deg); }
+
+  .flashcard-front, .flashcard-back {
+    position: absolute;
+    inset: 0;
+    border-radius: 16px;
+    backface-visibility: hidden;
+    -webkit-backface-visibility: hidden;
+    padding: 1.2rem;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    box-shadow: var(--shadow-sm);
+  }
+  .flashcard-front {
+    background: linear-gradient(135deg, var(--earth) 0%, var(--soil) 100%);
+    color: var(--cream);
+  }
+  .flashcard-back {
+    background: linear-gradient(135deg, var(--green) 0%, #1b4332 100%);
+    color: var(--green-pale);
+    transform: rotateY(180deg);
+  }
+  .fc-icon { font-size: 1.6rem; }
+  .fc-question {
+    font-family: 'Playfair Display', serif;
+    font-size: 0.9rem;
+    line-height: 1.35;
+    flex: 1;
+    display: flex;
+    align-items: center;
+    padding: 0.3rem 0;
+  }
+  .fc-hint {
+    font-size: 0.68rem;
+    opacity: 0.6;
+    font-style: italic;
+  }
+  .fc-answer {
+    font-size: 0.82rem;
+    line-height: 1.5;
+    flex: 1;
+    display: flex;
+    align-items: center;
+    padding: 0.3rem 0;
+  }
+  .fc-back-icon { font-size: 1.2rem; opacity: 0.7; text-align: right; }
+
+  /* ── GOOGLE ECOSYSTEM ── */
+  .ecosystem-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 0.8rem;
+    margin-bottom: 1.5rem;
+  }
+  @media (max-width: 500px) { .ecosystem-grid { grid-template-columns: 1fr; } }
+
+  .eco-item {
+    background: var(--white);
+    border-radius: 14px;
+    padding: 1rem 1.2rem;
+    box-shadow: var(--shadow-sm);
+    display: flex;
+    gap: 0.8rem;
+    align-items: center;
+    transition: transform 0.2s;
+  }
+  .eco-item:hover { transform: translateY(-2px); }
+  .eco-icon { font-size: 1.8rem; flex-shrink: 0; }
+  .eco-name { font-weight: 600; font-size: 0.9rem; color: var(--earth); }
+  .eco-role { font-size: 0.78rem; color: var(--text-light); margin-top: 0.15rem; }
+
+  /* ── CELL ANATOMY ── */
+  .spreadsheet-demo {
+    background: var(--white);
+    border-radius: 16px;
+    overflow: hidden;
+    box-shadow: var(--shadow);
+    margin-bottom: 1.5rem;
+    border: 1px solid #e2d9cc;
+  }
+  .sheet-toolbar {
+    background: #f1f1f1;
+    padding: 0.5rem 1rem;
+    font-size: 0.78rem;
+    color: var(--text-light);
+    border-bottom: 1px solid #e0e0e0;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+  }
+  .formula-input {
+    background: white;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    padding: 0.2rem 0.6rem;
+    font-family: 'DM Mono', monospace;
+    font-size: 0.8rem;
+    color: var(--green);
+    flex: 1;
+  }
+  .sheet-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 0.82rem;
+    font-family: 'DM Mono', monospace;
+  }
+  .sheet-table th {
+    background: #f8f8f8;
+    padding: 0.35rem 0.6rem;
+    text-align: center;
+    border: 1px solid #e8e8e8;
+    color: var(--text-light);
+    font-weight: 500;
+    font-size: 0.75rem;
+  }
+  .sheet-table td {
+    padding: 0.35rem 0.6rem;
+    border: 1px solid #eee;
+    text-align: center;
+    color: var(--text-mid);
+  }
+  .sheet-table td.row-header {
+    background: #f8f8f8;
+    color: var(--text-light);
+    font-weight: 500;
+  }
+  .sheet-table td.active-cell {
+    background: #e3f2fd;
+    border: 2px solid #1976d2;
+    color: #0d47a1;
+    font-weight: 600;
+  }
+  .sheet-table td.formula-cell {
+    background: #e8f5e9;
+    color: var(--green);
+    font-weight: 600;
+  }
+
+  /* ── NAVIGATION ── */
+  .nav-bottom {
+    position: fixed;
+    bottom: 0; left: 0; right: 0;
+    background: rgba(253,246,227,0.95);
+    backdrop-filter: blur(10px);
+    border-top: 1px solid #e2d9cc;
+    padding: 0.8rem 1.5rem;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 1rem;
+    z-index: 50;
+  }
+  .nav-btn {
+    background: var(--earth);
+    color: var(--cream);
+    border: none;
+    padding: 0.6rem 1.6rem;
+    border-radius: 30px;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 0.88rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+  }
+  .nav-btn:hover { background: var(--green); transform: translateY(-1px); }
+  .nav-btn:disabled { background: #ccc; cursor: not-allowed; transform: none; }
+  .nav-btn.primary { background: var(--green); }
+  .nav-btn.primary:hover { background: #1b4332; }
+
+  /* ── HIGHLIGHT ── */
+  .highlight {
+    background: linear-gradient(120deg, var(--wheat-light) 0%, transparent 100%);
+    padding: 0.1rem 0.3rem;
+    border-radius: 4px;
+  }
+  .tag-inline {
+    display: inline-block;
+    background: var(--green-pale);
+    color: var(--green);
+    font-size: 0.75rem;
+    font-weight: 600;
+    padding: 0.1rem 0.5rem;
+    border-radius: 8px;
+  }
+
+  /* ── CONCLUSION ── */
+  .conclusion-banner {
+    background: linear-gradient(135deg, var(--earth), var(--soil));
+    color: var(--cream);
+    border-radius: 20px;
+    padding: 2rem;
+    text-align: center;
+    margin-bottom: 1.5rem;
+  }
+  .conclusion-banner h2 {
+    font-family: 'Playfair Display', serif;
+    font-size: 1.5rem;
+    margin-bottom: 0.5rem;
+  }
+  .conclusion-banner p { font-size: 0.92rem; opacity: 0.85; line-height: 1.6; }
+
+  .pillar-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 0.8rem;
+    margin-bottom: 1.5rem;
+  }
+  @media (max-width: 600px) { .pillar-grid { grid-template-columns: 1fr; } }
+
+  .pillar {
+    background: var(--white);
+    border-radius: 14px;
+    padding: 1.2rem;
+    text-align: center;
+    box-shadow: var(--shadow-sm);
+    border-bottom: 3px solid var(--green);
+  }
+  .pillar.p2 { border-bottom-color: var(--wheat); }
+  .pillar.p3 { border-bottom-color: #e74c3c; }
+  .pillar-icon { font-size: 2rem; margin-bottom: 0.5rem; }
+  .pillar-title { font-weight: 700; font-size: 0.88rem; color: var(--earth); margin-bottom: 0.3rem; }
+  .pillar-desc { font-size: 0.77rem; color: var(--text-light); line-height: 1.4; }
+
+</style>
+</head>
+<body>
+
+<header>
+  <div class="header-title">📊 <span>Planilhas</span> na Agronomia</div>
+  <div class="progress-bar-wrap"><div id="progress-fill"></div></div>
+  <div class="slide-counter" id="counter">1 / 8</div>
+</header>
+
+<div class="nav-dots" id="nav-dots">
+  <button class="dot active" onclick="goTo(0)" title="Slide 1"></button>
+  <button class="dot" onclick="goTo(1)" title="Slide 2"></button>
+  <button class="dot" onclick="goTo(2)" title="Slide 3"></button>
+  <button class="dot" onclick="goTo(3)" title="Slide 4"></button>
+  <button class="dot" onclick="goTo(4)" title="Slide 5"></button>
+  <button class="dot" onclick="goTo(5)" title="Slide 6"></button>
+  <button class="dot" onclick="goTo(6)" title="Slide 7"></button>
+  <button class="dot" onclick="goTo(7)" title="Slide 8"></button>
+</div>
+
+<div class="slides-container">
+
+  <!-- ═══════════════════════════════════════
+       SLIDE 1 — Curiosidade histórica
+  ═══════════════════════════════════════ -->
+  <div class="slide active" id="slide-0">
+    <div class="slide-header">
+      <div class="slide-tag">📜 Contexto histórico</div>
+      <h1 class="slide-title">A origem das planilhas</h1>
+      <p class="slide-subtitle">Muito antes dos computadores — a ideia já existia.</p>
+    </div>
+
+    <div class="content-card">
+      <div class="timeline">
+        <div class="timeline-item">
+          <div class="timeline-year">~3000 a.C. — Sumérios</div>
+          <div class="timeline-text">Registravam produção agrícola (grãos, rebanhos) em <strong>tábuas de argila</strong> organizadas em linhas e colunas. A primeira "planilha" de produtividade rural da história.</div>
+        </div>
+        <div class="timeline-item">
+          <div class="timeline-year">Egito e Roma Antiga</div>
+          <div class="timeline-text">Registros organizados para controle de <strong>impostos, estoques e tributos</strong>. Colunas de débito e crédito já eram usadas em papiro.</div>
+        </div>
+        <div class="timeline-item">
+          <div class="timeline-year">Idade Média</div>
+          <div class="timeline-text"><strong>Livros contábeis</strong> estruturados em colunas (débito / crédito). Comerciantes italianos popularizaram a contabilidade de partidas dobradas.</div>
+        </div>
+        <div class="timeline-item">
+          <div class="timeline-year">1979 — VisiCalc</div>
+          <div class="timeline-text">Primeira planilha eletrônica, criada para o Apple II. Automatizou o que antes era feito à mão. Transformou contadores e gestores.</div>
+        </div>
+        <div class="timeline-item">
+          <div class="timeline-year">1985 — Microsoft Excel</div>
+          <div class="timeline-text">Lançado para Mac. Em 1987, chegou ao Windows. Tornou-se o padrão mundial e permanece dominante até hoje.</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="content-card wheat-border">
+      <strong>💡 Conclusão histórica:</strong> A ideia de linhas + colunas para organizar informação já existia há 5.000 anos. O computador <em>apenas automatizou</em> o que humanos faziam manualmente — incluindo dados agrícolas.
+    </div>
+
+    <div class="flashcards-section">
+      <div class="flashcards-title">📚 Flash-cards — clique para revelar</div>
+      <div class="cards-row">
+        <div class="flashcard" onclick="this.classList.toggle('flipped')">
+          <div class="flashcard-inner">
+            <div class="flashcard-front">
+              <div class="fc-icon">🏺</div>
+              <div class="fc-question">O que os sumérios registravam em suas tábuas de argila?</div>
+              <div class="fc-hint">↩ clique para revelar</div>
+            </div>
+            <div class="flashcard-back">
+              <div class="fc-back-icon">✓</div>
+              <div class="fc-answer">Produção agrícola: quantidade de grãos colhidos, número de animais, estoques. Era essencialmente um controle de produtividade rural — a primeira "planilha" da história.</div>
+              <div class="fc-hint">↩ clique para voltar</div>
+            </div>
+          </div>
+        </div>
+        <div class="flashcard" onclick="this.classList.toggle('flipped')">
+          <div class="flashcard-inner">
+            <div class="flashcard-front">
+              <div class="fc-icon">💻</div>
+              <div class="fc-question">Qual foi a primeira planilha eletrônica e quando surgiu?</div>
+              <div class="fc-hint">↩ clique para revelar</div>
+            </div>
+            <div class="flashcard-back">
+              <div class="fc-back-icon">✓</div>
+              <div class="fc-answer">VisiCalc, criada em 1979 para o Apple II. Foi ela que demonstrou ao mundo o valor prático dos computadores pessoais para tarefas de negócios.</div>
+              <div class="fc-hint">↩ clique para voltar</div>
+            </div>
+          </div>
+        </div>
+        <div class="flashcard" onclick="this.classList.toggle('flipped')">
+          <div class="flashcard-inner">
+            <div class="flashcard-front">
+              <div class="fc-icon">🌾</div>
+              <div class="fc-question">Por que a história das planilhas é relevante para o agrônomo?</div>
+              <div class="fc-hint">↩ clique para revelar</div>
+            </div>
+            <div class="flashcard-back">
+              <div class="fc-back-icon">✓</div>
+              <div class="fc-answer">Porque o controle de dados agrícolas é a origem das planilhas. Desde os sumérios, organizar produção, estoques e clima em tabelas é uma necessidade central do campo.</div>
+              <div class="fc-hint">↩ clique para voltar</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ═══════════════════════════════════════
+       SLIDE 2 — Computadores usam planilhas?
+  ═══════════════════════════════════════ -->
+  <div class="slide" id="slide-1">
+    <div class="slide-header">
+      <div class="slide-tag">🖥️ Fundamentos</div>
+      <h1 class="slide-title">Computadores usam planilhas?</h1>
+      <p class="slide-subtitle">Sim — mas de uma forma bem diferente do que você imagina.</p>
+    </div>
+
+    <div class="two-col">
+      <div class="col-card">
+        <h3>👤 Interface humana</h3>
+        <p>O que você vê no Excel ou Google Sheets é uma <strong>camada amigável</strong> criada para humanos. Linhas, colunas, células, gráficos — tudo isso é uma representação visual.</p>
+      </div>
+      <div class="col-card alt">
+        <h3>⚙️ O que o computador realmente usa</h3>
+        <ul>
+          <li><strong>Arrays</strong> — listas de valores na memória</li>
+          <li><strong>Matrizes 2D</strong> — tabelas em código</li>
+          <li><strong>Banco de dados</strong> — SQL, estruturas relacionais</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="content-card">
+      <h3 style="font-family:'Playfair Display',serif; margin-bottom:1rem; color:var(--earth);">Anatomia de uma planilha</h3>
+      <p style="font-size:0.88rem; color:var(--text-mid); margin-bottom:1rem;">Uma planilha eletrônica é, na essência, uma <strong>tabela 2D com fórmulas automatizadas</strong>. Cada célula é endereçada por coluna + linha.</p>
+      <div class="spreadsheet-demo">
+        <div class="sheet-toolbar">
+          <span>fx</span>
+          <div class="formula-input">=MÉDIA(C2:C6)</div>
+        </div>
+        <table class="sheet-table">
+          <thead>
+            <tr>
+              <th></th><th>A</th><th>B</th><th>C</th><th>D</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td class="row-header">1</td>
+              <td><strong>Talhão</strong></td>
+              <td><strong>Área (ha)</strong></td>
+              <td><strong>Produt. (sc/ha)</strong></td>
+              <td class="active-cell"><strong>Média</strong></td>
+            </tr>
+            <tr>
+              <td class="row-header">2</td><td>T-01</td><td>12</td><td>58</td><td></td>
+            </tr>
+            <tr>
+              <td class="row-header">3</td><td>T-02</td><td>8</td><td>63</td><td></td>
+            </tr>
+            <tr>
+              <td class="row-header">4</td><td>T-03</td><td>15</td><td>51</td><td></td>
+            </tr>
+            <tr>
+              <td class="row-header">5</td><td>T-04</td><td>10</td><td>70</td><td></td>
+            </tr>
+            <tr>
+              <td class="row-header">6</td><td>T-05</td><td>9</td><td>66</td><td class="formula-cell">=MÉDIA(C2:C6) → 61,6</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+      <p style="font-size:0.8rem; color:var(--text-light);">🌾 A célula D6 contém uma fórmula. Para o <em>usuário</em>, ela mostra 61,6. Para o <em>computador</em>, executa um loop somando e dividindo os valores do array C2:C6.</p>
+    </div>
+
+    <div class="flashcards-section">
+      <div class="flashcards-title">📚 Flash-cards</div>
+      <div class="cards-row">
+        <div class="flashcard" onclick="this.classList.toggle('flipped')">
+          <div class="flashcard-inner">
+            <div class="flashcard-front">
+              <div class="fc-icon">🗄️</div>
+              <div class="fc-question">Qual a diferença entre uma planilha e um banco de dados?</div>
+              <div class="fc-hint">↩ clique para revelar</div>
+            </div>
+            <div class="flashcard-back">
+              <div class="fc-back-icon">✓</div>
+              <div class="fc-answer">A planilha é uma interface visual para humanos. O banco de dados (SQL) é uma estrutura otimizada para o computador processar grandes volumes de dados, com relacionamentos entre tabelas.</div>
+              <div class="fc-hint">↩ clique para voltar</div>
+            </div>
+          </div>
+        </div>
+        <div class="flashcard" onclick="this.classList.toggle('flipped')">
+          <div class="flashcard-inner">
+            <div class="flashcard-front">
+              <div class="fc-icon">📐</div>
+              <div class="fc-question">O que é uma célula numa planilha e como ela é identificada?</div>
+              <div class="fc-hint">↩ clique para revelar</div>
+            </div>
+            <div class="flashcard-back">
+              <div class="fc-back-icon">✓</div>
+              <div class="fc-answer">Célula = interseção de uma coluna (letra) com uma linha (número). Ex.: A1, B3, C10. É a unidade básica de armazenamento de dados — pode conter texto, número ou fórmula.</div>
+              <div class="fc-hint">↩ clique para voltar</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ═══════════════════════════════════════
+       SLIDE 3 — Softwares atuais
+  ═══════════════════════════════════════ -->
+  <div class="slide" id="slide-2">
+    <div class="slide-header">
+      <div class="slide-tag">🛠️ Ferramentas</div>
+      <h1 class="slide-title">Softwares de planilhas atuais</h1>
+      <p class="slide-subtitle">Qual usar? Depende do objetivo.</p>
+    </div>
+
+    <div class="software-grid">
+      <div class="sw-card">
+        <div class="sw-icon">🟢</div>
+        <div>
+          <div class="sw-name">Microsoft Excel</div>
+          <div class="sw-desc">O mais completo do mercado. Funções avançadas, macros em VBA, Power Query, tabelas dinâmicas.</div>
+          <span class="sw-badge badge-blue">Mercado corporativo</span>
+          <span class="sw-badge badge-blue">Pago</span>
+        </div>
+      </div>
+      <div class="sw-card">
+        <div class="sw-icon">📊</div>
+        <div>
+          <div class="sw-name">Google Sheets</div>
+          <div class="sw-desc">Online, colaborativo em tempo real. Integra com Drive, Forms e APIs. Ideal para equipes e projetos compartilhados.</div>
+          <span class="sw-badge badge-green">Gratuito</span>
+          <span class="sw-badge badge-green">Online</span>
+        </div>
+      </div>
+      <div class="sw-card">
+        <div class="sw-icon">📄</div>
+        <div>
+          <div class="sw-name">LibreOffice Calc</div>
+          <div class="sw-desc">Gratuito e open-source. Funciona offline. Compatível com .xlsx. Boa opção quando não há internet disponível.</div>
+          <span class="sw-badge badge-gray">Gratuito</span>
+          <span class="sw-badge badge-gray">Offline</span>
+        </div>
+      </div>
+      <div class="sw-card">
+        <div class="sw-icon">🍎</div>
+        <div>
+          <div class="sw-name">Apple Numbers</div>
+          <div class="sw-desc">Visual atraente, fácil de usar. Exclusivo para Mac/iPhone/iPad. Mais limitado em funções avançadas.</div>
+          <span class="sw-badge badge-silver">Ecossistema Apple</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="content-card wheat-border">
+      <strong>🎯 Qual usar na graduação?</strong>
+      <p style="margin-top:0.6rem; font-size:0.88rem; color:var(--text-mid); line-height:1.6;">
+        Para este curso, usaremos o <span class="tag-inline">Google Sheets</span> — gratuito, acessível de qualquer dispositivo, permite colaboração e não precisa de instalação. Para estágios e mercado de trabalho, o <span class="tag-inline">Excel</span> continua sendo o padrão exigido.
+      </p>
+    </div>
+
+    <div class="flashcards-section">
+      <div class="flashcards-title">📚 Flash-cards</div>
+      <div class="cards-row">
+        <div class="flashcard" onclick="this.classList.toggle('flipped')">
+          <div class="flashcard-inner">
+            <div class="flashcard-front">
+              <div class="fc-icon">🤝</div>
+              <div class="fc-question">Qual a principal vantagem do Google Sheets sobre o Excel?</div>
+              <div class="fc-hint">↩ clique para revelar</div>
+            </div>
+            <div class="flashcard-back">
+              <div class="fc-back-icon">✓</div>
+              <div class="fc-answer">Colaboração em tempo real: várias pessoas editam o mesmo arquivo simultaneamente, via navegador, sem precisar instalar nada. O histórico de versões é automático.</div>
+              <div class="fc-hint">↩ clique para voltar</div>
+            </div>
+          </div>
+        </div>
+        <div class="flashcard" onclick="this.classList.toggle('flipped')">
+          <div class="flashcard-inner">
+            <div class="flashcard-front">
+              <div class="fc-icon">⚡</div>
+              <div class="fc-question">Quando o Excel ainda é preferível ao Google Sheets?</div>
+              <div class="fc-hint">↩ clique para revelar</div>
+            </div>
+            <div class="flashcard-back">
+              <div class="fc-back-icon">✓</div>
+              <div class="fc-answer">Quando se trabalha com grandes volumes de dados, macros complexas em VBA, Power Query para ETL de dados, ou se exige máxima performance em cálculos iterativos.</div>
+              <div class="fc-hint">↩ clique para voltar</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ═══════════════════════════════════════
+       SLIDE 4 — Google ajuda?
+  ═══════════════════════════════════════ -->
+  <div class="slide" id="slide-3">
+    <div class="slide-header">
+      <div class="slide-tag">🌐 Ecossistema</div>
+      <h1 class="slide-title">O Google ajuda?</h1>
+      <p class="slide-subtitle">Sim — bastante. O ecossistema é completo e integrado.</p>
+    </div>
+
+    <div class="ecosystem-grid">
+      <div class="eco-item">
+        <div class="eco-icon">💾</div>
+        <div>
+          <div class="eco-name">Google Drive</div>
+          <div class="eco-role">Armazenamento em nuvem. Guardar, organizar e compartilhar arquivos.</div>
+        </div>
+      </div>
+      <div class="eco-item">
+        <div class="eco-icon">📊</div>
+        <div>
+          <div class="eco-name">Google Sheets</div>
+          <div class="eco-role">Planilhas online. Fórmulas, gráficos, análise de dados colaborativa.</div>
+        </div>
+      </div>
+      <div class="eco-item">
+        <div class="eco-icon">📋</div>
+        <div>
+          <div class="eco-name">Google Forms</div>
+          <div class="eco-role">Criação de formulários. Coleta de dados automaticamente em planilha.</div>
+        </div>
+      </div>
+      <div class="eco-item">
+        <div class="eco-icon">📈</div>
+        <div>
+          <div class="eco-name">Looker Studio</div>
+          <div class="eco-role">Dashboards e visualizações interativas. Conecta direto ao Sheets.</div>
+        </div>
+      </div>
+      <div class="eco-item">
+        <div class="eco-icon">🗺️</div>
+        <div>
+          <div class="eco-name">Google Earth Engine</div>
+          <div class="eco-role">Análise de imagens de satélite. Fundamental para agricultura de precisão.</div>
+        </div>
+      </div>
+      <div class="eco-item">
+        <div class="eco-icon">📧</div>
+        <div>
+          <div class="eco-name">Gmail + Workspace</div>
+          <div class="eco-role">Tudo conectado: e-mail, agenda, documentos, planilhas — uma conta só.</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="content-card">
+      <strong>🔗 Por que integração importa no agro?</strong>
+      <p style="margin-top:0.6rem; font-size:0.88rem; color:var(--text-mid); line-height:1.6;">
+        Um <strong>formulário de campo</strong> (Forms) alimenta automaticamente uma <strong>planilha</strong> (Sheets), que gera um <strong>gráfico de produtividade</strong> (Sheets), que aparece num <strong>painel visual</strong> (Looker Studio), compartilhado com toda a equipe via <strong>Drive</strong>. Tudo isso sem copiar e colar dados manualmente.
+      </p>
+    </div>
+
+    <div class="flashcards-section">
+      <div class="flashcards-title">📚 Flash-cards</div>
+      <div class="cards-row">
+        <div class="flashcard" onclick="this.classList.toggle('flipped')">
+          <div class="flashcard-inner">
+            <div class="flashcard-front">
+              <div class="fc-icon">📋</div>
+              <div class="fc-question">Como o Google Forms pode ajudar na coleta de dados a campo?</div>
+              <div class="fc-hint">↩ clique para revelar</div>
+            </div>
+            <div class="flashcard-back">
+              <div class="fc-back-icon">✓</div>
+              <div class="fc-answer">Você cria um formulário no celular e preenche em campo (pH, produtividade, pragas). As respostas vão automaticamente para uma planilha no Sheets — sem digitação posterior.</div>
+              <div class="fc-hint">↩ clique para voltar</div>
+            </div>
+          </div>
+        </div>
+        <div class="flashcard" onclick="this.classList.toggle('flipped')">
+          <div class="flashcard-inner">
+            <div class="flashcard-front">
+              <div class="fc-icon">📈</div>
+              <div class="fc-question">O que o Looker Studio faz com dados do Sheets?</div>
+              <div class="fc-hint">↩ clique para revelar</div>
+            </div>
+            <div class="flashcard-back">
+              <div class="fc-back-icon">✓</div>
+              <div class="fc-answer">Cria dashboards interativos e dinâmicos. Quando os dados da planilha são atualizados, o painel se atualiza automaticamente — ideal para monitoramento de fazenda em tempo real.</div>
+              <div class="fc-hint">↩ clique para voltar</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ═══════════════════════════════════════
+       SLIDE 5 — Passo a passo
+  ═══════════════════════════════════════ -->
+  <div class="slide" id="slide-4">
+    <div class="slide-header">
+      <div class="slide-tag">🚀 Prática</div>
+      <h1 class="slide-title">Primeiros passos no Google Sheets</h1>
+      <p class="slide-subtitle">Do zero à primeira planilha de dados agronômicos.</p>
+    </div>
+
+    <div class="two-col">
+      <div class="col-card" style="border-top-color: #4285F4;">
+        <h3>① Criar conta Google</h3>
+        <div class="steps">
+          <div class="step-item">
+            <div class="step-num">1</div>
+            <div class="step-body">
+              <h4>Acesse accounts.google.com</h4>
+              <p>Clique em "Criar conta" → "Para uso próprio"</p>
+            </div>
+          </div>
+          <div class="step-item">
+            <div class="step-num">2</div>
+            <div class="step-body">
+              <h4>Preencha os dados</h4>
+              <p>Nome, sobrenome, e-mail, senha segura</p>
+            </div>
+          </div>
+          <div class="step-item">
+            <div class="step-num">3</div>
+            <div class="step-body">
+              <h4>Confirme o telefone</h4>
+              <p>Necessário para recuperação de conta</p>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="col-card" style="border-top-color: #0F9D58;">
+        <h3>② Navegar no Drive</h3>
+        <div class="steps">
+          <div class="step-item">
+            <div class="step-num">1</div>
+            <div class="step-body">
+              <h4>Acesse drive.google.com</h4>
+              <p>Faça login com sua conta Google</p>
+            </div>
+          </div>
+          <div class="step-item">
+            <div class="step-num">2</div>
+            <div class="step-body">
+              <h4>Conheça a interface</h4>
+              <p>Menu esquerdo: Meu Drive, Recentes | Centro: seus arquivos | Topo: busca</p>
+            </div>
+          </div>
+          <div class="step-item">
+            <div class="step-num">3</div>
+            <div class="step-body">
+              <h4>Botão "Novo"</h4>
+              <p>Criar pastas, planilhas, documentos</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="content-card">
+      <h3 style="font-family:'Playfair Display',serif; margin-bottom:1rem; color:var(--earth);">③ Primeiras fórmulas práticas</h3>
+      <div style="display:flex; flex-wrap:wrap; gap:1rem; margin-bottom:1rem;">
+        <div>
+          <p style="font-size:0.82rem; color:var(--text-light); margin-bottom:0.3rem;">Somar valores (ex: produção total):</p>
+          <div class="formula-box">=SOMA(A1:A10)</div>
+        </div>
+        <div>
+          <p style="font-size:0.82rem; color:var(--text-light); margin-bottom:0.3rem;">Calcular média (ex: produtividade média):</p>
+          <div class="formula-box">=MÉDIA(B1:B10)</div>
+        </div>
+        <div>
+          <p style="font-size:0.82rem; color:var(--text-light); margin-bottom:0.3rem;">Encontrar valor máximo:</p>
+          <div class="formula-box">=MÁXIMO(C1:C10)</div>
+        </div>
+        <div>
+          <p style="font-size:0.82rem; color:var(--text-light); margin-bottom:0.3rem;">Encontrar valor mínimo:</p>
+          <div class="formula-box">=MÍNIMO(C1:C10)</div>
+        </div>
+      </div>
+      <p style="font-size:0.82rem; color:var(--text-mid);">④ <strong>Criar gráfico:</strong> selecione os dados → menu <em>Inserir</em> → <em>Gráfico</em>. O Sheets sugere automaticamente o tipo mais adequado.</p>
+    </div>
+
+    <div class="flashcards-section">
+      <div class="flashcards-title">📚 Flash-cards</div>
+      <div class="cards-row">
+        <div class="flashcard" onclick="this.classList.toggle('flipped')">
+          <div class="flashcard-inner">
+            <div class="flashcard-front">
+              <div class="fc-icon">🔢</div>
+              <div class="fc-question">O que significa =SOMA(A1:A10) numa planilha?</div>
+              <div class="fc-hint">↩ clique para revelar</div>
+            </div>
+            <div class="flashcard-back">
+              <div class="fc-back-icon">✓</div>
+              <div class="fc-answer">Soma todos os valores nas células de A1 até A10. O ":" indica um intervalo contíguo. A fórmula se recalcula automaticamente quando qualquer valor do intervalo muda.</div>
+              <div class="fc-hint">↩ clique para voltar</div>
+            </div>
+          </div>
+        </div>
+        <div class="flashcard" onclick="this.classList.toggle('flipped')">
+          <div class="flashcard-inner">
+            <div class="flashcard-front">
+              <div class="fc-icon">📊</div>
+              <div class="fc-question">Como criar um gráfico de produtividade por talhão no Sheets?</div>
+              <div class="fc-hint">↩ clique para revelar</div>
+            </div>
+            <div class="flashcard-back">
+              <div class="fc-back-icon">✓</div>
+              <div class="fc-answer">1. Selecione as colunas com nome do talhão e valores de produtividade. 2. Vá em Inserir → Gráfico. 3. No painel lateral, escolha o tipo (barras para comparação entre talhões é ideal).</div>
+              <div class="fc-hint">↩ clique para voltar</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ═══════════════════════════════════════
+       SLIDE 6 — O que são dados?
+  ═══════════════════════════════════════ -->
+  <div class="slide" id="slide-5">
+    <div class="slide-header">
+      <div class="slide-tag">🔬 Conceito</div>
+      <h1 class="slide-title">O que são dados?</h1>
+      <p class="slide-subtitle">E qual a diferença entre dados e informação?</p>
+    </div>
+
+    <div class="data-compare">
+      <div class="data-box raw">
+        <div class="db-icon">🌱</div>
+        <div class="db-title">Dados</div>
+        <div class="db-def">Valores brutos, isolados, sem contexto. Por si só, não dizem nada.</div>
+        <div class="db-ex">
+          <strong>Exemplos agronômicos:</strong><br>
+          pH = 4,8 · Chuva = 12mm · Produtividade = 48 sc/ha · Temperatura = 34°C
+        </div>
+      </div>
+      <div class="data-box info">
+        <div class="db-icon">💡</div>
+        <div class="db-title">Informação</div>
+        <div class="db-def">Dados interpretados, com contexto e significado para tomada de decisão.</div>
+        <div class="db-ex">
+          <strong>Exemplos agronômicos:</strong><br>
+          "Área T-03 com pH abaixo do ideal para soja — recomendar calagem urgente."
+        </div>
+      </div>
+    </div>
+
+    <div class="content-card">
+      <h3 style="font-family:'Playfair Display',serif; margin-bottom:0.8rem; color:var(--earth);">Tipos de dados que o agrônomo trabalha</h3>
+      <div style="display:grid; grid-template-columns:repeat(3,1fr); gap:0.8rem;">
+        <div style="background:#fef9e7; border-radius:12px; padding:0.9rem; text-align:center;">
+          <div style="font-size:1.5rem;">🌡️</div>
+          <div style="font-weight:600; font-size:0.82rem; color:var(--earth); margin:0.3rem 0;">Climáticos</div>
+          <div style="font-size:0.76rem; color:var(--text-light);">Chuva, temperatura, umidade relativa, radiação solar</div>
+        </div>
+        <div style="background:#eafaf1; border-radius:12px; padding:0.9rem; text-align:center;">
+          <div style="font-size:1.5rem;">🪱</div>
+          <div style="font-weight:600; font-size:0.82rem; color:var(--earth); margin:0.3rem 0;">Solo</div>
+          <div style="font-size:0.76rem; color:var(--text-light);">pH, CTC, matéria orgânica, macro e micronutrientes</div>
+        </div>
+        <div style="background:#f0f3ff; border-radius:12px; padding:0.9rem; text-align:center;">
+          <div style="font-size:1.5rem;">🌽</div>
+          <div style="font-weight:600; font-size:0.82rem; color:var(--earth); margin:0.3rem 0;">Produção</div>
+          <div style="font-size:0.76rem; color:var(--text-light);">Produtividade por talhão, estande de plantas, índice de colheita</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="flashcards-section">
+      <div class="flashcards-title">📚 Flash-cards</div>
+      <div class="cards-row">
+        <div class="flashcard" onclick="this.classList.toggle('flipped')">
+          <div class="flashcard-inner">
+            <div class="flashcard-front">
+              <div class="fc-icon">📏</div>
+              <div class="fc-question">"pH = 4,8" é um dado ou uma informação?</div>
+              <div class="fc-hint">↩ clique para revelar</div>
+            </div>
+            <div class="flashcard-back">
+              <div class="fc-back-icon">✓</div>
+              <div class="fc-answer">É um dado bruto. Só vira informação quando contextualizado: "pH 4,8 indica acidez excessiva para cultivo de soja, exigindo calagem para elevar a pH 6,0–6,5."</div>
+              <div class="fc-hint">↩ clique para voltar</div>
+            </div>
+          </div>
+        </div>
+        <div class="flashcard" onclick="this.classList.toggle('flipped')">
+          <div class="flashcard-inner">
+            <div class="flashcard-front">
+              <div class="fc-icon">🌧️</div>
+              <div class="fc-question">Por que registrar dados climáticos em planilha é importante na agronomia?</div>
+              <div class="fc-hint">↩ clique para revelar</div>
+            </div>
+            <div class="flashcard-back">
+              <div class="fc-back-icon">✓</div>
+              <div class="fc-answer">Permite identificar padrões de distribuição de chuvas, períodos de deficit hídrico e correlacionar com produtividade. Sem histórico registrado, é impossível tomar decisões de manejo baseadas em evidências.</div>
+              <div class="fc-hint">↩ clique para voltar</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ═══════════════════════════════════════
+       SLIDE 7 — Por que analisar dados?
+  ═══════════════════════════════════════ -->
+  <div class="slide" id="slide-6">
+    <div class="slide-header">
+      <div class="slide-tag">🌾 Aplicação</div>
+      <h1 class="slide-title">Por que analisar dados na agronomia?</h1>
+      <p class="slide-subtitle">Motivos reais — não teóricos.</p>
+    </div>
+
+    <div class="reason-list">
+      <div class="reason-item">
+        <div class="reason-icon">🎯</div>
+        <div>
+          <div class="reason-title">Tomada de decisão</div>
+          <div class="reason-desc">Adubação, irrigação, correção de solo — decisões baseadas em dados reais, não em intuição.</div>
+        </div>
+      </div>
+      <div class="reason-item">
+        <div class="reason-icon">💰</div>
+        <div>
+          <div class="reason-title">Redução de custo</div>
+          <div class="reason-desc">Evita aplicação desnecessária de insumos. Fertilizante aplicado onde não precisa = dinheiro jogado fora.</div>
+        </div>
+      </div>
+      <div class="reason-item">
+        <div class="reason-icon">📈</div>
+        <div>
+          <div class="reason-title">Aumento de produtividade</div>
+          <div class="reason-desc">Identificar talhões com baixo desempenho e entender o porquê para corrigi-los.</div>
+        </div>
+      </div>
+      <div class="reason-item">
+        <div class="reason-icon">🗺️</div>
+        <div>
+          <div class="reason-title">Agricultura de precisão</div>
+          <div class="reason-desc">Decisões por talhão ou por ponto amostral, não por fazenda inteira. Variabilidade espacial exige dados.</div>
+        </div>
+      </div>
+      <div class="reason-item">
+        <div class="reason-icon">🌡️</div>
+        <div>
+          <div class="reason-title">Monitoramento contínuo</div>
+          <div class="reason-desc">Clima, pragas, doenças, desempenho — tendências só aparecem com séries históricas bem registradas.</div>
+        </div>
+      </div>
+      <div class="reason-item">
+        <div class="reason-icon">🌍</div>
+        <div>
+          <div class="reason-title">Sustentabilidade</div>
+          <div class="reason-desc">Rastrear pegada hídrica, uso de defensivos, emissões. ESG e certificações exigem dados documentados.</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="content-card wheat-border">
+      <strong>🚜 Caso prático:</strong>
+      <p style="margin-top:0.5rem; font-size:0.88rem; color:var(--text-mid); line-height:1.6;">
+        Uma fazenda com 5 talhões de soja registra produtividade em planilha por 3 safras. Na análise, percebe que o Talhão T-03 tem produtividade consistentemente 18% abaixo dos demais. Cruzando com análise de solo, descobre pH 4,6 — muito ácido. <strong>Sem o registro histórico, esse problema levaria anos a mais para ser identificado.</strong>
+      </p>
+    </div>
+
+    <div class="flashcards-section">
+      <div class="flashcards-title">📚 Flash-cards</div>
+      <div class="cards-row">
+        <div class="flashcard" onclick="this.classList.toggle('flipped')">
+          <div class="flashcard-inner">
+            <div class="flashcard-front">
+              <div class="fc-icon">🗺️</div>
+              <div class="fc-question">O que é agricultura de precisão e qual o papel dos dados?</div>
+              <div class="fc-hint">↩ clique para revelar</div>
+            </div>
+            <div class="flashcard-back">
+              <div class="fc-back-icon">✓</div>
+              <div class="fc-answer">Fazer o manejo considerando a variabilidade do campo — aplicar insumos na dose certa, no lugar certo, na hora certa. Isso só é possível com dados georreferenciados coletados e analisados sistematicamente.</div>
+              <div class="fc-hint">↩ clique para voltar</div>
+            </div>
+          </div>
+        </div>
+        <div class="flashcard" onclick="this.classList.toggle('flipped')">
+          <div class="flashcard-inner">
+            <div class="flashcard-front">
+              <div class="fc-icon">💸</div>
+              <div class="fc-question">Como a análise de dados pode reduzir custo de adubação?</div>
+              <div class="fc-hint">↩ clique para revelar</div>
+            </div>
+            <div class="flashcard-back">
+              <div class="fc-back-icon">✓</div>
+              <div class="fc-answer">A partir de análises de solo e mapas de produtividade, é possível fazer adubação a taxa variável: menos fertilizante nas áreas férteis, mais nas deficientes. Sem dados, aplica-se dose uniforme — ineficiente.</div>
+              <div class="fc-hint">↩ clique para voltar</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ═══════════════════════════════════════
+       SLIDE 8 — Visão crítica
+  ═══════════════════════════════════════ -->
+  <div class="slide" id="slide-7">
+    <div class="slide-header">
+      <div class="slide-tag">⚠️ Visão crítica</div>
+      <h1 class="slide-title">Planilha ≠ Análise de dados</h1>
+      <p class="slide-subtitle">O erro mais comum de quem começa a trabalhar com dados.</p>
+    </div>
+
+    <div class="critical-card">
+      <h3>⚠️ O mito que precisa ser quebrado</h3>
+      <p style="font-size:0.9rem; color:var(--text-mid); line-height:1.6; margin-bottom:0.5rem;">
+        Muitos estudantes (e profissionais) assumem implicitamente que <strong>"aprender planilha = saber analisar dados"</strong>. Isso é falso — e perigoso.
+      </p>
+      <div class="myth-vs-fact">
+        <div class="myth">
+          <div class="myth-label">❌ Mito</div>
+          <p>Sei usar Excel/Sheets, portanto sei analisar dados. Fiz um gráfico bonito, portanto gerei informação.</p>
+        </div>
+        <div class="fact">
+          <div class="fact-label">✓ Realidade</div>
+          <p>Planilha é a ferramenta. Análise exige: estatística básica, interpretação agronômica e contexto do problema.</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="content-card red-border">
+      <strong>🚨 Erro comum na prática:</strong>
+      <p style="margin-top:0.5rem; font-size:0.88rem; color:var(--text-mid); line-height:1.6;">
+        Gerar um gráfico de barras com cores bonitas e apresentar sem interpretar o que ele significa agronomicamente. <em>"A produtividade variou entre talhões"</em> não é análise — é leitura visual. Análise é: <em>"A variação de 23% entre T-01 e T-03 é estatisticamente significativa e está correlacionada com déficit hídrico no florescimento, indicando necessidade de irrigação suplementar nesse período."</em>
+      </p>
+    </div>
+
+    <div class="pillar-grid">
+      <div class="pillar">
+        <div class="pillar-icon">🛠️</div>
+        <div class="pillar-title">Ferramenta</div>
+        <div class="pillar-desc">Planilha, Python, R — são meios, não fins.</div>
+      </div>
+      <div class="pillar p2">
+        <div class="pillar-icon">📐</div>
+        <div class="pillar-title">Estatística básica</div>
+        <div class="pillar-desc">Média, desvio padrão, correlação — mínimo necessário.</div>
+      </div>
+      <div class="pillar p3">
+        <div class="pillar-icon">🌱</div>
+        <div class="pillar-title">Contexto agronômico</div>
+        <div class="pillar-desc">Números sem interpretação agronômica não valem nada.</div>
+      </div>
+    </div>
+
+    <div class="conclusion-banner">
+      <h2>🎯 O objetivo desta disciplina</h2>
+      <p>Não é apenas ensinar a usar planilhas. É desenvolver o raciocínio para coletar, organizar, analisar e interpretar dados agronômicos com rigor e significado prático.</p>
+    </div>
+
+    <div class="flashcards-section">
+      <div class="flashcards-title">📚 Flash-cards</div>
+      <div class="cards-row">
+        <div class="flashcard" onclick="this.classList.toggle('flipped')">
+          <div class="flashcard-inner">
+            <div class="flashcard-front">
+              <div class="fc-icon">📊</div>
+              <div class="fc-question">Por que um gráfico bonito pode ser enganoso na agronomia?</div>
+              <div class="fc-hint">↩ clique para revelar</div>
+            </div>
+            <div class="flashcard-back">
+              <div class="fc-back-icon">✓</div>
+              <div class="fc-answer">Porque a aparência não garante significado. Um gráfico pode mostrar diferenças aleatórias como se fossem tendências reais, sem que haja significância estatística ou explicação causal agronômica.</div>
+              <div class="fc-hint">↩ clique para voltar</div>
+            </div>
+          </div>
+        </div>
+        <div class="flashcard" onclick="this.classList.toggle('flipped')">
+          <div class="flashcard-inner">
+            <div class="flashcard-front">
+              <div class="fc-icon">🎓</div>
+              <div class="fc-question">Quais são os 3 pilares para analisar dados de verdade?</div>
+              <div class="fc-hint">↩ clique para revelar</div>
+            </div>
+            <div class="flashcard-back">
+              <div class="fc-back-icon">✓</div>
+              <div class="fc-answer">1. Ferramenta (planilha, software) — para organizar e calcular. 2. Estatística básica — para interpretar com rigor. 3. Contexto agronômico — para dar significado prático ao resultado.</div>
+              <div class="fc-hint">↩ clique para voltar</div>
+            </div>
+          </div>
+        </div>
+        <div class="flashcard" onclick="this.classList.toggle('flipped')">
+          <div class="flashcard-inner">
+            <div class="flashcard-front">
+              <div class="fc-icon">🔍</div>
+              <div class="fc-question">Qual a diferença entre "descrever" e "analisar" dados?</div>
+              <div class="fc-hint">↩ clique para revelar</div>
+            </div>
+            <div class="flashcard-back">
+              <div class="fc-back-icon">✓</div>
+              <div class="fc-answer">Descrever = "a média foi X". Analisar = explicar por que foi X, se é esperado, o que causou, e qual a implicação para o manejo. Análise exige conhecimento agronômico além da ferramenta.</div>
+              <div class="fc-hint">↩ clique para voltar</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</div><!-- /slides-container -->
+
+<nav class="nav-bottom">
+  <button class="nav-btn" id="btn-prev" onclick="prevSlide()" disabled>← Anterior</button>
+  <button class="nav-btn primary" id="btn-next" onclick="nextSlide()">Próximo →</button>
+</nav>
+
+<script>
+  let current = 0;
+  const total = 8;
+
+  function updateUI() {
+    document.querySelectorAll('.slide').forEach((s, i) => {
+      s.classList.toggle('active', i === current);
+    });
+    document.querySelectorAll('.dot').forEach((d, i) => {
+      d.classList.toggle('active', i === current);
+    });
+    document.getElementById('counter').textContent = `${current + 1} / ${total}`;
+    document.getElementById('progress-fill').style.width = `${((current + 1) / total) * 100}%`;
+    document.getElementById('btn-prev').disabled = current === 0;
+    document.getElementById('btn-next').disabled = current === total - 1;
+    document.getElementById('btn-next').textContent = current === total - 1 ? '✓ Concluído' : 'Próximo →';
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  }
+
+  function nextSlide() {
+    if (current < total - 1) { current++; updateUI(); }
+  }
+  function prevSlide() {
+    if (current > 0) { current--; updateUI(); }
+  }
+  function goTo(n) {
+    current = n; updateUI();
+  }
+
+  // Keyboard navigation
+  document.addEventListener('keydown', e => {
+    if (e.key === 'ArrowRight' || e.key === 'ArrowDown') nextSlide();
+    if (e.key === 'ArrowLeft'  || e.key === 'ArrowUp')   prevSlide();
+  });
+</script>
+</body>
+</html>
