@@ -1,0 +1,1897 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Agrocomputação · Matriz Curricular Interativa</title>
+
+<!-- ============================================================
+     DADOS DO CURSO — edite aqui para atualizar o conteúdo
+     Cada semestre é um objeto no array SEMESTRES.
+     Cada disciplina tem: nome, codigo, tipo, ch, ementa, topicos[], prereq
+     tipo: "comp" | "agro" | "int" | "ext"
+     ============================================================ -->
+<script>
+const CURSO = {
+  nome: "Tecnólogo em Agrocomputação",
+  ch_total: "~3.200h",
+  semestres_total: 8,
+  instituicao: "Instituto Federal de Goiás — Câmpus Cidade de Goiás"
+};
+
+/* ================================================================
+   FILOSOFIA — AGRÔNOMO 4.0 (4 anos / 8 semestres)
+   Agronomia é o foco. Computação é a ferramenta.
+   Todo semestre tem pelo menos uma disciplina de cada pilar.
+
+   LEGENDA DE TIPOS
+   comp → Base computacional                    (azul)
+   agro → Agronomia / Ciências Agrárias         (verde)
+   int  → Tecnologia aplicada ao campo          (âmbar)
+   ext  → Extensão / Projeto com comunidade     (roxo)
+   ================================================================ */
+
+const SEMESTRES = [
+
+  /* ════════════════════════════════════════════════════════════
+     1º SEMESTRE — Alicerce: campo, código e eletrônica
+     Comp: Algoritmos com Python · Eletrônica · Fundamentos de Computação
+     ════════════════════════════════════════════════════════════ */
+  {
+    numero: 1, ano: "1º Ano",
+    titulo: "Fundamentos das Ciências Agrárias e Base Computacional",
+    subtitulo: "Entender o campo e a máquina ao mesmo tempo — os dois pilares do Agrônomo 4.0",
+    disciplinas: [
+      {
+        nome: "Biologia e Fisiologia Vegetal",
+        codigo: "BFV", tipo: "agro", ch: "80h",
+        ementa: "Célula vegetal, tecidos, fotossíntese, respiração, transpiração e nutrição mineral. Fenologia das culturas. Relação solo–planta–atmosfera–água. Base científica indispensável para interpretar dados de sensores, índices espectrais e modelos de crescimento vegetal.",
+        topicos: [
+          "Organização celular e tecidos vegetais",
+          "Fotossíntese e respiração — balanço de carbono da lavoura",
+          "Transpiração e potencial hídrico — base fisiológica da irrigação",
+          "Nutrição mineral: macro e micronutrientes essenciais",
+          "Fenologia das culturas: estádios de desenvolvimento (escala BBCH)",
+          "Estresses abióticos: seca, calor, salinidade e encharcamento",
+          "Como NDVI, clorofila e índices espectrais 'enxergam' a planta"
+        ],
+        prereq: "—"
+      },
+      {
+        nome: "Pedologia e Ciência do Solo",
+        codigo: "SOL", tipo: "agro", ch: "80h",
+        ementa: "Formação, morfologia e classificação dos solos do Cerrado. Propriedades físicas, químicas e biológicas. Análise de solo e interpretação de laudos. Fundamento para sensores de solo, mapas de variabilidade espacial e sistemas de recomendação de adubação.",
+        topicos: [
+          "Horizontes e perfil do solo — Latossolo e Neossolo do Cerrado",
+          "Granulometria: areia, silte e argila — texturas e comportamento",
+          "Propriedades químicas: CTC, V%, pH e matéria orgânica",
+          "Leitura e interpretação de laudo de análise de solo (tabela GO)",
+          "Recomendação de calagem (método de saturação de bases)",
+          "Sensores de solo: umidade volumétrica, FDR, TDR e condutividade",
+          "Variabilidade espacial do solo — fundamento da agricultura de precisão"
+        ],
+        prereq: "—"
+      },
+      {
+        nome: "Climatologia e Agrometeorologia",
+        codigo: "CLM", tipo: "agro", ch: "60h",
+        ementa: "Elementos e fatores climáticos. Evapotranspiração. Balanço hídrico. Zoneamento agroclimático. ENSO e variabilidade climática. Estações automáticas e APIs climáticas como ferramentas de suporte à decisão agronômica no Cerrado.",
+        topicos: [
+          "Elementos climáticos: temperatura, precipitação, umidade e radiação",
+          "Evapotranspiração de referência — FAO Penman-Monteith (ET₀)",
+          "Balanço hídrico de Thornthwaite aplicado a culturas",
+          "Zoneamento agroclimático do Cerrado — riscos por cultura e município",
+          "ENSO: El Niño e La Niña — impacto no planejamento de safra em Goiás",
+          "Estações meteorológicas automáticas — leitura de dados do INMET",
+          "APIs climáticas: Open-Meteo, NASA POWER e INMET"
+        ],
+        prereq: "—"
+      },
+      {
+        nome: "Algoritmos e Programação com Python",
+        codigo: "APP", tipo: "comp", ch: "80h",
+        ementa: "Lógica de programação com Python — a língua franca da ciência de dados agrícola. Variáveis, estruturas de controle, funções, listas, dicionários e arquivos CSV. Todos os exercícios resolvem problemas agronômicos reais: balanço hídrico, cálculo de adubação, análise de produtividade.",
+        topicos: [
+          "Por que Python no agronegócio? Ecossistema científico e de dados",
+          "Variáveis, tipos e operadores — sem pseudocódigo, direto ao Python",
+          "Condicionais (if/elif/else) — tomada de decisão agronômica",
+          "Laços (for/while) — automatizar cálculos repetitivos de campo",
+          "Funções — calcular ET₀, adubação NPK e balanço hídrico",
+          "Listas e dicionários — estruturar dados de talhões e colheitas",
+          "CSV com pandas: ler laudos de solo e planilhas de produtividade",
+          "Projeto: calculadora de balanço hídrico por cultura e município"
+        ],
+        prereq: "—"
+      },
+      {
+        nome: "Introdução à Eletrônica",
+        codigo: "CEL", tipo: "comp", ch: "60h",
+        ementa: "Base elétrica e eletrônica para compreender sensores, atuadores e sistemas embarcados agrícolas. Lei de Ohm, circuitos básicos, sinais digitais e analógicos, transistores como chave e componentes optoeletrônicos. Prática com bancada, multímetro e osciloscópio.",
+        topicos: [
+          "Tensão, corrente e resistência — Lei de Ohm e potência elétrica",
+          "Associação de resistores em série, paralelo e mista",
+          "Capacitores e indutores — filtragem de sinais de sensores",
+          "Sinal digital vs. analógico — como os sensores de campo funcionam",
+          "Transistor (BJT e MOSFET) como chave — base de relés e atuadores",
+          "LDR, fotodiodo, fototransistor, LED e optoacoplador",
+          "Leitura de datasheets de sensores agrícolas (DHT22, DS18B20)",
+          "Prática: medir tensão e corrente em sensores reais com multímetro"
+        ],
+        prereq: "—"
+      },
+      {
+        nome: "Fundamentos de Computação e Sistemas Operacionais",
+        codigo: "FCO", tipo: "comp", ch: "60h",
+        ementa: "Arquitetura de computadores, representação de dados e sistemas operacionais. Linux como ambiente de desenvolvimento para aplicações agrícolas embarcadas e em nuvem. Terminal, shell script, processos e gerenciamento de arquivos. Base para Raspberry Pi e servidores em nuvem.",
+        topicos: [
+          "Arquitetura de Von Neumann — CPU, memória, barramento e I/O",
+          "Representação binária, hexadecimal e tipos de dados numéricos",
+          "Sistemas operacionais: processos, threads, scheduling e memória virtual",
+          "Linux essencial: terminal, navegação, permissões e usuários",
+          "Shell script — automatizar coleta e backup de dados de campo",
+          "Gerenciamento de pacotes: apt, pip e ambientes virtuais Python",
+          "SSH, SCP e acesso remoto a Raspberry Pi instalado no campo",
+          "Cron jobs — execução agendada de scripts de monitoramento"
+        ],
+        prereq: "—"
+      }
+    ]
+  },
+
+  /* ════════════════════════════════════════════════════════════
+     2º SEMESTRE — Dados, Estruturas, Redes e Produção Vegetal
+     Comp: Banco de Dados I · Estruturas de Dados · Redes de Computadores
+     ════════════════════════════════════════════════════════════ */
+  {
+    numero: 2, ano: "1º Ano",
+    titulo: "Fitotecnia, Banco de Dados, Estruturas de Dados e Redes",
+    subtitulo: "Dominar as grandes culturas e as estruturas que organizam e transportam seus dados",
+    disciplinas: [
+      {
+        nome: "Fitotecnia — Grandes Culturas do Cerrado",
+        codigo: "FIT", tipo: "agro", ch: "80h",
+        ementa: "Manejo agronômico das principais culturas do Cerrado: soja, milho, algodão, feijão e sorgo. Cultivares, densidade, épocas de semeadura, nutrição, fitossanidade e colheita. Base para sistemas de suporte à decisão, modelos de crescimento e automação de recomendações.",
+        topicos: [
+          "Soja: grupos de maturidade, épocas de semeadura e manejo em Goiás",
+          "Milho: híbridos, adubação nitrogenada e potencial produtivo",
+          "Algodão: regulação de crescimento e manejo fitossanitário",
+          "Feijão-caupi e sorgo: oportunidades na safrinha do Cerrado",
+          "Densidade e espaçamento — cálculo por variabilidade de talhão",
+          "Estádios fenológicos (VE/R) e janela de tomada de decisão",
+          "Introdução a simuladores de culturas: APSIM e DSSAT"
+        ],
+        prereq: "BFV"
+      },
+      {
+        nome: "Fertilidade do Solo e Nutrição de Plantas",
+        codigo: "NUT", tipo: "agro", ch: "80h",
+        ementa: "Dinâmica de nutrientes no solo e na planta. Calagem e gessagem. Adubação NPK e micronutrientes. Análise foliar. Recomendação por produtividade esperada e por zona de manejo. Fertilização de precisão conectada a dados geoespaciais e sensores de solo.",
+        topicos: [
+          "CTC, saturação de bases e necessidade de calagem (V% alvo)",
+          "Macronutrientes: N, P, K — dinâmica, perdas e recomendação",
+          "Micronutrientes: Zn, B, Cu, Mn — diagnóstico e quando aplicar",
+          "Análise foliar — interpretação e diagnóstico de deficiências",
+          "Adubação por zona de manejo — conectando laudo ao mapa de solo",
+          "Fertilizantes sólidos, líquidos e organominerais — custos e eficiência",
+          "Calculando recomendação de adubação por talhão com Python"
+        ],
+        prereq: "SOL, BFV"
+      },
+      {
+        nome: "Banco de Dados I — Modelagem e SQL",
+        codigo: "BD1", tipo: "comp", ch: "60h",
+        ementa: "Fundamentos de bancos de dados relacionais aplicados à gestão rural. Modelo Entidade-Relacionamento, normalização e SQL essencial no PostgreSQL. O aluno projeta e implementa o banco de dados de uma propriedade real — talhões, culturas, insumos e colheitas.",
+        topicos: [
+          "Por que banco de dados? Limitações fatais da planilha na gestão rural",
+          "Modelo Entidade-Relacionamento — talhões, culturas, insumos, sensores",
+          "Normalização: 1FN, 2FN e 3FN com exemplos agronômicos reais",
+          "DDL: CREATE TABLE, ALTER TABLE, DROP e tipos de dado no PostgreSQL",
+          "DML: INSERT, UPDATE, DELETE com dados de campo",
+          "SELECT, WHERE, ORDER BY, GROUP BY e funções de agregação",
+          "Integração Python ↔ PostgreSQL com psycopg2",
+          "Projeto: banco de dados completo de uma propriedade rural parceira"
+        ],
+        prereq: "APP"
+      },
+      {
+        nome: "Estruturas de Dados",
+        codigo: "ESD", tipo: "comp", ch: "60h",
+        ementa: "Estruturas de dados fundamentais implementadas em Python com aplicação direta em sistemas agrícolas. Listas ligadas, pilhas, filas, árvores e grafos. Algoritmos de busca e ordenação. Análise de complexidade. Base para sistemas de processamento de dados de sensores e geoespaciais.",
+        topicos: [
+          "Complexidade de algoritmos: O(n), O(log n) e O(n²) na prática",
+          "Listas ligadas — fila de leituras de sensores em memória",
+          "Pilhas e filas — processamento de eventos de IoT",
+          "Tabelas hash — índices de busca rápida em dados de campo",
+          "Árvores binárias e BST — busca em dados de série temporal",
+          "Grafos — modelar rotas de máquinas e dependências de talhões",
+          "Algoritmos de ordenação: merge sort e quick sort em dados de safra",
+          "Projeto: fila de prioridade para alertas de sensores críticos"
+        ],
+        prereq: "APP"
+      },
+      {
+        nome: "Redes de Computadores — Conectividade Rural e IoT",
+        codigo: "REC", tipo: "comp", ch: "60h",
+        ementa: "Fundamentos de redes com foco em cenários rurais onde conectividade é escassa e crítica. Modelo OSI, TCP/IP, Wi-Fi, redes mesh, LoRa, LoRaWAN e MQTT. VPN para acesso remoto. Segurança básica em redes de sensores agrícolas.",
+        topicos: [
+          "Modelo OSI e TCP/IP — as camadas que fazem os dados chegarem",
+          "Endereçamento IP, máscaras de sub-rede e CIDR",
+          "Wi-Fi 802.11 no campo: alcance, interferência e antenas direcionais",
+          "LoRa — modulação de espalhamento e comunicação de longo alcance",
+          "LoRaWAN — arquitetura: end device, gateway e network server",
+          "Redes mesh — cobertura em propriedades de grande porte",
+          "MQTT — protocolo publish/subscribe para sensores rurais",
+          "VPN e túnel SSH — acesso remoto seguro a equipamentos no campo"
+        ],
+        prereq: "FCO"
+      }
+    ]
+  },
+
+  /* ════════════════════════════════════════════════════════════
+     3º SEMESTRE — Sanidade, Irrigação, BD Avançado, POO e Embarcados
+     Comp: Banco de Dados II · POO · Sistemas Embarcados
+     ════════════════════════════════════════════════════════════ */
+  {
+    numero: 3, ano: "2º Ano",
+    titulo: "Sanidade Vegetal, Irrigação, BD Avançado, POO e Sistemas Embarcados",
+    subtitulo: "Domínio agronômico profundo + software orientado a objetos + sensores no campo",
+    disciplinas: [
+      {
+        nome: "Fitopatologia",
+        codigo: "FTP", tipo: "agro", ch: "80h",
+        ementa: "Doenças de plantas de importância econômica no Cerrado. Etiologia, sintomatologia, epidemiologia e controle. Fungicidas: grupos, modos de ação e resistência. Modelos preditivos de epidemias com dados climáticos. Apps e sistemas digitais de vigilância fitossanitária.",
+        topicos: [
+          "Triângulo da doença: hospedeiro, patógeno e ambiente",
+          "Doenças da soja: ferrugem, mofo-branco, antracnose e DFC",
+          "Doenças do milho: cercosporiose, helmintosporiose e mancha de Phaeosphaeria",
+          "Doenças do algodão: ramulária, mancha angular e ramulose",
+          "Escala diagramática e quantificação de incidência e severidade",
+          "Fungicidas: grupos FRAC, misturas e manejo da resistência",
+          "Modelos epidemiológicos com dados de temperatura e umidade foliar"
+        ],
+        prereq: "BFV, CLM"
+      },
+      {
+        nome: "Entomologia Agrícola e MIP",
+        codigo: "ENT", tipo: "agro", ch: "60h",
+        ementa: "Insetos e ácaros de importância econômica nas grandes culturas do Cerrado. Biologia, ecologia e dano econômico. Manejo Integrado de Pragas (MIP). Nível de ação. Armadilhas de monitoramento e ferramentas digitais de registro e decisão.",
+        topicos: [
+          "Morfologia de insetos e identificação de pragas a campo",
+          "Pragas da soja: percevejos, lagarta-da-soja e mosca-branca",
+          "Pragas do milho: lagarta-do-cartucho, cigarrinha e elasmo",
+          "Pragas do algodão: bicudo, pulgão, tripes e ácaro rajado",
+          "Nível de Dano Econômico (NDE) — cálculo e tomada de decisão",
+          "MIP: monitoramento semanal com pano de batida e armadilhas",
+          "Registro digital de MIP: apps, planilhas e integração com BD"
+        ],
+        prereq: "BFV"
+      },
+      {
+        nome: "Manejo e Irrigação",
+        codigo: "IRG", tipo: "agro", ch: "80h",
+        ementa: "Balanço hídrico da cultura, evapotranspiração e eficiência de uso da água. Sistemas de irrigação: gotejamento, aspersão convencional e pivô central. Automação. Sensores de umidade de solo. Manejo preciso da água integrado a APIs climáticas e sensores IoT.",
+        topicos: [
+          "Evapotranspiração real e potencial — cálculo com Python e Open-Meteo",
+          "Balanço hídrico de cultura por estádio fenológico",
+          "Pivô central: operação, eficiência, telemetria e monitoramento remoto",
+          "Gotejamento: dimensionamento e manejo em horticultura",
+          "Sensores FDR, TDR e tensiômetro — instalação e interpretação",
+          "Automação de pivô: controladores PLC e SCADA básico",
+          "Fertirrigação: programação e cálculo de soluções nutritivas"
+        ],
+        prereq: "CLM, SOL"
+      },
+      {
+        nome: "Banco de Dados II — SQL Avançado e NoSQL",
+        codigo: "BD2", tipo: "comp", ch: "60h",
+        ementa: "Aprofundamento em PostgreSQL: JOINs complexos, VIEWs, índices, stored procedures, triggers e otimização de queries. Introdução a bancos não-relacionais: MongoDB para documentos e InfluxDB para séries temporais de IoT. Integração completa com Python.",
+        topicos: [
+          "JOINs: INNER, LEFT, RIGHT, FULL OUTER e self-join com dados rurais",
+          "VIEWs simples e materializadas — consultas reutilizáveis",
+          "Índices B-Tree, GiST e GIN — performance em tabelas grandes",
+          "Stored procedures e triggers no PostgreSQL — automatizar regras",
+          "EXPLAIN ANALYZE — entender e otimizar o plano de execução",
+          "NoSQL: quando o relacional não basta — séries temporais e documentos",
+          "MongoDB — documentos, coleções e queries para dados de sensores",
+          "InfluxDB — banco de séries temporais para estações meteorológicas"
+        ],
+        prereq: "BD1"
+      },
+      {
+        nome: "Programação Orientada a Objetos",
+        codigo: "POO", tipo: "comp", ch: "60h",
+        ementa: "POO com Python (e introdução a Java) aplicada ao desenvolvimento de sistemas agrícolas. Classes, encapsulamento, herança, polimorfismo e interfaces. Padrões de projeto (Design Patterns) relevantes para sistemas de IoT e gestão rural. Testes unitários com pytest.",
+        topicos: [
+          "Classes e objetos: modelar Talhão, Sensor, Colheita e Cultura",
+          "Encapsulamento — proteger dados de leituras de sensores",
+          "Herança e polimorfismo — sensores de solo, clima e imagem",
+          "Interfaces e classes abstratas — contratos em sistemas IoT",
+          "Design Patterns: Singleton (configuração), Observer (alertas), Factory",
+          "Type hints e mypy — código legível em equipe",
+          "Testes unitários com pytest — garantir cálculos agronômicos corretos",
+          "Projeto: sistema OO de gerenciamento de sensores e talhões"
+        ],
+        prereq: "APP, ESD"
+      },
+      {
+        nome: "Sistemas Embarcados para o Campo",
+        codigo: "EMB", tipo: "int", ch: "80h",
+        ementa: "Raspberry Pi e ESP32 como plataformas de monitoramento agrícola. Python e MicroPython para leitura de sensores de solo, clima e luminosidade. Atuadores para automação de irrigação. Comunicação MQTT. Projeto de estação agrometeorológica conectada.",
+        topicos: [
+          "Raspberry Pi 5 — Linux embarcado para aplicações de campo",
+          "ESP32 — microcontrolador Wi-Fi/BLE de baixo custo e consumo",
+          "MicroPython no ESP32 — programar sensores sem IDE pesada",
+          "Sensores: DHT22, DS18B20, capacitivo de solo e pluviômetro",
+          "Leitura analógica (ADC) e digital (GPIO) — na prática do campo",
+          "Relé e válvula solenóide — automação de irrigação por zona",
+          "MQTT com ESP32: publicar leituras no broker Mosquitto",
+          "Projeto: estação agrometeorológica completa com Raspberry Pi"
+        ],
+        prereq: "CEL, APP, REC"
+      }
+    ]
+  },
+
+  /* ════════════════════════════════════════════════════════════
+     4º SEMESTRE — Precisão, APIs, Geoprocessamento I e IoT
+     Comp: APIs e Integração · Geoprocessamento I · Comunicação IoT
+     ════════════════════════════════════════════════════════════ */
+  {
+    numero: 4, ano: "2º Ano",
+    titulo: "Mecanização, APIs, Geoprocessamento I e Comunicação IoT",
+    subtitulo: "Conectar o campo ao satélite — consumindo APIs reais e montando redes de sensores",
+    disciplinas: [
+      {
+        nome: "Mecanização Agrícola e Máquinas de Precisão",
+        codigo: "MEK", tipo: "agro", ch: "60h",
+        ementa: "Tratores, implementos, plantadoras, pulverizadores e colhedoras com foco em automação e telemetria. Piloto automático RTK-GPS. Monitores de operação e taxa variável (VRA). Exportação e análise de dados de máquinas com Python para redução de custo e rastreabilidade.",
+        topicos: [
+          "Tratores — potência, tração, consumo e seleção por operação",
+          "Plantadoras — sensores de semente e precisão de distribuição",
+          "Pulverizadores — pontas, pressão e aplicação à taxa variável (VRA)",
+          "Colhedoras — monitor de produtividade e mapa de perdas",
+          "Piloto automático RTK-GPS — precisão centimétrica em campo",
+          "Telemetria: John Deere Operations Center, CNH AFS e AGCO Connect",
+          "Exportar e analisar dados de máquinas com Python e pandas"
+        ],
+        prereq: "—"
+      },
+      {
+        nome: "Armazenamento e Pós-Colheita",
+        codigo: "ARM", tipo: "agro", ch: "60h",
+        ementa: "Fisiologia pós-colheita de grãos. Secagem, aeração e controle de temperatura e umidade. Ecossistema da armazenagem. Monitoramento digital de silos com sensores. Qualidade, micotoxinas e rastreabilidade pós-colheita da lavoura ao porto.",
+        topicos: [
+          "Propriedades físicas dos grãos: umidade, densidade e ângulo de repouso",
+          "Ponto de equilíbrio higroscópico e curvas de secagem",
+          "Secagem estática e contínua — controle de temperatura",
+          "Aeração — quando acionar: algoritmo de decisão com Python",
+          "Sensores de temperatura em cabos termométricos — leitura e alerta",
+          "Aflatoxinas e micotoxinas: condições predisponentes e monitoramento",
+          "Rastreabilidade de grãos: da lavoura ao porto com blockchain"
+        ],
+        prereq: "FIT, NUT"
+      },
+      {
+        nome: "APIs e Integração de Sistemas Agrícolas",
+        codigo: "API1", tipo: "comp", ch: "80h",
+        ementa: "Consumo e criação de APIs para sistemas agrícolas. HTTP, REST, autenticação OAuth2 e JWT. Sentinel Hub para NDVI por talhão. Open-Meteo, NASA POWER e IBGE Sidra. Introdução ao FastAPI. Criação de endpoints que expõem dados de sensores e banco de dados rural.",
+        topicos: [
+          "HTTP profundo: métodos, status codes, headers e body",
+          "REST: recursos, verbos, idempotência e boas práticas",
+          "Autenticação: API Key, OAuth2 e Bearer Token — implementar e consumir",
+          "Requests: sessões, timeout, retry e tratamento de erros HTTP",
+          "Sentinel Hub API: autenticar e baixar NDVI/EVI por polígono de talhão",
+          "Open-Meteo e NASA POWER: séries históricas de ET₀, chuva e temperatura",
+          "IBGE Sidra: produção agrícola municipal por cultura e ano",
+          "FastAPI: criar endpoint que retorna dados do banco da propriedade",
+          "Projeto: pipeline NDVI + clima automatizado para lavoura real"
+        ],
+        prereq: "POO, BD2, REC"
+      },
+      {
+        nome: "Geoprocessamento I — SIG, QGIS e Python Geoespacial",
+        codigo: "GEO1", tipo: "int", ch: "80h",
+        ementa: "Fundamentos de Sistemas de Informação Geográfica. Projeções, sistemas de referência e coordenadas. QGIS para delimitação e análise de talhões. Geopandas e Shapely para operações espaciais em Python. Integração com Sentinel Hub API para primeiras análises de NDVI.",
+        topicos: [
+          "Fundamentos geoespaciais: datum, projeção, CRS e EPSG",
+          "QGIS: interface, camadas vetoriais e raster, plugins agrícolas",
+          "Digitalização de talhões — do Google Earth ao shapefile",
+          "Geopandas — shapefiles de talhões, municípios e biomas em Python",
+          "Shapely — área, perímetro, buffer, intersecção e diferença",
+          "Análise de variabilidade espacial: mapas de solo e produtividade",
+          "Interpolação IDW e Kriging — mapas de fertilidade por talhão",
+          "Primeiro contato com NDVI: baixar imagem Sentinel-2 e visualizar"
+        ],
+        prereq: "BD1, PY2"
+      },
+      {
+        nome: "Comunicação IoT — LoRa, LoRaWAN e MQTT",
+        codigo: "IOT", tipo: "int", ch: "60h",
+        ementa: "Protocolos de comunicação IoT para cenários rurais sem cobertura celular. LoRa e LoRaWAN para grandes propriedades. MQTT avançado com broker local e em nuvem. The Things Network. ThingsBoard e Node-RED para orquestração. Projeto de rede de sensores em fazenda real.",
+        topicos: [
+          "LoRa: modulação, parâmetros (SF, BW, CR) e alcance real no Cerrado",
+          "LoRaWAN: end device, gateway, network server e application server",
+          "The Things Network: cadastrar gateway e dispositivos gratuitamente",
+          "MQTT avançado: QoS 0/1/2, retenção, LWT e tópicos hierárquicos",
+          "Broker Mosquitto: instalar, configurar e monitorar no Raspberry Pi",
+          "ThingsBoard: dashboard, regras de negócio e alertas para sensores",
+          "Node-RED: fluxo visual de dados — sensor → banco → notificação",
+          "Projeto: rede LoRaWAN de monitoramento de solo em fazenda parceira"
+        ],
+        prereq: "EMB, REC"
+      }
+    ]
+  },
+
+  /* ════════════════════════════════════════════════════════════
+     5º SEMESTRE — Nuvem, Edge, Geoprocessamento II e Agro
+     Comp: Engenharia de Software · Computação em Nuvem + Edge · Geoprocessamento II
+     ════════════════════════════════════════════════════════════ */
+  {
+    numero: 5, ano: "3º Ano",
+    titulo: "Produção Animal, Engenharia de Software, Nuvem e Geoprocessamento II",
+    subtitulo: "Arquitetar sistemas distribuídos e processar imagens de satélite com Python",
+    disciplinas: [
+      {
+        nome: "Sistemas de Produção Animal com Tecnologia",
+        codigo: "SPA", tipo: "agro", ch: "80h",
+        ementa: "Bovinocultura de corte e leite, suinocultura e avicultura com ênfase em tecnologia de precisão. Nutrição, sanidade e bem-estar animal. Rastreabilidade (SISBOV). Brincos eletrônicos, monitoramento de cio, pesagem automatizada e gestão zootécnica digital.",
+        topicos: [
+          "Sistemas de produção: pastagem, semi-intensivo e confinamento",
+          "Nutrição animal: exigências por categoria e formulação de dietas",
+          "Sanidade: protocolos de vacinação e controle de parasitas",
+          "SISBOV — rastreabilidade bovina: obrigatoriedade e implementação",
+          "Brincos eletrônicos (RFID) e coleiras com GPS e pedômetro",
+          "Monitoramento de cio e saúde reprodutiva com sensores IoT",
+          "Gestão zootécnica digital: BoiTata, Pecege e integração com BD"
+        ],
+        prereq: "FIT"
+      },
+      {
+        nome: "Gestão do Agronegócio e Custos de Produção",
+        codigo: "GES", tipo: "agro", ch: "60h",
+        ementa: "Gestão econômica e financeira da propriedade rural. Custo de produção por cultura, ponto de equilíbrio, comercialização e mercado futuro. ERP agrícola e KPIs de desempenho. Dashboard de gestão para tomada de decisão baseada em dados.",
+        topicos: [
+          "Custo de produção: fixo, variável e total por saca e por hectare",
+          "Ponto de equilíbrio e margem de contribuição por cultura",
+          "Estratégias de comercialização e hedge com mercado futuro",
+          "ERP agrícola: Aegro, Agristream e Siagri — comparativo prático",
+          "KPIs da fazenda: custo/ha, produtividade, rentabilidade e giro",
+          "Dashboard de gestão com Streamlit e dados reais da propriedade",
+          "ROI de uma nova tecnologia: quando vale e quando não vale"
+        ],
+        prereq: "BD1, PY2"
+      },
+      {
+        nome: "Engenharia de Software — Arquitetura Distribuída e APIs",
+        codigo: "ESW", tipo: "comp", ch: "80h",
+        ementa: "Desenvolvimento de software profissional para sistemas agrícolas distribuídos. FastAPI para APIs REST. Autenticação JWT. Arquitetura em microsserviços. Docker e Docker Compose. CI/CD com GitHub Actions. Deploy em nuvem. O aluno entrega uma API agrícola documentada e em produção.",
+        topicos: [
+          "Arquitetura de software: monolito vs. microsserviços no contexto agro",
+          "FastAPI: rotas, parâmetros de path/query, body e validação (Pydantic)",
+          "Autenticação JWT — proteger endpoints de dados sensíveis da fazenda",
+          "SQLAlchemy ORM — integrar FastAPI ao PostgreSQL",
+          "Docker: Dockerfile e containerizar a aplicação agrícola",
+          "Docker Compose: orquestrar API + PostgreSQL + Redis localmente",
+          "GitHub Actions: CI/CD — testar e fazer deploy automático na nuvem",
+          "Documentação Swagger/OpenAPI — API autodocumentada"
+        ],
+        prereq: "POO, BD2, API1"
+      },
+      {
+        nome: "Computação em Nuvem e Edge Computing",
+        codigo: "CLD", tipo: "comp", ch: "60h",
+        ementa: "Infraestrutura em nuvem para sistemas agrícolas. AWS e GCP — serviços essenciais para dados de campo. Edge computing com Raspberry Pi para processamento local sem internet. Arquitetura híbrida edge + nuvem: o padrão real em propriedades rurais conectadas.",
+        topicos: [
+          "Cloud computing: IaaS, PaaS e SaaS — o que faz sentido no agro",
+          "AWS: EC2 (computação), S3 (armazenamento de rasters), RDS e Lambda",
+          "GCP: Cloud Run e BigQuery para análise de grandes volumes de dados",
+          "Terraform: infraestrutura como código — replicar ambientes",
+          "Edge computing: por que processar no campo antes de enviar à nuvem?",
+          "Raspberry Pi como gateway edge: filtrar, agregar e enviar dados",
+          "Arquitetura híbrida completa: sensor → edge → nuvem → dashboard",
+          "Custo de transferência de dados: otimizar para propriedades rurais"
+        ],
+        prereq: "FCO, REC, API1"
+      },
+      {
+        nome: "Geoprocessamento II — Imagens, Raster e NDVI com Python",
+        codigo: "GEO2", tipo: "int", ch: "80h",
+        ementa: "Processamento programático de imagens de satélite com Python. GDAL, rasterio e numpy para rasters. Cálculo de índices espectrais (NDVI, EVI, NDWI, SAVI) por talhão. Análise multitemporal. Integração com Sentinel Hub API. Produção de mapas de vigor de lavoura.",
+        topicos: [
+          "Imagens de satélite: bandas, resolução espacial e espectral",
+          "GDAL — leitura, reprojeção e recorte de rasters grandes",
+          "Rasterio — manipulação de imagens Sentinel-2 e Landsat com Python",
+          "Cálculo de NDVI, EVI, SAVI e NDWI por polígono de talhão",
+          "NumPy para álgebra matricial em imagens raster",
+          "Análise multitemporal: NDVI ao longo da safra por talhão",
+          "Sentinel Hub Process API: calcular NDVI por polígono via requisição",
+          "Projeto: mapa de vigor de lavoura com série temporal Sentinel-2"
+        ],
+        prereq: "GEO1, BD2"
+      }
+    ]
+  },
+
+  /* ════════════════════════════════════════════════════════════
+     6º SEMESTRE — IA, Big Data, Web e Sistemas Integrados
+     Comp: Inteligência Artificial · Big Data · Desenvolvimento Web
+     ════════════════════════════════════════════════════════════ */
+  {
+    numero: 6, ano: "3º Ano",
+    titulo: "Agricultura de Precisão, IA Aplicada, Big Data e Desenvolvimento Web",
+    subtitulo: "Transformar dados em produto real — modelos que o produtor usa e dashboards que ele entende",
+    disciplinas: [
+      {
+        nome: "Agricultura de Precisão — Do Dado à Prescrição",
+        codigo: "APR", tipo: "int", ch: "100h",
+        ementa: "Ciclo completo de Agricultura de Precisão: coleta → análise → prescrição → execução → avaliação. Amostragem georreferenciada de solo. Zonas de manejo com k-means. Mapas de prescrição para VRA. Monitor de colheita. Plataformas comerciais e análise de ROI.",
+        topicos: [
+          "Fluxo completo de AP: coleta → mapa → prescrição → execução → feedback",
+          "Amostragem georreferenciada de solo — malha regular e por zonas",
+          "Mapas de fertilidade com QGIS e interpolação Kriging",
+          "Zonas de manejo — k-means com dados de solo, NDVI e produtividade",
+          "Mapa de prescrição (.shp) para semeadora VRA e pulverizador",
+          "Monitor de colheita — processamento e limpeza de dados com Python",
+          "Plataformas: Climate FieldView, John Deere Ops Center, Aegro AP",
+          "Análise de ROI: o que a AP entregou de retorno na safra?"
+        ],
+        prereq: "GEO2, NUT, MEK"
+      },
+      {
+        nome: "Ecologia Agrícola e Sustentabilidade",
+        codigo: "ECO", tipo: "agro", ch: "60h",
+        ementa: "Sistemas de produção sustentáveis: ILPF, plantio direto e biologia do solo. Bioinsumos e controle biológico. Serviços ecossistêmicos. Mudanças climáticas e adaptação das culturas do Cerrado. Rastreabilidade ambiental e carbono agrícola.",
+        topicos: [
+          "ILPF — Integração Lavoura-Pecuária-Floresta no Cerrado",
+          "Plantio direto: matéria orgânica, compactação e biodiversidade de solo",
+          "Bioinsumos: inoculantes (rizóbio, Azospirillum), Trichoderma e Bacillus",
+          "Controle biológico de pragas: Cotesia, Trichogramma e Baculovirus",
+          "Serviços ecossistêmicos: polinização, carbono no solo e qualidade da água",
+          "Mudanças climáticas: cenários IPCC para o Cerrado (2030-2050)",
+          "Carbono agrícola: créditos, metodologias e sistemas de mensuração"
+        ],
+        prereq: "FIT, FTP, SOL"
+      },
+      {
+        nome: "Inteligência Artificial Aplicada ao Agro",
+        codigo: "IA1", tipo: "comp", ch: "80h",
+        ementa: "Machine learning com foco total na interpretação agronômica dos resultados. Scikit-learn para regressão de produtividade e classificação de doenças. Séries temporais de NDVI com Prophet. SHAP values para explicar modelos ao produtor. Introdução a redes neurais.",
+        topicos: [
+          "Fundamentos de ML: features, target, treino, validação e teste",
+          "Pré-processamento: normalização, encoding e imputação de dados de campo",
+          "Regressão: prever produtividade com dados de solo, clima e NDVI",
+          "Classificação: Random Forest e XGBoost para risco de ferrugem por talhão",
+          "Validação cruzada e métricas: MAE, RMSE, F1 — o que significam no agro",
+          "Séries temporais de NDVI: decomposição e previsão com Prophet",
+          "SHAP values — explicar o modelo em linguagem agronômica ao produtor",
+          "Projeto: modelo de previsão de produtividade para lavouras de Goiás"
+        ],
+        prereq: "PY2, GEO2, BD2"
+      },
+      {
+        nome: "Big Data e Engenharia de Dados Agrícolas",
+        codigo: "BIG", tipo: "comp", ch: "60h",
+        ementa: "Arquitetura de dados em larga escala para propriedades e cooperativas. Apache Kafka para streaming de sensores IoT. Apache Spark para processamento de grandes volumes de imagens e dados históricos. Data Lake no S3. Dashboards em tempo real com Grafana e InfluxDB.",
+        topicos: [
+          "Por que Big Data no agro? Volume de sensores, satélites e máquinas",
+          "Apache Kafka: produtores, consumidores, tópicos e partições",
+          "Streaming IoT: ESP32 → MQTT → Kafka → processamento em tempo real",
+          "Apache Spark: processar terabytes de imagens de satélite e histórico",
+          "Data Lake no AWS S3: organizar rasters, CSVs e JSONs por safra",
+          "dbt (data build tool): transformar e documentar dados de campo",
+          "InfluxDB + Grafana: dashboard de sensores em tempo real",
+          "Pipeline completo: sensor → stream → storage → análise → alerta"
+        ],
+        prereq: "BD2, CLD, IOT"
+      },
+      {
+        nome: "Desenvolvimento Web para o Agronegócio",
+        codigo: "WEB", tipo: "comp", ch: "60h",
+        ementa: "Frontend moderno com React integrado a APIs REST agronômicas. Consumo de dados de sensores, NDVI e clima. Mapas interativos com Leaflet. Dashboard para o produtor e para o técnico. Deploy em nuvem. Foco em produto usável — não em framework perfeito.",
+        topicos: [
+          "React: componentes, props, estado (useState) e hooks essenciais",
+          "Fetch e Axios: consumir APIs de sensores, NDVI e banco de dados",
+          "Leaflet.js: mapa interativo de talhões com NDVI renderizado por cor",
+          "Recharts: gráficos de séries temporais de produtividade e clima",
+          "Autenticação no frontend: JWT, localStorage e rotas protegidas",
+          "React Query: cache e sincronização de dados de sensores em tempo real",
+          "Deploy Vercel/Netlify integrado à API no Railway ou AWS",
+          "Projeto: dashboard web completo para a propriedade parceira"
+        ],
+        prereq: "ESW, GEO2"
+      }
+    ]
+  },
+
+  /* ════════════════════════════════════════════════════════════
+     7º SEMESTRE — Visão Computacional, Microsserviços e Segurança
+     Comp: Visão Computacional · Sistemas Distribuídos · Segurança IoT e APIs
+     ════════════════════════════════════════════════════════════ */
+  {
+    numero: 7, ano: "4º Ano",
+    titulo: "Drones, Visão Computacional, Microsserviços e Segurança de Sistemas",
+    subtitulo: "Sistemas robustos e seguros — da câmera no campo ao microsserviço na nuvem",
+    disciplinas: [
+      {
+        nome: "Extensão Rural e Transferência de Tecnologia",
+        codigo: "EXT", tipo: "agro", ch: "60h",
+        ementa: "O técnico como agente de transformação. ATER, dias de campo e unidades demonstrativas. Comunicação com produtores de diferentes perfis técnicos. Tecnologia social para pequenos agricultores. Empreendedorismo AgTech e ecossistema de inovação no agronegócio.",
+        topicos: [
+          "ATER — Assistência Técnica e Extensão Rural pública (EMATER, EMBRAPA)",
+          "Dias de campo e unidades demonstrativas — planejamento e execução",
+          "Linguagem simples para tecnologia complexa — técnicas de comunicação",
+          "WhatsApp, YouTube e redes sociais como ferramentas de ATER rural",
+          "Tecnologia social: soluções de baixo custo para o pequeno produtor",
+          "Ecossistema AgTech Brasil: startups, aceleradoras (Embrapa Ventures)",
+          "Pitch de solução tecnológica para produtor, cooperativa e fundo"
+        ],
+        prereq: "GES"
+      },
+      {
+        nome: "Rastreabilidade e Gestão Ambiental",
+        codigo: "RAT", tipo: "agro", ch: "60h",
+        ementa: "Rastreabilidade como exigência de mercado e ferramenta de gestão. RFID, QR Code, blockchain e caderneta de campo digital. CAR, APP, Reserva Legal e conformidade ambiental. Certificações de exportação. Sistemas digitais de conformidade integrados ao banco de dados.",
+        topicos: [
+          "Rastreabilidade: por que o mercado externo exige e o que muda",
+          "RFID e QR Code — aplicação em embalagens, animais e insumos",
+          "Caderneta de campo digital — registro de defensivos e rastreabilidade",
+          "Blockchain para rastreabilidade: fundamentos e casos reais no agro",
+          "GlobalG.A.P. e Rainforest Alliance — exigências para exportação",
+          "CAR, APP e Reserva Legal — conformidade com QGIS e sistemas web",
+          "Sistema integrado: caderneta + banco de dados + relatório automático"
+        ],
+        prereq: "GES, BD2"
+      },
+      {
+        nome: "Visão Computacional com Drones e Satélites",
+        codigo: "VIS", tipo: "comp", ch: "80h",
+        ementa: "Processamento de imagens para identificação de pragas, doenças, plantas daninhas e estresses em lavouras. OpenCV com Python. YOLO v8 para detecção em imagens de campo, drone e satélite. Análise de ortomosaicos. Integração com câmera embarcada em Raspberry Pi.",
+        topicos: [
+          "OpenCV: leitura, pré-processamento, filtros e segmentação de imagens",
+          "Transformações morfológicas — limpar ruído em imagens de campo",
+          "YOLO v8: arquitetura, treinamento e detecção de pragas e doenças",
+          "Roboflow: criar, anotar e gerenciar dataset agrícola",
+          "Transfer learning: adaptar modelo pré-treinado a culturas de Goiás",
+          "Análise de ortomosaico de drone: classificação pixel a pixel",
+          "Raspberry Pi + câmera HQ: visão embarcada de baixo custo no campo",
+          "LLMs com visão: GPT-4o Vision para diagnóstico agronômico por foto"
+        ],
+        prereq: "IA1, GEO2"
+      },
+      {
+        nome: "Sistemas Distribuídos — Microsserviços e Mensageria",
+        codigo: "SDS", tipo: "comp", ch: "80h",
+        ementa: "Arquitetura de microsserviços para sistemas agrícolas de grande escala. RabbitMQ e Kafka para mensageria assíncrona. Service discovery, load balancing e circuit breaker. Kubernetes para orquestração. Monitoramento com Prometheus e Grafana em produção.",
+        topicos: [
+          "Microsserviços: decomposição de sistema agrícola monolítico",
+          "RabbitMQ: exchanges, filas, bindings e mensagens persistentes",
+          "Padrões de mensageria: Pub/Sub, Work Queue e RPC no agro",
+          "API Gateway: ponto único de entrada para múltiplos microsserviços",
+          "Service discovery com Consul e load balancing com Nginx",
+          "Circuit breaker com Resilience4j — tolerância a falhas em campo",
+          "Kubernetes: pods, deployments e services — orquestrar no cluster",
+          "Prometheus + Grafana: monitorar latência e erros em produção"
+        ],
+        prereq: "ESW, CLD, BIG"
+      },
+      {
+        nome: "Segurança de Sistemas IoT e APIs",
+        codigo: "SEG", tipo: "comp", ch: "60h",
+        ementa: "Segurança em sistemas agrícolas conectados — um risco real e frequentemente ignorado. OWASP Top 10 para APIs. TLS/SSL em dispositivos IoT. Autenticação de dispositivos com certificados X.509. Criptografia de dados sensíveis. Pen testing básico em APIs e redes de sensores.",
+        topicos: [
+          "Ameaças reais em sistemas IoT agrícolas: casos documentados",
+          "OWASP API Security Top 10 — vulnerabilidades em APIs REST",
+          "TLS 1.3 em dispositivos IoT — configurar no ESP32 e Raspberry Pi",
+          "Autenticação de dispositivos com certificados X.509 (PKI)",
+          "OTA updates seguros — atualizar firmware sem comprometer o campo",
+          "Criptografia de dados sensíveis: AES-256 em dados de produção",
+          "JWT seguro: algoritmos, expiração e rotação de chaves",
+          "Pen testing básico: Burp Suite em APIs e Wireshark em rede IoT"
+        ],
+        prereq: "ESW, IOT, REC"
+      }
+    ]
+  },
+
+  /* ════════════════════════════════════════════════════════════
+     8º SEMESTRE — Otimização, Empreendedorismo e TCC
+     Comp: Otimização e SAD · Empreendedorismo · TCC Integrador
+     ════════════════════════════════════════════════════════════ */
+  {
+    numero: 8, ano: "4º Ano",
+    titulo: "Otimização, Sistemas de Decisão, Empreendedorismo e Projeto Final",
+    subtitulo: "Fechar a formação entregando valor real — sistema completo em produção",
+    disciplinas: [
+      {
+        nome: "Mudanças Climáticas e Adaptação da Agricultura",
+        codigo: "MCA", tipo: "agro", ch: "60h",
+        ementa: "Impactos das mudanças climáticas na agricultura brasileira. Cenários IPCC para o Cerrado. Adaptação: cultivares, épocas de semeadura e irrigação. Mitigação: plantio direto, ILPF e sequestro de carbono. Zoneamento de risco climático e seguro agrícola com dados digitais.",
+        topicos: [
+          "Cenários climáticos CMIP6 para o Cerrado até 2050 e 2100",
+          "Impacto projetado: produtividade de soja, milho e algodão",
+          "Adaptação: cultivares tolerantes ao calor e janelas de semeadura",
+          "Mitigação: sequestro de carbono em plantio direto e ILPF",
+          "Zoneamento de risco climático do MAPA — uso prático e API",
+          "Seguro agrícola e Proagro — quando acionar e como comprovar",
+          "Simulação de impacto climático com DSSAT e dados do CMIP6"
+        ],
+        prereq: "FIT, CLM"
+      },
+      {
+        nome: "Modelos de Crescimento e Simulação de Culturas",
+        codigo: "MCG", tipo: "agro", ch: "60h",
+        ementa: "Modelos matemáticos de crescimento vegetal como ferramentas de decisão e planejamento. DSSAT e APSIM para simulação de culturas. Calibração com dados de campo. Simulação de cenários de manejo e climáticos. Uso na análise de risco e planejamento de safra.",
+        topicos: [
+          "Fundamentos de modelagem: balanço de carbono, água e nitrogênio",
+          "DSSAT — instalação, calibração e simulação de soja e milho",
+          "APSIM — simulação de sistemas integrados (ILPF e safrinha)",
+          "Calibração de modelo com dados reais de experimento de campo",
+          "Simulação de cenários de manejo: épocas, densidades e adubação",
+          "Análise de risco: probabilidade de lucro em diferentes cenários",
+          "Integração DSSAT + Python: automatizar simulações em larga escala"
+        ],
+        prereq: "FIT, CLM, PY2"
+      },
+      {
+        nome: "Otimização e Sistemas de Apoio à Decisão",
+        codigo: "SAD", tipo: "comp", ch: "80h",
+        ementa: "Algoritmos de otimização aplicados ao agronegócio: produção, logística e alocação de recursos. Programação linear e inteira. Algoritmos genéticos e simulated annealing. Sistemas de apoio à decisão multicriterial. Integração com dados climáticos, de produção e de mercado.",
+        topicos: [
+          "Programação linear: maximizar lucro com restrições de insumo e área",
+          "PuLP e SciPy: resolver problemas de otimização com Python",
+          "Otimização de mistura de fertilizantes por custo mínimo",
+          "Roteamento de máquinas agrícolas: problema do caixeiro viajante",
+          "Algoritmos genéticos: otimização de rotação de culturas",
+          "Decisão multicriterial (AHP e TOPSIS) para escolha de tecnologias",
+          "Sistema de apoio à decisão integrado: clima + preço + custo + risco",
+          "Projeto: SAD para planejamento de safra em propriedade real"
+        ],
+        prereq: "IA1, GES, PY2"
+      },
+      {
+        nome: "Empreendedorismo e Inovação no Agronegócio",
+        codigo: "EMP", tipo: "agro", ch: "60h",
+        ementa: "Empreendedorismo rural e AgTech. Identificação de oportunidades no campo. Canvas, validação de mercado e modelo de negócio. Ecossistema AgTech brasileiro. Captação de recursos (FINEP, BNDES, aceleradoras). Propriedade intelectual. Pitch para investidor e para produtor rural.",
+        topicos: [
+          "Identificar problema real no campo — metodologia lean startup",
+          "Business Model Canvas para soluções agrícolas digitais",
+          "MVP: o mínimo necessário para o produtor validar a solução",
+          "Ecossistema AgTech Brasil: Embrapa Ventures, Raízen, Corteva",
+          "Financiamento público: FINEP, BNDES Agro e editais estaduais",
+          "Propriedade intelectual: patente de software, cultivar e segredo",
+          "Pitch para investidor: o que importa e o que mata a apresentação",
+          "Pitch para produtor: linguagem diferente, resultado igual"
+        ],
+        prereq: "GES"
+      },
+      {
+        nome: "Projeto Integrador Final — Sistema Completo em Produção",
+        codigo: "TCC", tipo: "ext", ch: "120h",
+        ementa: "Desenvolvimento e implantação de sistema completo com parceiro real. O projeto integra obrigatoriamente: hardware (sensor ou drone), backend distribuído (API + banco de dados + mensageria), frontend (dashboard) e modelo de IA ou otimização. Defesa pública com avaliação de impacto agronômico, técnico e econômico.",
+        topicos: [
+          "Definição do problema com o parceiro — agronômico é o ponto de partida",
+          "Arquitetura completa: sensor → edge → API → banco → dashboard",
+          "Desenvolvimento em sprints Scrum com produtor como Product Owner",
+          "Implantação física: sensores, gateway LoRaWAN e câmera no campo",
+          "Testes de carga, segurança e failover do sistema em produção",
+          "Análise de impacto: produtividade, custo, sustentabilidade e ROI",
+          "Artigo técnico ou relatório de inovação para publicação",
+          "Defesa pública: banca com avaliação técnica, agronômica e de negócio"
+        ],
+        prereq: "Todos os semestres anteriores"
+      }
+    ]
+  }
+
+];
+</script>
+
+<style>
+/* ============================================================
+   DESIGN SYSTEM — variáveis globais
+   ============================================================ */
+:root {
+  --bg:          #0d1117;
+  --bg-card:     #161b22;
+  --bg-card2:    #1c2128;
+  --border:      #30363d;
+  --text-primary: #e6edf3;
+  --text-secondary: #8b949e;
+  --text-muted:  #484f58;
+  --accent-green: #3fb950;
+  --accent-blue:  #58a6ff;
+  --accent-orange: #d29922;
+  --accent-purple: #bc8cff;
+  --accent-teal:  #39d353;
+  --radius-sm:   6px;
+  --radius-md:   12px;
+  --radius-lg:   20px;
+  --font-display: 'DM Serif Display', Georgia, serif;
+  --font-body:    'DM Sans', system-ui, sans-serif;
+  --font-mono:    'JetBrains Mono', monospace;
+  --shadow:       0 4px 24px rgba(0,0,0,0.4);
+  --shadow-lg:    0 8px 48px rgba(0,0,0,0.6);
+
+  /* cores por tipo de disciplina */
+  --comp:  #58a6ff;
+  --agro:  #3fb950;
+  --int:   #d29922;
+  --ext:   #bc8cff;
+}
+
+/* ============================================================
+   RESET & BASE
+   ============================================================ */
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+html { font-size: 16px; scroll-behavior: smooth; }
+body {
+  font-family: var(--font-body);
+  background: var(--bg);
+  color: var(--text-primary);
+  min-height: 100vh;
+  line-height: 1.6;
+}
+@import url('https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;1,9..40,400&family=DM+Serif+Display&family=JetBrains+Mono:wght@400;500&display=swap');
+
+/* ============================================================
+   HEADER
+   ============================================================ */
+.site-header {
+  background: linear-gradient(180deg, #0d2818 0%, #0d1117 100%);
+  border-bottom: 1px solid var(--border);
+  padding: 2.5rem 1.5rem 2rem;
+  text-align: center;
+  position: relative;
+  overflow: hidden;
+}
+.site-header::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(ellipse 80% 50% at 50% -10%, rgba(63,185,80,0.12) 0%, transparent 70%);
+  pointer-events: none;
+}
+.header-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  background: rgba(63,185,80,0.12);
+  border: 1px solid rgba(63,185,80,0.3);
+  border-radius: 20px;
+  padding: 4px 12px;
+  font-size: 0.75rem;
+  font-weight: 600;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--accent-green);
+  margin-bottom: 1rem;
+}
+.header-badge::before { content: '🌱'; font-size: 14px; }
+.site-header h1 {
+  font-family: var(--font-display);
+  font-size: clamp(1.8rem, 5vw, 3rem);
+  font-weight: 400;
+  line-height: 1.1;
+  color: var(--text-primary);
+  margin-bottom: 0.5rem;
+}
+.site-header h1 em {
+  font-style: normal;
+  color: var(--accent-green);
+}
+.site-header p {
+  color: var(--text-secondary);
+  font-size: 0.9rem;
+  max-width: 600px;
+  margin: 0 auto 1.5rem;
+}
+.header-stats {
+  display: flex;
+  justify-content: center;
+  gap: 2rem;
+  flex-wrap: wrap;
+}
+.stat {
+  text-align: center;
+}
+.stat-value {
+  font-family: var(--font-mono);
+  font-size: 1.5rem;
+  font-weight: 500;
+  color: var(--accent-green);
+  display: block;
+}
+.stat-label {
+  font-size: 0.72rem;
+  color: var(--text-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+/* ============================================================
+   LEGENDA DE TIPOS
+   ============================================================ */
+.legend {
+  display: flex;
+  justify-content: center;
+  gap: 1rem;
+  flex-wrap: wrap;
+  padding: 0.75rem 1.5rem;
+  background: var(--bg-card);
+  border-bottom: 1px solid var(--border);
+  position: sticky;
+  top: 0;
+  z-index: 100;
+}
+.legend-item {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 0.78rem;
+  color: var(--text-secondary);
+  cursor: pointer;
+  padding: 4px 10px;
+  border-radius: 20px;
+  border: 1px solid transparent;
+  transition: all 0.2s;
+}
+.legend-item:hover,
+.legend-item.active {
+  background: rgba(255,255,255,0.05);
+  border-color: var(--border);
+}
+.legend-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  flex-shrink: 0;
+}
+.legend-dot.comp { background: var(--comp); }
+.legend-dot.agro { background: var(--agro); }
+.legend-dot.int  { background: var(--int); }
+.legend-dot.ext  { background: var(--ext); }
+
+/* ============================================================
+   NAVEGAÇÃO DE SEMESTRES
+   ============================================================ */
+.nav-semestres {
+  display: flex;
+  justify-content: center;
+  gap: 8px;
+  padding: 1.25rem 1.5rem;
+  flex-wrap: wrap;
+  border-bottom: 1px solid var(--border);
+}
+.nav-btn {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-md);
+  padding: 8px 16px;
+  color: var(--text-secondary);
+  font-family: var(--font-body);
+  font-size: 0.82rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+.nav-btn:hover {
+  border-color: var(--accent-green);
+  color: var(--text-primary);
+}
+.nav-btn.active {
+  background: rgba(63,185,80,0.12);
+  border-color: var(--accent-green);
+  color: var(--accent-green);
+}
+.nav-btn .sem-num {
+  font-family: var(--font-mono);
+  font-size: 0.7rem;
+  background: rgba(255,255,255,0.07);
+  border-radius: 4px;
+  padding: 1px 5px;
+}
+
+/* ============================================================
+   CONTAINER DO SEMESTRE ATIVO
+   ============================================================ */
+.main-content {
+  max-width: 1280px;
+  margin: 0 auto;
+  padding: 2rem 1.5rem 4rem;
+}
+
+.semestre-section { display: none; }
+.semestre-section.active { display: block; }
+
+.semestre-header {
+  display: flex;
+  align-items: flex-start;
+  gap: 1.5rem;
+  margin-bottom: 2rem;
+  padding-bottom: 1.5rem;
+  border-bottom: 1px solid var(--border);
+}
+.sem-number-badge {
+  width: 56px;
+  height: 56px;
+  border-radius: var(--radius-md);
+  background: rgba(63,185,80,0.12);
+  border: 1px solid rgba(63,185,80,0.3);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: var(--font-mono);
+  font-size: 1.5rem;
+  font-weight: 600;
+  color: var(--accent-green);
+  flex-shrink: 0;
+}
+.semestre-header-text h2 {
+  font-family: var(--font-display);
+  font-size: 1.6rem;
+  font-weight: 400;
+  color: var(--text-primary);
+  margin-bottom: 0.25rem;
+}
+.semestre-header-text p {
+  font-size: 0.88rem;
+  color: var(--text-secondary);
+}
+.semestre-meta {
+  margin-left: auto;
+  text-align: right;
+  flex-shrink: 0;
+}
+.semestre-meta .ch-total {
+  font-family: var(--font-mono);
+  font-size: 1.1rem;
+  color: var(--accent-green);
+  font-weight: 500;
+}
+.semestre-meta .ch-label {
+  font-size: 0.7rem;
+  color: var(--text-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+/* ============================================================
+   GRID DE DISCIPLINAS
+   ============================================================ */
+.disciplinas-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: 1rem;
+}
+
+/* ============================================================
+   CARD DA DISCIPLINA (frente)
+   ============================================================ */
+.disc-card {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-md);
+  cursor: pointer;
+  transition: all 0.25s;
+  position: relative;
+  overflow: hidden;
+}
+.disc-card:hover {
+  border-color: var(--accent-green);
+  transform: translateY(-2px);
+  box-shadow: var(--shadow);
+}
+.disc-card::before {
+  content: '';
+  position: absolute;
+  left: 0; top: 0; bottom: 0;
+  width: 3px;
+  border-radius: 3px 0 0 3px;
+}
+.disc-card[data-tipo="comp"]::before { background: var(--comp); }
+.disc-card[data-tipo="agro"]::before { background: var(--agro); }
+.disc-card[data-tipo="int"]::before  { background: var(--int); }
+.disc-card[data-tipo="ext"]::before  { background: var(--ext); }
+
+.disc-card-inner { padding: 1.1rem 1.1rem 1rem 1.25rem; }
+
+.disc-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: 0.6rem;
+  gap: 0.5rem;
+}
+.disc-codigo {
+  font-family: var(--font-mono);
+  font-size: 0.68rem;
+  font-weight: 500;
+  background: rgba(255,255,255,0.06);
+  border: 1px solid var(--border);
+  border-radius: 4px;
+  padding: 2px 7px;
+  color: var(--text-secondary);
+  flex-shrink: 0;
+}
+.disc-tipo-badge {
+  font-size: 0.66rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  padding: 2px 8px;
+  border-radius: 20px;
+  flex-shrink: 0;
+}
+.disc-tipo-badge.comp { background: rgba(88,166,255,0.12); color: var(--comp); }
+.disc-tipo-badge.agro { background: rgba(63,185,80,0.12);  color: var(--agro); }
+.disc-tipo-badge.int  { background: rgba(210,153,34,0.12); color: var(--int); }
+.disc-tipo-badge.ext  { background: rgba(188,140,255,0.12);color: var(--ext); }
+
+.disc-nome {
+  font-size: 0.97rem;
+  font-weight: 500;
+  color: var(--text-primary);
+  line-height: 1.35;
+  margin-bottom: 0.5rem;
+}
+.disc-footer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-top: 0.75rem;
+}
+.disc-ch {
+  font-family: var(--font-mono);
+  font-size: 0.72rem;
+  color: var(--text-muted);
+}
+.disc-prereq {
+  font-size: 0.7rem;
+  color: var(--text-muted);
+}
+.disc-prereq span {
+  color: var(--accent-orange);
+  font-family: var(--font-mono);
+  font-size: 0.68rem;
+}
+.disc-hint {
+  font-size: 0.68rem;
+  color: var(--text-muted);
+  text-align: right;
+  margin-top: 0.4rem;
+  opacity: 0.6;
+}
+
+/* ============================================================
+   MODAL / FLASHCARD
+   ============================================================ */
+.modal-overlay {
+  display: none;
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,0.82);
+  z-index: 500;
+  align-items: flex-start;
+  justify-content: center;
+  padding: 2rem;
+  backdrop-filter: blur(6px);
+  overflow-y: auto;
+}
+.modal-overlay.open { display: flex; }
+
+.flashcard-wrapper {
+  width: 100%;
+  max-width: 980px;
+  margin: auto;
+  cursor: pointer;
+}
+.flashcard {
+  width: 100%;
+  position: relative;
+}
+
+/* FRENTE e VERSO — cada um é position:relative, cresce com conteúdo */
+.fc-face {
+  width: 100%;
+  border-radius: var(--radius-lg);
+  border: 1px solid var(--border);
+  background: var(--bg-card2);
+  transition: opacity 0.25s ease, transform 0.25s ease;
+}
+.fc-face.fc-hidden {
+  display: none;
+}
+
+/* FRENTE do flashcard */
+.fc-front {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 2.5rem 3rem;
+  min-height: 320px;
+}
+.fc-front-top {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 1.5rem;
+}
+.fc-codigo {
+  font-family: var(--font-mono);
+  font-size: 0.75rem;
+  background: rgba(255,255,255,0.06);
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  padding: 4px 10px;
+  color: var(--text-secondary);
+}
+.fc-tipo-pill {
+  font-size: 0.7rem;
+  font-weight: 600;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  padding: 4px 12px;
+  border-radius: 20px;
+}
+.fc-tipo-pill.comp { background: rgba(88,166,255,0.15); color: var(--comp); }
+.fc-tipo-pill.agro { background: rgba(63,185,80,0.15);  color: var(--agro); }
+.fc-tipo-pill.int  { background: rgba(210,153,34,0.15); color: var(--int); }
+.fc-tipo-pill.ext  { background: rgba(188,140,255,0.15);color: var(--ext); }
+
+.fc-icon {
+  font-size: 3.5rem;
+  text-align: center;
+  margin: 0.5rem 0 1rem;
+}
+.fc-nome {
+  font-family: var(--font-display);
+  font-size: 1.5rem;
+  font-weight: 400;
+  text-align: center;
+  color: var(--text-primary);
+  line-height: 1.25;
+  margin-bottom: 1rem;
+}
+.fc-ch-row {
+  display: flex;
+  gap: 1.5rem;
+  justify-content: center;
+  margin-bottom: 1.5rem;
+}
+.fc-ch-item {
+  text-align: center;
+}
+.fc-ch-val {
+  font-family: var(--font-mono);
+  font-size: 1rem;
+  font-weight: 500;
+  color: var(--accent-green);
+  display: block;
+}
+.fc-ch-lbl {
+  font-size: 0.68rem;
+  color: var(--text-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+.fc-flip-hint {
+  margin-top: auto;
+  text-align: center;
+  font-size: 0.78rem;
+  color: var(--text-muted);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+}
+.fc-flip-hint::before { content: '↩'; }
+
+/* VERSO do flashcard — layout duas colunas */
+.fc-back {
+  display: flex;
+  flex-direction: column;
+  padding: 2rem 2.5rem;
+}
+.fc-back-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 1.25rem;
+  padding-bottom: 1rem;
+  border-bottom: 1px solid var(--border);
+}
+.fc-back-nome {
+  font-size: 1rem;
+  font-weight: 600;
+  color: var(--text-primary);
+  line-height: 1.3;
+  max-width: 75%;
+}
+/* two-column body */
+.fc-back-body {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1.75rem;
+  flex: 1;
+}
+.fc-back-col { display: flex; flex-direction: column; }
+.fc-section-title {
+  font-size: 0.62rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.09em;
+  color: var(--text-muted);
+  margin-bottom: 0.6rem;
+  margin-top: 0;
+}
+.fc-ementa {
+  font-size: 0.84rem;
+  color: var(--text-secondary);
+  line-height: 1.65;
+  border-left: 2px solid var(--border);
+  padding-left: 0.85rem;
+}
+.fc-topicos {
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+}
+.fc-topicos li {
+  font-size: 0.81rem;
+  color: var(--text-secondary);
+  display: flex;
+  align-items: flex-start;
+  gap: 7px;
+  line-height: 1.4;
+}
+.fc-topicos li::before {
+  content: '▸';
+  color: var(--accent-green);
+  flex-shrink: 0;
+  margin-top: 2px;
+  font-size: 0.7rem;
+}
+.fc-prereq-row {
+  margin-top: 1.25rem;
+  padding-top: 0.75rem;
+  border-top: 1px solid var(--border);
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 0.75rem;
+  color: var(--text-muted);
+  grid-column: 1 / -1;
+}
+.fc-prereq-row strong {
+  font-family: var(--font-mono);
+  font-size: 0.72rem;
+  color: var(--accent-orange);
+}
+.fc-flip-hint-back {
+  margin-top: 1rem;
+  text-align: center;
+  font-size: 0.72rem;
+  color: var(--text-muted);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+}
+.fc-flip-hint-back::before { content: '↩'; }
+
+/* botão fechar */
+.fc-close-btn {
+  position: fixed;
+  top: 1rem;
+  right: 1rem;
+  width: 40px;
+  height: 40px;
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: 50%;
+  color: var(--text-secondary);
+  font-size: 1.1rem;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 600;
+  transition: all 0.2s;
+}
+.fc-close-btn:hover {
+  background: rgba(255,255,255,0.08);
+  color: var(--text-primary);
+}
+
+/* ícones por tipo */
+.disc-card[data-tipo="comp"] .disc-icon::after { content: '💻'; }
+.disc-card[data-tipo="agro"] .disc-icon::after { content: '🌱'; }
+.disc-card[data-tipo="int"]  .disc-icon::after { content: '⚡'; }
+.disc-card[data-tipo="ext"]  .disc-icon::after { content: '🤝'; }
+
+/* ============================================================
+   NAVEGAÇÃO INTERNA DO MODAL
+   ============================================================ */
+.modal-nav {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 1rem;
+  margin-top: 1rem;
+}
+.modal-nav-btn {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  padding: 6px 14px;
+  color: var(--text-secondary);
+  font-size: 0.82rem;
+  cursor: pointer;
+  transition: all 0.2s;
+  font-family: var(--font-body);
+}
+.modal-nav-btn:hover:not(:disabled) {
+  border-color: var(--accent-green);
+  color: var(--accent-green);
+}
+.modal-nav-btn:disabled {
+  opacity: 0.3;
+  cursor: default;
+}
+.modal-nav-counter {
+  font-family: var(--font-mono);
+  font-size: 0.78rem;
+  color: var(--text-muted);
+}
+
+/* ============================================================
+   BARRA DE PROGRESSO DO SEMESTRE
+   ============================================================ */
+.progress-bar-wrap {
+  margin-bottom: 1.5rem;
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+.progress-bar {
+  flex: 1;
+  height: 3px;
+  background: var(--border);
+  border-radius: 3px;
+  overflow: hidden;
+}
+.progress-bar-fill {
+  height: 100%;
+  background: linear-gradient(90deg, var(--accent-green), #58a6ff);
+  border-radius: 3px;
+  transition: width 0.4s;
+}
+.progress-label {
+  font-family: var(--font-mono);
+  font-size: 0.7rem;
+  color: var(--text-muted);
+  flex-shrink: 0;
+}
+
+/* ============================================================
+   FOOTER
+   ============================================================ */
+.site-footer {
+  text-align: center;
+  padding: 2rem;
+  border-top: 1px solid var(--border);
+  color: var(--text-muted);
+  font-size: 0.8rem;
+}
+
+/* ============================================================
+   RESPONSIVO
+   ============================================================ */
+@media (max-width: 640px) {
+  .disciplinas-grid { grid-template-columns: 1fr; }
+  .semestre-header { flex-wrap: wrap; gap: 1rem; }
+  .semestre-meta { margin-left: 0; text-align: left; }
+  .header-stats { gap: 1.25rem; }
+  .fc-nome { font-size: 1.2rem; }
+  .fc-back-body { grid-template-columns: 1fr; gap: 1rem; }
+  .modal-overlay { padding: 0.75rem; align-items: flex-start; }
+  .flashcard-wrapper { max-width: 100%; }
+  .fc-back { padding: 1.25rem; }
+  .fc-front { padding: 1.5rem; }
+}
+
+/* filtro ativo */
+body.filter-active .disc-card { opacity: 0.2; transition: opacity 0.2s; }
+body.filter-active .disc-card.filter-match { opacity: 1; }
+</style>
+</head>
+<body>
+
+<!-- ============================================================
+     HEADER
+     ============================================================ -->
+<header class="site-header">
+  <div class="header-badge">Matriz Curricular Interativa</div>
+  <h1>Tecnólogo em <em>Agrocomputação</em></h1>
+  <p id="inst-name">Instituto Federal de Goiás — Câmpus Cidade de Goiás &nbsp;|&nbsp; Proposta curricular baseada no PPC 2023</p>
+  <div class="header-stats">
+    <div class="stat">
+      <span class="stat-value" id="hdr-ch">~3.200h</span>
+      <span class="stat-label">Carga Horária</span>
+    </div>
+    <div class="stat">
+      <span class="stat-value">8</span>
+      <span class="stat-label">Semestres</span>
+    </div>
+    <div class="stat">
+      <span class="stat-value" id="hdr-disc">0</span>
+      <span class="stat-label">Disciplinas</span>
+    </div>
+    <div class="stat">
+      <span class="stat-value">4 anos</span>
+      <span class="stat-label">Duração</span>
+    </div>
+  </div>
+</header>
+
+<!-- ============================================================
+     LEGENDA / FILTRO
+     ============================================================ -->
+<div class="legend" id="legend">
+  <div class="legend-item active" data-filter="all">
+    <span class="legend-dot" style="background:#555"></span>
+    Todos
+  </div>
+  <div class="legend-item" data-filter="comp">
+    <span class="legend-dot comp"></span>
+    Computação
+  </div>
+  <div class="legend-item" data-filter="agro">
+    <span class="legend-dot agro"></span>
+    Agronomia
+  </div>
+  <div class="legend-item" data-filter="int">
+    <span class="legend-dot int"></span>
+    Integração
+  </div>
+  <div class="legend-item" data-filter="ext">
+    <span class="legend-dot ext"></span>
+    Extensão
+  </div>
+</div>
+
+<!-- ============================================================
+     NAV SEMESTRES
+     ============================================================ -->
+<nav class="nav-semestres" id="nav-sem"></nav>
+
+<!-- ============================================================
+     CONTEÚDO PRINCIPAL
+     ============================================================ -->
+<main class="main-content" id="main-content"></main>
+
+<!-- ============================================================
+     MODAL FLASHCARD
+     ============================================================ -->
+<div class="modal-overlay" id="modal">
+  <button class="fc-close-btn" id="fc-close" title="Fechar (ESC)">✕</button>
+  <div>
+    <div class="flashcard-wrapper">
+      <div class="flashcard" id="flashcard">
+        <!-- Frente -->
+        <div class="fc-face fc-front" id="fc-front">
+          <div class="fc-front-top">
+            <span class="fc-codigo" id="fc-codigo">—</span>
+            <span class="fc-tipo-pill" id="fc-tipo-pill">—</span>
+          </div>
+          <div class="fc-icon" id="fc-icon">🌱</div>
+          <div class="fc-nome" id="fc-nome">—</div>
+          <div class="fc-ch-row">
+            <div class="fc-ch-item">
+              <span class="fc-ch-val" id="fc-ch">—</span>
+              <span class="fc-ch-lbl">Carga Horária</span>
+            </div>
+            <div class="fc-ch-item">
+              <span class="fc-ch-val" id="fc-sem">—</span>
+              <span class="fc-ch-lbl">Semestre</span>
+            </div>
+          </div>
+          <div class="fc-flip-hint">Clique para ver ementa e conteúdos</div>
+        </div>
+        <!-- Verso -->
+        <div class="fc-face fc-back fc-hidden" id="fc-back">
+          <div class="fc-back-header">
+            <span class="fc-back-nome" id="fc-back-nome">—</span>
+            <span class="fc-tipo-pill" id="fc-back-tipo">—</span>
+          </div>
+          <div class="fc-back-body">
+            <div class="fc-back-col">
+              <div class="fc-section-title">Ementa</div>
+              <p class="fc-ementa" id="fc-ementa">—</p>
+            </div>
+            <div class="fc-back-col">
+              <div class="fc-section-title">Tópicos Principais</div>
+              <ul class="fc-topicos" id="fc-topicos"></ul>
+            </div>
+            <div class="fc-prereq-row">
+              Pré-requisito: <strong id="fc-prereq">—</strong>
+            </div>
+          </div>
+          <div class="fc-flip-hint-back">Clique para voltar ao card</div>
+        </div>
+      </div>
+    </div>
+    <div class="modal-nav">
+      <button class="modal-nav-btn" id="prev-btn">← Anterior</button>
+      <span class="modal-nav-counter" id="nav-counter">1 / 6</span>
+      <button class="modal-nav-btn" id="next-btn">Próxima →</button>
+    </div>
+  </div>
+</div>
+
+<!-- ============================================================
+     FOOTER
+     ============================================================ -->
+<footer class="site-footer">
+  <p>Instituto Federal de Goiás — Câmpus Cidade de Goiás · Proposta curricular de Agrocomputação · Roadmap elaborado em 2025<br>
+  Edite a variável <code>SEMESTRES</code> no topo do arquivo para atualizar conteúdos.</p>
+</footer>
+
+<!-- ============================================================
+     JAVASCRIPT — renderização e interações
+     ============================================================ -->
+<script>
+/* ---------- mapa de ícones por tipo ---------- */
+const ICONS = {
+  comp: { ILP: '⌨️', BDI: '🗄️', LPR: '💻', ESW: '🏗️', BDII: '🔐', CSO: '⚙️',
+          POO: '🧩', APS: '📐', REC: '🌐', PRW: '🕸️', GPS: '📋', TBI: '📊',
+          QSW: '✅', IRO: '🤖', PES: '📈', default: '💻' },
+  agro: { MFA: '💰', FAG: '📁', LAA: '⚖️', FCLI: '🌦️', MAG: '🚜', ARM: '🌾',
+          PAP: '🛰️', GAR: '🌿', SPV: '🌱', SPA: '🐄', default: '🌱' },
+  int:  { TIC: '🔗', MSA: '🏛️', SRA: '🔍', GEO: '🗺️', ICA: '📡', default: '⚡' },
+  ext:  { PIEI: '🤝', PIEII: '🔬', PIEIII: '🚀', PIEIV: '🏆', default: '🤝' }
+};
+
+const TIPO_LABELS = { comp: 'Computação', agro: 'Agronomia', int: 'Integração', ext: 'Extensão' };
+
+function getIcon(disc) {
+  return (ICONS[disc.tipo] || {})[disc.codigo] || (ICONS[disc.tipo] || {}).default || '📚';
+}
+
+/* ---------- estado da app ---------- */
+let currentSemestre = 0;
+let currentDiscIndex = 0;
+let currentSemestreDiscs = [];
+let isFlipped = false;
+
+/* ---------- renderiza a nav e o conteúdo ---------- */
+function init() {
+  const nav = document.getElementById('nav-sem');
+  const main = document.getElementById('main-content');
+  let totalDiscs = 0;
+
+  SEMESTRES.forEach((sem, si) => {
+    totalDiscs += sem.disciplinas.length;
+
+    /* botão de nav */
+    const btn = document.createElement('button');
+    btn.className = 'nav-btn' + (si === 0 ? ' active' : '');
+    btn.innerHTML = `<span class="sem-num">${sem.numero}°</span>${sem.ano} · ${sem.titulo.split(' ').slice(0,2).join(' ')}…`;
+    btn.addEventListener('click', () => showSemestre(si));
+    nav.appendChild(btn);
+
+    /* seção do semestre */
+    const section = document.createElement('section');
+    section.className = 'semestre-section' + (si === 0 ? ' active' : '');
+    section.id = `sem-${si}`;
+
+    const chSem = sem.disciplinas.reduce((acc, d) => acc + parseInt(d.ch), 0);
+
+    section.innerHTML = `
+      <div class="semestre-header">
+        <div class="sem-number-badge">${sem.numero}°</div>
+        <div class="semestre-header-text">
+          <h2>${sem.titulo}</h2>
+          <p>${sem.ano} · ${sem.subtitulo}</p>
+        </div>
+        <div class="semestre-meta">
+          <div class="ch-total">${chSem}h</div>
+          <div class="ch-label">Carga do Semestre</div>
+        </div>
+      </div>
+      <div class="progress-bar-wrap">
+        <div class="progress-label">${sem.disciplinas.length} disciplinas</div>
+        <div class="progress-bar"><div class="progress-bar-fill" style="width:${(sem.numero/8)*100}%"></div></div>
+        <div class="progress-label">${Math.round((sem.numero/8)*100)}% do curso</div>
+      </div>
+      <div class="disciplinas-grid" id="grid-${si}"></div>
+    `;
+
+    main.appendChild(section);
+
+    /* cards das disciplinas */
+    const grid = section.querySelector(`#grid-${si}`);
+    sem.disciplinas.forEach((disc, di) => {
+      const card = document.createElement('div');
+      card.className = 'disc-card';
+      card.dataset.tipo = disc.tipo;
+      card.dataset.semestre = si;
+      card.dataset.index = di;
+
+      card.innerHTML = `
+        <div class="disc-card-inner">
+          <div class="disc-header">
+            <span class="disc-codigo">${disc.codigo}</span>
+            <div style="display:flex;gap:4px;align-items:center">
+              <span class="disc-tipo-badge ${disc.tipo}">${TIPO_LABELS[disc.tipo]}</span>
+            </div>
+          </div>
+          <div class="disc-nome">${disc.nome}</div>
+          <div class="disc-footer">
+            <span class="disc-ch">${disc.ch}</span>
+            <span class="disc-prereq">Pré-req: <span>${disc.prereq}</span></span>
+          </div>
+          <div class="disc-hint">clique para detalhes</div>
+        </div>
+      `;
+      card.addEventListener('click', () => openCard(si, di));
+      grid.appendChild(card);
+    });
+  });
+
+  document.getElementById('hdr-disc').textContent = totalDiscs;
+  document.getElementById('inst-name').textContent = CURSO.instituicao + ' · Proposta curricular de Agrocomputação';
+}
+
+function showSemestre(index) {
+  currentSemestre = index;
+  document.querySelectorAll('.semestre-section').forEach((s, i) => {
+    s.classList.toggle('active', i === index);
+  });
+  document.querySelectorAll('.nav-btn').forEach((b, i) => {
+    b.classList.toggle('active', i === index);
+  });
+  window.scrollTo({ top: document.getElementById('nav-sem').offsetTop - 60, behavior: 'smooth' });
+}
+
+/* ---------- abertura do flashcard ---------- */
+function openCard(si, di) {
+  currentSemestre = si;
+  currentDiscIndex = di;
+  currentSemestreDiscs = SEMESTRES[si].disciplinas;
+  renderFlashcard(si, di);
+  document.getElementById('modal').classList.add('open');
+  document.body.style.overflow = 'hidden';
+}
+
+function renderFlashcard(si, di) {
+  const disc = SEMESTRES[si].disciplinas[di];
+  isFlipped = false;
+  document.getElementById('fc-front').classList.remove('fc-hidden');
+  document.getElementById('fc-back').classList.add('fc-hidden');
+
+  /* frente */
+  document.getElementById('fc-codigo').textContent = disc.codigo;
+  document.getElementById('fc-icon').textContent = getIcon(disc);
+  document.getElementById('fc-nome').textContent = disc.nome;
+  document.getElementById('fc-ch').textContent = disc.ch;
+  document.getElementById('fc-sem').textContent = `${SEMESTRES[si].numero}° Sem. · ${SEMESTRES[si].ano}`;
+
+  const tipoPill = document.getElementById('fc-tipo-pill');
+  tipoPill.textContent = TIPO_LABELS[disc.tipo];
+  tipoPill.className = `fc-tipo-pill ${disc.tipo}`;
+
+  /* verso */
+  document.getElementById('fc-back-nome').textContent = disc.nome;
+  const backTipo = document.getElementById('fc-back-tipo');
+  backTipo.textContent = TIPO_LABELS[disc.tipo];
+  backTipo.className = `fc-tipo-pill ${disc.tipo}`;
+  document.getElementById('fc-ementa').textContent = disc.ementa;
+  document.getElementById('fc-prereq').textContent = disc.prereq;
+
+  const ul = document.getElementById('fc-topicos');
+  ul.innerHTML = '';
+  disc.topicos.forEach(t => {
+    const li = document.createElement('li');
+    li.textContent = t;
+    ul.appendChild(li);
+  });
+
+  /* counter */
+  document.getElementById('nav-counter').textContent = `${di + 1} / ${currentSemestreDiscs.length}`;
+  document.getElementById('prev-btn').disabled = di === 0;
+  document.getElementById('next-btn').disabled = di === currentSemestreDiscs.length - 1;
+
+}
+
+function closeModal() {
+  document.getElementById('modal').classList.remove('open');
+  document.body.style.overflow = '';
+}
+
+/* ---------- eventos ---------- */
+document.getElementById('flashcard').addEventListener('click', () => {
+  toggleFlip();
+});
+
+function toggleFlip() {
+  isFlipped = !isFlipped;
+  const front = document.getElementById('fc-front');
+  const back  = document.getElementById('fc-back');
+  if (isFlipped) {
+    front.classList.add('fc-hidden');
+    back.classList.remove('fc-hidden');
+  } else {
+    back.classList.add('fc-hidden');
+    front.classList.remove('fc-hidden');
+  }
+}
+
+document.getElementById('fc-close').addEventListener('click', closeModal);
+
+document.getElementById('modal').addEventListener('click', (e) => {
+  if (e.target === document.getElementById('modal')) closeModal();
+});
+
+document.getElementById('prev-btn').addEventListener('click', (e) => {
+  e.stopPropagation();
+  if (currentDiscIndex > 0) {
+    currentDiscIndex--;
+    renderFlashcard(currentSemestre, currentDiscIndex);
+  }
+});
+
+document.getElementById('next-btn').addEventListener('click', (e) => {
+  e.stopPropagation();
+  if (currentDiscIndex < currentSemestreDiscs.length - 1) {
+    currentDiscIndex++;
+    renderFlashcard(currentSemestre, currentDiscIndex);
+  }
+});
+
+document.addEventListener('keydown', (e) => {
+  if (!document.getElementById('modal').classList.contains('open')) return;
+  if (e.key === 'Escape') closeModal();
+  if (e.key === ' ' || e.key === 'Enter') {
+    e.preventDefault();
+    toggleFlip();
+  }
+  if (e.key === 'ArrowLeft' && currentDiscIndex > 0) {
+    currentDiscIndex--; renderFlashcard(currentSemestre, currentDiscIndex);
+  }
+  if (e.key === 'ArrowRight' && currentDiscIndex < currentSemestreDiscs.length - 1) {
+    currentDiscIndex++; renderFlashcard(currentSemestre, currentDiscIndex);
+  }
+});
+
+/* ---------- filtro por tipo ---------- */
+document.getElementById('legend').addEventListener('click', (e) => {
+  const item = e.target.closest('.legend-item');
+  if (!item) return;
+  const filter = item.dataset.filter;
+
+  document.querySelectorAll('.legend-item').forEach(li => li.classList.remove('active'));
+  item.classList.add('active');
+
+  if (filter === 'all') {
+    document.body.classList.remove('filter-active');
+    document.querySelectorAll('.disc-card').forEach(c => c.classList.remove('filter-match'));
+  } else {
+    document.body.classList.add('filter-active');
+    document.querySelectorAll('.disc-card').forEach(c => {
+      c.classList.toggle('filter-match', c.dataset.tipo === filter);
+    });
+  }
+});
+
+/* ---------- iniciar ---------- */
+init();
+</script>
+</body>
+</html>
