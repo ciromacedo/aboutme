@@ -14,7 +14,7 @@
 <script>
 const CURSO = {
   nome: "Tecnólogo em Agrocomputação",
-  ch_total: "~3.200h",
+  ch_total: "~2.960h",
   semestres_total: 8,
   instituicao: "Instituto Federal de Goiás — Câmpus Cidade de Goiás"
 };
@@ -44,7 +44,7 @@ const SEMESTRES = [
     disciplinas: [
       {
         nome: "Biologia e Fisiologia Vegetal",
-        codigo: "BFV", tipo: "agro", ch: "80h",
+        codigo: "BFV", tipo: "agro", ch: "70h",
         ementa: "Célula vegetal, tecidos, fotossíntese, respiração, transpiração e nutrição mineral. Fenologia das culturas. Relação solo–planta–atmosfera–água. Base científica indispensável para interpretar dados de sensores, índices espectrais e modelos de crescimento vegetal.",
         topicos: [
           "Organização celular e tecidos vegetais",
@@ -59,7 +59,7 @@ const SEMESTRES = [
       },
       {
         nome: "Pedologia e Ciência do Solo",
-        codigo: "SOL", tipo: "agro", ch: "80h",
+        codigo: "SOL", tipo: "agro", ch: "70h",
         ementa: "Formação, morfologia e classificação dos solos do Cerrado. Propriedades físicas, químicas e biológicas. Análise de solo e interpretação de laudos. Fundamento para sensores de solo, mapas de variabilidade espacial e sistemas de recomendação de adubação.",
         topicos: [
           "Horizontes e perfil do solo — Latossolo e Neossolo do Cerrado",
@@ -74,7 +74,7 @@ const SEMESTRES = [
       },
       {
         nome: "Climatologia e Agrometeorologia",
-        codigo: "CLM", tipo: "agro", ch: "60h",
+        codigo: "CLM", tipo: "agro", ch: "50h",
         ementa: "Elementos e fatores climáticos. Evapotranspiração. Balanço hídrico. Zoneamento agroclimático. ENSO e variabilidade climática. Estações automáticas e APIs climáticas como ferramentas de suporte à decisão agronômica no Cerrado.",
         topicos: [
           "Elementos climáticos: temperatura, precipitação, umidade e radiação",
@@ -105,7 +105,7 @@ const SEMESTRES = [
       },
       {
         nome: "Introdução à Eletrônica",
-        codigo: "CEL", tipo: "comp", ch: "60h",
+        codigo: "CEL", tipo: "comp", ch: "50h",
         ementa: "Base elétrica e eletrônica para compreender sensores, atuadores e sistemas embarcados agrícolas. Lei de Ohm, circuitos básicos, sinais digitais e analógicos, transistores como chave e componentes optoeletrônicos. Prática com bancada, multímetro e osciloscópio.",
         topicos: [
           "Tensão, corrente e resistência — Lei de Ohm e potência elétrica",
@@ -121,7 +121,7 @@ const SEMESTRES = [
       },
       {
         nome: "Fundamentos de Computação e Sistemas Operacionais",
-        codigo: "FCO", tipo: "comp", ch: "60h",
+        codigo: "FCO", tipo: "comp", ch: "50h",
         ementa: "Arquitetura de computadores, representação de dados e sistemas operacionais. Linux como ambiente de desenvolvimento para aplicações agrícolas embarcadas e em nuvem. Terminal, shell script, processos e gerenciamento de arquivos. Base para Raspberry Pi e servidores em nuvem.",
         topicos: [
           "Arquitetura de Von Neumann — CPU, memória, barramento e I/O",
@@ -164,7 +164,7 @@ const SEMESTRES = [
       },
       {
         nome: "Fertilidade do Solo e Nutrição de Plantas",
-        codigo: "NUT", tipo: "agro", ch: "80h",
+        codigo: "NUT", tipo: "agro", ch: "90h",
         ementa: "Dinâmica de nutrientes no solo e na planta. Calagem e gessagem. Adubação NPK e micronutrientes. Análise foliar. Recomendação por produtividade esperada e por zona de manejo. Fertilização de precisão conectada a dados geoespaciais e sensores de solo.",
         topicos: [
           "CTC, saturação de bases e necessidade de calagem (V% alvo)",
@@ -179,7 +179,7 @@ const SEMESTRES = [
       },
       {
         nome: "Banco de Dados I — Modelagem e SQL",
-        codigo: "BD1", tipo: "comp", ch: "60h",
+        codigo: "BD1", tipo: "comp", ch: "70h",
         ementa: "Fundamentos de bancos de dados relacionais aplicados à gestão rural. Modelo Entidade-Relacionamento, normalização e SQL essencial no PostgreSQL. O aluno projeta e implementa o banco de dados de uma propriedade real — talhões, culturas, insumos e colheitas.",
         topicos: [
           "Por que banco de dados? Limitações fatais da planilha na gestão rural",
@@ -211,7 +211,7 @@ const SEMESTRES = [
       },
       {
         nome: "Redes de Computadores — Conectividade Rural e IoT",
-        codigo: "REC", tipo: "comp", ch: "60h",
+        codigo: "REC", tipo: "comp", ch: "70h",
         ementa: "Fundamentos de redes com foco em cenários rurais onde conectividade é escassa e crítica. Modelo OSI, TCP/IP, Wi-Fi, redes mesh, LoRa, LoRaWAN e MQTT. VPN para acesso remoto. Segurança básica em redes de sensores agrícolas.",
         topicos: [
           "Modelo OSI e TCP/IP — as camadas que fazem os dados chegarem",
@@ -239,7 +239,7 @@ const SEMESTRES = [
     disciplinas: [
       {
         nome: "Fitopatologia",
-        codigo: "FTP", tipo: "agro", ch: "80h",
+        codigo: "FTP", tipo: "agro", ch: "70h",
         ementa: "Doenças de plantas de importância econômica no Cerrado. Etiologia, sintomatologia, epidemiologia e controle. Fungicidas: grupos, modos de ação e resistência. Modelos preditivos de epidemias com dados climáticos. Apps e sistemas digitais de vigilância fitossanitária.",
         topicos: [
           "Triângulo da doença: hospedeiro, patógeno e ambiente",
@@ -269,7 +269,7 @@ const SEMESTRES = [
       },
       {
         nome: "Manejo e Irrigação",
-        codigo: "IRG", tipo: "agro", ch: "80h",
+        codigo: "IRG", tipo: "agro", ch: "70h",
         ementa: "Balanço hídrico da cultura, evapotranspiração e eficiência de uso da água. Sistemas de irrigação: gotejamento, aspersão convencional e pivô central. Automação. Sensores de umidade de solo. Manejo preciso da água integrado a APIs climáticas e sensores IoT.",
         topicos: [
           "Evapotranspiração real e potencial — cálculo com Python e Open-Meteo",
@@ -300,7 +300,7 @@ const SEMESTRES = [
       },
       {
         nome: "Programação Orientada a Objetos",
-        codigo: "POO", tipo: "comp", ch: "60h",
+        codigo: "POO", tipo: "comp", ch: "50h",
         ementa: "POO com Python (e introdução a Java) aplicada ao desenvolvimento de sistemas agrícolas. Classes, encapsulamento, herança, polimorfismo e interfaces. Padrões de projeto (Design Patterns) relevantes para sistemas de IoT e gestão rural. Testes unitários com pytest.",
         topicos: [
           "Classes e objetos: modelar Talhão, Sensor, Colheita e Cultura",
@@ -316,7 +316,7 @@ const SEMESTRES = [
       },
       {
         nome: "Sistemas Embarcados para o Campo",
-        codigo: "EMB", tipo: "int", ch: "80h",
+        codigo: "EMB", tipo: "int", ch: "60h",
         ementa: "Raspberry Pi e ESP32 como plataformas de monitoramento agrícola. Python e MicroPython para leitura de sensores de solo, clima e luminosidade. Atuadores para automação de irrigação. Comunicação MQTT. Projeto de estação agrometeorológica conectada.",
         topicos: [
           "Raspberry Pi 5 — Linux embarcado para aplicações de campo",
@@ -344,7 +344,7 @@ const SEMESTRES = [
     disciplinas: [
       {
         nome: "Mecanização Agrícola e Máquinas de Precisão",
-        codigo: "MEK", tipo: "agro", ch: "60h",
+        codigo: "MEK", tipo: "agro", ch: "70h",
         ementa: "Tratores, implementos, plantadoras, pulverizadores e colhedoras com foco em automação e telemetria. Piloto automático RTK-GPS. Monitores de operação e taxa variável (VRA). Exportação e análise de dados de máquinas com Python para redução de custo e rastreabilidade.",
         topicos: [
           "Tratores — potência, tração, consumo e seleção por operação",
@@ -359,7 +359,7 @@ const SEMESTRES = [
       },
       {
         nome: "Armazenamento e Pós-Colheita",
-        codigo: "ARM", tipo: "agro", ch: "60h",
+        codigo: "ARM", tipo: "agro", ch: "70h",
         ementa: "Fisiologia pós-colheita de grãos. Secagem, aeração e controle de temperatura e umidade. Ecossistema da armazenagem. Monitoramento digital de silos com sensores. Qualidade, micotoxinas e rastreabilidade pós-colheita da lavoura ao porto.",
         topicos: [
           "Propriedades físicas dos grãos: umidade, densidade e ângulo de repouso",
@@ -374,7 +374,7 @@ const SEMESTRES = [
       },
       {
         nome: "APIs e Integração de Sistemas Agrícolas",
-        codigo: "API1", tipo: "comp", ch: "80h",
+        codigo: "API1", tipo: "comp", ch: "90h",
         ementa: "Consumo e criação de APIs para sistemas agrícolas. HTTP, REST, autenticação OAuth2 e JWT. Sentinel Hub para NDVI por talhão. Open-Meteo, NASA POWER e IBGE Sidra. Introdução ao FastAPI. Criação de endpoints que expõem dados de sensores e banco de dados rural.",
         topicos: [
           "HTTP profundo: métodos, status codes, headers e body",
@@ -450,7 +450,7 @@ const SEMESTRES = [
       },
       {
         nome: "Gestão do Agronegócio e Custos de Produção",
-        codigo: "GES", tipo: "agro", ch: "60h",
+        codigo: "GES", tipo: "agro", ch: "70h",
         ementa: "Gestão econômica e financeira da propriedade rural. Custo de produção por cultura, ponto de equilíbrio, comercialização e mercado futuro. ERP agrícola e KPIs de desempenho. Dashboard de gestão para tomada de decisão baseada em dados.",
         topicos: [
           "Custo de produção: fixo, variável e total por saca e por hectare",
@@ -541,7 +541,7 @@ const SEMESTRES = [
       },
       {
         nome: "Ecologia Agrícola e Sustentabilidade",
-        codigo: "ECO", tipo: "agro", ch: "60h",
+        codigo: "ECO", tipo: "agro", ch: "70h",
         ementa: "Sistemas de produção sustentáveis: ILPF, plantio direto e biologia do solo. Bioinsumos e controle biológico. Serviços ecossistêmicos. Mudanças climáticas e adaptação das culturas do Cerrado. Rastreabilidade ambiental e carbono agrícola.",
         topicos: [
           "ILPF — Integração Lavoura-Pecuária-Floresta no Cerrado",
@@ -616,7 +616,7 @@ const SEMESTRES = [
     disciplinas: [
       {
         nome: "Extensão Rural e Transferência de Tecnologia",
-        codigo: "EXT", tipo: "agro", ch: "60h",
+        codigo: "EXT", tipo: "agro", ch: "70h",
         ementa: "O técnico como agente de transformação. ATER, dias de campo e unidades demonstrativas. Comunicação com produtores de diferentes perfis técnicos. Tecnologia social para pequenos agricultores. Empreendedorismo AgTech e ecossistema de inovação no agronegócio.",
         topicos: [
           "ATER — Assistência Técnica e Extensão Rural pública (EMATER, EMBRAPA)",
@@ -631,7 +631,7 @@ const SEMESTRES = [
       },
       {
         nome: "Rastreabilidade e Gestão Ambiental",
-        codigo: "RAT", tipo: "agro", ch: "60h",
+        codigo: "RAT", tipo: "agro", ch: "70h",
         ementa: "Rastreabilidade como exigência de mercado e ferramenta de gestão. RFID, QR Code, blockchain e caderneta de campo digital. CAR, APP, Reserva Legal e conformidade ambiental. Certificações de exportação. Sistemas digitais de conformidade integrados ao banco de dados.",
         topicos: [
           "Rastreabilidade: por que o mercado externo exige e o que muda",
@@ -646,7 +646,7 @@ const SEMESTRES = [
       },
       {
         nome: "Visão Computacional com Drones e Satélites",
-        codigo: "VIS", tipo: "comp", ch: "80h",
+        codigo: "VIS", tipo: "comp", ch: "90h",
         ementa: "Processamento de imagens para identificação de pragas, doenças, plantas daninhas e estresses em lavouras. OpenCV com Python. YOLO v8 para detecção em imagens de campo, drone e satélite. Análise de ortomosaicos. Integração com câmera embarcada em Raspberry Pi.",
         topicos: [
           "OpenCV: leitura, pré-processamento, filtros e segmentação de imagens",
@@ -752,7 +752,7 @@ const SEMESTRES = [
       },
       {
         nome: "Empreendedorismo e Inovação no Agronegócio",
-        codigo: "EMP", tipo: "agro", ch: "60h",
+        codigo: "EMP", tipo: "agro", ch: "50h",
         ementa: "Empreendedorismo rural e AgTech. Identificação de oportunidades no campo. Canvas, validação de mercado e modelo de negócio. Ecossistema AgTech brasileiro. Captação de recursos (FINEP, BNDES, aceleradoras). Propriedade intelectual. Pitch para investidor e para produtor rural.",
         topicos: [
           "Identificar problema real no campo — metodologia lean startup",
@@ -1522,7 +1522,7 @@ body.filter-active .disc-card.filter-match { opacity: 1; }
   <p id="inst-name">Instituto Federal de Goiás — Câmpus Cidade de Goiás &nbsp;|&nbsp; Proposta curricular baseada no PPC 2023</p>
   <div class="header-stats">
     <div class="stat">
-      <span class="stat-value" id="hdr-ch">~3.200h</span>
+      <span class="stat-value" id="hdr-ch">~2.960h</span>
       <span class="stat-label">Carga Horária</span>
     </div>
     <div class="stat">
