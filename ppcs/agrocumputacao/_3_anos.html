@@ -9,12 +9,12 @@
      DADOS DO CURSO — edite aqui para atualizar o conteúdo
      Cada semestre é um objeto no array SEMESTRES.
      Cada disciplina tem: nome, codigo, tipo, ch, ementa, topicos[], prereq
-     tipo: "comp" | "agro" | "int" | "ext" | "niv"
+     tipo: "comp" | "agro" | "int" | "ext"
      ============================================================ -->
 <script>
 const CURSO = {
   nome: "Tecnólogo em Agrocomputação",
-  ch_total: "2.400h",
+  ch_total: "~2.400h",
   semestres_total: 6,
   instituicao: "Instituto Federal de Goiás — Câmpus Cidade de Goiás"
 };
@@ -22,12 +22,9 @@ const CURSO = {
 /* ================================================================
    FILOSOFIA — AGRÔNOMO 4.0
    Agronomia é o foco. Computação é a ferramenta.
-   O 1º semestre nivela o aluno em matemática, comunicação e
-   informática básica antes de iniciar programação.
    Cada semestre tem pelo menos uma disciplina de cada pilar.
 
    LEGENDA DE TIPOS
-   niv  → Nivelamento / Formação Básica         (coral)
    comp → Base computacional                    (azul)
    agro → Agronomia / Ciências Agrárias         (verde)
    int  → Tecnologia aplicada ao campo          (âmbar)
@@ -37,13 +34,13 @@ const CURSO = {
 const SEMESTRES = [
 
   /* ═══════════════════════════════════════════════════════════
-     1º SEMESTRE — Nivelamento + Fundamentos Agro
+     1º SEMESTRE — Alicerce: campo + computação + eletrônica
      ═══════════════════════════════════════════════════════════ */
   {
     numero: 1,
     ano: "1º Ano",
-    titulo: "Nivelamento e Fundamentos das Ciências Agrárias",
-    subtitulo: "Corrigir deficiências básicas e construir a base agronômica — preparar o aluno antes de programar",
+    titulo: "Fundamentos das Ciências Agrárias e Base Computacional",
+    subtitulo: "Entender o campo e a máquina ao mesmo tempo — os dois pilares do Agrônomo 4.0",
     disciplinas: [
       {
         nome: "Biologia e Fisiologia Vegetal",
@@ -97,54 +94,53 @@ const SEMESTRES = [
         prereq: "—"
       },
       {
-        nome: "Matemática Instrumental e Raciocínio Lógico",
-        codigo: "MAT",
-        tipo: "niv",
-        ch: "60h",
-        ementa: "Revisão e consolidação de matemática básica essencial para o curso. Operações fundamentais, frações, porcentagens, razão e proporção, regra de três, unidades de medida. Introdução à lógica proposicional e pensamento algorítmico. Todos os exercícios usam contexto agronômico: cálculo de calagem, adubação, produtividade e conversão de unidades do campo.",
-        topicos: [
-          "Operações fundamentais: frações, decimais e porcentagem",
-          "Razão, proporção e regra de três — cálculos agronômicos",
-          "Unidades de medida: hectare, alqueire, sacas, kg/ha, L/ha",
-          "Equações de 1º grau — ponto de equilíbrio econômico da lavoura",
-          "Noções de estatística: média, mediana e desvio em dados de campo",
-          "Lógica proposicional: tabelas-verdade e conectivos",
-          "Pensamento algorítmico: resolver problemas passo a passo (sem computador)"
-        ],
-        prereq: "—"
-      },
-      {
-        nome: "Comunicação, Leitura e Produção Textual",
-        codigo: "COM",
-        tipo: "niv",
-        ch: "60h",
-        ementa: "Desenvolvimento de competências em leitura, interpretação de texto e produção escrita. Leitura de textos técnicos e científicos da área agrícola. Redação de relatórios, laudos e documentos técnicos. Comunicação oral para apresentações e defesas. Habilidade essencial para compreender documentações técnicas, redigir relatórios de campo e se comunicar com produtores.",
-        topicos: [
-          "Estratégias de leitura e interpretação de textos técnicos",
-          "Leitura de artigos científicos da área agrícola e computacional",
-          "Estrutura de relatórios técnicos e laudos agronômicos",
-          "Redação técnica: clareza, objetividade e normas ABNT",
-          "Comunicação oral: apresentações, seminários e defesas",
-          "Resumo e fichamento de textos — síntese de informação",
-          "Prática: redigir laudo de visita técnica a propriedade rural"
-        ],
-        prereq: "—"
-      },
-      {
-        nome: "Letramento Digital e Informática Básica",
-        codigo: "LDG",
-        tipo: "niv",
+        nome: "Algoritmos e Programação com Python",
+        codigo: "APP",
+        tipo: "comp",
         ch: "80h",
-        ementa: "Domínio prático do computador como ferramenta de trabalho. Sistema operacional, gerenciamento de arquivos e pastas, editores de texto, planilhas eletrônicas e apresentações. Navegação na internet, e-mail profissional, armazenamento em nuvem. Introdução ao terminal/linha de comando. Prepara o aluno para usar o computador com fluência antes de programar.",
+        ementa: "Lógica de programação com Python — língua franca da ciência de dados agrícola. Variáveis, estruturas de controle, funções, listas e arquivos CSV. Todo exercício resolve um problema agronômico real: balanço hídrico, recomendação de adubação, análise de produtividade.",
         topicos: [
-          "Sistema operacional: área de trabalho, pastas, arquivos e atalhos",
-          "Editor de texto: formatação de documentos, relatórios e laudos",
-          "Planilhas eletrônicas: fórmulas, gráficos e tabelas com dados agrícolas",
-          "Apresentações: slides profissionais para seminários e defesas",
-          "Internet: pesquisa acadêmica, Google Scholar e repositórios",
-          "E-mail profissional e armazenamento em nuvem (Google Drive)",
-          "Introdução ao terminal: navegação de pastas e comandos básicos",
-          "Prática: criar planilha de custo de produção de uma lavoura"
+          "Por que Python no agronegócio? Ecossistema e mercado",
+          "Variáveis, tipos e operadores — direto ao Python, sem pseudocódigo",
+          "Condicionais e laços — automatizar cálculos agronômicos",
+          "Funções — calcular ET₀, adubação NPK e balanço hídrico",
+          "Listas e dicionários — organizar dados de campo",
+          "Leitura e escrita de CSV — laudos e planilhas de produtividade",
+          "Projeto: calculadora de balanço hídrico por cultura e município"
+        ],
+        prereq: "—"
+      },
+      {
+        nome: "Introdução a Circuitos Elétricos e Eletrônica",
+        codigo: "CEL",
+        tipo: "comp",
+        ch: "60h",
+        ementa: "Base elétrica e eletrônica para entender sensores, atuadores e sistemas embarcados agrícolas. Lei de Ohm, circuitos básicos, sinais digitais e analógicos, transistores como chave, componentes optoeletrônicos. Prática com bancada e multímetro.",
+        topicos: [
+          "Tensão, corrente e resistência — Lei de Ohm",
+          "Circuitos série e paralelo — associação de resistores",
+          "Sinal digital vs. analógico — como os sensores de campo funcionam",
+          "Transistor como chave — base de relés e acionamentos",
+          "LDR, fotodiodo e fototransistor — sensores optoeletrônicos",
+          "Leitura de datasheets de sensores agrícolas",
+          "Prática: medir tensão e corrente em sensores reais"
+        ],
+        prereq: "—"
+      },
+      {
+        nome: "Fundamentos de Computação e Sistemas Operacionais",
+        codigo: "FCO",
+        tipo: "comp",
+        ch: "60h",
+        ementa: "Arquitetura de computadores, representação de dados e sistemas operacionais. Linux como ambiente de desenvolvimento para aplicações agrícolas. Terminal, shell script, gerenciamento de processos e arquivos. Base para trabalhar com Raspberry Pi e servidores na nuvem.",
+        topicos: [
+          "Arquitetura de Von Neumann — CPU, memória e I/O",
+          "Representação binária, hexadecimal e tipos de dados",
+          "Sistemas operacionais: processos, threads e gerência de memória",
+          "Linux essencial: terminal, navegação e permissões",
+          "Shell script — automatizar tarefas de coleta de dados",
+          "Gerenciamento de pacotes: apt, pip e ambientes virtuais",
+          "SSH e acesso remoto a Raspberry Pi no campo"
         ],
         prereq: "—"
       }
@@ -152,13 +148,13 @@ const SEMESTRES = [
   },
 
   /* ═══════════════════════════════════════════════════════════
-     2º SEMESTRE — Início da Computação + Fitotecnia
+     2º SEMESTRE — Dados, Redes e Produção Vegetal
      ═══════════════════════════════════════════════════════════ */
   {
     numero: 2,
     ano: "1º Ano",
-    titulo: "Fitotecnia, Programação, Eletrônica e Sistemas Operacionais",
-    subtitulo: "Iniciar a computação com base sólida — o aluno já sabe usar o computador, agora aprende a programá-lo",
+    titulo: "Fitotecnia, Banco de Dados, Análise de Dados e Redes",
+    subtitulo: "Dominar as grandes culturas e as ferramentas digitais que as monitoram",
     disciplinas: [
       {
         nome: "Fitotecnia — Grandes Culturas",
@@ -190,72 +186,72 @@ const SEMESTRES = [
           "Análise foliar — interpretação e diagnóstico de deficiências",
           "Adubação por zona de manejo — conectando solo ao mapa",
           "Fertilizantes sólidos, líquidos e organominerais",
-          "Calculando recomendação de adubação com planilha e fórmulas"
+          "Calculando recomendação de adubação com Python"
         ],
         prereq: "SOL, BFV"
       },
       {
-        nome: "Algoritmos e Programação com Python",
-        codigo: "APP",
-        tipo: "comp",
-        ch: "80h",
-        ementa: "Lógica de programação com Python — língua franca da ciência de dados agrícola. Variáveis, estruturas de controle, funções, listas e arquivos CSV. Todo exercício resolve um problema agronômico real: balanço hídrico, recomendação de adubação, análise de produtividade.",
-        topicos: [
-          "Por que Python no agronegócio? Ecossistema e mercado",
-          "Variáveis, tipos e operadores — direto ao Python, sem pseudocódigo",
-          "Condicionais e laços — automatizar cálculos agronômicos",
-          "Funções — calcular ET₀, adubação NPK e balanço hídrico",
-          "Listas e dicionários — organizar dados de campo",
-          "Leitura e escrita de CSV — laudos e planilhas de produtividade",
-          "Projeto: calculadora de balanço hídrico por cultura e município"
-        ],
-        prereq: "MAT, LDG"
-      },
-      {
-        nome: "Introdução a Circuitos Elétricos e Eletrônica",
-        codigo: "CEL",
-        tipo: "comp",
-        ch: "80h",
-        ementa: "Base elétrica e eletrônica para entender sensores, atuadores e sistemas embarcados agrícolas. Lei de Ohm, circuitos básicos, sinais digitais e analógicos, transistores como chave, componentes optoeletrônicos. Prática com bancada e multímetro.",
-        topicos: [
-          "Tensão, corrente e resistência — Lei de Ohm",
-          "Circuitos série e paralelo — associação de resistores",
-          "Sinal digital vs. analógico — como os sensores de campo funcionam",
-          "Transistor como chave — base de relés e acionamentos",
-          "LDR, fotodiodo e fototransistor — sensores optoeletrônicos",
-          "Leitura de datasheets de sensores agrícolas",
-          "Prática: medir tensão e corrente em sensores reais"
-        ],
-        prereq: "MAT"
-      },
-      {
-        nome: "Fundamentos de Computação e Sistemas Operacionais",
-        codigo: "FCO",
+        nome: "Banco de Dados I — Modelagem e SQL",
+        codigo: "BD1",
         tipo: "comp",
         ch: "60h",
-        ementa: "Arquitetura de computadores, representação de dados e sistemas operacionais. Linux como ambiente de desenvolvimento para aplicações agrícolas. Terminal, shell script, gerenciamento de processos e arquivos. Base para trabalhar com Raspberry Pi e servidores na nuvem.",
+        ementa: "Fundamentos de bancos de dados relacionais aplicados à gestão rural. Modelo Entidade-Relacionamento, normalização e SQL essencial. O aluno projeta e implementa o banco de dados de uma propriedade real — talhões, culturas, insumos, colheitas e análises de solo.",
         topicos: [
-          "Arquitetura de Von Neumann — CPU, memória e I/O",
-          "Representação binária, hexadecimal e tipos de dados",
-          "Sistemas operacionais: processos, threads e gerência de memória",
-          "Linux essencial: terminal, navegação e permissões",
-          "Shell script — automatizar tarefas de coleta de dados",
-          "Gerenciamento de pacotes: apt, pip e ambientes virtuais",
-          "SSH e acesso remoto a Raspberry Pi no campo"
+          "Por que banco de dados? Limitações da planilha na gestão rural",
+          "Modelo Entidade-Relacionamento — talhões, culturas, insumos",
+          "Normalização: 1FN, 2FN e 3FN com exemplos agronômicos",
+          "DDL: CREATE TABLE, ALTER, DROP no PostgreSQL",
+          "DML: INSERT, UPDATE, DELETE com dados de campo reais",
+          "SELECT, WHERE, ORDER BY, GROUP BY e funções de agregação",
+          "Projeto: banco de dados de uma propriedade real do entorno"
         ],
-        prereq: "LDG"
+        prereq: "APP"
+      },
+      {
+        nome: "Python para Análise de Dados Agrícolas",
+        codigo: "PY2",
+        tipo: "int",
+        ch: "80h",
+        ementa: "Pandas, NumPy e Matplotlib aplicados a dados reais do campo. Planilhas de safra, séries climáticas do INMET, laudos de solo. Limpeza, análise estatística e visualização. Primeiro consumo de API pública: IBGE Sidra e INMET.",
+        topicos: [
+          "Pandas — DataFrames com planilhas de produtividade real de Goiás",
+          "Limpeza de dados: valores ausentes e outliers no campo",
+          "Estatística descritiva: média, desvio padrão, quartis por talhão",
+          "Séries temporais de chuva e temperatura com matplotlib",
+          "Correlação entre variáveis agronômicas (solo × produtividade)",
+          "Consumo de API REST: IBGE Sidra (produção) e INMET (clima)",
+          "Projeto: painel de análise de safra com dados reais de Goiás"
+        ],
+        prereq: "APP"
+      },
+      {
+        nome: "Redes de Computadores — Conectividade Rural e IoT",
+        codigo: "REC",
+        tipo: "comp",
+        ch: "60h",
+        ementa: "Fundamentos de redes com foco em cenários rurais — onde conectividade é crítica e cara. Modelo OSI, TCP/IP, Wi-Fi, redes mesh, LoRa, LoRaWAN e MQTT. VPN para acesso remoto a fazendas. Segurança básica em redes de sensores.",
+        topicos: [
+          "Modelo OSI e TCP/IP — as camadas que fazem os dados chegarem",
+          "Endereçamento IP, máscaras de sub-rede e CIDR",
+          "Wi-Fi no campo: alcance, interferência e antenas direcionais",
+          "LoRa e LoRaWAN — comunicação de longo alcance sem internet",
+          "Redes mesh — cobertura em propriedades de grande porte",
+          "MQTT — protocolo publish/subscribe para sensores rurais",
+          "VPN e SSH — acesso remoto seguro a equipamentos no campo"
+        ],
+        prereq: "FCO"
       }
     ]
   },
 
   /* ═══════════════════════════════════════════════════════════
-     3º SEMESTRE — Sanidade, Irrigação, Dados e Redes
+     3º SEMESTRE — Sanidade, Sensores, BD Avançado e APIs
      ═══════════════════════════════════════════════════════════ */
   {
     numero: 3,
     ano: "2º Ano",
-    titulo: "Sanidade Vegetal, Irrigação, Análise de Dados e Redes",
-    subtitulo: "Diagnóstico agronômico profundo + primeiros passos em dados, banco de dados e conectividade",
+    titulo: "Sanidade Vegetal, Irrigação, BD Avançado, Sensores e APIs",
+    subtitulo: "Diagnóstico agronômico profundo + sensores no campo consumindo APIs reais",
     disciplinas: [
       {
         nome: "Fitopatologia e Entomologia Agrícola",
@@ -290,103 +286,6 @@ const SEMESTRES = [
           "Projeto: manejo de irrigação com dados de Open-Meteo API"
         ],
         prereq: "CLM, SOL"
-      },
-      {
-        nome: "Python para Análise de Dados Agrícolas",
-        codigo: "PY2",
-        tipo: "int",
-        ch: "80h",
-        ementa: "Pandas, NumPy e Matplotlib aplicados a dados reais do campo. Planilhas de safra, séries climáticas do INMET, laudos de solo. Limpeza, análise estatística e visualização. Primeiro consumo de API pública: IBGE Sidra e INMET.",
-        topicos: [
-          "Pandas — DataFrames com planilhas de produtividade real de Goiás",
-          "Limpeza de dados: valores ausentes e outliers no campo",
-          "Estatística descritiva: média, desvio padrão, quartis por talhão",
-          "Séries temporais de chuva e temperatura com matplotlib",
-          "Correlação entre variáveis agronômicas (solo × produtividade)",
-          "Consumo de API REST: IBGE Sidra (produção) e INMET (clima)",
-          "Projeto: painel de análise de safra com dados reais de Goiás"
-        ],
-        prereq: "APP"
-      },
-      {
-        nome: "Banco de Dados I — Modelagem e SQL",
-        codigo: "BD1",
-        tipo: "comp",
-        ch: "80h",
-        ementa: "Fundamentos de bancos de dados relacionais aplicados à gestão rural. Modelo Entidade-Relacionamento, normalização e SQL essencial. O aluno projeta e implementa o banco de dados de uma propriedade real — talhões, culturas, insumos, colheitas e análises de solo.",
-        topicos: [
-          "Por que banco de dados? Limitações da planilha na gestão rural",
-          "Modelo Entidade-Relacionamento — talhões, culturas, insumos",
-          "Normalização: 1FN, 2FN e 3FN com exemplos agronômicos",
-          "DDL: CREATE TABLE, ALTER, DROP no PostgreSQL",
-          "DML: INSERT, UPDATE, DELETE com dados de campo reais",
-          "SELECT, WHERE, ORDER BY, GROUP BY e funções de agregação",
-          "Projeto: banco de dados de uma propriedade real do entorno"
-        ],
-        prereq: "APP"
-      },
-      {
-        nome: "Redes de Computadores — Conectividade Rural e IoT",
-        codigo: "REC",
-        tipo: "comp",
-        ch: "80h",
-        ementa: "Fundamentos de redes com foco em cenários rurais — onde conectividade é crítica e cara. Modelo OSI, TCP/IP, Wi-Fi, redes mesh, LoRa, LoRaWAN e MQTT. VPN para acesso remoto a fazendas. Segurança básica em redes de sensores.",
-        topicos: [
-          "Modelo OSI e TCP/IP — as camadas que fazem os dados chegarem",
-          "Endereçamento IP, máscaras de sub-rede e CIDR",
-          "Wi-Fi no campo: alcance, interferência e antenas direcionais",
-          "LoRa e LoRaWAN — comunicação de longo alcance sem internet",
-          "Redes mesh — cobertura em propriedades de grande porte",
-          "MQTT — protocolo publish/subscribe para sensores rurais",
-          "VPN e SSH — acesso remoto seguro a equipamentos no campo"
-        ],
-        prereq: "FCO"
-      }
-    ]
-  },
-
-  /* ═══════════════════════════════════════════════════════════
-     4º SEMESTRE — Mecanização, BD Avançado, Sensores e APIs
-     ═══════════════════════════════════════════════════════════ */
-  {
-    numero: 4,
-    ano: "2º Ano",
-    titulo: "Mecanização, BD Avançado, Embarcados, APIs e Estatística",
-    subtitulo: "Máquinas de precisão, sensores no campo e início da trilha de ciência de dados",
-    disciplinas: [
-      {
-        nome: "Mecanização Agrícola e Máquinas de Precisão",
-        codigo: "MEK",
-        tipo: "agro",
-        ch: "60h",
-        ementa: "Tratores, plantadoras, pulverizadores e colhedoras com foco em automação e dados. Piloto automático RTK-GPS. Monitores de operação. Telemetria de máquinas. Taxa variável (VRA). Análise de dados de máquinas para redução de custo e aumento de precisão.",
-        topicos: [
-          "Tratores — potência, tração e consumo por operação",
-          "Plantadoras — sensores de semente e precisão de distribuição",
-          "Pulverizadores — pontas, pressão e aplicação à taxa variável",
-          "Colhedoras — monitor de produtividade e mapa de perdas",
-          "Piloto automático RTK-GPS — precisão centimétrica",
-          "Telemetria: John Deere Operations Center e CNH Fleet",
-          "Exportar e analisar dados de máquinas com Python"
-        ],
-        prereq: "—"
-      },
-      {
-        nome: "Gestão Ambiental e Legislação Rural",
-        codigo: "GAL",
-        tipo: "agro",
-        ch: "60h",
-        ementa: "Legislação ambiental do produtor rural. Código Florestal, APP, Reserva Legal e CAR. Boas Práticas Agrícolas (BPA). Certificações ambientais. Mercado de carbono. Sistemas digitais de conformidade e rastreabilidade ambiental.",
-        topicos: [
-          "Código Florestal Brasileiro — obrigações e penalidades",
-          "APP e Reserva Legal — delimitação com QGIS e CAR",
-          "Cadastro Ambiental Rural (CAR) — como regularizar",
-          "BPA: Boas Práticas Agrícolas — caderneta digital",
-          "Certificações: Rainforest Alliance e GlobalG.A.P.",
-          "Mercado de carbono — créditos e protocolos",
-          "Sistemas de conformidade ambiental com banco de dados"
-        ],
-        prereq: "—"
       },
       {
         nome: "Banco de Dados II — SQL Avançado e NoSQL",
@@ -441,38 +340,117 @@ const SEMESTRES = [
           "Projeto: pipeline NDVI + clima automatizado para lavoura real"
         ],
         prereq: "PY2, BD1"
-      },
-      {
-        nome: "Estatística e Ciência de Dados para o Agro I",
-        codigo: "ECD1",
-        tipo: "comp",
-        ch: "80h",
-        ementa: "Base estatística sólida com foco na variabilidade do agro, relações entre variáveis e validação estatística para tomada de decisão. Estatística descritiva, correlação (Pearson e Spearman), probabilidade, inferência e preparação de dados. Todos os exercícios usam datasets reais: clima, solo, produtividade e rebanhos.",
-        topicos: [
-          "Pensamento em dados no agro: tipos de problemas e pipeline de dados",
-          "Estatística descritiva: média, mediana, variância, desvio padrão",
-          "Visualização: histogramas, boxplots e scatter plots com Seaborn",
-          "Correlação de Pearson: interpretação, sensibilidade a outliers",
-          "Correlação de Spearman: ranking, robustez e quando usar",
-          "Matrizes de correlação e heatmaps — variáveis que se relacionam",
-          "Significância estatística: p-value e armadilhas (correlação espúria)",
-          "Probabilidade aplicada: distribuição normal e binomial",
-          "Inferência: amostragem, intervalo de confiança e testes de hipótese",
-          "Projeto: identificar fatores que influenciam produtividade com matriz de correlação"
-        ],
-        prereq: "PY2, MAT"
       }
     ]
   },
 
   /* ═══════════════════════════════════════════════════════════
-     5º SEMESTRE — Gestão, Geoprocessamento, IoT e Ciência de Dados II
+     4º SEMESTRE — Precisão, Nuvem, Geoprocessamento e LoRa
+     ═══════════════════════════════════════════════════════════ */
+  {
+    numero: 4,
+    ano: "2º Ano",
+    titulo: "Agricultura de Precisão, Nuvem, Geoprocessamento e IoT com LoRa",
+    subtitulo: "Conectar o campo ao satélite e à nuvem — de ponta a ponta",
+    disciplinas: [
+      {
+        nome: "Mecanização Agrícola e Máquinas de Precisão",
+        codigo: "MEK",
+        tipo: "agro",
+        ch: "60h",
+        ementa: "Tratores, plantadoras, pulverizadores e colhedoras com foco em automação e dados. Piloto automático RTK-GPS. Monitores de operação. Telemetria de máquinas. Taxa variável (VRA). Análise de dados de máquinas para redução de custo e aumento de precisão.",
+        topicos: [
+          "Tratores — potência, tração e consumo por operação",
+          "Plantadoras — sensores de semente e precisão de distribuição",
+          "Pulverizadores — pontas, pressão e aplicação à taxa variável",
+          "Colhedoras — monitor de produtividade e mapa de perdas",
+          "Piloto automático RTK-GPS — precisão centimétrica",
+          "Telemetria: John Deere Operations Center e CNH Fleet",
+          "Exportar e analisar dados de máquinas com Python"
+        ],
+        prereq: "—"
+      },
+      {
+        nome: "Gestão Ambiental e Legislação Rural",
+        codigo: "GAL",
+        tipo: "agro",
+        ch: "60h",
+        ementa: "Legislação ambiental do produtor rural. Código Florestal, APP, Reserva Legal e CAR. Boas Práticas Agrícolas (BPA). Certificações ambientais. Mercado de carbono. Sistemas digitais de conformidade e rastreabilidade ambiental.",
+        topicos: [
+          "Código Florestal Brasileiro — obrigações e penalidades",
+          "APP e Reserva Legal — delimitação com QGIS e CAR",
+          "Cadastro Ambiental Rural (CAR) — como regularizar",
+          "BPA: Boas Práticas Agrícolas — caderneta digital",
+          "Certificações: Rainforest Alliance e GlobalG.A.P.",
+          "Mercado de carbono — créditos e protocolos",
+          "Sistemas de conformidade ambiental com banco de dados"
+        ],
+        prereq: "—"
+      },
+      {
+        nome: "Computação em Nuvem e Edge Computing",
+        codigo: "CLD",
+        tipo: "comp",
+        ch: "60h",
+        ementa: "Infraestrutura em nuvem para sistemas agrícolas. AWS e GCP — serviços essenciais. Deploy de aplicações de campo. Edge computing com Raspberry Pi para processamento local sem internet. Arquitetura híbrida: edge + nuvem para propriedades rurais.",
+        topicos: [
+          "Cloud computing: IaaS, PaaS e SaaS — o que usar no agro",
+          "AWS: EC2, S3, RDS e Lambda — fundamentos práticos",
+          "GCP: Cloud Run e BigQuery para dados agrícolas de grande volume",
+          "Deploy de API Python na nuvem — Railway e Render gratuitos",
+          "Edge computing: por que processar localmente no campo?",
+          "Raspberry Pi como gateway edge com processamento local",
+          "Arquitetura híbrida: sensor → edge → nuvem → dashboard"
+        ],
+        prereq: "FCO, REC, API1"
+      },
+      {
+        nome: "Geoprocessamento com Python",
+        codigo: "GEO",
+        tipo: "int",
+        ch: "80h",
+        ementa: "Processamento geoespacial programático com Python. GDAL, rasterio, geopandas e shapely. Leitura e manipulação de rasters e shapefiles. Cálculo de NDVI por talhão. QGIS para visualização. Integração com Sentinel Hub API para análise multitemporal.",
+        topicos: [
+          "Fundamentos geoespaciais: projeções, CRS e datum",
+          "Geopandas — shapefiles de talhões, municípios e biomas",
+          "Shapely — operações geométricas: área, buffer, intersecção",
+          "GDAL e rasterio — leitura e manipulação de imagens de satélite",
+          "Cálculo de NDVI, EVI e NDWI por polígono com rasterio",
+          "QGIS — visualização e edição manual de talhões",
+          "Análise multitemporal: NDVI ao longo da safra por talhão",
+          "Projeto: mapa de vigor de lavoura com série Sentinel-2"
+        ],
+        prereq: "API1, BD2"
+      },
+      {
+        nome: "Comunicação IoT — LoRa, LoRaWAN e MQTT",
+        codigo: "IOT",
+        tipo: "int",
+        ch: "60h",
+        ementa: "Protocolos de comunicação IoT para cenários rurais sem cobertura celular. LoRa e LoRaWAN para grandes propriedades. MQTT com broker local e em nuvem. The Things Network. Plataformas IoT: ThingsBoard e Node-RED. Projeto de rede de sensores em fazenda real.",
+        topicos: [
+          "LoRa — modulação, alcance e parâmetros de configuração",
+          "LoRaWAN — arquitetura: end device, gateway e network server",
+          "The Things Network (TTN) — cadastrar gateway e dispositivos",
+          "MQTT avançado: QoS, retenção e tópicos hierárquicos",
+          "ThingsBoard: dashboard, regras e alertas para sensores rurais",
+          "Node-RED: fluxo visual de dados — sensor → banco → alerta",
+          "Consumo de energia: bateria e solar para nós remotos",
+          "Projeto: rede LoRaWAN de monitoramento de solo em fazenda"
+        ],
+        prereq: "EMB, REC"
+      }
+    ]
+  },
+
+  /* ═══════════════════════════════════════════════════════════
+     5º SEMESTRE — Produto: Engenharia, IA e Web
      ═══════════════════════════════════════════════════════════ */
   {
     numero: 5,
     ano: "3º Ano",
-    titulo: "Produção Animal, Gestão, Geoprocessamento, IoT e Ciência de Dados II",
-    subtitulo: "Conectar o campo ao satélite — modelos preditivos com dados reais do sensor ao dashboard",
+    titulo: "Produção Animal, Engenharia de Software, IA e Desenvolvimento Web",
+    subtitulo: "Transformar dados em produto real — APIs, dashboards e modelos que o produtor usa",
     disciplinas: [
       {
         nome: "Sistemas de Produção Animal com Tecnologia",
@@ -509,70 +487,69 @@ const SEMESTRES = [
         prereq: "PY2"
       },
       {
-        nome: "Estatística e Ciência de Dados para o Agro II",
-        codigo: "ECD2",
+        nome: "Engenharia de Software — Arquitetura, APIs e Microsserviços",
+        codigo: "ESW",
         tipo: "comp",
         ch: "80h",
-        ementa: "Transformar relações estatísticas em modelos preditivos e decisões operacionais no agro. EDA avançada com correlação, regressão linear e logística, árvores de decisão, Random Forest, séries temporais, clusterização. O aluno sai capaz de construir modelos preditivos com dados reais e justificar cada decisão estatisticamente.",
+        ementa: "Desenvolvimento de software profissional para sistemas agrícolas. FastAPI para criação de APIs REST. Autenticação JWT. Arquitetura em microsserviços. Docker para containerização. CI/CD. Deploy em nuvem. O aluno entrega uma API de dados agronômicos funcional e documentada.",
         topicos: [
-          "EDA avançada: matrizes de correlação, multicolinearidade e seleção de variáveis",
-          "Regressão linear: interpretação de coeficientes e relação com correlação",
-          "Regressão logística: classificação binária para risco no campo",
-          "Árvores de decisão e Random Forest — robustez e interpretabilidade",
-          "Séries temporais: sazonalidade, tendência e autocorrelação no agro",
-          "Clusterização com K-means: zonas de manejo por padrão de solo",
-          "Dados do mundo real: IoT, sensores e imagens na agricultura de precisão",
-          "Projeto: modelo preditivo com EDA, matriz de correlação e justificativa estatística"
+          "Arquitetura de software: monolito vs. microsserviços no agro",
+          "FastAPI: rotas, parâmetros, validação com Pydantic",
+          "Autenticação JWT — proteger endpoints de dados da fazenda",
+          "Integração FastAPI ↔ PostgreSQL com SQLAlchemy",
+          "Docker: containerizar a aplicação agrícola",
+          "CI/CD com GitHub Actions — deploy automático na nuvem",
+          "Documentação de API: Swagger/OpenAPI",
+          "Projeto: API REST de dados de sensores e mapas da propriedade"
         ],
-        prereq: "ECD1"
+        prereq: "BD2, CLD, API1"
       },
       {
-        nome: "Geoprocessamento com Python",
-        codigo: "GEO",
-        tipo: "int",
+        nome: "Inteligência Artificial Aplicada ao Agro",
+        codigo: "IA1",
+        tipo: "comp",
         ch: "80h",
-        ementa: "Processamento geoespacial programático com Python. GDAL, rasterio, geopandas e shapely. Leitura e manipulação de rasters e shapefiles. Cálculo de NDVI por talhão. QGIS para visualização. Integração com Sentinel Hub API para análise multitemporal.",
+        ementa: "Machine learning com foco em interpretação agronômica dos resultados. Scikit-learn para regressão (produtividade) e classificação (doenças, pragas). Séries temporais de NDVI com Prophet. SHAP values para explicar o modelo ao produtor. Introdução a redes neurais.",
         topicos: [
-          "Fundamentos geoespaciais: projeções, CRS e datum",
-          "Geopandas — shapefiles de talhões, municípios e biomas",
-          "Shapely — operações geométricas: área, buffer, intersecção",
-          "GDAL e rasterio — leitura e manipulação de imagens de satélite",
-          "Cálculo de NDVI, EVI e NDWI por polígono com rasterio",
-          "QGIS — visualização e edição manual de talhões",
-          "Análise multitemporal: NDVI ao longo da safra por talhão",
-          "Projeto: mapa de vigor de lavoura com série Sentinel-2"
+          "Fundamentos de ML: features, target, treino e teste",
+          "Regressão: prever produtividade com solo, clima e histórico",
+          "Classificação: risco de ferrugem por talhão e semana",
+          "Random Forest e XGBoost — robustez e interpretabilidade",
+          "Séries temporais de NDVI: tendência e anomalias com Prophet",
+          "SHAP values — explicar o modelo em linguagem agronômica",
+          "Introdução a redes neurais: quando usar no agro",
+          "Projeto: modelo de previsão de produtividade para Goiás"
         ],
-        prereq: "API1, BD2"
+        prereq: "PY2, GEO, BD2"
       },
       {
-        nome: "Comunicação IoT — LoRa, LoRaWAN e MQTT",
-        codigo: "IOT",
-        tipo: "int",
-        ch: "80h",
-        ementa: "Protocolos de comunicação IoT para cenários rurais sem cobertura celular. LoRa e LoRaWAN para grandes propriedades. MQTT com broker local e em nuvem. The Things Network. Plataformas IoT: ThingsBoard e Node-RED. Projeto de rede de sensores em fazenda real.",
+        nome: "Desenvolvimento de Aplicações Web para o Agro",
+        codigo: "WEB",
+        tipo: "comp",
+        ch: "60h",
+        ementa: "Frontend moderno com React integrado a APIs REST agronômicas. Consumo de APIs de sensores, NDVI e clima. Mapas interativos com Leaflet. Dashboard para o produtor e para o técnico. Deploy em nuvem. Foco em produto usável — não em código bonito.",
         topicos: [
-          "LoRa — modulação, alcance e parâmetros de configuração",
-          "LoRaWAN — arquitetura: end device, gateway e network server",
-          "The Things Network (TTN) — cadastrar gateway e dispositivos",
-          "MQTT avançado: QoS, retenção e tópicos hierárquicos",
-          "ThingsBoard: dashboard, regras e alertas para sensores rurais",
-          "Node-RED: fluxo visual de dados — sensor → banco → alerta",
-          "Consumo de energia: bateria e solar para nós remotos",
-          "Projeto: rede LoRaWAN de monitoramento de solo em fazenda"
+          "React: componentes, estado e hooks — sem over-engineering",
+          "Fetch e Axios: consumir APIs de sensores e NDVI",
+          "Leaflet.js: mapa interativo de talhões com NDVI por cor",
+          "Gráficos com Recharts: séries temporais de produtividade",
+          "Autenticação no frontend: JWT e rotas protegidas",
+          "Deploy na Vercel/Netlify integrado à API no Railway",
+          "Projeto: dashboard web completo para a propriedade parceira"
         ],
-        prereq: "EMB, REC"
+        prereq: "ESW, GEO"
       }
     ]
   },
 
   /* ═══════════════════════════════════════════════════════════
-     6º SEMESTRE — Engenharia Full-Stack, IA Avançada + Visão e TCC
+     6º SEMESTRE — Visão Computacional, Big Data e TCC
      ═══════════════════════════════════════════════════════════ */
   {
     numero: 6,
     ano: "3º Ano",
-    titulo: "Ecologia, Extensão, Engenharia Full-Stack, IA Avançada + Visão e Projeto Final",
-    subtitulo: "Deep learning, visão computacional e entrega real: do modelo treinado ao sistema em produção",
+    titulo: "Visão Computacional, Big Data e Projeto Integrador Final",
+    subtitulo: "Tecnologias de fronteira + entrega real: sensor, backend e dashboard em produção",
     disciplinas: [
       {
         nome: "Ecologia Agrícola e Sistemas Integrados",
@@ -609,45 +586,39 @@ const SEMESTRES = [
         prereq: "GES"
       },
       {
-        nome: "Engenharia de Software Full-Stack para o Agro",
-        codigo: "ESW",
-        tipo: "comp",
-        ch: "100h",
-        ementa: "Desenvolvimento de software profissional completo — backend e frontend — para sistemas agrícolas. FastAPI para APIs REST, autenticação JWT, Docker e CI/CD. React para interfaces modernas. Mapas interativos com Leaflet. Deploy em nuvem. O aluno entrega um sistema web funcional, documentado e em produção.",
-        topicos: [
-          "Arquitetura de software: monolito vs. microsserviços no agro",
-          "FastAPI: rotas, parâmetros, validação com Pydantic",
-          "Autenticação JWT — proteger endpoints de dados da fazenda",
-          "Integração FastAPI ↔ PostgreSQL com SQLAlchemy",
-          "Docker: containerizar a aplicação agrícola",
-          "CI/CD com GitHub Actions — deploy automático",
-          "React essencial: componentes, estado e consumo de APIs",
-          "Leaflet.js: mapa interativo de talhões com camadas de NDVI",
-          "Deploy full-stack: API no Railway + frontend na Vercel",
-          "Projeto: sistema web completo para a propriedade parceira"
-        ],
-        prereq: "BD2, API1"
-      },
-      {
-        nome: "IA Avançada e Visão Computacional para o Agro",
-        codigo: "IA3",
+        nome: "Visão Computacional com Drones e Satélites",
+        codigo: "VIS",
         tipo: "comp",
         ch: "80h",
-        ementa: "Capstone da trilha de IA. Deep learning, redes neurais convolucionais e visão computacional aplicados ao agro. XGBoost e SHAP para explicabilidade. OpenCV e YOLO v8 para detecção de pragas, doenças e plantas daninhas em imagens de campo e drone. Análise de ortomosaicos. IA generativa para diagnóstico agronômico. O aluno chega com base estatística e modelos clássicos dominados — agora avança para deep learning e visão.",
+        ementa: "Processamento de imagens para identificação de pragas, doenças e plantas daninhas. OpenCV com Python. YOLO v8 para detecção em imagens de campo e drone. Análise de ortomosaicos. Integração com câmeras embarcadas em Raspberry Pi. IA generativa para diagnóstico agronômico.",
         topicos: [
-          "XGBoost: gradient boosting para previsão de safra com dados tabulares",
-          "SHAP values — explicar qualquer modelo em linguagem agronômica",
-          "Redes neurais: perceptron, backpropagation e arquiteturas básicas",
-          "CNNs: redes convolucionais para classificação de imagens de campo",
-          "OpenCV: pré-processamento e segmentação de imagens agrícolas",
-          "YOLO v8: detecção de pragas, doenças e plantas daninhas em tempo real",
+          "OpenCV: leitura, pré-processamento e segmentação de imagens",
+          "YOLO v8: detecção de pragas, doenças e plantas daninhas",
           "Criação e anotação de dataset agrícola com Roboflow",
-          "Análise de ortomosaico de drone: classificação por pixel e zona",
-          "LLMs + visão: GPT-4o Vision para diagnóstico agronômico por foto",
-          "Deploy de modelos: exportar para edge (Raspberry Pi) e nuvem",
-          "Projeto: sistema de identificação visual de pragas com modelo treinado em dados de Goiás"
+          "Treinar e avaliar modelo com imagens de campo de Goiás",
+          "Análise de ortomosaico de drone: classificação por pixel",
+          "Raspberry Pi + câmera: visão embarcada de baixo custo no campo",
+          "LLMs + visão: GPT-4o Vision para diagnóstico por foto",
+          "Projeto: sistema de identificação de pragas em tempo real"
         ],
-        prereq: "ECD2, GEO"
+        prereq: "IA1, GEO"
+      },
+      {
+        nome: "Big Data e Streaming de Dados Agrícolas",
+        codigo: "BIG",
+        tipo: "comp",
+        ch: "60h",
+        ementa: "Arquitetura de dados em larga escala para propriedades e cooperativas. Apache Kafka para streaming de sensores em tempo real. Apache Spark para processamento de grandes volumes. Data Lake no S3. Dashboards em tempo real com Grafana e InfluxDB.",
+        topicos: [
+          "Por que Big Data no agro? Volume de sensores e satélites",
+          "Apache Kafka: produtores, consumidores e tópicos de sensores",
+          "Streaming de dados IoT: ESP32 → MQTT → Kafka → banco",
+          "Apache Spark: processar terabytes de imagens de satélite",
+          "Data Lake no AWS S3: armazenar rasters, CSVs e JSONs",
+          "InfluxDB + Grafana: dashboard de sensores em tempo real",
+          "Pipeline completo: sensor → stream → processamento → alerta"
+        ],
+        prereq: "BD2, CLD, IOT"
       },
       {
         nome: "Projeto Integrador Final — Sistema Completo",
@@ -703,7 +674,6 @@ const SEMESTRES = [
   --agro:  #3fb950;
   --int:   #d29922;
   --ext:   #bc8cff;
-  --niv:   #f78166;
 }
 
 /* ============================================================
@@ -837,7 +807,6 @@ body {
 .legend-dot.agro { background: var(--agro); }
 .legend-dot.int  { background: var(--int); }
 .legend-dot.ext  { background: var(--ext); }
-.legend-dot.niv  { background: var(--niv); }
 
 /* ============================================================
    NAVEGAÇÃO DE SEMESTRES
@@ -983,7 +952,6 @@ body {
 .disc-card[data-tipo="agro"]::before { background: var(--agro); }
 .disc-card[data-tipo="int"]::before  { background: var(--int); }
 .disc-card[data-tipo="ext"]::before  { background: var(--ext); }
-.disc-card[data-tipo="niv"]::before  { background: var(--niv); }
 
 .disc-card-inner { padding: 1.1rem 1.1rem 1rem 1.25rem; }
 
@@ -1018,7 +986,6 @@ body {
 .disc-tipo-badge.agro { background: rgba(63,185,80,0.12);  color: var(--agro); }
 .disc-tipo-badge.int  { background: rgba(210,153,34,0.12); color: var(--int); }
 .disc-tipo-badge.ext  { background: rgba(188,140,255,0.12);color: var(--ext); }
-.disc-tipo-badge.niv  { background: rgba(247,129,102,0.12);color: var(--niv); }
 
 .disc-nome {
   font-size: 0.97rem;
@@ -1130,7 +1097,6 @@ body {
 .fc-tipo-pill.agro { background: rgba(63,185,80,0.15);  color: var(--agro); }
 .fc-tipo-pill.int  { background: rgba(210,153,34,0.15); color: var(--int); }
 .fc-tipo-pill.ext  { background: rgba(188,140,255,0.15);color: var(--ext); }
-.fc-tipo-pill.niv  { background: rgba(247,129,102,0.15);color: var(--niv); }
 
 .fc-icon {
   font-size: 3.5rem;
@@ -1411,7 +1377,7 @@ body.filter-active .disc-card.filter-match { opacity: 1; }
   <p id="inst-name">Instituto Federal de Goiás — Câmpus Cidade de Goiás &nbsp;|&nbsp; Proposta curricular baseada no PPC 2023</p>
   <div class="header-stats">
     <div class="stat">
-      <span class="stat-value" id="hdr-ch">2.400h</span>
+      <span class="stat-value" id="hdr-ch">2.432h</span>
       <span class="stat-label">Carga Horária</span>
     </div>
     <div class="stat">
@@ -1452,10 +1418,6 @@ body.filter-active .disc-card.filter-match { opacity: 1; }
   <div class="legend-item" data-filter="ext">
     <span class="legend-dot ext"></span>
     Extensão
-  </div>
-  <div class="legend-item" data-filter="niv">
-    <span class="legend-dot niv"></span>
-    Nivelamento
   </div>
 </div>
 
@@ -1543,16 +1505,14 @@ body.filter-active .disc-card.filter-match { opacity: 1; }
 const ICONS = {
   comp: { ILP: '⌨️', BDI: '🗄️', LPR: '💻', ESW: '🏗️', BDII: '🔐', CSO: '⚙️',
           POO: '🧩', APS: '📐', REC: '🌐', PRW: '🕸️', GPS: '📋', TBI: '📊',
-          QSW: '✅', IRO: '🤖', PES: '📈', ECD1: '📊', ECD2: '📈', IA3: '🧠',
-          default: '💻' },
+          QSW: '✅', IRO: '🤖', PES: '📈', default: '💻' },
   agro: { MFA: '💰', FAG: '📁', LAA: '⚖️', FCLI: '🌦️', MAG: '🚜', ARM: '🌾',
           PAP: '🛰️', GAR: '🌿', SPV: '🌱', SPA: '🐄', default: '🌱' },
   int:  { TIC: '🔗', MSA: '🏛️', SRA: '🔍', GEO: '🗺️', ICA: '📡', default: '⚡' },
-  ext:  { PIEI: '🤝', PIEII: '🔬', PIEIII: '🚀', PIEIV: '🏆', default: '🤝' },
-  niv:  { MAT: '📐', COM: '📝', LDG: '🖥️', default: '📐' }
+  ext:  { PIEI: '🤝', PIEII: '🔬', PIEIII: '🚀', PIEIV: '🏆', default: '🤝' }
 };
 
-const TIPO_LABELS = { comp: 'Computação', agro: 'Agronomia', int: 'Integração', ext: 'Extensão', niv: 'Nivelamento' };
+const TIPO_LABELS = { comp: 'Computação', agro: 'Agronomia', int: 'Integração', ext: 'Extensão' };
 
 function getIcon(disc) {
   return (ICONS[disc.tipo] || {})[disc.codigo] || (ICONS[disc.tipo] || {}).default || '📚';
