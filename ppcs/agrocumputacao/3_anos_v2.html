@@ -351,8 +351,8 @@ const SEMESTRES = [
   {
     numero: 4,
     ano: "2º Ano",
-    titulo: "Mecanização, BD Avançado, Sistemas Embarcados e APIs",
-    subtitulo: "Máquinas de precisão + sensores no campo consumindo APIs reais",
+    titulo: "Mecanização, BD Avançado, Embarcados, APIs e Estatística",
+    subtitulo: "Máquinas de precisão, sensores no campo e início da trilha de ciência de dados",
     disciplinas: [
       {
         nome: "Mecanização Agrícola e Máquinas de Precisão",
@@ -441,18 +441,38 @@ const SEMESTRES = [
           "Projeto: pipeline NDVI + clima automatizado para lavoura real"
         ],
         prereq: "PY2, BD1"
+      },
+      {
+        nome: "Estatística e Ciência de Dados para o Agro I",
+        codigo: "ECD1",
+        tipo: "comp",
+        ch: "60h",
+        ementa: "Base estatística sólida com foco na variabilidade do agro, relações entre variáveis e validação estatística para tomada de decisão. Estatística descritiva, correlação (Pearson e Spearman), probabilidade, inferência e preparação de dados. Todos os exercícios usam datasets reais: clima, solo, produtividade e rebanhos.",
+        topicos: [
+          "Pensamento em dados no agro: tipos de problemas e pipeline de dados",
+          "Estatística descritiva: média, mediana, variância, desvio padrão",
+          "Visualização: histogramas, boxplots e scatter plots com Seaborn",
+          "Correlação de Pearson: interpretação, sensibilidade a outliers",
+          "Correlação de Spearman: ranking, robustez e quando usar",
+          "Matrizes de correlação e heatmaps — variáveis que se relacionam",
+          "Significância estatística: p-value e armadilhas (correlação espúria)",
+          "Probabilidade aplicada: distribuição normal e binomial",
+          "Inferência: amostragem, intervalo de confiança e testes de hipótese",
+          "Projeto: identificar fatores que influenciam produtividade com matriz de correlação"
+        ],
+        prereq: "PY2, MAT"
       }
     ]
   },
 
   /* ═══════════════════════════════════════════════════════════
-     5º SEMESTRE — Nuvem, Geoprocessamento, IoT e Gestão
+     5º SEMESTRE — Gestão, Geoprocessamento, IoT e Ciência de Dados II
      ═══════════════════════════════════════════════════════════ */
   {
     numero: 5,
     ano: "3º Ano",
-    titulo: "Produção Animal, Gestão, Nuvem + Big Data, Geoprocessamento e IoT",
-    subtitulo: "Conectar o campo ao satélite e à nuvem — de ponta a ponta, do sensor ao dashboard",
+    titulo: "Produção Animal, Gestão, Geoprocessamento, IoT e Ciência de Dados II",
+    subtitulo: "Conectar o campo ao satélite — modelos preditivos com dados reais do sensor ao dashboard",
     disciplinas: [
       {
         nome: "Sistemas de Produção Animal com Tecnologia",
@@ -489,22 +509,22 @@ const SEMESTRES = [
         prereq: "PY2"
       },
       {
-        nome: "Computação em Nuvem, Edge e Big Data Agrícola",
-        codigo: "CLD",
+        nome: "Estatística e Ciência de Dados para o Agro II",
+        codigo: "ECD2",
         tipo: "comp",
-        ch: "80h",
-        ementa: "Infraestrutura em nuvem e arquitetura de dados em larga escala para sistemas agrícolas. AWS e GCP — serviços essenciais. Edge computing com Raspberry Pi. Apache Kafka para streaming de sensores. Data Lake e processamento com Spark. InfluxDB + Grafana para dashboards em tempo real.",
+        ch: "60h",
+        ementa: "Transformar relações estatísticas em modelos preditivos e decisões operacionais no agro. EDA avançada com correlação, regressão linear e logística, árvores de decisão, Random Forest, séries temporais, clusterização. O aluno sai capaz de construir modelos preditivos com dados reais e justificar cada decisão estatisticamente.",
         topicos: [
-          "Cloud computing: IaaS, PaaS e SaaS — o que usar no agro",
-          "AWS: EC2, S3, RDS e Lambda — fundamentos práticos",
-          "Edge computing: Raspberry Pi como gateway com processamento local",
-          "Arquitetura híbrida: sensor → edge → nuvem → dashboard",
-          "Apache Kafka: streaming de dados de sensores em tempo real",
-          "Data Lake no S3 e introdução ao Apache Spark",
-          "InfluxDB + Grafana: dashboard de sensores em tempo real",
-          "Pipeline completo: sensor → stream → processamento → alerta"
+          "EDA avançada: matrizes de correlação, multicolinearidade e seleção de variáveis",
+          "Regressão linear: interpretação de coeficientes e relação com correlação",
+          "Regressão logística: classificação binária para risco no campo",
+          "Árvores de decisão e Random Forest — robustez e interpretabilidade",
+          "Séries temporais: sazonalidade, tendência e autocorrelação no agro",
+          "Clusterização com K-means: zonas de manejo por padrão de solo",
+          "Dados do mundo real: IoT, sensores e imagens na agricultura de precisão",
+          "Projeto: modelo preditivo com EDA, matriz de correlação e justificativa estatística"
         ],
-        prereq: "FCO, REC, API1"
+        prereq: "ECD1"
       },
       {
         nome: "Geoprocessamento com Python",
@@ -546,13 +566,13 @@ const SEMESTRES = [
   },
 
   /* ═══════════════════════════════════════════════════════════
-     6º SEMESTRE — Engenharia Full-Stack, IA + Visão e TCC
+     6º SEMESTRE — Engenharia Full-Stack, IA Avançada + Visão e TCC
      ═══════════════════════════════════════════════════════════ */
   {
     numero: 6,
     ano: "3º Ano",
-    titulo: "Ecologia, Extensão, Engenharia Full-Stack, IA + Visão e Projeto Final",
-    subtitulo: "Tecnologias de fronteira + entrega real: sensor, backend, IA e dashboard em produção",
+    titulo: "Ecologia, Extensão, Engenharia Full-Stack, IA Avançada + Visão e Projeto Final",
+    subtitulo: "Deep learning, visão computacional e entrega real: do modelo treinado ao sistema em produção",
     disciplinas: [
       {
         nome: "Ecologia Agrícola e Sistemas Integrados",
@@ -606,27 +626,28 @@ const SEMESTRES = [
           "Deploy full-stack: API no Railway + frontend na Vercel",
           "Projeto: sistema web completo para a propriedade parceira"
         ],
-        prereq: "BD2, CLD, API1"
+        prereq: "BD2, API1"
       },
       {
-        nome: "Inteligência Artificial e Visão Computacional para o Agro",
-        codigo: "IA1",
+        nome: "IA Avançada e Visão Computacional para o Agro",
+        codigo: "IA3",
         tipo: "comp",
-        ch: "100h",
-        ementa: "Machine learning e visão computacional com foco em interpretação agronômica. Scikit-learn para regressão e classificação. SHAP para explicabilidade. OpenCV e YOLO v8 para detecção de pragas, doenças e plantas daninhas em imagens de campo e drone. IA generativa para diagnóstico.",
+        ch: "80h",
+        ementa: "Capstone da trilha de IA. Deep learning, redes neurais convolucionais e visão computacional aplicados ao agro. XGBoost e SHAP para explicabilidade. OpenCV e YOLO v8 para detecção de pragas, doenças e plantas daninhas em imagens de campo e drone. Análise de ortomosaicos. IA generativa para diagnóstico agronômico. O aluno chega com base estatística e modelos clássicos dominados — agora avança para deep learning e visão.",
         topicos: [
-          "Fundamentos de ML: features, target, treino e teste",
-          "Regressão: prever produtividade com solo, clima e histórico",
-          "Classificação: risco de ferrugem por talhão e semana",
-          "Random Forest e XGBoost — robustez e interpretabilidade",
-          "SHAP values — explicar o modelo em linguagem agronômica",
-          "OpenCV: pré-processamento e segmentação de imagens de campo",
-          "YOLO v8: detecção de pragas, doenças e plantas daninhas",
-          "Criação de dataset agrícola com Roboflow e treino do modelo",
-          "LLMs + visão: GPT-4o Vision para diagnóstico por foto",
-          "Projeto: modelo preditivo + identificação visual de pragas"
+          "XGBoost: gradient boosting para previsão de safra com dados tabulares",
+          "SHAP values — explicar qualquer modelo em linguagem agronômica",
+          "Redes neurais: perceptron, backpropagation e arquiteturas básicas",
+          "CNNs: redes convolucionais para classificação de imagens de campo",
+          "OpenCV: pré-processamento e segmentação de imagens agrícolas",
+          "YOLO v8: detecção de pragas, doenças e plantas daninhas em tempo real",
+          "Criação e anotação de dataset agrícola com Roboflow",
+          "Análise de ortomosaico de drone: classificação por pixel e zona",
+          "LLMs + visão: GPT-4o Vision para diagnóstico agronômico por foto",
+          "Deploy de modelos: exportar para edge (Raspberry Pi) e nuvem",
+          "Projeto: sistema de identificação visual de pragas com modelo treinado em dados de Goiás"
         ],
-        prereq: "PY2, GEO, BD2"
+        prereq: "ECD2, GEO"
       },
       {
         nome: "Projeto Integrador Final — Sistema Completo",
@@ -1522,7 +1543,8 @@ body.filter-active .disc-card.filter-match { opacity: 1; }
 const ICONS = {
   comp: { ILP: '⌨️', BDI: '🗄️', LPR: '💻', ESW: '🏗️', BDII: '🔐', CSO: '⚙️',
           POO: '🧩', APS: '📐', REC: '🌐', PRW: '🕸️', GPS: '📋', TBI: '📊',
-          QSW: '✅', IRO: '🤖', PES: '📈', default: '💻' },
+          QSW: '✅', IRO: '🤖', PES: '📈', ECD1: '📊', ECD2: '📈', IA3: '🧠',
+          default: '💻' },
   agro: { MFA: '💰', FAG: '📁', LAA: '⚖️', FCLI: '🌦️', MAG: '🚜', ARM: '🌾',
           PAP: '🛰️', GAR: '🌿', SPV: '🌱', SPA: '🐄', default: '🌱' },
   int:  { TIC: '🔗', MSA: '🏛️', SRA: '🔍', GEO: '🗺️', ICA: '📡', default: '⚡' },
