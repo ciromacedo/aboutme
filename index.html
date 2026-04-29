@@ -385,6 +385,62 @@
         .badge-indigo{ background: #5c6bc0;           color: white; }
         .badge-gray  { background: #78909c;           color: white; }
 
+        /* ── Publication-specific styles ── */
+        .card.publication { border-top-color: #0d7377; }
+        .card-header-row {
+            display: flex;
+            align-items: flex-start;
+            justify-content: space-between;
+            gap: 12px;
+            margin-bottom: 10px;
+        }
+        .citation-badge {
+            flex-shrink: 0;
+            background: var(--gold-light);
+            color: var(--navy-dark);
+            border: 1px solid var(--gold);
+            border-radius: 3px;
+            padding: 4px 10px;
+            font-family: 'Inter', sans-serif;
+            font-size: 0.72em;
+            font-weight: 700;
+            letter-spacing: 0.04em;
+            text-transform: uppercase;
+            white-space: nowrap;
+        }
+        .citation-badge .cit-num { font-size: 1.35em; color: var(--navy-dark); margin-right: 4px; }
+        .citation-badge.upcoming {
+            background: #fff;
+            color: #c0392b;
+            border-color: #c0392b;
+        }
+        .pub-authors {
+            color: var(--text-primary);
+            font-size: 0.86em;
+            line-height: 1.55;
+            margin-bottom: 6px;
+        }
+        .pub-authors .me { font-weight: 700; color: var(--navy-dark); }
+        .pub-venue {
+            color: var(--text-muted);
+            font-size: 0.82em;
+            font-style: italic;
+            line-height: 1.5;
+            margin-bottom: 16px;
+        }
+        .scholar-link {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            margin-left: auto;
+            color: var(--navy-mid);
+            text-decoration: none;
+            font-size: 0.82em;
+            font-weight: 600;
+            padding-bottom: 4px;
+        }
+        .scholar-link:hover { color: var(--gold); }
+
         /* ── Buttons ── */
         .btn {
             display: inline-block;
@@ -539,6 +595,7 @@
             <ul class="navbar-links">
                 <li><a href="#about">Academic Profile</a></li>
                 <li><a href="#projects">Projects</a></li>
+                <li><a href="#publications">Publications</a></li>
                 <li><a href="#presentations">Presentations</a></li>
                 <li><a href="#teaching">Teaching</a></li>
                 <li><a href="#ppcs">PPCs</a></li>
@@ -826,6 +883,158 @@
                     </div>
                 </div>
             </a>
+
+        </div>
+    </section>
+
+    <!-- PUBLICATIONS -->
+    <section class="cards-section" id="publications">
+        <div class="cards-section-header">
+            <h2>Selected Publications</h2>
+            <span class="section-label">Peer-Reviewed Research &amp; Preprints</span>
+            <a href="https://scholar.google.com.br/citations?user=GMxi-B8AAAAJ" target="_blank" class="scholar-link">
+                View full list on Google Scholar →
+            </a>
+        </div>
+        <div class="cards-grid">
+
+            <div class="card publication">
+                <div class="card-header-row">
+                    <span class="badge badge-indigo">Conference</span>
+                    <span class="citation-badge upcoming">To Appear · 2026</span>
+                </div>
+                <h3>Recomendação de Rotas Consciente de QoE com Atenção e Comunicação</h3>
+                <p class="pub-authors">
+                    R de Oliveira Santos, <span class="me">C Macedo</span>, CE Santos, A Oliveira-Jr
+                </p>
+                <p class="pub-venue">
+                    XLIV Simpósio Brasileiro de Redes de Computadores e Sistemas Distribuídos (SBRC 2026) ·
+                    Sessão Técnica 19 — Roteamento e Transporte · 28 May 2026, Praia do Forte, Bahia
+                </p>
+                <div class="links">
+                    <a href="https://sbrc.sbc.org.br/2026/programacao-trilha-principal/" class="btn btn-primary" target="_blank">View Program</a>
+                </div>
+            </div>
+
+            <div class="card publication">
+                <div class="card-header-row">
+                    <span class="badge badge-mid">Preprint</span>
+                    <span class="citation-badge"><span class="cit-num">29</span>citations</span>
+                </div>
+                <h3>A Softwarized Perspective of the 5G Networks</h3>
+                <p class="pub-authors">
+                    KV Cardoso, CB Both, LR Prade, <span class="me">CJA Macedo</span>, VHL Lopes
+                </p>
+                <p class="pub-venue">arXiv preprint arXiv:2006.10409</p>
+                <div class="links">
+                    <a href="https://arxiv.org/abs/2006.10409" class="btn btn-primary" target="_blank">View on arXiv</a>
+                </div>
+            </div>
+
+            <div class="card publication">
+                <div class="card-header-row">
+                    <span class="badge badge-mid">Preprint</span>
+                    <span class="citation-badge"><span class="cit-num">7</span>citations</span>
+                </div>
+                <h3>System Intelligence for UAV-Based Mission Critical with Challenging 5G/B5G Connectivity</h3>
+                <p class="pub-authors">
+                    CB Both, J Borges, L Gonçalves, C Nahum, <span class="me">C Macedo</span>, A Klautau, et al.
+                </p>
+                <p class="pub-venue">arXiv preprint arXiv:2102.02318</p>
+                <div class="links">
+                    <a href="https://arxiv.org/abs/2102.02318" class="btn btn-primary" target="_blank">View on arXiv</a>
+                </div>
+            </div>
+
+            <div class="card publication">
+                <div class="card-header-row">
+                    <span class="badge badge-teal">Book Chapter</span>
+                    <span class="citation-badge"><span class="cit-num">5</span>citations</span>
+                </div>
+                <h3>Soft5G+: Explorando a Softwarização nas Redes 5G</h3>
+                <p class="pub-authors">
+                    CB Both, KV Cardoso, LR Prade, VHL Lopes, <span class="me">CJA Macedo</span>
+                </p>
+                <p class="pub-venue">Minicursos do XXXVIII Simpósio Brasileiro de Redes de Computadores e Sistemas Distribuídos (SBRC)</p>
+                <div class="links">
+                    <a href="https://scholar.google.com.br/scholar?cluster=12230598103167015960" class="btn btn-primary" target="_blank">View Citation</a>
+                </div>
+            </div>
+
+            <div class="card publication">
+                <div class="card-header-row">
+                    <span class="badge badge-teal">Journal</span>
+                    <span class="citation-badge"><span class="cit-num">4</span>citations</span>
+                </div>
+                <h3>Implantação de Múltiplos Gateways IoT Definido por Software e Virtualizado para Campus Inteligente</h3>
+                <p class="pub-authors">
+                    DF Júnior, JP Cabral, <span class="me">C Macedo</span>, T dos Santos Filho, SL Correa, et al.
+                </p>
+                <p class="pub-venue">Revista de Sistemas de Informação da FSMA, vol. 25, p. 2–18</p>
+                <div class="links">
+                    <a href="https://scholar.google.com.br/scholar?cluster=14064611068727091170" class="btn btn-primary" target="_blank">View Citation</a>
+                </div>
+            </div>
+
+            <div class="card publication">
+                <div class="card-header-row">
+                    <span class="badge badge-navy">Journal</span>
+                    <span class="citation-badge"><span class="cit-num">3</span>citations</span>
+                </div>
+                <h3>An Improved Multiobjective Search Method Applied to Single Frequency Networks Planning</h3>
+                <p class="pub-authors">
+                    AS Rocha, <span class="me">CJA Macedo</span>, PHS Palhares, LC Brito
+                </p>
+                <p class="pub-venue">IEEE Latin America Transactions, vol. 10, no. 1, p. 1143–1148</p>
+                <div class="links">
+                    <a href="https://ieeexplore.ieee.org/document/6142483" class="btn btn-primary" target="_blank">View on IEEE Xplore</a>
+                </div>
+            </div>
+
+            <div class="card publication">
+                <div class="card-header-row">
+                    <span class="badge badge-teal">Proceedings</span>
+                    <span class="citation-badge"><span class="cit-num">3</span>citations</span>
+                </div>
+                <h3>Otimização Multiobjetivo e Multirestrição da Cobertura de Redes de Frequência Única</h3>
+                <p class="pub-authors">
+                    AS Rocha, LC Brito, <span class="me">CJA Macedo</span>
+                </p>
+                <p class="pub-venue">Blucher Mathematical Proceedings, vol. 1, no. 1, p. 68–77</p>
+                <div class="links">
+                    <a href="https://www.proceedings.blucher.com.br/article-details/otimizao-multiobjetivo-e-multirrestrio-da-cobertura-de-redes-de-frequncia-nica-13107" class="btn btn-primary" target="_blank">View Proceedings</a>
+                </div>
+            </div>
+
+            <div class="card publication">
+                <div class="card-header-row">
+                    <span class="badge badge-indigo">Conference</span>
+                    <span class="citation-badge"><span class="cit-num">2</span>citations</span>
+                </div>
+                <h3>Improved Support for UAV-Based Computer Vision Applications in Search and Rescue Operations via RAN Intelligent Controllers</h3>
+                <p class="pub-authors">
+                    <span class="me">CJA Macedo</span>, EV Dias, JJ da Silva Júnior, GZ Bruno, FH Grings
+                </p>
+                <p class="pub-venue">XL Simpósio Brasileiro de Telecomunicações e Processamento de Sinais (SBrT 2022)</p>
+                <div class="links">
+                    <a href="https://scholar.google.com.br/scholar?cluster=18083366946099731728" class="btn btn-primary" target="_blank">View Citation</a>
+                </div>
+            </div>
+
+            <div class="card publication">
+                <div class="card-header-row">
+                    <span class="badge badge-mid">Preprint</span>
+                    <span class="citation-badge"><span class="cit-num">1</span>citation</span>
+                </div>
+                <h3>FramCo: Frame Corrupted Detection for the Open RAN Intelligent Controller to Assist UAV-Based Mission-Critical Operations</h3>
+                <p class="pub-authors">
+                    <span class="me">CJA Macedo</span>, EV Dias, CB Both, KV Cardoso
+                </p>
+                <p class="pub-venue">SSRN Electronic Journal · Available at SSRN 4629064</p>
+                <div class="links">
+                    <a href="https://papers.ssrn.com/sol3/papers.cfm?abstract_id=4629064" class="btn btn-primary" target="_blank">View on SSRN</a>
+                </div>
+            </div>
 
         </div>
     </section>
