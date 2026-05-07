@@ -1,0 +1,1582 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Unidade 1 · Antes da Era Digital</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600;700;800&family=Quicksand:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    /* Paleta vintage / transição analógica → digital */
+    --bg:        #fbf3e6;
+    --bg-soft:   #f3e6cf;
+    --panel:     #ffffff;
+    --panel-2:   #fdf6e8;
+    --sepia:     #a0683c;
+    --sepia-soft: #f4e2c8;
+    --gold:      #d49a3e;
+    --gold-soft: #f8e8c2;
+    --copper:    #c87138;
+    --teal:      #3f8b9c;
+    --teal-soft: #d6e8ed;
+    --mauve:     #9a6e8c;
+    --mauve-soft: #ebdde6;
+    --leaf:      #6b8a5a;
+    --leaf-soft: #dde7d3;
+    --ink:       #3d2e1f;
+    --text:      #4a3a2c;
+    --muted:     #8a7868;
+    --line:      #e3d4b8;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: 'Quicksand', sans-serif;
+    min-height: 100vh;
+  }
+
+  /* ── HEADER ── */
+  header {
+    background: linear-gradient(135deg, #f0d9b3 0%, #e0c896 50%, #cfa865 100%);
+    border-bottom: 2px solid var(--line);
+    padding: 32px 36px 28px;
+    text-align: center;
+    position: relative;
+    overflow: hidden;
+  }
+  header::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: radial-gradient(ellipse at 20% 20%, rgba(255,255,255,0.4), transparent 60%);
+    pointer-events: none;
+  }
+  header .eyebrow {
+    font-size: 0.72rem;
+    letter-spacing: 4px;
+    text-transform: uppercase;
+    color: var(--sepia);
+    font-weight: 700;
+    margin-bottom: 8px;
+    position: relative;
+  }
+  header h1 {
+    font-family: 'Playfair Display', serif;
+    font-size: 2.1rem;
+    font-weight: 800;
+    color: var(--ink);
+    line-height: 1.2;
+    margin-bottom: 6px;
+    position: relative;
+  }
+  header .subtitle {
+    font-size: 0.95rem;
+    color: var(--text);
+    font-weight: 500;
+    opacity: 0.85;
+    position: relative;
+  }
+  .meta-row {
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+    margin-top: 18px;
+    flex-wrap: wrap;
+    position: relative;
+  }
+  .meta-pill {
+    background: rgba(255,255,255,0.55);
+    border: 1px solid rgba(255,255,255,0.85);
+    padding: 6px 16px;
+    border-radius: 20px;
+    font-size: 0.78rem;
+    font-weight: 600;
+    color: var(--ink);
+  }
+
+  /* ── TABS ── */
+  .tabs {
+    display: flex;
+    gap: 4px;
+    padding: 22px 36px 0;
+    border-bottom: 1px solid var(--line);
+    flex-wrap: wrap;
+    background: var(--bg);
+    position: sticky;
+    top: 0;
+    z-index: 50;
+  }
+  .tab {
+    padding: 11px 22px;
+    border-radius: 10px 10px 0 0;
+    background: var(--bg-soft);
+    border: 1px solid var(--line);
+    border-bottom: none;
+    color: var(--muted);
+    cursor: pointer;
+    font-weight: 600;
+    font-size: 0.85rem;
+    transition: all 0.2s;
+    position: relative; bottom: -1px;
+    font-family: 'Quicksand', sans-serif;
+  }
+  .tab.active {
+    background: var(--panel);
+    color: var(--ink);
+    border-color: var(--line);
+    border-bottom: 1px solid var(--panel);
+  }
+  .tab.active::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 3px;
+    background: var(--sepia);
+    border-radius: 10px 10px 0 0;
+  }
+  .tab:hover:not(.active) { color: var(--ink); background: var(--panel-2); }
+
+  /* ── SECTIONS ── */
+  .section { display: none; padding: 36px; max-width: 1180px; margin: 0 auto; }
+  .section.active { display: block; }
+
+  /* ── FLASHCARD NAV ── */
+  .flashcard-nav {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 24px;
+    flex-wrap: wrap;
+    gap: 12px;
+  }
+  .fc-meta { text-align: center; flex: 1; }
+  .fc-progress { font-size: 0.78rem; color: var(--muted); font-weight: 600; margin-bottom: 8px; letter-spacing: 1px; }
+  .fc-dots { display: flex; gap: 6px; justify-content: center; flex-wrap: wrap; max-width: 540px; margin: 0 auto; }
+  .fc-dot {
+    width: 9px; height: 9px;
+    border-radius: 50%;
+    background: var(--bg-soft);
+    border: 1px solid var(--line);
+    transition: all 0.3s;
+    cursor: pointer;
+  }
+  .fc-dot.active { background: var(--sepia); border-color: var(--sepia); transform: scale(1.3); }
+  .fc-dot.done { background: var(--leaf); border-color: var(--leaf); }
+
+  /* ── BUTTONS ── */
+  .btn {
+    padding: 11px 22px;
+    border-radius: 12px;
+    border: none;
+    font-family: 'Quicksand', sans-serif;
+    font-weight: 600;
+    font-size: 0.85rem;
+    cursor: pointer;
+    transition: all 0.2s;
+  }
+  .btn-primary {
+    background: var(--sepia);
+    color: white;
+    box-shadow: 0 2px 10px rgba(160,104,60,0.3);
+  }
+  .btn-primary:hover { background: #8c5a30; transform: translateY(-1px); }
+  .btn-primary:disabled { opacity: 0.4; cursor: not-allowed; transform: none; }
+  .btn-ghost {
+    background: var(--panel);
+    color: var(--text);
+    border: 1px solid var(--line);
+  }
+  .btn-ghost:hover { background: var(--bg-soft); }
+  .btn-ghost:disabled { opacity: 0.4; cursor: not-allowed; }
+
+  /* ── FLASHCARD ── */
+  .flashcard-wrapper { perspective: 1500px; min-height: 480px; position: relative; }
+  .flashcard {
+    width: 100%;
+    min-height: 480px;
+    position: relative;
+    transform-style: preserve-3d;
+    transition: transform 0.7s cubic-bezier(0.4,0,0.2,1);
+    cursor: pointer;
+  }
+  .flashcard.flipped { transform: rotateY(180deg); }
+  .card-face {
+    position: absolute;
+    width: 100%; min-height: 480px;
+    backface-visibility: hidden;
+    -webkit-backface-visibility: hidden;
+    border-radius: 24px;
+    padding: 40px 48px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 4px 28px rgba(60,40,20,0.1);
+  }
+  .card-front {
+    background: linear-gradient(135deg, #ffffff 0%, var(--panel-2) 100%);
+    border: 1px solid var(--line);
+  }
+  .card-back {
+    background: linear-gradient(135deg, var(--panel-2) 0%, #f5e8d0 100%);
+    border: 1px solid var(--gold-soft);
+    transform: rotateY(180deg);
+  }
+  .card-icon { font-size: 2.8rem; margin-bottom: 14px; }
+  .card-title {
+    font-size: 0.7rem;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    color: var(--sepia);
+    font-weight: 700;
+    margin-bottom: 12px;
+  }
+  .card-back .card-title { color: var(--copper); }
+  .card-heading {
+    font-family: 'Playfair Display', serif;
+    font-size: 1.7rem;
+    font-weight: 700;
+    text-align: center;
+    margin-bottom: 18px;
+    line-height: 1.25;
+    color: var(--ink);
+  }
+  .card-body {
+    font-size: 0.95rem;
+    color: var(--text);
+    line-height: 1.75;
+    text-align: center;
+    max-width: 660px;
+  }
+  .card-body strong { color: var(--ink); font-weight: 700; }
+  .card-back .card-body { text-align: left; }
+  .card-back .card-body p { margin-bottom: 10px; }
+  .card-body .pill {
+    display: inline-block;
+    background: var(--sepia-soft);
+    border: 1px solid var(--sepia);
+    color: #6e3f1e;
+    padding: 2px 10px;
+    border-radius: 12px;
+    font-size: 0.85em;
+    font-weight: 600;
+  }
+  .card-body .pill-gold { background: var(--gold-soft); border-color: var(--gold); color: #7a5912; }
+  .card-body .pill-teal { background: var(--teal-soft); border-color: var(--teal); color: #2d5a68; }
+  .card-body .pill-leaf { background: var(--leaf-soft); border-color: var(--leaf); color: #4a6238; }
+  .card-body .pill-mauve { background: var(--mauve-soft); border-color: var(--mauve); color: #6a4d62; }
+  .complementar {
+    margin-top: 16px;
+    padding: 14px 18px;
+    background: rgba(154,110,140,0.10);
+    border-left: 3px solid var(--mauve);
+    border-radius: 0 10px 10px 0;
+    font-size: 0.86rem;
+    color: var(--text);
+    width: 100%;
+    max-width: 660px;
+  }
+  .complementar .label {
+    font-size: 0.7rem;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    color: var(--mauve);
+    font-weight: 700;
+    margin-bottom: 6px;
+  }
+  .complementar ul { padding-left: 20px; margin-top: 4px; }
+  .complementar li { margin: 4px 0; line-height: 1.55; }
+  .flip-hint {
+    font-size: 0.7rem;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    color: var(--muted);
+    margin-top: 22px;
+    font-weight: 600;
+    opacity: 0.7;
+  }
+
+  /* ── COMPARATION TABLE ── */
+  .panel {
+    background: var(--panel);
+    border: 1px solid var(--line);
+    border-radius: 18px;
+    padding: 28px 32px;
+    margin-bottom: 24px;
+    box-shadow: 0 2px 14px rgba(60,40,20,0.06);
+  }
+  .panel h2 {
+    font-family: 'Playfair Display', serif;
+    font-size: 1.4rem;
+    color: var(--ink);
+    margin-bottom: 6px;
+  }
+  .panel > p.lead {
+    color: var(--muted);
+    font-size: 0.9rem;
+    line-height: 1.65;
+    margin-bottom: 22px;
+  }
+
+  .comp-table {
+    width: 100%;
+    border-collapse: separate;
+    border-spacing: 0;
+    border-radius: 12px;
+    overflow: hidden;
+    background: var(--bg-soft);
+  }
+  .comp-table th {
+    padding: 14px 18px;
+    background: var(--sepia);
+    color: white;
+    font-size: 0.85rem;
+    text-align: left;
+    font-weight: 700;
+  }
+  .comp-table td {
+    padding: 14px 18px;
+    background: white;
+    border-bottom: 1px solid var(--line);
+    font-size: 0.92rem;
+    line-height: 1.5;
+  }
+  .comp-table tr:last-child td { border-bottom: none; }
+  .comp-table .col-need { font-weight: 700; color: var(--ink); width: 26%; }
+  .comp-table .analog { color: var(--copper); }
+  .comp-table .digital { color: var(--teal); }
+
+  /* ── TIMELINE ── */
+  .timeline {
+    position: relative;
+    padding: 20px 0;
+  }
+  .timeline::before {
+    content: '';
+    position: absolute;
+    left: 80px;
+    top: 0; bottom: 0;
+    width: 3px;
+    background: linear-gradient(180deg, var(--sepia) 0%, var(--gold) 50%, var(--teal) 100%);
+  }
+  .tl-item {
+    display: flex;
+    align-items: flex-start;
+    gap: 22px;
+    margin-bottom: 22px;
+    position: relative;
+  }
+  .tl-year {
+    width: 80px;
+    text-align: right;
+    padding-right: 14px;
+    font-family: 'Playfair Display', serif;
+    font-size: 1.2rem;
+    font-weight: 800;
+    color: var(--sepia);
+    flex-shrink: 0;
+    padding-top: 2px;
+  }
+  .tl-dot {
+    width: 18px;
+    height: 18px;
+    border-radius: 50%;
+    background: var(--bg);
+    border: 4px solid var(--sepia);
+    flex-shrink: 0;
+    margin-left: -9px;
+    margin-top: 4px;
+    box-shadow: 0 0 0 4px var(--bg);
+    z-index: 1;
+  }
+  .tl-content {
+    flex: 1;
+    background: var(--panel);
+    border: 1px solid var(--line);
+    border-radius: 12px;
+    padding: 14px 18px;
+    box-shadow: 0 2px 8px rgba(60,40,20,0.05);
+  }
+  .tl-content h3 {
+    font-family: 'Playfair Display', serif;
+    font-size: 1rem;
+    color: var(--ink);
+    margin-bottom: 4px;
+  }
+  .tl-content p {
+    font-size: 0.85rem;
+    color: var(--muted);
+    line-height: 1.55;
+  }
+  .tl-item:nth-child(odd) .tl-dot { border-color: var(--gold); }
+  .tl-item:nth-child(even) .tl-dot { border-color: var(--teal); }
+
+  /* ── DEVICES GRID ── */
+  .devices-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+    gap: 18px;
+    margin-top: 12px;
+  }
+  .device-card {
+    background: white;
+    border: 1px solid var(--line);
+    border-radius: 14px;
+    padding: 20px 18px;
+    text-align: center;
+    transition: transform 0.2s, box-shadow 0.2s;
+  }
+  .device-card:hover { transform: translateY(-3px); box-shadow: 0 6px 18px rgba(60,40,20,0.1); }
+  .device-card .ico { font-size: 2rem; margin-bottom: 8px; }
+  .device-card h4 { font-family: 'Playfair Display', serif; color: var(--ink); margin-bottom: 4px; font-size: 1rem; }
+  .device-card .perc {
+    font-size: 1.6rem;
+    font-weight: 800;
+    color: var(--sepia);
+    font-family: 'Playfair Display', serif;
+  }
+  .device-card .label { font-size: 0.78rem; color: var(--muted); }
+
+  /* ── INFO CARDS ── */
+  .two-col {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 22px;
+  }
+  .info-card {
+    background: var(--panel);
+    border: 1px solid var(--line);
+    border-radius: 14px;
+    padding: 20px 22px;
+    box-shadow: 0 2px 10px rgba(60,40,20,0.04);
+  }
+  .info-card h3 {
+    font-family: 'Playfair Display', serif;
+    font-size: 1rem;
+    color: var(--ink);
+    margin-bottom: 10px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+  .info-card .ico {
+    width: 34px; height: 34px;
+    border-radius: 50%;
+    background: var(--sepia-soft);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1rem;
+  }
+  .info-card.teal .ico { background: var(--teal-soft); }
+  .info-card.leaf .ico { background: var(--leaf-soft); }
+  .info-card.mauve .ico { background: var(--mauve-soft); }
+  .info-card p { font-size: 0.86rem; color: var(--text); line-height: 1.65; }
+  .info-card strong { color: var(--ink); }
+
+  .footer {
+    text-align: center;
+    padding: 36px 20px;
+    color: var(--muted);
+    font-size: 0.82rem;
+    border-top: 1px solid var(--line);
+    margin-top: 40px;
+  }
+  .footer a { color: var(--sepia); text-decoration: none; font-weight: 600; }
+  .footer a:hover { text-decoration: underline; }
+
+  ::-webkit-scrollbar { width: 8px; }
+  ::-webkit-scrollbar-track { background: var(--bg); }
+  ::-webkit-scrollbar-thumb { background: var(--line); border-radius: 4px; }
+  ::-webkit-scrollbar-thumb:hover { background: var(--sepia); }
+
+  @media (max-width: 800px) {
+    .two-col { grid-template-columns: 1fr; }
+    .section { padding: 24px 16px; }
+    header { padding: 24px 16px; }
+    header h1 { font-size: 1.5rem; }
+    .tabs { padding: 16px 12px 0; }
+    .tab { padding: 8px 14px; font-size: 0.78rem; }
+    .card-face { padding: 28px 22px; }
+    .card-heading { font-size: 1.25rem; }
+    .timeline::before { left: 50px; }
+    .tl-year { width: 50px; font-size: 0.9rem; }
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="eyebrow">Unidade 01 · 20 slides</div>
+  <h1>Antes da Era Digital</h1>
+  <p class="subtitle">Uma jornada do mundo analógico ao digital</p>
+  <div class="meta-row">
+    <span class="meta-pill">📜 História da Tecnologia</span>
+    <span class="meta-pill">🎓 1º ano · Agroecologia</span>
+    <span class="meta-pill">📚 PNLD 2026 · FTD</span>
+  </div>
+</header>
+
+<nav class="tabs">
+  <div class="tab active" onclick="switchTab('cards')">📚 Flash-cards (20)</div>
+  <div class="tab" onclick="switchTab('timeline')">⏳ Linha do Tempo</div>
+  <div class="tab" onclick="switchTab('compare')">🔄 Analógico × Digital</div>
+</nav>
+
+<!-- ════════════════════════════════════════════
+     FLASH-CARDS — 20 SLIDES
+════════════════════════════════════════════ -->
+<div class="section active" id="tab-cards">
+
+  <div class="flashcard-nav">
+    <button class="btn btn-ghost" id="prev-btn" onclick="prevCard()">← Anterior</button>
+    <div class="fc-meta">
+      <div class="fc-progress" id="prog">Slide 1 de 20</div>
+      <div class="fc-dots" id="dots"></div>
+    </div>
+    <button class="btn btn-primary" id="next-btn" onclick="nextCard()">Próximo →</button>
+  </div>
+
+  <div class="flashcard-wrapper">
+    <div class="flashcard" id="fc" onclick="flipCard()">
+
+      <!-- ─── 1. ERA DIGITAL × ANALÓGICA ─── -->
+      <div class="card-face card-front" data-idx="0">
+        <div class="card-icon">🕰️</div>
+        <div class="card-title">Slide 01 · Introdução</div>
+        <div class="card-heading">O que é a<br>"Era Digital"?</div>
+        <div class="card-body">
+          Você já parou para pensar como seria sua vida <strong>sem celular</strong>?<br>
+          Sem WhatsApp, sem TikTok, sem Google?<br><br>
+          Pois é assim que a humanidade viveu por <strong>quase toda</strong> sua história.
+        </div>
+        <div class="flip-hint">↻ Clique para revelar</div>
+      </div>
+      <div class="card-face card-back" data-idx="0">
+        <div class="card-icon">📻</div>
+        <div class="card-title">Definição</div>
+        <div class="card-heading">Era Analógica<br>↓ ↓ ↓<br>Era Digital</div>
+        <div class="card-body">
+          <p><span class="pill">Era Digital</span> é o tempo em que <strong>computadores, celulares e internet</strong> fazem parte do nosso dia.</p>
+          <p><span class="pill-gold pill">Era Analógica</span> é o período <strong>antes</strong> disso. Música em LP, foto em filme, carta nos Correios.</p>
+          <p style="margin-top:12px"><strong>Analogia:</strong> é como comparar um LP de vinil com o Spotify. Os dois tocam música — mas de formas <em>completamente</em> diferentes.</p>
+        </div>
+        <div class="complementar">
+          <div class="label">💡 Para complementar em aula</div>
+          <ul>
+            <li>Pergunte: alguém da turma já viu um disco de vinil rodando? E uma fita cassete?</li>
+            <li>Mostre vídeo de 30s do TikTok mostrando "como era ouvir música em 1990"</li>
+            <li>O termo "analógico" vem de "análogo" — o som no LP é uma <em>cópia física</em> da onda sonora</li>
+            <li>Conexão com o campo: muitas tarefas rurais ainda são feitas de forma analógica (planilha em papel, anotação manual de chuva)</li>
+          </ul>
+        </div>
+      </div>
+
+      <!-- ─── 2. SURGIMENTO DO CELULAR ─── -->
+      <div class="card-face card-front" data-idx="1" style="display:none">
+        <div class="card-icon">📞</div>
+        <div class="card-title">Slide 02 · Marco Histórico</div>
+        <div class="card-heading">O primeiro celular<br>do mundo... era um <span style="color:var(--copper)">tijolo</span>!</div>
+        <div class="card-body">
+          Em <strong>1973</strong>, surgiu o primeiro celular.<br>
+          Mas ele não cabia no bolso — quase quebrava o pulso.<br><br>
+          Como ele evoluiu até chegar no smartphone que está na sua mão agora?
+        </div>
+        <div class="flip-hint">↻ Clique para revelar</div>
+      </div>
+      <div class="card-face card-back" data-idx="1" style="display:none">
+        <div class="card-icon">📱</div>
+        <div class="card-title">1973 → Hoje</div>
+        <div class="card-heading">De tijolo a<br>"computador de bolso"</div>
+        <div class="card-body">
+          <p>📞 <strong>1973:</strong> O primeiro celular pesava quase <strong>1 kg</strong>, era enorme e custava uma <strong>fortuna</strong>. Só servia para fazer ligações.</p>
+          <p>📲 <strong>40 anos depois:</strong> O celular virou <span class="pill">câmera</span>, <span class="pill-teal pill">GPS</span>, <span class="pill-leaf pill">banco</span>, <span class="pill-mauve pill">cinema</span>, <span class="pill-gold pill">biblioteca</span>... tudo num só aparelho.</p>
+          <p style="margin-top:12px">💭 <strong>Pense nisso:</strong> seu bisavô provavelmente <em>nunca imaginou</em> que um dia carregaríamos uma "biblioteca inteira" no bolso!</p>
+        </div>
+        <div class="complementar">
+          <div class="label">💡 Para complementar em aula</div>
+          <ul>
+            <li>Mostre foto do "Motorola DynaTAC 8000X" (o primeiro celular) — vai chocar pelo tamanho</li>
+            <li>O primeiro celular custava cerca de US$ 4.000 em 1983 (≈ R$ 60 mil hoje)</li>
+            <li>Pergunte: quantos apps tem no celular de cada um? Compare com "1 só app" de 1973</li>
+            <li>No campo: hoje o agricultor tem app de previsão do tempo, GPS de máquina, marketplace de insumos... tudo no celular</li>
+          </ul>
+        </div>
+      </div>
+
+      <!-- ─── 3. INTERNET HOJE ─── -->
+      <div class="card-face card-front" data-idx="2" style="display:none">
+        <div class="card-icon">🌐</div>
+        <div class="card-title">Slide 03 · Cotidiano</div>
+        <div class="card-heading">Quantas coisas você faz<br>com a internet em <span style="color:var(--teal)">1 dia</span>?</div>
+        <div class="card-body">
+          Levante a mão se hoje você já:<br>
+          mandou mensagem · ouviu música · viu vídeo · pesquisou algo · usou GPS...<br><br>
+          Tudo isso é internet trabalhando para você.
+        </div>
+        <div class="flip-hint">↻ Clique para revelar</div>
+      </div>
+      <div class="card-face card-back" data-idx="2" style="display:none">
+        <div class="card-icon">🚀</div>
+        <div class="card-title">A internet faz quase tudo</div>
+        <div class="card-heading">O celular conectado virou<br>o "canivete suíço" digital</div>
+        <div class="card-body">
+          <p>💬 <strong>Comunicar:</strong> WhatsApp, Telegram, e-mail — instantâneo, para qualquer parte do mundo</p>
+          <p>🔎 <strong>Buscar:</strong> Google, Wikipedia, ChatGPT — qualquer dúvida em segundos</p>
+          <p>🗺 <strong>Localizar:</strong> Google Maps, Waze — nunca mais se perder</p>
+          <p>📺 <strong>Entreter:</strong> YouTube, Netflix, Spotify, jogos online</p>
+          <p>💳 <strong>Resolver vida:</strong> banco, compras, pagamentos, agendamentos</p>
+          <p>📞 <strong>Conviver:</strong> videochamadas com pessoas distantes</p>
+        </div>
+        <div class="complementar">
+          <div class="label">💡 Para complementar em aula</div>
+          <ul>
+            <li>Atividade rápida: cada aluno conta as últimas 5 ações que fez no celular hoje</li>
+            <li>Tudo isso era <strong>impensável</strong> para alguém de 1990 — só 35 anos atrás</li>
+            <li>Pergunte: que tarefa do dia a dia rural <em>ainda</em> não foi para o digital? (resposta varia)</li>
+            <li>A internet fez tudo isso virar um único "balcão único" — antes precisava ir em vários lugares físicos</li>
+          </ul>
+        </div>
+      </div>
+
+      <!-- ─── 4. MUNDO ANALÓGICO ─── -->
+      <div class="card-face card-front" data-idx="3" style="display:none">
+        <div class="card-icon">📜</div>
+        <div class="card-title">Slide 04 · Como Era Antes</div>
+        <div class="card-heading">Como as pessoas<br>se viravam <span style="color:var(--sepia)">sem internet</span>?</div>
+        <div class="card-body">
+          Antes do Google e do WhatsApp,<br>tudo dependia de <strong>papel, fita, disco e contato pessoal</strong>.<br><br>
+          Vamos ver como era?
+        </div>
+        <div class="flip-hint">↻ Clique para revelar</div>
+      </div>
+      <div class="card-face card-back" data-idx="3" style="display:none">
+        <div class="card-icon">📚</div>
+        <div class="card-title">Antes × Depois</div>
+        <div class="card-heading">Cada necessidade<br>tinha uma solução física</div>
+        <div class="card-body">
+          <p>✉️ <strong>Comunicar</strong> → Cartas pelos Correios (demoravam <em>dias ou semanas</em>!)</p>
+          <p>🗺 <strong>Localizar-se</strong> → Mapas de papel desdobráveis</p>
+          <p>📖 <strong>Buscar info</strong> → Enciclopédias impressas (volumes inteiros!)</p>
+          <p>💿 <strong>Ouvir música</strong> → CD player, fita cassete, LP de vinil</p>
+          <p>📹 <strong>Ver filmes</strong> → Ir até a videolocadora alugar VHS ou DVD</p>
+          <p>📰 <strong>Saber notícias</strong> → Comprar jornal na banca toda manhã</p>
+          <p style="margin-top:12px"><span class="pill-gold pill">Veja a tabela completa na aba "Analógico × Digital"</span></p>
+        </div>
+        <div class="complementar">
+          <div class="label">💡 Para complementar em aula</div>
+          <ul>
+            <li>Mostrar enciclopédia Barsa ou Britannica (uma estante inteira!) → hoje cabe na Wikipedia</li>
+            <li>Curiosidade: Wikipedia tem hoje mais de 6 milhões de artigos só em inglês</li>
+            <li>Videolocadora: Blockbuster fechou em 2014 derrotada pela Netflix — exemplo de empresa que não soube se digitalizar</li>
+            <li>Pergunte: alguém da família ainda usa algo analógico? (jornal, rádio AM, CD…)</li>
+          </ul>
+        </div>
+      </div>
+
+      <!-- ─── 5. REVOLUÇÃO TECNOLÓGICA ─── -->
+      <div class="card-face card-front" data-idx="4" style="display:none">
+        <div class="card-icon">⚡</div>
+        <div class="card-title">Slide 05 · Mudança Histórica</div>
+        <div class="card-heading">Por que falamos em<br><span style="color:var(--copper)">Revolução Digital</span>?</div>
+        <div class="card-body">
+          A palavra "revolução" é forte. Significa <strong>mudança profunda</strong>.<br><br>
+          Já houve uma <em>Revolução Industrial</em>. Agora vivemos a <em>Revolução Digital</em>. O que essas duas têm em comum?
+        </div>
+        <div class="flip-hint">↻ Clique para revelar</div>
+      </div>
+      <div class="card-face card-back" data-idx="4" style="display:none">
+        <div class="card-icon">🔥</div>
+        <div class="card-title">Antes × Depois da Revolução</div>
+        <div class="card-heading">Tudo muda:<br>trabalho, lazer, relações</div>
+        <div class="card-body">
+          <p>🏭 <strong>Revolução Industrial (séc. XVIII):</strong> a máquina substituiu o trabalho braçal. Surgiram fábricas, ferrovias, cidades grandes.</p>
+          <p>💻 <strong>Revolução Digital (séc. XX-XXI):</strong> o computador e a internet mudaram <em>tudo</em> — como trabalhamos, nos comunicamos, nos divertimos, votamos, namoramos.</p>
+          <p style="margin-top:12px"><strong>Existe um "antes" e um "depois"</strong> da era digital — assim como houve um antes e um depois da Revolução Industrial.</p>
+          <p>📝 É por isso que estudar essa transição é tão importante: para entender o mundo em que vivemos.</p>
+        </div>
+        <div class="complementar">
+          <div class="label">💡 Para complementar em aula</div>
+          <ul>
+            <li>Conexão histórica: Revolução Industrial → fim do trabalho artesanal. Revolução Digital → fim do trabalho repetitivo</li>
+            <li>No campo: mecanização (Revolução Industrial) + agricultura de precisão (Revolução Digital)</li>
+            <li>Cada revolução cria empregos novos e destrói outros. Quais profissões estão "morrendo" hoje?</li>
+            <li>Reflexão: vocês são a primeira geração que <strong>nasceu</strong> totalmente digital</li>
+          </ul>
+        </div>
+      </div>
+
+      <!-- ─── 6. FOTOGRAFIA ─── -->
+      <div class="card-face card-front" data-idx="5" style="display:none">
+        <div class="card-icon">📸</div>
+        <div class="card-title">Slide 06 · Fotografia</div>
+        <div class="card-heading">Imagine tirar uma foto<br>e só ver o resultado <span style="color:var(--copper)">3 dias depois</span>!</div>
+        <div class="card-body">
+          Hoje você tira 50 fotos do mesmo prato e escolhe a melhor.<br>
+          Antes? Cada foto era um <strong>investimento</strong>.<br><br>
+          Como era esse processo?
+        </div>
+        <div class="flip-hint">↻ Clique para revelar</div>
+      </div>
+      <div class="card-face card-back" data-idx="5" style="display:none">
+        <div class="card-icon">🎞</div>
+        <div class="card-title">Do Filme ao Pixel</div>
+        <div class="card-heading">Uma aventura<br>em 4 etapas</div>
+        <div class="card-body">
+          <p><strong>Era analógica:</strong></p>
+          <p>1️⃣ Comprar um <strong>rolo de filme</strong> (caro!) com 24 ou 36 poses</p>
+          <p>2️⃣ Fotografar com <em>muito cuidado</em> — sem ver o resultado</p>
+          <p>3️⃣ Levar o rolo para revelação no laboratório</p>
+          <p>4️⃣ Esperar <strong>dias</strong> e receber as fotos em papel</p>
+          <p style="margin-top:10px"><strong>Hoje:</strong> ✨ <span class="pill-leaf pill">Fotos ilimitadas, vê na hora, edita, publica.</span></p>
+          <p style="margin-top:8px">⚠️ Mas o álbum de fotos físico (que passava de geração em geração) está sendo substituído por arquivos no celular — que podem sumir num clique acidental.</p>
+        </div>
+        <div class="complementar">
+          <div class="label">💡 Para complementar em aula</div>
+          <ul>
+            <li>Mostrar uma máquina fotográfica antiga ou foto de filme (24 poses!)</li>
+            <li>Reflexão: você tem como ver fotos do seu nascimento? E os pais delas?</li>
+            <li>Cuidado moderno: fazer backup de fotos importantes (Google Photos, HD externo)</li>
+            <li>Comparar: o álbum físico durava 100 anos. Um arquivo digital sem backup pode durar 1 dia</li>
+          </ul>
+        </div>
+      </div>
+
+      <!-- ─── 7. DESIGUAL DESENVOLVIMENTO ─── -->
+      <div class="card-face card-front" data-idx="6" style="display:none">
+        <div class="card-icon">🌍</div>
+        <div class="card-title">Slide 07 · Desigualdade Global</div>
+        <div class="card-heading">A revolução chegou<br>ao mesmo tempo<br>em <span style="color:var(--copper)">todos os lugares</span>?</div>
+        <div class="card-body">
+          A tecnologia não nasce em todos os países simultaneamente.<br>
+          Quem inventou primeiro? Quem demorou? Por quê?
+        </div>
+        <div class="flip-hint">↻ Clique para revelar</div>
+      </div>
+      <div class="card-face card-back" data-idx="6" style="display:none">
+        <div class="card-icon">🏁</div>
+        <div class="card-title">Quem Chegou Primeiro</div>
+        <div class="card-heading">A revolução acontece<br>em ondas — não juntas</div>
+        <div class="card-body">
+          <p>Os <strong>primeiros</strong> países a desenvolver computadores e internet:</p>
+          <p>🇺🇸 Estados Unidos · 🇬🇧 Inglaterra · 🇯🇵 Japão · 🇷🇺 União Soviética (Rússia)</p>
+          <p style="margin-top:10px">No Brasil, a internet só se popularizou no <strong>final do século XX</strong> (anos 1990).</p>
+          <p style="margin-top:10px"><strong>Mesmo dentro do Brasil</strong>, a tecnologia chegou em ritmos diferentes: cidades grandes primeiro, depois pequenas, depois zona rural. Ainda hoje há <em>desigualdade digital</em> — comunidades sem internet de qualidade.</p>
+        </div>
+        <div class="complementar">
+          <div class="label">💡 Para complementar em aula</div>
+          <ul>
+            <li>Paralelo: Revolução Industrial começou na Inglaterra. Revolução Digital nos EUA</li>
+            <li>Por que esses países? Investimento em ciência, universidades fortes, contexto de guerra</li>
+            <li>Reflexão local: quem aqui tem internet boa em casa? E na zona rural?</li>
+            <li>"Apartheid digital": pessoas sem acesso ficam excluídas de oportunidades, serviços, educação</li>
+          </ul>
+        </div>
+      </div>
+
+      <!-- ─── 8. PRIMEIROS COMPUTADORES ─── -->
+      <div class="card-face card-front" data-idx="7" style="display:none">
+        <div class="card-icon">🧮</div>
+        <div class="card-title">Slide 08 · Pré-História</div>
+        <div class="card-heading">Quem inventou<br>o computador?</div>
+        <div class="card-body">
+          O notebook que você conhece é <strong>recente</strong>.<br>
+          Mas a <em>ideia</em> de uma "máquina de calcular" tem mais de <strong>200 anos</strong>!
+        </div>
+        <div class="flip-hint">↻ Clique para revelar</div>
+      </div>
+      <div class="card-face card-back" data-idx="7" style="display:none">
+        <div class="card-icon">⏳</div>
+        <div class="card-title">Marcos Antes de 1940</div>
+        <div class="card-heading">Quatro nomes<br>que mudaram tudo</div>
+        <div class="card-body">
+          <p>📐 <strong>1822 — Charles Babbage</strong> projeta uma máquina de calcular mecânica. É chamado de "pai do computador".</p>
+          <p>👩‍💻 <strong>1843 — Ada Lovelace</strong> escreve o <em>primeiro algoritmo</em> da história. Ela é a <strong>primeira programadora</strong> do mundo.</p>
+          <p>🗂 <strong>1890 — Herman Hollerith</strong> inventa o cartão perfurado para contar dados do censo dos EUA. Sua empresa virou a <em>IBM</em>.</p>
+          <p>🧠 <strong>1936 — Alan Turing</strong> cria o modelo teórico do computador moderno (a "Máquina de Turing").</p>
+        </div>
+        <div class="complementar">
+          <div class="label">💡 Para complementar em aula</div>
+          <ul>
+            <li>Ada Lovelace era filha do poeta Lord Byron — combinou arte e ciência</li>
+            <li>Linguagem de programação <strong>Ada</strong> recebeu esse nome em homenagem a ela</li>
+            <li>Cartões perfurados foram usados <em>até a década de 1970</em> em computadores grandes</li>
+            <li>Reforçar: muito antes do silício, já existia "computação" — só que mecânica</li>
+          </ul>
+        </div>
+      </div>
+
+      <!-- ─── 9. ALAN TURING ─── -->
+      <div class="card-face card-front" data-idx="8" style="display:none">
+        <div class="card-icon">🔐</div>
+        <div class="card-title">Slide 09 · O Pai da Computação</div>
+        <div class="card-heading">Alan Turing:<br>quebrou códigos nazistas<br>e <span style="color:var(--copper)">encurtou uma guerra</span></div>
+        <div class="card-body">
+          Sem ele, não existiria a Siri, a Alexa nem o ChatGPT.<br>
+          Você sabe quem foi <strong>Alan Turing</strong>?
+        </div>
+        <div class="flip-hint">↻ Clique para revelar</div>
+      </div>
+      <div class="card-face card-back" data-idx="8" style="display:none">
+        <div class="card-icon">🧮</div>
+        <div class="card-title">1912 — 1954</div>
+        <div class="card-heading">O matemático que<br>plantou a IA</div>
+        <div class="card-body">
+          <p><strong>Alan Turing</strong> foi um matemático britânico que mudou a história em duas frentes:</p>
+          <p>⚔️ Durante a <strong>2ª Guerra Mundial</strong>, ele liderou a equipe que decifrou os códigos secretos da máquina <em>Enigma</em> dos nazistas — o que ajudou a <strong>encurtar a guerra em vários anos</strong>.</p>
+          <p>🤖 Ele propôs a pergunta que originou a <strong>Inteligência Artificial</strong>: <em>"Uma máquina pode pensar?"</em></p>
+          <p style="margin-top:12px">💡 A IA que está em <span class="pill-teal pill">Siri</span>, <span class="pill-mauve pill">Alexa</span> e <span class="pill-leaf pill">ChatGPT</span> existe graças às ideias que Turing plantou nos anos 1950.</p>
+        </div>
+        <div class="complementar">
+          <div class="label">💡 Para complementar em aula</div>
+          <ul>
+            <li>Filme recomendado: "O Jogo da Imitação" (2014) — biografia de Turing</li>
+            <li>Triste: Turing foi perseguido por ser homossexual e morreu jovem (41 anos). Recebeu pedido oficial de desculpas do governo britânico em 2009</li>
+            <li>"Teste de Turing" = se você conversa com uma máquina e não percebe que é máquina, ela passou no teste</li>
+            <li>O ChatGPT já passa no Teste de Turing em muitas situações — algo impensável há 5 anos</li>
+          </ul>
+        </div>
+      </div>
+
+      <!-- ─── 10. ENIAC ─── -->
+      <div class="card-face card-front" data-idx="9" style="display:none">
+        <div class="card-icon">🖥️</div>
+        <div class="card-title">Slide 10 · Primeiro Computador Eletrônico</div>
+        <div class="card-heading">O ENIAC pesava<br><span style="color:var(--copper)">30 toneladas</span><br>(cinco elefantes!)</div>
+        <div class="card-body">
+          O primeiro computador eletrônico de uso geral <strong>ocupava uma sala inteira</strong>.<br>
+          Hoje, seu celular tem mais poder do que ele.<br><br>
+          Bem mais.
+        </div>
+        <div class="flip-hint">↻ Clique para revelar</div>
+      </div>
+      <div class="card-face card-back" data-idx="9" style="display:none">
+        <div class="card-icon">🏛</div>
+        <div class="card-title">ENIAC · 1946 · Filadélfia (EUA)</div>
+        <div class="card-heading">Uma "fera"<br>do tamanho de um galpão</div>
+        <div class="card-body">
+          <p>📏 <strong>Pesava 30 toneladas</strong> — o equivalente a 5 elefantes</p>
+          <p>🏠 <strong>Ocupava uma sala inteira</strong> — cerca de 167 m²</p>
+          <p>⚡ Consumia tanta energia que <em>"as luzes da cidade piscavam"</em> quando ligava</p>
+          <p>🎯 Função principal: <strong>cálculos militares</strong> de balística</p>
+          <p>📡 Não conseguia se comunicar com outros computadores</p>
+          <p style="margin-top:14px">📱 Compare com seu smartphone: cabe no bolso e tem <strong>bilhões de vezes</strong> mais poder de processamento. Em ~80 anos, a computação encolheu absurdamente.</p>
+        </div>
+        <div class="complementar">
+          <div class="label">💡 Para complementar em aula</div>
+          <ul>
+            <li>ENIAC = Electronic Numerical Integrator and Computer</li>
+            <li>Tinha 17.468 válvulas — peças que queimavam toda hora. Manutenção constante</li>
+            <li>Lei de Moore: a cada ~2 anos, dobra o poder dos chips. Daí vem essa miniaturização</li>
+            <li>Reflexão: que evolução vai parecer "ENIAC" daqui a 80 anos? (talvez nossos celulares atuais)</li>
+          </ul>
+        </div>
+      </div>
+
+      <!-- ─── 11. GUERRA E COMPUTADORES ─── -->
+      <div class="card-face card-front" data-idx="10" style="display:none">
+        <div class="card-icon">⚔️</div>
+        <div class="card-title">Slide 11 · Tecnologia & Guerra</div>
+        <div class="card-heading">Os primeiros computadores<br>nasceram para a <span style="color:var(--copper)">guerra</span></div>
+        <div class="card-body">
+          Não foi por acaso.<br>
+          Existe uma ligação <strong>histórica e profunda</strong> entre conflitos militares e o avanço da tecnologia.
+        </div>
+        <div class="flip-hint">↻ Clique para revelar</div>
+      </div>
+      <div class="card-face card-back" data-idx="10" style="display:none">
+        <div class="card-icon">🛡</div>
+        <div class="card-title">Conexão entre Estado, Exército e Tecnologia</div>
+        <div class="card-heading">Os 3 grandes computadores<br>da 2ª Guerra</div>
+        <div class="card-body">
+          <p>🇩🇪 <strong>Z1 (1934)</strong> — criado pela Alemanha antes da guerra</p>
+          <p>🇬🇧 <strong>Colossus (1943)</strong> — construído pelos britânicos para decifrar os códigos nazistas</p>
+          <p>🇺🇸 <strong>ENIAC (1946)</strong> — financiado pelo exército dos EUA para cálculos balísticos</p>
+          <p style="margin-top:12px">Essa união entre <strong>governo + exército + indústria de tecnologia</strong> é chamada de <span class="pill">complexo militar-industrial</span> — e existe até hoje.</p>
+          <p>🌐 Curiosidade: a <strong>internet</strong> também nasceu para fins militares (Arpanet) — vamos ver no slide 15.</p>
+        </div>
+        <div class="complementar">
+          <div class="label">💡 Para complementar em aula</div>
+          <ul>
+            <li>GPS, micro-ondas, internet, computadores, drones — todos têm origem militar</li>
+            <li>Reflexão crítica: a guerra <em>impulsiona</em> a tecnologia, mas a que custo humano?</li>
+            <li>Hoje: drones agrícolas usam exatamente a mesma tecnologia dos drones militares</li>
+            <li>Pense: o que aprendemos sobre a relação entre poder e tecnologia?</li>
+          </ul>
+        </div>
+      </div>
+
+      <!-- ─── 12. CÓDIGO BINÁRIO ─── -->
+      <div class="card-face card-front" data-idx="11" style="display:none">
+        <div class="card-icon">🔢</div>
+        <div class="card-title">Slide 12 · A Língua do Computador</div>
+        <div class="card-heading">Computadores só<br>"falam" duas coisas:<br><span style="color:var(--gold)">0</span> e <span style="color:var(--teal)">1</span></div>
+        <div class="card-body">
+          O ChatGPT escreve poesias, mas no fundo tudo é <strong>0 e 1</strong>.<br>
+          Como duas letrinhas conseguem fazer tudo isso?
+        </div>
+        <div class="flip-hint">↻ Clique para revelar</div>
+      </div>
+      <div class="card-face card-back" data-idx="11" style="display:none">
+        <div class="card-icon">💡</div>
+        <div class="card-title">Sistema Binário</div>
+        <div class="card-heading">Como um interruptor<br>de luz: ligado / desligado</div>
+        <div class="card-body">
+          <p>O computador não entende português, inglês ou japonês.<br>Ele entende apenas <strong>BINÁRIO</strong>:</p>
+          <p>🟦 <strong>0</strong> = desligado (sem corrente elétrica)</p>
+          <p>🟧 <strong>1</strong> = ligado (com corrente elétrica)</p>
+          <p style="margin-top:10px">Com sequências de 0 e 1, o computador representa <em>tudo</em> — letras, números, fotos, músicas.</p>
+          <p>🔤 Veja como letras viram binário:</p>
+          <p>A → <span class="pill">0100 0001</span> · E → <span class="pill">0100 0101</span> · I → <span class="pill">0100 1001</span></p>
+          <p style="margin-top:10px">💡 É como um interruptor de luz: ou está ligado (1), ou desligado (0). Simples — mas com <strong>bilhões</strong> trabalhando juntos!</p>
+        </div>
+        <div class="complementar">
+          <div class="label">💡 Para complementar em aula</div>
+          <ul>
+            <li>Cada caractere = 8 bits (0s e 1s) = 1 byte. Aprofundamos no material complementar de Números Binários</li>
+            <li>Atividade: peça aos alunos para "escreverem o nome em binário" usando uma tabela ASCII</li>
+            <li>Por que 0 e 1? Porque eletricidade só tem 2 estados: passa ou não passa</li>
+            <li>Curiosidade: existem computadores quânticos que usam <em>0, 1 e os dois ao mesmo tempo</em> (qubits) — a próxima revolução!</li>
+          </ul>
+        </div>
+      </div>
+
+      <!-- ─── 13. TRANSISTOR ─── -->
+      <div class="card-face card-front" data-idx="12" style="display:none">
+        <div class="card-icon">🔬</div>
+        <div class="card-title">Slide 13 · A Peça Mágica</div>
+        <div class="card-heading">A invenção minúscula<br>que mudou <span style="color:var(--copper)">tudo</span></div>
+        <div class="card-body">
+          Em 1947, três pesquisadores ganham o Nobel inventando <strong>uma peça menor que um grão de areia</strong>.<br><br>
+          Sem ela, não existiriam celulares.
+        </div>
+        <div class="flip-hint">↻ Clique para revelar</div>
+      </div>
+      <div class="card-face card-back" data-idx="12" style="display:none">
+        <div class="card-icon">⚡</div>
+        <div class="card-title">O Transistor · 1947</div>
+        <div class="card-heading">O "tijolinho" digital</div>
+        <div class="card-body">
+          <p>O <strong>transistor</strong> é um <em>interruptor eletrônico</em> minúsculo. Ele controla a passagem de corrente elétrica — exatamente o que precisamos para representar os 0s e 1s.</p>
+          <p>📉 Com o tempo, ele ficou <strong>cada vez menor e mais barato</strong>. Foi assim que computadores deixaram de ser do tamanho de uma sala e viraram celulares.</p>
+          <p style="margin-top:12px"><strong>Para você ter uma ideia:</strong></p>
+          <p>📱 Um chip de celular moderno tem <span class="pill">~20 BILHÕES de transistores</span></p>
+          <p>📐 Cada transistor é <strong>menor que um vírus</strong></p>
+          <p>🤯 Algo absolutamente impensável para os engenheiros de 1947!</p>
+        </div>
+        <div class="complementar">
+          <div class="label">💡 Para complementar em aula</div>
+          <ul>
+            <li>1947: 1 transistor. 2024: 20 bilhões num chip do tamanho da unha. Crescimento exponencial</li>
+            <li>Lei de Moore (1965): cada ~2 anos, dobra a quantidade de transistores num chip</li>
+            <li>Essa miniaturização é o que permitiu drones, sensores agrícolas, GPS de máquinas</li>
+            <li>Curiosidade: hoje os transistores são feitos com técnicas de "litografia" — desenho com luz em silício</li>
+          </ul>
+        </div>
+      </div>
+
+      <!-- ─── 14. PC EM CASA ─── -->
+      <div class="card-face card-front" data-idx="13" style="display:none">
+        <div class="card-icon">💻</div>
+        <div class="card-title">Slide 14 · O PC Pessoal</div>
+        <div class="card-heading">Quando o computador<br>chegou às <span style="color:var(--copper)">casas comuns</span></div>
+        <div class="card-body">
+          Por décadas, computador era coisa de governo e empresa enorme.<br>
+          Quando ele virou eletrodoméstico?
+        </div>
+        <div class="flip-hint">↻ Clique para revelar</div>
+      </div>
+      <div class="card-face card-back" data-idx="13" style="display:none">
+        <div class="card-icon">🏠</div>
+        <div class="card-title">Anos 1970-80</div>
+        <div class="card-heading">A democratização<br>do computador</div>
+        <div class="card-body">
+          <p>🍎 <strong>1977 — Apple I</strong> — Steve Jobs e Steve Wozniak lançam o primeiro PC para uso doméstico. (Sim, dois jovens montaram numa garagem!)</p>
+          <p>🖥 <strong>1982 — IBM PC</strong> — Estabelece o "padrão" dos computadores pessoais que dominou décadas</p>
+          <p>🖱 <strong>1984 — Macintosh</strong> — Primeiro PC com <strong>interface gráfica</strong> (janelas, ícones) e mouse</p>
+          <p style="margin-top:12px">⚠️ <strong>Antes disso:</strong> para usar um computador, você digitava <em>comandos de texto</em> numa tela preta. Nada de clicar em ícones!</p>
+        </div>
+        <div class="complementar">
+          <div class="label">💡 Para complementar em aula</div>
+          <ul>
+            <li>Mostrar imagem de um terminal "DOS" preto com texto verde — choque para os alunos</li>
+            <li>Filme recomendado: "Piratas do Vale do Silício" (1999) — sobre Jobs e Bill Gates</li>
+            <li>A interface gráfica (clicar em ícones) <strong>não foi inventada pela Apple</strong> — eles "compraram" da Xerox PARC. História polêmica!</li>
+            <li>Hoje: os celulares fizeram a 2ª onda de "democratização" — alcançaram pessoas que nunca tiveram PC</li>
+          </ul>
+        </div>
+      </div>
+
+      <!-- ─── 15. NASCIMENTO DA INTERNET ─── -->
+      <div class="card-face card-front" data-idx="14" style="display:none">
+        <div class="card-icon">🌍</div>
+        <div class="card-title">Slide 15 · A Grande Rede</div>
+        <div class="card-heading">Como nasceu<br>a <span style="color:var(--teal)">internet</span>?</div>
+        <div class="card-body">
+          A internet não surgiu pronta. Levou <strong>décadas</strong> sendo construída.<br>
+          E o início... também foi militar.
+        </div>
+        <div class="flip-hint">↻ Clique para revelar</div>
+      </div>
+      <div class="card-face card-back" data-idx="14" style="display:none">
+        <div class="card-icon">📡</div>
+        <div class="card-title">Linha do Tempo da Internet</div>
+        <div class="card-heading">De rede militar<br>a fenômeno mundial</div>
+        <div class="card-body">
+          <p>🪖 <strong>Anos 1960 — Arpanet</strong> — o governo dos EUA cria uma rede que conecta universidades e bases militares</p>
+          <p>📧 <strong>1971 — E-mail</strong> — funcionário do Departamento de Defesa cria o "correio eletrônico"</p>
+          <p>🔢 <strong>1978 — Endereço IP</strong> — cada dispositivo na rede ganha um "RG" único</p>
+          <p>🕸 <strong>1990 — Web (WWW)</strong> — Tim Berners-Lee inventa as "páginas" — a internet vira algo que qualquer pessoa pode usar</p>
+          <p>🏢 <strong>1995</strong> — o governo dos EUA <strong>privatiza</strong> a infraestrutura da internet — começa o "boom" comercial</p>
+        </div>
+        <div class="complementar">
+          <div class="label">💡 Para complementar em aula</div>
+          <ul>
+            <li>Tim Berners-Lee = inventor da Web. Existe internet sem Web (e-mail é um exemplo)</li>
+            <li>Web ≠ Internet: a internet é a "estrada", a web são os "sites" que andam por ela</li>
+            <li>"Privatização da internet": antes era bem pública. Hoje é dominada por gigantes (Google, Meta, Amazon)</li>
+            <li>Reflexão: 35 anos atrás (1990), praticamente ninguém usava a Web. Hoje, é vital para tudo</li>
+          </ul>
+        </div>
+      </div>
+
+      <!-- ─── 16. INTERNET NO BRASIL ─── -->
+      <div class="card-face card-front" data-idx="15" style="display:none">
+        <div class="card-icon">📡</div>
+        <div class="card-title">Slide 16 · Brasil 1990</div>
+        <div class="card-heading">Quando a internet chegou<br>era <span style="color:var(--copper)">caríssima e lenta</span></div>
+        <div class="card-body">
+          Tem gente da família dos seus pais que ainda lembra:<br>
+          conectar à internet era um <strong>evento</strong>.<br><br>
+          Como era?
+        </div>
+        <div class="flip-hint">↻ Clique para revelar</div>
+      </div>
+      <div class="card-face card-back" data-idx="15" style="display:none">
+        <div class="card-icon">🐢</div>
+        <div class="card-title">Anos 1990 → Hoje</div>
+        <div class="card-heading">Da internet "discada"<br>à banda larga 5G</div>
+        <div class="card-body">
+          <p><strong>Internet no Brasil — anos 1990:</strong></p>
+          <p>⏰ Conexão paga <strong>por horário</strong> (geralmente à noite, mais barato)</p>
+          <p>🐌 Conexão lenta e instável — abrir uma foto demorava minutos</p>
+          <p>📞 Usava a linha telefônica — quem tentava ligar pra você, ouvia "ocupado"</p>
+          <p>🖥 Internet só ficava <strong>no computador de casa</strong></p>
+          <p style="margin-top:12px"><strong>Hoje:</strong> ✨ <span class="pill-leaf pill">Banda larga, 4G, 5G — internet em todo lugar, o tempo todo, no celular.</span></p>
+          <p>🌾 <strong>No campo:</strong> ainda hoje há áreas com sinal ruim. Por isso 5G rural é prioridade política.</p>
+        </div>
+        <div class="complementar">
+          <div class="label">💡 Para complementar em aula</div>
+          <ul>
+            <li>"Som da internet discada" — toque em sala (existe no YouTube). Vai gerar muita risada</li>
+            <li>Curiosidade: Bitnet, Renpac, BBS — redes brasileiras antes da internet "geral"</li>
+            <li>Hoje: 5G chega antes em capitais. Cidade do interior espera. Zona rural espera ainda mais</li>
+            <li>Conexão com agroecologia: agricultura de precisão depende de boa conectividade</li>
+          </ul>
+        </div>
+      </div>
+
+      <!-- ─── 17. SMARTPHONES E APPS ─── -->
+      <div class="card-face card-front" data-idx="16" style="display:none">
+        <div class="card-icon">📲</div>
+        <div class="card-title">Slide 17 · Era dos Apps</div>
+        <div class="card-heading">Smartphones nasceram<br>em <span style="color:var(--teal)">1994</span> — e aí?</div>
+        <div class="card-body">
+          O primeiro "smartphone" tinha 30 anos.<br>
+          Mas só virou febre nos anos 2000, com algo novo:<br><strong>os aplicativos</strong>.
+        </div>
+        <div class="flip-hint">↻ Clique para revelar</div>
+      </div>
+      <div class="card-face card-back" data-idx="16" style="display:none">
+        <div class="card-icon">🎯</div>
+        <div class="card-title">A Era dos Aplicativos</div>
+        <div class="card-heading">Apps mudaram nosso<br>comportamento <em>radicalmente</em></div>
+        <div class="card-body">
+          <p>📱 <strong>1994 — Primeiro smartphone</strong> (combinação de telefone + agenda eletrônica)</p>
+          <p>🚀 <strong>Anos 2000 — Explosão dos smartphones</strong> e nascimento dos apps modernos</p>
+          <p style="margin-top:10px">Categorias de apps que mudaram tudo:</p>
+          <p>📸 <span class="pill-mauve pill">Redes sociais</span> — Instagram, TikTok, X (Twitter)</p>
+          <p>🎵 <span class="pill-teal pill">Streaming</span> — Netflix, Spotify, Disney+</p>
+          <p>💰 <span class="pill-leaf pill">Bancos digitais</span> — Nubank, PicPay, Inter</p>
+          <p>🛵 <span class="pill-gold pill">Entrega</span> — iFood, Uber, 99</p>
+          <p style="margin-top:10px">📊 Hoje, o brasileiro passa em média <strong>5 horas por dia</strong> no celular.</p>
+        </div>
+        <div class="complementar">
+          <div class="label">💡 Para complementar em aula</div>
+          <ul>
+            <li>Atividade: cada um faz lista dos 3 apps que mais usa. Compartilhem em grupo</li>
+            <li>iPhone (2007) e App Store (2008) foram os divisores de águas</li>
+            <li>Discussão crítica: 5h/dia no celular é muito ou pouco? O que estamos deixando de fazer?</li>
+            <li>No campo: já existem dezenas de "agro-apps" (Plantix, Agro Decision, Aegro)</li>
+          </ul>
+        </div>
+      </div>
+
+      <!-- ─── 18. INTERNET NO BRASIL HOJE ─── -->
+      <div class="card-face card-front" data-idx="17" style="display:none">
+        <div class="card-icon">🇧🇷</div>
+        <div class="card-title">Slide 18 · Brasil Hoje</div>
+        <div class="card-heading">Brasil é<br>"<span style="color:var(--copper)">mobile first</span>"</div>
+        <div class="card-body">
+          <strong>91,5%</strong> dos lares brasileiros têm internet. E o aparelho mais usado para acessar não é o computador.<br><br>
+          Você já adivinha qual é?
+        </div>
+        <div class="flip-hint">↻ Clique para revelar</div>
+      </div>
+      <div class="card-face card-back" data-idx="17" style="display:none">
+        <div class="card-icon">📊</div>
+        <div class="card-title">IBGE 2022</div>
+        <div class="card-heading">Os dispositivos de acesso<br>à internet no Brasil</div>
+        <div class="card-body">
+          <p>📱 <strong>Celular: 98,9%</strong> dos usuários — disparado o mais usado</p>
+          <p>📺 <strong>Televisor (smart TV): 47,5%</strong></p>
+          <p>💻 <strong>Computador pessoal: 35,5%</strong></p>
+          <p>📲 <strong>Tablet: 7,6%</strong></p>
+          <p style="margin-top:14px"><strong>Conclusão:</strong> o Brasil é um país <span class="pill">mobile first</span> — a maior parte das pessoas <em>nunca</em> teve um computador, mas tem celular.</p>
+          <p>📚 Isso impacta a educação, o jornalismo, o comércio — tudo precisa ser pensado <strong>primeiro para o celular</strong>.</p>
+        </div>
+        <div class="complementar">
+          <div class="label">💡 Para complementar em aula</div>
+          <ul>
+            <li>Comparação: nos EUA, computador ainda é mais comum. No Brasil, celular dominou</li>
+            <li>Pix é um exemplo brasileiro de tecnologia "mobile first" — pensado para celular</li>
+            <li>Atividade: contar quantos têm computador em casa × quantos só têm celular</li>
+            <li>Reflexão: estudar e trabalhar pelo celular tem limites — pense numa monografia digitada no celular!</li>
+          </ul>
+        </div>
+      </div>
+
+      <!-- ─── 19. JORNALISMO ─── -->
+      <div class="card-face card-front" data-idx="18" style="display:none">
+        <div class="card-icon">📰</div>
+        <div class="card-title">Slide 19 · Jornalismo Digital</div>
+        <div class="card-heading">Antes: notícia chegava em<br><span style="color:var(--copper)">horas ou dias</span><br>Hoje: em <span style="color:var(--teal)">segundos</span></div>
+        <div class="card-body">
+          Mas com toda essa velocidade...<br>
+          <strong>como saber se uma notícia é verdadeira?</strong>
+        </div>
+        <div class="flip-hint">↻ Clique para revelar</div>
+      </div>
+      <div class="card-face card-back" data-idx="18" style="display:none">
+        <div class="card-icon">⚠️</div>
+        <div class="card-title">A Era das Fake News</div>
+        <div class="card-heading">Velocidade trouxe<br>um problema novo</div>
+        <div class="card-body">
+          <p><strong>Antes da internet:</strong></p>
+          <p>📰 Comprar jornal na banca · 📺 Telejornal em horário fixo · 📻 Rádio · As notícias chegavam <em>depois</em> dos fatos</p>
+          <p style="margin-top:10px"><strong>Hoje:</strong> notícias em <span class="pill-leaf pill">tempo real</span> direto no celular, de qualquer canto do mundo.</p>
+          <p style="margin-top:10px">⚠️ Mas isso trouxe um problema gigante: <strong>fake news</strong> — notícias falsas se espalham com a <em>mesma velocidade</em> das verdadeiras.</p>
+          <p style="margin-top:12px">💡 <strong>Dica importante:</strong> antes de compartilhar uma notícia, verifique a fonte! Consulte mais de um veículo confiável e cheque em sites de checagem (Aos Fatos, Lupa, AFP Checamos).</p>
+        </div>
+        <div class="complementar">
+          <div class="label">💡 Para complementar em aula</div>
+          <ul>
+            <li>Atividade: trazer 2-3 manchetes do dia. Pedir para os alunos checarem fontes</li>
+            <li>"Sites de checagem" são jornalistas que verificam notícias profissionalmente</li>
+            <li>Fake news no campo: corrente sobre "dengue dos plantios", "agrotóxico bom para saúde", etc.</li>
+            <li>Reforçar: WhatsApp não é fonte. Tio do Zap não é jornalista. Sempre cheque!</li>
+          </ul>
+        </div>
+      </div>
+
+      <!-- ─── 20. REFLEXÃO FINAL ─── -->
+      <div class="card-face card-front" data-idx="19" style="display:none">
+        <div class="card-icon">🤔</div>
+        <div class="card-title">Slide 20 · Encerramento</div>
+        <div class="card-heading">O que aprendemos<br>com essa <span style="color:var(--copper)">jornada</span>?</div>
+        <div class="card-body">
+          Saímos de um mundo de cartas, vinis e jornais impressos<br>
+          e chegamos a um mundo de celulares, ChatGPT e drones agrícolas.<br><br>
+          Cinco reflexões para levar para a vida.
+        </div>
+        <div class="flip-hint">↻ Clique para revelar</div>
+      </div>
+      <div class="card-face card-back" data-idx="19" style="display:none">
+        <div class="card-icon">🌟</div>
+        <div class="card-title">5 Pontos para Levar</div>
+        <div class="card-heading">A Era Digital<br>nos transforma — para o bem e para o mal</div>
+        <div class="card-body">
+          <p>✅ <strong>Acesso à informação</strong> nunca foi tão fácil — mas exige <em>senso crítico</em> para separar o verdadeiro do falso</p>
+          <p>✅ <strong>A memória mudou de forma:</strong> do álbum físico para a nuvem</p>
+          <p>✅ <strong>O trabalho se transformou:</strong> profissões que não existiam 30 anos atrás (criador de conteúdo, dev de app, analista de dados)</p>
+          <p>✅ <strong>A desigualdade digital existe:</strong> nem todos têm acesso de qualidade — especialmente no campo</p>
+          <p>✅ <strong>Saber informática</strong> deixou de ser diferencial — virou necessidade básica para a cidadania</p>
+          <p style="margin-top:10px;font-style:italic">📌 No mundo digital, ser <strong>crítico</strong> é tão importante quanto ser <strong>conectado</strong>.</p>
+        </div>
+        <div class="complementar">
+          <div class="label">💡 Para complementar em aula</div>
+          <ul>
+            <li>Encerre pedindo: "uma palavra que define a era digital para você". Anote no quadro</li>
+            <li>Conexão com a próxima unidade: <strong>Algoritmos</strong> — entendendo as "regras invisíveis" do digital</li>
+            <li>Tarefa de casa: conversar com avós/pais sobre como era viver sem internet — anotar 3 diferenças</li>
+            <li>Discussão futura: tecnologia como aliada da agroecologia × tecnologia como ameaça à biodiversidade</li>
+          </ul>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+<!-- ════════════════════════════════════════════
+     LINHA DO TEMPO
+════════════════════════════════════════════ -->
+<div class="section" id="tab-timeline">
+  <div class="panel">
+    <h2>⏳ Linha do Tempo da Era Digital</h2>
+    <p class="lead">Os marcos cronológicos que vimos nos flash-cards, organizados em uma única visão. Use para fixar a ordem dos acontecimentos.</p>
+
+    <div class="timeline">
+      <div class="tl-item">
+        <div class="tl-year">1822</div>
+        <div class="tl-dot"></div>
+        <div class="tl-content">
+          <h3>📐 Charles Babbage projeta a Máquina Analítica</h3>
+          <p>Primeira máquina de calcular mecânica. Pai do computador.</p>
+        </div>
+      </div>
+      <div class="tl-item">
+        <div class="tl-year">1843</div>
+        <div class="tl-dot"></div>
+        <div class="tl-content">
+          <h3>👩‍💻 Ada Lovelace escreve o primeiro algoritmo</h3>
+          <p>É reconhecida como a primeira programadora da história.</p>
+        </div>
+      </div>
+      <div class="tl-item">
+        <div class="tl-year">1890</div>
+        <div class="tl-dot"></div>
+        <div class="tl-content">
+          <h3>🗂 Hollerith inventa o cartão perfurado</h3>
+          <p>Usado para tabular o censo dos EUA. Sua empresa virou a IBM.</p>
+        </div>
+      </div>
+      <div class="tl-item">
+        <div class="tl-year">1936</div>
+        <div class="tl-dot"></div>
+        <div class="tl-content">
+          <h3>🧠 Alan Turing cria o modelo teórico do computador</h3>
+          <p>A "Máquina de Turing" — base teórica de toda a computação.</p>
+        </div>
+      </div>
+      <div class="tl-item">
+        <div class="tl-year">1946</div>
+        <div class="tl-dot"></div>
+        <div class="tl-content">
+          <h3>🖥 ENIAC — primeiro computador eletrônico</h3>
+          <p>30 toneladas, ocupava uma sala. Cálculos militares de balística.</p>
+        </div>
+      </div>
+      <div class="tl-item">
+        <div class="tl-year">1947</div>
+        <div class="tl-dot"></div>
+        <div class="tl-content">
+          <h3>🔬 Invenção do transistor</h3>
+          <p>Permite a miniaturização — caminho para o PC e o celular.</p>
+        </div>
+      </div>
+      <div class="tl-item">
+        <div class="tl-year">1960s</div>
+        <div class="tl-dot"></div>
+        <div class="tl-content">
+          <h3>🪖 Arpanet — embrião da internet</h3>
+          <p>Rede militar/universitária criada pelo governo dos EUA.</p>
+        </div>
+      </div>
+      <div class="tl-item">
+        <div class="tl-year">1971</div>
+        <div class="tl-dot"></div>
+        <div class="tl-content">
+          <h3>📧 Surge o e-mail</h3>
+          <p>Primeira "mensagem eletrônica" da história.</p>
+        </div>
+      </div>
+      <div class="tl-item">
+        <div class="tl-year">1973</div>
+        <div class="tl-dot"></div>
+        <div class="tl-content">
+          <h3>📞 Primeiro telefone celular</h3>
+          <p>Pesava quase 1 kg, era enorme — só servia para ligações.</p>
+        </div>
+      </div>
+      <div class="tl-item">
+        <div class="tl-year">1977</div>
+        <div class="tl-dot"></div>
+        <div class="tl-content">
+          <h3>🍎 Apple I — Steve Jobs &amp; Wozniak</h3>
+          <p>Primeiro PC voltado para uso doméstico.</p>
+        </div>
+      </div>
+      <div class="tl-item">
+        <div class="tl-year">1982</div>
+        <div class="tl-dot"></div>
+        <div class="tl-content">
+          <h3>💻 IBM PC — padrão dos computadores pessoais</h3>
+          <p>Estabelece a arquitetura que dominará as próximas décadas.</p>
+        </div>
+      </div>
+      <div class="tl-item">
+        <div class="tl-year">1984</div>
+        <div class="tl-dot"></div>
+        <div class="tl-content">
+          <h3>🖱 Macintosh — interface gráfica e mouse</h3>
+          <p>Pela primeira vez, dá para "clicar em ícones" em vez de digitar comandos.</p>
+        </div>
+      </div>
+      <div class="tl-item">
+        <div class="tl-year">1990</div>
+        <div class="tl-dot"></div>
+        <div class="tl-content">
+          <h3>🕸 Tim Berners-Lee inventa a Web</h3>
+          <p>A internet vira algo que qualquer pessoa pode usar (com sites e links).</p>
+        </div>
+      </div>
+      <div class="tl-item">
+        <div class="tl-year">1994</div>
+        <div class="tl-dot"></div>
+        <div class="tl-content">
+          <h3>📱 Primeiro smartphone do mundo</h3>
+          <p>Telefone + agenda eletrônica. Antecessor do iPhone.</p>
+        </div>
+      </div>
+      <div class="tl-item">
+        <div class="tl-year">1995</div>
+        <div class="tl-dot"></div>
+        <div class="tl-content">
+          <h3>🌐 Internet privatizada — chega ao Brasil</h3>
+          <p>Começa a popularização da web como ferramenta comercial.</p>
+        </div>
+      </div>
+      <div class="tl-item">
+        <div class="tl-year">2007</div>
+        <div class="tl-dot"></div>
+        <div class="tl-content">
+          <h3>🚀 iPhone — a era dos apps começa</h3>
+          <p>Steve Jobs apresenta o smartphone que muda os celulares para sempre.</p>
+        </div>
+      </div>
+      <div class="tl-item">
+        <div class="tl-year">2010s</div>
+        <div class="tl-dot"></div>
+        <div class="tl-content">
+          <h3>📲 Era das redes sociais e streaming</h3>
+          <p>Instagram, TikTok, Netflix, Spotify, Uber, iFood mudam o cotidiano.</p>
+        </div>
+      </div>
+      <div class="tl-item">
+        <div class="tl-year">2022</div>
+        <div class="tl-dot"></div>
+        <div class="tl-content">
+          <h3>🤖 ChatGPT inaugura a era da IA generativa</h3>
+          <p>Inteligência artificial começa a "conversar" com qualquer pessoa.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ════════════════════════════════════════════
+     COMPARAÇÃO ANALÓGICO × DIGITAL
+════════════════════════════════════════════ -->
+<div class="section" id="tab-compare">
+  <div class="panel">
+    <h2>🔄 Mundo Analógico × Mundo Digital</h2>
+    <p class="lead">A mesma necessidade humana — comunicar, ouvir música, encontrar caminho — resolvida de jeitos completamente diferentes em cada época.</p>
+
+    <table class="comp-table">
+      <thead>
+        <tr>
+          <th class="col-need">Necessidade</th>
+          <th>Solução Analógica</th>
+          <th>Solução Digital</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td class="col-need">💬 Comunicar-se</td>
+          <td class="analog">Cartas pelos Correios (dias/semanas)</td>
+          <td class="digital">WhatsApp, e-mail (instantâneo)</td>
+        </tr>
+        <tr>
+          <td class="col-need">🗺 Encontrar caminho</td>
+          <td class="analog">Mapas de papel desdobráveis</td>
+          <td class="digital">Google Maps / GPS</td>
+        </tr>
+        <tr>
+          <td class="col-need">📚 Buscar informação</td>
+          <td class="analog">Enciclopédia impressa em vários volumes</td>
+          <td class="digital">Google · Wikipedia · ChatGPT</td>
+        </tr>
+        <tr>
+          <td class="col-need">🎵 Ouvir música</td>
+          <td class="analog">CD player · Fita cassete · LP de vinil</td>
+          <td class="digital">Spotify · YouTube · Deezer</td>
+        </tr>
+        <tr>
+          <td class="col-need">🎬 Assistir filmes</td>
+          <td class="analog">Videolocadora (alugar VHS / DVD)</td>
+          <td class="digital">Netflix · YouTube · Prime Video</td>
+        </tr>
+        <tr>
+          <td class="col-need">📰 Ler notícias</td>
+          <td class="analog">Jornal impresso · Telejornal em horário fixo</td>
+          <td class="digital">Sites e apps de notícias 24h</td>
+        </tr>
+        <tr>
+          <td class="col-need">📸 Tirar fotos</td>
+          <td class="analog">Rolo de filme · Revelação no laboratório</td>
+          <td class="digital">Câmera do celular · Instagram</td>
+        </tr>
+        <tr>
+          <td class="col-need">💰 Pagar contas</td>
+          <td class="analog">Fila no banco · Boleto na lotérica</td>
+          <td class="digital">Pix · App do banco</td>
+        </tr>
+        <tr>
+          <td class="col-need">🛒 Fazer compras</td>
+          <td class="analog">Ir até a loja física</td>
+          <td class="digital">Amazon · Mercado Livre · Shopee</td>
+        </tr>
+        <tr>
+          <td class="col-need">🌧 Saber o tempo</td>
+          <td class="analog">TV ou rádio (1× ao dia)</td>
+          <td class="digital">App de previsão hora a hora</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="panel">
+    <h2>📱 O Brasil é "mobile first" — IBGE 2022</h2>
+    <p class="lead">A maioria das pessoas no Brasil usa o celular como porta de entrada para a internet. Veja a porcentagem por dispositivo:</p>
+    <div class="devices-grid">
+      <div class="device-card">
+        <div class="ico">📱</div>
+        <h4>Celular</h4>
+        <div class="perc">98,9%</div>
+        <div class="label">dos usuários</div>
+      </div>
+      <div class="device-card">
+        <div class="ico">📺</div>
+        <h4>Smart TV</h4>
+        <div class="perc">47,5%</div>
+        <div class="label">dos usuários</div>
+      </div>
+      <div class="device-card">
+        <div class="ico">💻</div>
+        <h4>Computador</h4>
+        <div class="perc">35,5%</div>
+        <div class="label">dos usuários</div>
+      </div>
+      <div class="device-card">
+        <div class="ico">📲</div>
+        <h4>Tablet</h4>
+        <div class="perc">7,6%</div>
+        <div class="label">dos usuários</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="two-col">
+    <div class="info-card">
+      <h3><span class="ico">🌾</span> Conexão com o campo</h3>
+      <p>Muitas tarefas rurais ainda são <strong>analógicas</strong>: anotação manual de chuva, planilha em papel, calendário do plantio na parede. A digitalização chega aos poucos — apps de gestão de fazenda, sensores de solo, drones para mapeamento.</p>
+    </div>
+    <div class="info-card teal">
+      <h3><span class="ico">🤔</span> Reflexão crítica</h3>
+      <p>Nem tudo "digital" é melhor. Um álbum físico de família dura 100 anos; um arquivo no celular pode sumir num clique. Saber escolher <strong>o que digitalizar</strong> e <strong>o que manter analógico</strong> é parte do bom uso da tecnologia.</p>
+    </div>
+  </div>
+</div>
+
+<div class="footer">
+  Unidade 01 · Antes da Era Digital · 20 slides<br><br>
+  <a href="../roadmap.html">← Voltar ao Roadmap da Disciplina</a>
+</div>
+
+<script>
+// ══════════════════════════════════════
+//   TABS
+// ══════════════════════════════════════
+function switchTab(id) {
+  document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+  document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
+  const idx = ['cards','timeline','compare'].indexOf(id);
+  document.querySelectorAll('.tab')[idx].classList.add('active');
+  document.getElementById('tab-' + id).classList.add('active');
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+
+// ══════════════════════════════════════
+//   FLASH-CARDS
+// ══════════════════════════════════════
+const TOTAL = 20;
+let current = 0;
+let flipped = false;
+const done = new Set();
+
+function initDots() {
+  const container = document.getElementById('dots');
+  container.innerHTML = '';
+  for (let i = 0; i < TOTAL; i++) {
+    const d = document.createElement('div');
+    d.className = 'fc-dot' + (i === 0 ? ' active' : '');
+    d.onclick = (e) => { e.stopPropagation(); goToCard(i); };
+    container.appendChild(d);
+  }
+}
+
+function updateDots() {
+  document.querySelectorAll('.fc-dot').forEach((d, i) => {
+    d.className = 'fc-dot';
+    if (done.has(i)) d.classList.add('done');
+    if (i === current) d.classList.add('active');
+  });
+}
+
+function showCard(idx) {
+  document.querySelectorAll('[data-idx]').forEach(face => {
+    face.style.display = 'none';
+  });
+  document.querySelectorAll(`[data-idx="${idx}"]`).forEach(face => {
+    face.style.display = 'flex';
+  });
+  const fc = document.getElementById('fc');
+  fc.classList.remove('flipped');
+  flipped = false;
+  document.getElementById('prog').textContent = `Slide ${idx + 1} de ${TOTAL}`;
+  document.getElementById('prev-btn').disabled = idx === 0;
+  document.getElementById('next-btn').disabled = idx === TOTAL - 1;
+  updateDots();
+}
+
+function flipCard() {
+  const fc = document.getElementById('fc');
+  flipped = !flipped;
+  fc.classList.toggle('flipped', flipped);
+  if (flipped) done.add(current);
+  updateDots();
+}
+
+function nextCard() { if (current < TOTAL - 1) { current++; showCard(current); } }
+function prevCard() { if (current > 0) { current--; showCard(current); } }
+function goToCard(idx) { current = idx; showCard(idx); }
+
+initDots();
+showCard(0);
+
+// Keyboard navigation
+document.addEventListener('keydown', (e) => {
+  const isCardsTab = document.getElementById('tab-cards').classList.contains('active');
+  if (!isCardsTab) return;
+  if (e.key === 'ArrowRight') nextCard();
+  if (e.key === 'ArrowLeft') prevCard();
+  if (e.key === ' ') { e.preventDefault(); flipCard(); }
+});
+</script>
+
+</body>
+</html>

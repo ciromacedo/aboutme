@@ -1,0 +1,1826 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Unidade 2 · Algoritmos</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600;700;800&family=Quicksand:wght@400;500;600;700&family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    /* Paleta tech moderna */
+    --bg:        #f4f7fc;
+    --bg-soft:   #e6edf7;
+    --panel:     #ffffff;
+    --panel-2:   #f0f5fb;
+    --primary:   #3a7bd5;
+    --primary-soft: #d8e6f5;
+    --cyan:      #00b8d9;
+    --cyan-soft: #d0eef5;
+    --purple:    #7c5fd5;
+    --purple-soft: #e2dbf3;
+    --pink:      #d96aa8;
+    --pink-soft: #f7dde9;
+    --green:     #4cb070;
+    --green-soft: #d8ecdf;
+    --orange:    #f0995e;
+    --orange-soft: #fbe5d3;
+    --warning:   #d96a6a;
+    --warning-soft: #f7dada;
+    --ink:       #1c2740;
+    --text:      #3a4660;
+    --muted:     #7a8294;
+    --line:      #d8e0ec;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: 'Quicksand', sans-serif;
+    min-height: 100vh;
+  }
+
+  /* ── HEADER ── */
+  header {
+    background: linear-gradient(135deg, #3a7bd5 0%, #00b8d9 50%, #7c5fd5 100%);
+    border-bottom: 2px solid var(--line);
+    padding: 32px 36px 28px;
+    text-align: center;
+    color: white;
+    position: relative;
+    overflow: hidden;
+  }
+  header::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background:
+      radial-gradient(ellipse at 15% 0%, rgba(255,255,255,0.18), transparent 60%),
+      radial-gradient(ellipse at 85% 100%, rgba(255,255,255,0.1), transparent 50%);
+    pointer-events: none;
+  }
+  header .eyebrow {
+    font-size: 0.72rem;
+    letter-spacing: 4px;
+    text-transform: uppercase;
+    color: rgba(255,255,255,0.85);
+    font-weight: 700;
+    margin-bottom: 8px;
+    position: relative;
+  }
+  header h1 {
+    font-family: 'Playfair Display', serif;
+    font-size: 2.1rem;
+    font-weight: 800;
+    line-height: 1.2;
+    margin-bottom: 6px;
+    position: relative;
+  }
+  header .subtitle {
+    font-size: 0.95rem;
+    opacity: 0.9;
+    font-weight: 500;
+    position: relative;
+  }
+  .meta-row {
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+    margin-top: 18px;
+    flex-wrap: wrap;
+    position: relative;
+  }
+  .meta-pill {
+    background: rgba(255,255,255,0.18);
+    border: 1px solid rgba(255,255,255,0.4);
+    padding: 6px 16px;
+    border-radius: 20px;
+    font-size: 0.78rem;
+    font-weight: 600;
+  }
+
+  /* ── TABS ── */
+  .tabs {
+    display: flex;
+    gap: 4px;
+    padding: 22px 36px 0;
+    border-bottom: 1px solid var(--line);
+    flex-wrap: wrap;
+    background: var(--bg);
+    position: sticky;
+    top: 0;
+    z-index: 50;
+  }
+  .tab {
+    padding: 11px 22px;
+    border-radius: 10px 10px 0 0;
+    background: var(--bg-soft);
+    border: 1px solid var(--line);
+    border-bottom: none;
+    color: var(--muted);
+    cursor: pointer;
+    font-weight: 600;
+    font-size: 0.85rem;
+    transition: all 0.2s;
+    position: relative; bottom: -1px;
+    font-family: 'Quicksand', sans-serif;
+  }
+  .tab.active {
+    background: var(--panel);
+    color: var(--ink);
+    border-color: var(--line);
+    border-bottom: 1px solid var(--panel);
+  }
+  .tab.active::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 3px;
+    background: var(--primary);
+    border-radius: 10px 10px 0 0;
+  }
+  .tab:hover:not(.active) { color: var(--ink); background: var(--panel-2); }
+
+  .section { display: none; padding: 36px; max-width: 1180px; margin: 0 auto; }
+  .section.active { display: block; }
+
+  /* ── FLASHCARD NAV ── */
+  .flashcard-nav {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 24px;
+    flex-wrap: wrap;
+    gap: 12px;
+  }
+  .fc-meta { text-align: center; flex: 1; }
+  .fc-progress { font-size: 0.78rem; color: var(--muted); font-weight: 600; margin-bottom: 8px; letter-spacing: 1px; }
+  .fc-dots { display: flex; gap: 6px; justify-content: center; flex-wrap: wrap; max-width: 540px; margin: 0 auto; }
+  .fc-dot {
+    width: 9px; height: 9px;
+    border-radius: 50%;
+    background: var(--bg-soft);
+    border: 1px solid var(--line);
+    transition: all 0.3s;
+    cursor: pointer;
+  }
+  .fc-dot.active { background: var(--primary); border-color: var(--primary); transform: scale(1.3); }
+  .fc-dot.done { background: var(--green); border-color: var(--green); }
+
+  /* ── BUTTONS ── */
+  .btn {
+    padding: 11px 22px;
+    border-radius: 12px;
+    border: none;
+    font-family: 'Quicksand', sans-serif;
+    font-weight: 600;
+    font-size: 0.85rem;
+    cursor: pointer;
+    transition: all 0.2s;
+  }
+  .btn-primary {
+    background: var(--primary);
+    color: white;
+    box-shadow: 0 2px 10px rgba(58,123,213,0.3);
+  }
+  .btn-primary:hover { background: #2c6dc7; transform: translateY(-1px); }
+  .btn-primary:disabled { opacity: 0.4; cursor: not-allowed; transform: none; }
+  .btn-ghost {
+    background: var(--panel);
+    color: var(--text);
+    border: 1px solid var(--line);
+  }
+  .btn-ghost:hover { background: var(--bg-soft); }
+  .btn-ghost:disabled { opacity: 0.4; cursor: not-allowed; }
+
+  /* ── FLASHCARD ── */
+  .flashcard-wrapper { perspective: 1500px; min-height: 480px; position: relative; }
+  .flashcard {
+    width: 100%;
+    min-height: 480px;
+    position: relative;
+    transform-style: preserve-3d;
+    transition: transform 0.7s cubic-bezier(0.4,0,0.2,1);
+    cursor: pointer;
+  }
+  .flashcard.flipped { transform: rotateY(180deg); }
+  .card-face {
+    position: absolute;
+    width: 100%; min-height: 480px;
+    backface-visibility: hidden;
+    -webkit-backface-visibility: hidden;
+    border-radius: 24px;
+    padding: 40px 48px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 4px 28px rgba(28,39,64,0.08);
+  }
+  .card-front {
+    background: linear-gradient(135deg, #ffffff 0%, var(--panel-2) 100%);
+    border: 1px solid var(--line);
+  }
+  .card-back {
+    background: linear-gradient(135deg, var(--panel-2) 0%, #e7eef9 100%);
+    border: 1px solid var(--primary-soft);
+    transform: rotateY(180deg);
+  }
+  .card-icon { font-size: 2.8rem; margin-bottom: 14px; }
+  .card-title {
+    font-size: 0.7rem;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    color: var(--primary);
+    font-weight: 700;
+    margin-bottom: 12px;
+  }
+  .card-back .card-title { color: var(--purple); }
+  .card-heading {
+    font-family: 'Playfair Display', serif;
+    font-size: 1.7rem;
+    font-weight: 700;
+    text-align: center;
+    margin-bottom: 18px;
+    line-height: 1.25;
+    color: var(--ink);
+  }
+  .card-body {
+    font-size: 0.95rem;
+    color: var(--text);
+    line-height: 1.75;
+    text-align: center;
+    max-width: 660px;
+  }
+  .card-body strong { color: var(--ink); font-weight: 700; }
+  .card-back .card-body { text-align: left; }
+  .card-back .card-body p { margin-bottom: 10px; }
+  .card-body .pill {
+    display: inline-block;
+    background: var(--primary-soft);
+    border: 1px solid var(--primary);
+    color: #1f4d8a;
+    padding: 2px 10px;
+    border-radius: 12px;
+    font-size: 0.85em;
+    font-weight: 600;
+  }
+  .card-body .pill-cyan { background: var(--cyan-soft); border-color: var(--cyan); color: #006a85; }
+  .card-body .pill-purple { background: var(--purple-soft); border-color: var(--purple); color: #4a37a0; }
+  .card-body .pill-pink { background: var(--pink-soft); border-color: var(--pink); color: #8a3a6a; }
+  .card-body .pill-green { background: var(--green-soft); border-color: var(--green); color: #2a6a40; }
+  .card-body .pill-orange { background: var(--orange-soft); border-color: var(--orange); color: #a85a1f; }
+  .card-body .pill-warning { background: var(--warning-soft); border-color: var(--warning); color: #a04040; }
+  .card-body code {
+    background: var(--bg-soft);
+    border: 1px solid var(--line);
+    color: var(--ink);
+    padding: 1px 6px;
+    border-radius: 4px;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.85em;
+  }
+  .complementar {
+    margin-top: 16px;
+    padding: 14px 18px;
+    background: rgba(124,95,213,0.08);
+    border-left: 3px solid var(--purple);
+    border-radius: 0 10px 10px 0;
+    font-size: 0.86rem;
+    color: var(--text);
+    width: 100%;
+    max-width: 660px;
+  }
+  .complementar .label {
+    font-size: 0.7rem;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    color: var(--purple);
+    font-weight: 700;
+    margin-bottom: 6px;
+  }
+  .complementar ul { padding-left: 20px; margin-top: 4px; }
+  .complementar li { margin: 4px 0; line-height: 1.55; }
+  .flip-hint {
+    font-size: 0.7rem;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    color: var(--muted);
+    margin-top: 22px;
+    font-weight: 600;
+    opacity: 0.7;
+  }
+
+  /* ── PANELS ── */
+  .panel {
+    background: var(--panel);
+    border: 1px solid var(--line);
+    border-radius: 18px;
+    padding: 28px 32px;
+    margin-bottom: 24px;
+    box-shadow: 0 2px 14px rgba(28,39,64,0.05);
+  }
+  .panel h2 {
+    font-family: 'Playfair Display', serif;
+    font-size: 1.4rem;
+    color: var(--ink);
+    margin-bottom: 6px;
+  }
+  .panel > p.lead {
+    color: var(--muted);
+    font-size: 0.9rem;
+    line-height: 1.65;
+    margin-bottom: 22px;
+  }
+
+  /* ── FLOWCHART (Entrada/Processamento/Saída) ── */
+  .flow-chart {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 18px;
+    flex-wrap: wrap;
+    margin: 12px 0;
+  }
+  .flow-block {
+    flex: 1;
+    min-width: 200px;
+    border-radius: 14px;
+    padding: 22px 18px;
+    text-align: center;
+    color: white;
+    position: relative;
+    font-weight: 600;
+  }
+  .flow-block .ico { font-size: 2rem; margin-bottom: 8px; }
+  .flow-block h3 { font-family: 'Playfair Display', serif; font-size: 1.05rem; margin-bottom: 6px; }
+  .flow-block p { font-size: 0.85rem; opacity: 0.95; line-height: 1.55; }
+  .flow-block.input { background: linear-gradient(135deg, var(--cyan), #008ba8); }
+  .flow-block.process { background: linear-gradient(135deg, var(--purple), #5e44b3); }
+  .flow-block.output { background: linear-gradient(135deg, var(--green), #348a52); }
+  .flow-arrow {
+    color: var(--primary);
+    font-size: 1.6rem;
+    font-weight: 800;
+  }
+
+  /* ── GRAFO ── */
+  .graph-wrap {
+    background: var(--bg-soft);
+    border-radius: 14px;
+    padding: 30px 20px;
+    text-align: center;
+  }
+  .graph-svg { max-width: 100%; height: auto; }
+  .graph-node {
+    fill: var(--primary);
+    stroke: white;
+    stroke-width: 3;
+    cursor: pointer;
+    transition: fill 0.3s, transform 0.3s;
+    transform-origin: center;
+    transform-box: fill-box;
+  }
+  .graph-node:hover { fill: var(--cyan); transform: scale(1.15); }
+  .graph-node.highlighted { fill: var(--orange); }
+  .graph-edge { stroke: var(--muted); stroke-width: 2; opacity: 0.6; }
+  .graph-edge.highlighted { stroke: var(--orange); opacity: 1; stroke-width: 3; }
+  .graph-label {
+    font-family: 'Quicksand', sans-serif;
+    font-weight: 700;
+    fill: var(--ink);
+    font-size: 13px;
+    pointer-events: none;
+  }
+
+  /* ── CRIPTO DEMO ── */
+  .crypto-demo {
+    background: var(--bg-soft);
+    border-radius: 14px;
+    padding: 24px;
+  }
+  .crypto-row {
+    display: grid;
+    grid-template-columns: 1fr auto 1fr;
+    gap: 14px;
+    align-items: center;
+    margin-bottom: 14px;
+  }
+  .crypto-box {
+    background: white;
+    border: 1px solid var(--line);
+    border-radius: 10px;
+    padding: 16px;
+    text-align: center;
+  }
+  .crypto-box .label {
+    font-size: 0.7rem;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    color: var(--muted);
+    margin-bottom: 8px;
+    font-weight: 700;
+  }
+  .crypto-box .value {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 1.6rem;
+    font-weight: 700;
+    color: var(--ink);
+    word-break: break-all;
+  }
+  .crypto-box.encoded .value { color: var(--purple); }
+  .crypto-arrow {
+    font-size: 1.4rem;
+    color: var(--primary);
+    font-weight: 800;
+  }
+  .crypto-controls {
+    display: flex;
+    gap: 12px;
+    align-items: center;
+    margin-top: 14px;
+    flex-wrap: wrap;
+    justify-content: center;
+  }
+  .crypto-controls input {
+    padding: 10px 14px;
+    border: 1px solid var(--line);
+    border-radius: 10px;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 1rem;
+    text-transform: uppercase;
+    width: 150px;
+    background: white;
+    color: var(--ink);
+  }
+  .crypto-controls input:focus {
+    outline: none;
+    border-color: var(--primary);
+    box-shadow: 0 0 0 3px var(--primary-soft);
+  }
+  .crypto-shift {
+    background: white;
+    border-radius: 10px;
+    padding: 8px 14px;
+    border: 1px solid var(--line);
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.95rem;
+    color: var(--purple);
+    font-weight: 700;
+  }
+
+  /* ── ALGO STEPS ── */
+  .algo-steps {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 8px;
+  }
+  .algo-step {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    background: var(--panel-2);
+    border-left: 3px solid var(--primary);
+    padding: 12px 18px;
+    border-radius: 0 10px 10px 0;
+  }
+  .algo-step .num {
+    background: var(--primary);
+    color: white;
+    width: 28px; height: 28px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 700;
+    flex-shrink: 0;
+    font-size: 0.85rem;
+  }
+  .algo-step p { font-size: 0.92rem; line-height: 1.55; }
+  .algo-step.done { border-left-color: var(--green); }
+  .algo-step.done .num { background: var(--green); }
+  .algo-step.done p { color: var(--muted); text-decoration: line-through; }
+
+  /* ── INFO CARDS ── */
+  .two-col {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 22px;
+  }
+  .info-card {
+    background: var(--panel);
+    border: 1px solid var(--line);
+    border-radius: 14px;
+    padding: 20px 22px;
+    box-shadow: 0 2px 10px rgba(28,39,64,0.04);
+  }
+  .info-card h3 {
+    font-family: 'Playfair Display', serif;
+    font-size: 1rem;
+    color: var(--ink);
+    margin-bottom: 10px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+  .info-card .ico {
+    width: 34px; height: 34px;
+    border-radius: 50%;
+    background: var(--primary-soft);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1rem;
+  }
+  .info-card.purple .ico { background: var(--purple-soft); }
+  .info-card.green .ico { background: var(--green-soft); }
+  .info-card.orange .ico { background: var(--orange-soft); }
+  .info-card p { font-size: 0.86rem; color: var(--text); line-height: 1.65; }
+  .info-card strong { color: var(--ink); }
+
+  /* ── QUIZ ── */
+  .quiz-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 20px;
+  }
+  .quiz-card {
+    background: var(--panel);
+    border: 1px solid var(--line);
+    border-radius: 16px;
+    padding: 22px 24px;
+    box-shadow: 0 2px 10px rgba(28,39,64,0.05);
+  }
+  .quiz-card h3 {
+    font-family: 'Playfair Display', serif;
+    font-size: 1.05rem;
+    color: var(--ink);
+    margin-bottom: 8px;
+  }
+  .quiz-card p { font-size: 0.88rem; color: var(--muted); line-height: 1.55; margin-bottom: 14px; }
+  .quiz-options { display: flex; flex-direction: column; gap: 8px; }
+  .quiz-opt {
+    padding: 11px 16px;
+    border-radius: 10px;
+    border: 1px solid var(--line);
+    background: var(--bg);
+    color: var(--text);
+    cursor: pointer;
+    font-size: 0.86rem;
+    font-family: 'Quicksand', sans-serif;
+    text-align: left;
+    transition: all 0.2s;
+    font-weight: 500;
+  }
+  .quiz-opt:hover:not(:disabled) { border-color: var(--primary); background: var(--primary-soft); }
+  .quiz-opt.correct { border-color: var(--green) !important; background: var(--green-soft) !important; color: #2a6a40 !important; font-weight: 700; }
+  .quiz-opt.wrong { border-color: var(--warning) !important; background: var(--warning-soft) !important; color: #a04040 !important; }
+  .quiz-opt:disabled { cursor: default; }
+  .quiz-feedback {
+    margin-top: 12px;
+    font-size: 0.82rem;
+    line-height: 1.55;
+    min-height: 18px;
+    color: var(--text);
+  }
+
+  .footer {
+    text-align: center;
+    padding: 36px 20px;
+    color: var(--muted);
+    font-size: 0.82rem;
+    border-top: 1px solid var(--line);
+    margin-top: 40px;
+  }
+  .footer a { color: var(--primary); text-decoration: none; font-weight: 600; }
+  .footer a:hover { text-decoration: underline; }
+
+  ::-webkit-scrollbar { width: 8px; }
+  ::-webkit-scrollbar-track { background: var(--bg); }
+  ::-webkit-scrollbar-thumb { background: var(--line); border-radius: 4px; }
+  ::-webkit-scrollbar-thumb:hover { background: var(--primary); }
+
+  @media (max-width: 800px) {
+    .two-col, .quiz-grid { grid-template-columns: 1fr; }
+    .section { padding: 24px 16px; }
+    header { padding: 24px 16px; }
+    header h1 { font-size: 1.5rem; }
+    .tabs { padding: 16px 12px 0; }
+    .tab { padding: 8px 14px; font-size: 0.78rem; }
+    .card-face { padding: 28px 22px; }
+    .card-heading { font-size: 1.25rem; }
+    .flow-chart { flex-direction: column; }
+    .flow-arrow { transform: rotate(90deg); }
+    .crypto-row { grid-template-columns: 1fr; gap: 8px; }
+    .crypto-arrow { transform: rotate(90deg); }
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="eyebrow">Unidade 02 · 20 slides</div>
+  <h1>Algoritmos</h1>
+  <p class="subtitle">As regras invisíveis que controlam o mundo digital</p>
+  <div class="meta-row">
+    <span class="meta-pill">🤖 Pensamento Computacional</span>
+    <span class="meta-pill">🎓 1º ano · Agroecologia</span>
+    <span class="meta-pill">📚 PNLD 2026 · FTD</span>
+  </div>
+</header>
+
+<nav class="tabs">
+  <div class="tab active" onclick="switchTab('cards')">📚 Flash-cards (20)</div>
+  <div class="tab" onclick="switchTab('visual')">🔬 Visualizações</div>
+  <div class="tab" onclick="switchTab('quiz')">✏️ Quiz Final</div>
+</nav>
+
+<!-- ════════════════════════════════════════════
+     FLASH-CARDS — 20 SLIDES
+════════════════════════════════════════════ -->
+<div class="section active" id="tab-cards">
+
+  <div class="flashcard-nav">
+    <button class="btn btn-ghost" id="prev-btn" onclick="prevCard()">← Anterior</button>
+    <div class="fc-meta">
+      <div class="fc-progress" id="prog">Slide 1 de 20</div>
+      <div class="fc-dots" id="dots"></div>
+    </div>
+    <button class="btn btn-primary" id="next-btn" onclick="nextCard()">Próximo →</button>
+  </div>
+
+  <div class="flashcard-wrapper">
+    <div class="flashcard" id="fc" onclick="flipCard()">
+
+      <!-- ─── 1. ALGORITMOS EM TODO LUGAR ─── -->
+      <div class="card-face card-front" data-idx="0">
+        <div class="card-icon">🌐</div>
+        <div class="card-title">Slide 01 · Introdução</div>
+        <div class="card-heading">Você já percebeu<br>que o TikTok<br><span style="color:var(--purple)">"adivinha"</span> o que você gosta?</div>
+        <div class="card-body">
+          Cada vídeo que aparece na sua tela foi <strong>escolhido</strong> — não por acaso.<br><br>
+          Tem alguém (ou melhor, <em>algo</em>) trabalhando nos bastidores. Sabe o nome dele?
+        </div>
+        <div class="flip-hint">↻ Clique para revelar</div>
+      </div>
+      <div class="card-face card-back" data-idx="0">
+        <div class="card-icon">🤖</div>
+        <div class="card-title">Algoritmos Invisíveis</div>
+        <div class="card-heading">Algoritmos estão<br>em <strong>todo lugar</strong></div>
+        <div class="card-body">
+          <p>Toda vez que você abre o <span class="pill">TikTok</span>, <span class="pill-pink pill">Instagram</span> ou <span class="pill-warning pill">YouTube</span>, há um <strong>algoritmo</strong> trabalhando para escolher o que aparece.</p>
+          <p>Quando você pesquisa no Google, vê filme no streaming ou recebe sugestões de produtos — algoritmos selecionaram tudo, com base no <em>seu perfil de navegação</em>.</p>
+          <p style="margin-top:12px">⚠️ <strong>O ponto preocupante:</strong> o algoritmo influencia nossas escolhas <em>quase invisivelmente</em>. Nós, usuários, geralmente não sabemos quem o criou nem quais são as regras dele.</p>
+        </div>
+        <div class="complementar">
+          <div class="label">💡 Para complementar em aula</div>
+          <ul>
+            <li>Pergunte: alguém da turma já viu um vídeo "estranho" no TikTok que parecia te conhecer demais?</li>
+            <li>O TikTok é considerado o algoritmo mais "viciante" do mundo — empresas estudam para imitar</li>
+            <li>Reflexão: quando você pesquisa um produto no celular, ele "aparece" como anúncio depois?</li>
+            <li>"Algoritmo invisível" é um conceito-chave da unidade — vamos aprofundar nos próximos slides</li>
+          </ul>
+        </div>
+      </div>
+
+      <!-- ─── 2. O QUE É UM ALGORITMO ─── -->
+      <div class="card-face card-front" data-idx="1" style="display:none">
+        <div class="card-icon">📖</div>
+        <div class="card-title">Slide 02 · Definição</div>
+        <div class="card-heading">Mas afinal,<br>o que é um<br><span style="color:var(--primary)">algoritmo</span>?</div>
+        <div class="card-body">
+          A palavra parece complicada — mas o conceito é <strong>simples</strong>.<br>
+          Você já seguiu vários algoritmos sem nem perceber.<br><br>
+          Vamos descobrir?
+        </div>
+        <div class="flip-hint">↻ Clique para revelar</div>
+      </div>
+      <div class="card-face card-back" data-idx="1" style="display:none">
+        <div class="card-icon">📋</div>
+        <div class="card-title">Definição Simples</div>
+        <div class="card-heading">Algoritmo =<br>passo a passo</div>
+        <div class="card-body">
+          <p style="font-style:italic;border-left:3px solid var(--primary);padding-left:14px"><strong>Algoritmo</strong> é qualquer sequência de instruções claras, organizadas e específicas para executar uma tarefa ou resolver um problema — seja por uma pessoa ou por uma máquina.</p>
+          <p style="margin-top:12px"><strong>Algoritmos não são exclusivos dos computadores!</strong> Você já seguiu vários:</p>
+          <p>🍰 <span class="pill">Receita de bolo</span> — algoritmo de cozinha</p>
+          <p>🎮 <span class="pill-cyan pill">Manual de instrução</span> de brinquedo</p>
+          <p>🃏 <span class="pill-pink pill">Regras de um jogo</span> de cartas</p>
+          <p>🪑 <span class="pill-orange pill">Passo a passo</span> para montar um móvel da Tok&amp;Stok</p>
+        </div>
+        <div class="complementar">
+          <div class="label">💡 Para complementar em aula</div>
+          <ul>
+            <li>A palavra "algoritmo" vem de Al-Khwarizmi, matemático persa do século IX</li>
+            <li>Atividade simples: peça a turma para descrever "como escovar os dentes" em algoritmo</li>
+            <li>O importante é que as instruções sejam <strong>claras</strong> e <strong>específicas</strong> — sem ambiguidade</li>
+            <li>No campo: o calendário de plantio é um algoritmo. A receita de uma calda fitossanitária também.</li>
+          </ul>
+        </div>
+      </div>
+
+      <!-- ─── 3. SANDUÍCHE ─── -->
+      <div class="card-face card-front" data-idx="2" style="display:none">
+        <div class="card-icon">🥪</div>
+        <div class="card-title">Slide 03 · Algoritmo na Prática</div>
+        <div class="card-heading">Como fazer<br>um sanduíche é um<br><span style="color:var(--green)">algoritmo</span>?</div>
+        <div class="card-body">
+          Pode parecer bobo, mas montar um sanduíche é o <strong>exemplo perfeito</strong> de algoritmo.<br><br>
+          Por quê? Porque qualquer pessoa que siga as instruções <em>chega ao mesmo resultado</em>.
+        </div>
+        <div class="flip-hint">↻ Clique para revelar</div>
+      </div>
+      <div class="card-face card-back" data-idx="2" style="display:none">
+        <div class="card-icon">👨‍🍳</div>
+        <div class="card-title">Algoritmo do Sanduíche</div>
+        <div class="card-heading">Mesmas instruções<br>= mesmo resultado</div>
+        <div class="card-body">
+          <p>Algoritmo para fazer um sanduíche:</p>
+          <p>1️⃣ Pegue 2 fatias de pão de forma</p>
+          <p>2️⃣ Passe manteiga em um lado de cada</p>
+          <p>3️⃣ Coloque queijo e presunto sobre uma fatia</p>
+          <p>4️⃣ (Opcional) Adicione alface e tomate</p>
+          <p>5️⃣ Feche com a outra fatia</p>
+          <p>6️⃣ Corte ao meio se preferir</p>
+          <p>7️⃣ ✅ <strong>Sanduíche pronto!</strong></p>
+          <p style="margin-top:14px">🎯 <strong>Essência do algoritmo:</strong> instruções que, seguidas corretamente, garantem um resultado <span class="pill-green pill">previsível</span>.</p>
+        </div>
+        <div class="complementar">
+          <div class="label">💡 Para complementar em aula</div>
+          <ul>
+            <li>Atividade: cada aluno escreve um algoritmo de algo que sabe fazer (escovar dentes, fritar ovo, plantar muda)</li>
+            <li>Truque didático: peça a alguém que execute <em>literalmente</em> o algoritmo — qualquer "buraco" vira engraçado</li>
+            <li>Computadores são literais — se você não disser "abra o pão", ele monta o sanduíche fechado</li>
+            <li>Veja a aba "Visualizações" para ver os passos animados</li>
+          </ul>
+        </div>
+      </div>
+
+      <!-- ─── 4. ENTRADA / PROCESSAMENTO / SAÍDA ─── -->
+      <div class="card-face card-front" data-idx="3" style="display:none">
+        <div class="card-icon">⚙️</div>
+        <div class="card-title">Slide 04 · Estrutura</div>
+        <div class="card-heading">Todo algoritmo tem<br><span style="color:var(--cyan)">3 partes</span></div>
+        <div class="card-body">
+          Da receita de bolo ao app de banco — todo algoritmo segue a mesma estrutura básica.<br><br>
+          Quais são essas 3 partes?
+        </div>
+        <div class="flip-hint">↻ Clique para revelar</div>
+      </div>
+      <div class="card-face card-back" data-idx="3" style="display:none">
+        <div class="card-icon">📥</div>
+        <div class="card-title">Estrutura Universal</div>
+        <div class="card-heading">Entrada → Processamento → Saída</div>
+        <div class="card-body">
+          <p>📥 <span class="pill-cyan pill">ENTRADA</span> = o que você <strong>coloca</strong> (os ingredientes)</p>
+          <p>⚙️ <span class="pill-purple pill">PROCESSAMENTO</span> = o que você <strong>faz</strong> (os passos)</p>
+          <p>📤 <span class="pill-green pill">SAÍDA</span> = o <strong>resultado</strong> final</p>
+          <p style="margin-top:12px"><strong>No sanduíche:</strong></p>
+          <p>📥 Entrada: pão, queijo, presunto, alface</p>
+          <p>⚙️ Processamento: montar conforme as instruções</p>
+          <p>📤 Saída: sanduíche pronto</p>
+          <p style="margin-top:12px"><strong>No Google:</strong></p>
+          <p>📥 Você digita "pizza perto de mim" → ⚙️ Google processa → 📤 Lista de pizzarias</p>
+        </div>
+        <div class="complementar">
+          <div class="label">💡 Para complementar em aula</div>
+          <ul>
+            <li>Mostrar diagrama da aba "Visualizações" — visual ajuda a fixar</li>
+            <li>Atividade: aplicar essa estrutura em algoritmos do dia a dia (escovar dente, fazer café)</li>
+            <li>Conceito-chave da computação: tudo o que um computador faz cabe nessa estrutura</li>
+            <li>No campo: irrigação automática é entrada (sensor de umidade) → processamento (decisão) → saída (água liberada)</li>
+          </ul>
+        </div>
+      </div>
+
+      <!-- ─── 5. SOMA DE GAUSS ─── -->
+      <div class="card-face card-front" data-idx="4" style="display:none">
+        <div class="card-icon">🧮</div>
+        <div class="card-title">Slide 05 · Eficiência</div>
+        <div class="card-heading">Um menino de <span style="color:var(--purple)">10 anos</span><br>resolveu em minutos<br>o que demoraria <em>horas</em></div>
+        <div class="card-body">
+          O professor mandou somar todos os números de 1 a 100 para ter sossego.<br>
+          Quando voltou — Gauss já tinha entregue a resposta.<br><br>
+          Como?
+        </div>
+        <div class="flip-hint">↻ Clique para revelar</div>
+      </div>
+      <div class="card-face card-back" data-idx="4" style="display:none">
+        <div class="card-icon">💡</div>
+        <div class="card-title">Carl Friedrich Gauss</div>
+        <div class="card-heading">A fórmula que economiza<br>99 somas</div>
+        <div class="card-body">
+          <p>Se você somar 1+2+3+4+...+100, faz 99 contas. Demora.</p>
+          <p>Gauss percebeu um <strong>atalho</strong>:</p>
+          <p style="text-align:center;background:var(--bg-soft);padding:12px;border-radius:8px;font-family:'JetBrains Mono',monospace;font-size:1rem"><strong>soma = N × (N + 1) ÷ 2</strong></p>
+          <p>Para N = 100:</p>
+          <p style="text-align:center;background:var(--bg-soft);padding:12px;border-radius:8px;font-family:'JetBrains Mono',monospace;font-size:1rem">100 × 101 ÷ 2 = <strong>5.050</strong></p>
+          <p style="margin-top:12px">🎯 <strong>1 conta no lugar de 99.</strong> Isso é <span class="pill">eficiência algorítmica</span> — resolver com o <em>mínimo</em> de passos.</p>
+          <p style="margin-top:8px">🎓 Curiosidade: Gauss tinha apenas <strong>10 anos</strong> quando descobriu isso. Virou um dos maiores matemáticos da história.</p>
+        </div>
+        <div class="complementar">
+          <div class="label">💡 Para complementar em aula</div>
+          <ul>
+            <li>Aplicar com a turma: quanto é a soma de 1 a 50? (Resp: 50×51÷2 = 1275)</li>
+            <li>Mostre como funciona: 1+100=101, 2+99=101, 3+98=101... 50 pares de 101 = 5050</li>
+            <li>Lição computacional: existe sempre uma forma "rápida" e uma "lenta" de fazer a mesma coisa</li>
+            <li>Por isso programadores estudam algoritmos — para escolher os mais eficientes</li>
+          </ul>
+        </div>
+      </div>
+
+      <!-- ─── 6. ADA LOVELACE ─── -->
+      <div class="card-face card-front" data-idx="5" style="display:none">
+        <div class="card-icon">👩‍💻</div>
+        <div class="card-title">Slide 06 · Pioneira</div>
+        <div class="card-heading">A <span style="color:var(--pink)">primeira programadora</span> do mundo<br>foi <em>uma mulher</em> — em <strong>1843</strong></div>
+        <div class="card-body">
+          Antes de existir computador moderno,<br>antes de Steve Jobs nascer, antes de internet —<br>uma matemática inglesa escreveu o primeiro algoritmo da história.
+        </div>
+        <div class="flip-hint">↻ Clique para revelar</div>
+      </div>
+      <div class="card-face card-back" data-idx="5" style="display:none">
+        <div class="card-icon">📜</div>
+        <div class="card-title">Ada Lovelace · 1843</div>
+        <div class="card-heading">A visionária que<br>previu a computação moderna</div>
+        <div class="card-body">
+          <p><strong>Ada Lovelace</strong> foi uma matemática inglesa que, em 1843, escreveu o <strong>primeiro algoritmo</strong> destinado a ser processado por uma máquina (a "Máquina Analítica" de Babbage — slide 8 da Unidade 1).</p>
+          <p>Mais que isso: Ada foi a <strong>primeira pessoa</strong> da história a perceber que máquinas poderiam fazer <em>muito mais</em> do que cálculos — poderiam manipular símbolos, criar arte, compor música.</p>
+          <p style="margin-top:12px">💡 É por isso que ela é reconhecida como a <span class="pill-pink pill">primeira programadora do mundo</span>.</p>
+          <p style="margin-top:10px">⚖️ <strong>Curioso:</strong> a pioneira da programação foi <em>uma mulher</em>, numa época em que mulheres tinham pouquíssimo acesso à educação científica!</p>
+        </div>
+        <div class="complementar">
+          <div class="label">💡 Para complementar em aula</div>
+          <ul>
+            <li>A linguagem de programação <strong>Ada</strong> recebeu esse nome em homenagem a ela</li>
+            <li>Hoje, mulheres ainda são minoria em TI (~20%). Discussão importante sobre representatividade</li>
+            <li>Ada era filha do poeta Lord Byron — uniu a sensibilidade literária à precisão matemática</li>
+            <li>Existem prêmios e concursos como "Mulheres na Computação" que estimulam a participação feminina</li>
+          </ul>
+        </div>
+      </div>
+
+      <!-- ─── 7. PROGRAMADOR ─── -->
+      <div class="card-face card-front" data-idx="6" style="display:none">
+        <div class="card-icon">🧑‍💻</div>
+        <div class="card-title">Slide 07 · A Profissão</div>
+        <div class="card-heading">Quem <span style="color:var(--primary)">escreve</span><br>os algoritmos<br>que controlam o mundo?</div>
+        <div class="card-body">
+          Nas suas mãos, agora, há um celular cheio de algoritmos.<br>
+          Eles não nasceram do nada. Alguém escreveu cada um deles.<br><br>
+          Quem é essa pessoa?
+        </div>
+        <div class="flip-hint">↻ Clique para revelar</div>
+      </div>
+      <div class="card-face card-back" data-idx="6" style="display:none">
+        <div class="card-icon">💼</div>
+        <div class="card-title">O Programador</div>
+        <div class="card-heading">A pessoa que traduz<br>algoritmos para a máquina</div>
+        <div class="card-body">
+          <p>O <strong>programador</strong> é a pessoa que pega um algoritmo (escrito em português) e o <strong>traduz</strong> para uma "linguagem" que o computador entende.</p>
+          <p><strong>O que ele faz:</strong></p>
+          <p>💻 Escreve o código de aplicativos e programas</p>
+          <p>🐛 Corrige erros (os famosos <span class="pill-warning pill">bugs</span>)</p>
+          <p>🏥 Cria sistemas para empresas, hospitais, governo, pesquisa</p>
+          <p style="margin-top:10px"><strong>Onde trabalha:</strong> empresas de tecnologia, startups, hospitais, bancos, institutos de pesquisa, governo — praticamente <em>qualquer setor</em> hoje precisa de programadores.</p>
+          <p style="margin-top:10px"><strong>Como se tornar:</strong> 🎓 Cursos de Engenharia de Software, Ciência da Computação, Ciência de Dados ou cursos técnicos em TI.</p>
+        </div>
+        <div class="complementar">
+          <div class="label">💡 Para complementar em aula</div>
+          <ul>
+            <li>Salário inicial de programador júnior no Brasil: ~R$ 4-7 mil. Sênior: até R$ 30 mil+</li>
+            <li>O Brasil exporta serviço de programação — empresas dos EUA contratam brasileiros remotamente</li>
+            <li>"Bug" tem origem real: em 1947, encontraram um inseto travando um computador!</li>
+            <li>Programação no campo: existem dev's que se especializam em "agritechs" — aplicações agro</li>
+          </ul>
+        </div>
+      </div>
+
+      <!-- ─── 8. GRAFOS ─── -->
+      <div class="card-face card-front" data-idx="7" style="display:none">
+        <div class="card-icon">🕸</div>
+        <div class="card-title">Slide 08 · Estruturas</div>
+        <div class="card-heading">Como o algoritmo "vê"<br>as <span style="color:var(--purple)">conexões</span><br>entre as pessoas?</div>
+        <div class="card-body">
+          O Instagram sugere "Pessoas que você pode conhecer".<br>
+          O Google entende quem é amigo de quem.<br>
+          A magia tem nome: <strong>grafos</strong>.
+        </div>
+        <div class="flip-hint">↻ Clique para revelar</div>
+      </div>
+      <div class="card-face card-back" data-idx="7" style="display:none">
+        <div class="card-icon">📊</div>
+        <div class="card-title">Mapa das Conexões</div>
+        <div class="card-heading">Vértices + Arestas =<br>o "mapa" do mundo digital</div>
+        <div class="card-body">
+          <p>Um <strong>grafo</strong> é uma estrutura formada por:</p>
+          <p>⚪ <span class="pill">VÉRTICES (nós)</span> — os objetos ou pessoas conectadas</p>
+          <p>➖ <span class="pill-purple pill">ARESTAS (linhas)</span> — as conexões entre eles</p>
+          <p style="margin-top:12px"><strong>Exemplo:</strong> mapa de amizades</p>
+          <p style="font-family:'JetBrains Mono',monospace;background:var(--bg-soft);padding:14px;border-radius:8px;font-size:0.85em;line-height:1.7">
+            Ana ── José ── Laura<br>
+             |&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;|<br>
+            Lucas ── Vítor ── Sofia
+          </p>
+          <p style="margin-top:12px">📲 O Instagram usa esse "mapa" para sugerir <em>"pessoas que você pode conhecer"</em> — afinal, amigos dos seus amigos podem virar seus amigos.</p>
+          <p style="margin-top:8px"><span class="pill-cyan pill">Veja o grafo interativo na aba "Visualizações"</span></p>
+        </div>
+        <div class="complementar">
+          <div class="label">💡 Para complementar em aula</div>
+          <ul>
+            <li>Mapas (Google Maps) também são grafos: cidades = vértices, rodovias = arestas</li>
+            <li>Atividade: peça a turma para desenhar o "grafo" das amizades da sala (cuidado!)</li>
+            <li>Curiosidade: a teoria dos grafos surgiu em 1736 com Euler resolvendo "as 7 pontes de Königsberg"</li>
+            <li>No campo: rede de polinização (flor → abelha → flor) também é um grafo ecológico</li>
+          </ul>
+        </div>
+      </div>
+
+      <!-- ─── 9. PAGE RANK ─── -->
+      <div class="card-face card-front" data-idx="8" style="display:none">
+        <div class="card-icon">🔍</div>
+        <div class="card-title">Slide 09 · Algoritmo do Google</div>
+        <div class="card-heading">Como o Google<br>decide quem aparece<br>em <span style="color:var(--cyan)">primeiro lugar</span>?</div>
+        <div class="card-body">
+          Quando você busca algo, milhões de páginas existem.<br>
+          Mas só uma aparece no topo. <strong>Por que ela?</strong>
+        </div>
+        <div class="flip-hint">↻ Clique para revelar</div>
+      </div>
+      <div class="card-face card-back" data-idx="8" style="display:none">
+        <div class="card-icon">🏆</div>
+        <div class="card-title">PageRank</div>
+        <div class="card-heading">Algoritmo que ordena<br>os resultados do Google</div>
+        <div class="card-body">
+          <p>O <strong>PageRank</strong> é o algoritmo (criado por Larry Page e Sergey Brin) que decide a ordem das páginas no Google. Ele usa <span class="pill-purple pill">grafos</span> e analisa:</p>
+          <p>🔗 <strong>Quantos sites apontam links</strong> para a página</p>
+          <p>⭐ <strong>Qual a qualidade</strong> desses sites que apontam</p>
+          <p style="margin-top:10px"><strong>Lógica:</strong> se muitos sites <em>importantes</em> citam aquela página, é provável que ela seja relevante. Quanto mais "votos de confiança", mais alto o ranking.</p>
+          <p style="margin-top:12px">⚠️ <strong>Atenção:</strong> os primeiros resultados do Google <strong>nem sempre</strong> são os melhores. Muitas vezes são <span class="pill-warning pill">anúncios pagos</span> — empresas pagam para aparecer no topo!</p>
+        </div>
+        <div class="complementar">
+          <div class="label">💡 Para complementar em aula</div>
+          <ul>
+            <li>Faça uma busca em sala — mostre claramente quais resultados são "Patrocinados"</li>
+            <li>Page = pelo Larry Page (cofundador do Google) e também porque ranqueia "pages" (páginas)</li>
+            <li>Hoje o Google usa centenas de algoritmos além do PageRank — incluindo IA</li>
+            <li>SEO (Search Engine Optimization) = "arte" de fazer páginas aparecerem no topo. É uma profissão</li>
+          </ul>
+        </div>
+      </div>
+
+      <!-- ─── 10. ALGORITMOS REDES SOCIAIS ─── -->
+      <div class="card-face card-front" data-idx="9" style="display:none">
+        <div class="card-icon">📱</div>
+        <div class="card-title">Slide 10 · Redes Sociais</div>
+        <div class="card-heading">Por que você não<br>consegue <span style="color:var(--pink)">parar</span><br>de rolar o feed?</div>
+        <div class="card-body">
+          Não é falta de força de vontade.<br>
+          Os algoritmos das redes sociais são <strong>projetados</strong> para te prender.<br><br>
+          Como?
+        </div>
+        <div class="flip-hint">↻ Clique para revelar</div>
+      </div>
+      <div class="card-face card-back" data-idx="9" style="display:none">
+        <div class="card-icon">🎯</div>
+        <div class="card-title">Engajamento Calculado</div>
+        <div class="card-heading">A ordem do feed<br><strong>não é aleatória</strong></div>
+        <div class="card-body">
+          <p>Cada vídeo, cada post, cada sugestão foi <strong>calculada</strong> para maximizar o tempo que você passa na plataforma.</p>
+          <p>O algoritmo observa:</p>
+          <p>⏱ Quanto tempo você assiste cada vídeo</p>
+          <p>❤️ O que você curte, comenta e compartilha</p>
+          <p>🔍 Quais assuntos você busca</p>
+          <p>👥 Com quem você interage mais</p>
+          <p style="margin-top:12px">🎯 <strong>Objetivo principal:</strong> manter você <em>entretido pelo maior tempo possível</em>. Por quê? Para que a plataforma possa <span class="pill-warning pill">ganhar dinheiro com anúncios</span>.</p>
+        </div>
+        <div class="complementar">
+          <div class="label">💡 Para complementar em aula</div>
+          <ul>
+            <li>Mostrar reportagem: "ex-funcionários do TikTok admitem que app é viciante por design"</li>
+            <li>Quanto tempo cada um fica no celular por dia? Usar o "tempo de uso" do iOS/Android</li>
+            <li>Termo: "doom scrolling" — rolar feed sem parar, mesmo notícias ruins</li>
+            <li>Reflexão: as redes sociais "nos servem" ou "se servem" de nós?</li>
+          </ul>
+        </div>
+      </div>
+
+      <!-- ─── 11. MODELO DE NEGÓCIO ─── -->
+      <div class="card-face card-front" data-idx="10" style="display:none">
+        <div class="card-icon">💰</div>
+        <div class="card-title">Slide 11 · Modelo de Negócios</div>
+        <div class="card-heading">Se as redes sociais<br>são de graça,<br><span style="color:var(--warning)">como elas ganham dinheiro</span>?</div>
+        <div class="card-body">
+          O Instagram, TikTok, Facebook não cobram nada.<br>
+          Mas valem <strong>bilhões de dólares</strong>.<br><br>
+          De onde vem esse dinheiro? Pista: você está envolvido.
+        </div>
+        <div class="flip-hint">↻ Clique para revelar</div>
+      </div>
+      <div class="card-face card-back" data-idx="10" style="display:none">
+        <div class="card-icon">💸</div>
+        <div class="card-title">"Você é o produto"</div>
+        <div class="card-heading">A frase que define<br>a era das redes sociais</div>
+        <div class="card-body">
+          <p>O modelo de negócio funciona assim:</p>
+          <p>1️⃣ Você usa a plataforma <strong>de graça</strong></p>
+          <p>2️⃣ Enquanto você usa, o algoritmo <strong>coleta seus dados</strong>: idade, localização, gostos, hábitos</p>
+          <p>3️⃣ A plataforma <strong>vende esses dados</strong> para anunciantes</p>
+          <p>4️⃣ Os anunciantes exibem anúncios <strong>personalizados</strong> para você</p>
+          <p>5️⃣ Como os anúncios são relevantes, a chance de você comprar é maior — e a empresa anunciante paga mais à plataforma</p>
+          <p style="margin-top:14px;text-align:center;font-style:italic;color:var(--purple);font-size:1.05em">💡 <strong>"Se o produto é de graça, o produto é você."</strong></p>
+          <p style="margin-top:8px">A "mercadoria" das redes sociais são os <strong>dados</strong> dos usuários.</p>
+        </div>
+        <div class="complementar">
+          <div class="label">💡 Para complementar em aula</div>
+          <ul>
+            <li>Documentário: "O Dilema das Redes" (Netflix) — explica isso em detalhes</li>
+            <li>Discussão: vale a pena trocar dados pessoais por uso gratuito?</li>
+            <li>LGPD: Lei Geral de Proteção de Dados (Brasil, 2020) regulamenta o que pode ser coletado</li>
+            <li>Cookies: pequenos arquivos que sites colocam no seu navegador para te rastrear</li>
+          </ul>
+        </div>
+      </div>
+
+      <!-- ─── 12. LOOPING DE ENGAJAMENTO ─── -->
+      <div class="card-face card-front" data-idx="11" style="display:none">
+        <div class="card-icon">🔄</div>
+        <div class="card-title">Slide 12 · Espiral Tóxica</div>
+        <div class="card-heading">Por que conteúdo<br><span style="color:var(--warning)">polêmico e raivoso</span><br>se espalha mais?</div>
+        <div class="card-body">
+          Você já notou: notícia chocante explode em segundos.<br>
+          Notícia tranquila some no feed.<br><br>
+          Isso é resultado de um ciclo perverso.
+        </div>
+        <div class="flip-hint">↻ Clique para revelar</div>
+      </div>
+      <div class="card-face card-back" data-idx="11" style="display:none">
+        <div class="card-icon">🌪</div>
+        <div class="card-title">O Problema do Engajamento</div>
+        <div class="card-heading">Raiva gera mais cliques.<br>Cliques alimentam o algoritmo.</div>
+        <div class="card-body">
+          <p>Os algoritmos descobriram algo preocupante:<br><strong>conteúdo polêmico gera mais engajamento</strong> que conteúdo tranquilo.</p>
+          <p>Isso cria um ciclo perigoso:</p>
+          <p style="background:var(--warning-soft);border-left:3px solid var(--warning);padding:12px;border-radius:0 8px 8px 0;font-size:0.88em;line-height:1.7">
+            🔥 Postagem polêmica<br>
+            ↓<br>
+            ❤️ Mais curtidas e comentários<br>
+            ↓<br>
+            🚀 Algoritmo impulsiona mais<br>
+            ↓<br>
+            👁 Mais pessoas veem<br>
+            ↓<br>
+            🌪 Mais engajamento → ciclo se repete
+          </p>
+          <p style="margin-top:12px"><strong>Resultado:</strong> conteúdos extremistas, fake news e discursos de ódio se espalham <em>mais rápido</em> que informações corretas — porque geram <span class="pill-warning pill">mais reações emocionais</span>.</p>
+        </div>
+        <div class="complementar">
+          <div class="label">💡 Para complementar em aula</div>
+          <ul>
+            <li>Atividade: que tipo de post te faz parar e comentar? Geralmente é polêmico, sim</li>
+            <li>Termo: "engagement bait" — conteúdo feito de propósito para provocar reação</li>
+            <li>Reflexão: o algoritmo não tem moral — só conta cliques</li>
+            <li>Experiência: por 1 dia, evite curtir/comentar conteúdos polêmicos. Veja como o feed muda</li>
+          </ul>
+        </div>
+      </div>
+
+      <!-- ─── 13. FILTRO BOLHA ─── -->
+      <div class="card-face card-front" data-idx="12" style="display:none">
+        <div class="card-icon">🫧</div>
+        <div class="card-title">Slide 13 · Filtro-Bolha</div>
+        <div class="card-heading">Você só está vendo<br>o que <span style="color:var(--purple)">você já gostava</span></div>
+        <div class="card-body">
+          Quando foi a última vez que você viu uma opinião<br><em>diferente da sua</em> nas redes?<br><br>
+          Pode ser efeito do <strong>filtro-bolha</strong>.
+        </div>
+        <div class="flip-hint">↻ Clique para revelar</div>
+      </div>
+      <div class="card-face card-back" data-idx="12" style="display:none">
+        <div class="card-icon">🎯</div>
+        <div class="card-title">A Bolha Invisível</div>
+        <div class="card-heading">Sua visão de mundo fica<br>cada vez mais <em>restrita</em></div>
+        <div class="card-body">
+          <p><strong>Como funciona o filtro-bolha:</strong></p>
+          <p>1️⃣ Você demonstra interesse em certas ideias (likes, vídeos assistidos)</p>
+          <p>2️⃣ O algoritmo passa a te mostrar <strong>cada vez mais conteúdo igual</strong></p>
+          <p>3️⃣ Você para de ver opiniões diferentes das suas</p>
+          <p>4️⃣ Sua visão de mundo fica <em>restrita a um único ponto de vista</em></p>
+          <p style="margin-top:12px">⚠️ Isso pode levar à <span class="pill-warning pill">polarização</span>: pessoas que só enxergam um lado da discussão e perdem a capacidade de dialogar com quem pensa diferente.</p>
+          <p style="margin-top:12px;font-style:italic">🤔 <strong>Reflexão:</strong> quando foi a última vez que você leu/assistiu algo que <em>desafiou</em> sua opinião?</p>
+        </div>
+        <div class="complementar">
+          <div class="label">💡 Para complementar em aula</div>
+          <ul>
+            <li>Termo cunhado por Eli Pariser em 2011 — livro "O Filtro Invisível"</li>
+            <li>Atividade: dois alunos pesquisam "vacinas" no Google em celulares diferentes — comparar resultados</li>
+            <li>Antídoto: sigam pessoas com pensamento diferente do seu (com respeito)</li>
+            <li>Política, religião, agronomia × agroecologia — cada bolha tem suas verdades absolutas</li>
+          </ul>
+        </div>
+      </div>
+
+      <!-- ─── 14. SUPERPOSTADORES ─── -->
+      <div class="card-face card-front" data-idx="13" style="display:none">
+        <div class="card-icon">📢</div>
+        <div class="card-title">Slide 14 · Radicalização</div>
+        <div class="card-heading">Por que vozes<br>raivosas dominam<br>os debates online?</div>
+        <div class="card-body">
+          Pesquisadores descobriram um perfil:<br>
+          os <strong>"superpostadores"</strong>.<br><br>
+          Quem são eles e por que dominam o debate?
+        </div>
+        <div class="flip-hint">↻ Clique para revelar</div>
+      </div>
+      <div class="card-face card-back" data-idx="13" style="display:none">
+        <div class="card-icon">🔊</div>
+        <div class="card-title">Os Superpostadores</div>
+        <div class="card-heading">Minoria barulhenta<br>parece ser a maioria</div>
+        <div class="card-body">
+          <p>Os <strong>superpostadores</strong> são pessoas que ficam <em>horas</em> nas redes sociais postando e compartilhando conteúdo, especialmente político.</p>
+          <p>Como o algoritmo <strong>recompensa engajamento</strong>, essas pessoas ganham <span class="pill-warning pill">visibilidade desproporcional</span>.</p>
+          <p>Resultado: vozes <em>extremas e radicais</em> acabam dominando o debate online — mesmo sendo <strong>minoria</strong>.</p>
+          <p style="margin-top:12px">📚 Segundo o jornalista Max Fischer (livro "A Máquina do Caos"), superpostadores tendem a apresentar:</p>
+          <p>🔒 <strong>Dogmatismo</strong> — crença cega em verdades absolutas</p>
+          <p>🪞 <strong>Narcisismo</strong> — necessidade de atenção excessiva</p>
+        </div>
+        <div class="complementar">
+          <div class="label">💡 Para complementar em aula</div>
+          <ul>
+            <li>Pergunta: na sua família, quem é "tio do Zap"? Provavelmente um superpostador</li>
+            <li>Pesquisa: 1% dos usuários do Twitter geram 25% de todo conteúdo político</li>
+            <li>Reflexão: quem fica em silêncio nas redes não é desinteressado — só não posta</li>
+            <li>Conceito: "espiral do silêncio" — pessoas com opinião moderada se calam, vendo só extremos</li>
+          </ul>
+        </div>
+      </div>
+
+      <!-- ─── 15. RECONHECIMENTO FACIAL ─── -->
+      <div class="card-face card-front" data-idx="14" style="display:none">
+        <div class="card-icon">🧠</div>
+        <div class="card-title">Slide 15 · IA na Prática</div>
+        <div class="card-heading">Como o celular<br>"<span style="color:var(--cyan)">reconhece</span>"<br>seu rosto?</div>
+        <div class="card-body">
+          Você olha pra tela e o aparelho desbloqueia.<br>
+          Parece mágica — mas é <strong>algoritmo</strong>.<br><br>
+          Vamos por trás dessa "magia"?
+        </div>
+        <div class="flip-hint">↻ Clique para revelar</div>
+      </div>
+      <div class="card-face card-back" data-idx="14" style="display:none">
+        <div class="card-icon">📷</div>
+        <div class="card-title">Reconhecimento Facial</div>
+        <div class="card-heading">Sua "impressão facial"<br>é única — quase</div>
+        <div class="card-body">
+          <p>O processo, em 5 etapas:</p>
+          <p>1️⃣ A câmera <strong>captura</strong> a imagem do rosto</p>
+          <p>2️⃣ O algoritmo <strong>analisa características</strong>: distância entre os olhos, formato do nariz, contorno do rosto</p>
+          <p>3️⃣ Esses dados viram uma <strong>"impressão facial"</strong> digital (sequência de números)</p>
+          <p>4️⃣ O algoritmo <strong>compara</strong> com a impressão cadastrada</p>
+          <p>5️⃣ Se coincidir: ✅ <span class="pill-green pill">acesso liberado</span></p>
+          <p style="margin-top:12px">📍 <strong>Onde mais é usado:</strong> câmeras de segurança em aeroportos, metrôs e ruas de cidades como <em>São Paulo, Rio, Recife, BH</em>. Polícia também usa.</p>
+        </div>
+        <div class="complementar">
+          <div class="label">💡 Para complementar em aula</div>
+          <ul>
+            <li>Comparação com identificação biométrica antiga: digital, íris, voz</li>
+            <li>Curiosidade: ChinAI usa reconhecimento facial em estações de trem para pagar passagem</li>
+            <li>Privacidade: você consente em ser reconhecido por câmeras de rua? Geralmente, não</li>
+            <li>Próximo slide: alerta sobre os <strong>erros</strong> dessa tecnologia</li>
+          </ul>
+        </div>
+      </div>
+
+      <!-- ─── 16. ALGORITMOS ERRAM ─── -->
+      <div class="card-face card-front" data-idx="15" style="display:none">
+        <div class="card-icon">⚠️</div>
+        <div class="card-title">Slide 16 · Viés Algorítmico</div>
+        <div class="card-heading">Algoritmos também <span style="color:var(--warning)">erram</span><br>— e isso<br>pode ser perigoso</div>
+        <div class="card-body">
+          Achamos que computadores são "neutros" e "objetivos".<br>
+          <strong>Não são.</strong><br>
+          Por quê?
+        </div>
+        <div class="flip-hint">↻ Clique para revelar</div>
+      </div>
+      <div class="card-face card-back" data-idx="15" style="display:none">
+        <div class="card-icon">⚖️</div>
+        <div class="card-title">Tecnologia Não é Neutra</div>
+        <div class="card-heading">Algoritmos carregam<br>preconceitos de quem os criou</div>
+        <div class="card-body">
+          <p><strong>O problema:</strong> algoritmos são criados por pessoas e podem carregar os <em>preconceitos</em> de quem os programou.</p>
+          <p>📊 <strong>Caso documentado:</strong> algoritmos de reconhecimento facial têm <strong>maior dificuldade em identificar rostos negros</strong> — porque foram treinados com mais imagens de pessoas brancas.</p>
+          <p>📍 <strong>Em 2019, em Salvador (BA):</strong> um <em>adolescente negro</em> foi <strong>detido injustamente</strong> após ser confundido com um criminoso por um sistema de reconhecimento facial.</p>
+          <p style="margin-top:12px"><span class="pill-warning pill">"Falso positivo"</span> = quando o sistema identifica alguém erroneamente.</p>
+          <p>⚠️ Consequências: detenções injustas, constrangimento e violência policial contra inocentes.</p>
+          <p style="margin-top:12px;font-style:italic">💡 <strong>Lição:</strong> tecnologia não é neutra — ela reflete os valores e preconceitos de quem a cria.</p>
+        </div>
+        <div class="complementar">
+          <div class="label">💡 Para complementar em aula</div>
+          <ul>
+            <li>Documentário: "Coded Bias" (Netflix) — sobre viés racial em IA</li>
+            <li>Estudos: erro em identificar rostos negros chega a ser 35× maior que rostos brancos</li>
+            <li>Discussão: por que isso acontece? (treinamento, equipes pouco diversas)</li>
+            <li>Brasil: várias cidades já usam reconhecimento facial sem regulamentação clara — debate aberto</li>
+          </ul>
+        </div>
+      </div>
+
+      <!-- ─── 17. TECNOLOGIAS ASSISTIVAS ─── -->
+      <div class="card-face card-front" data-idx="16" style="display:none">
+        <div class="card-icon">♿</div>
+        <div class="card-title">Slide 17 · Inclusão Digital</div>
+        <div class="card-heading">Algoritmos também<br>podem <span style="color:var(--green)">incluir</span></div>
+        <div class="card-body">
+          Nem todo uso de algoritmo é problemático.<br>
+          Muitos são desenvolvidos para <strong>ajudar pessoas com deficiência</strong>.<br><br>
+          Conheça as <em>tecnologias assistivas</em>.
+        </div>
+        <div class="flip-hint">↻ Clique para revelar</div>
+      </div>
+      <div class="card-face card-back" data-idx="16" style="display:none">
+        <div class="card-icon">🤝</div>
+        <div class="card-title">Algoritmos a Favor</div>
+        <div class="card-heading">Tecnologia que<br>amplia possibilidades</div>
+        <div class="card-body">
+          <p><strong>Tecnologias assistivas</strong> são algoritmos criados para ajudar pessoas com deficiência a acessar o mundo digital:</p>
+          <p>🗣 <span class="pill-cyan pill">NLP — Processamento de Linguagem Natural</span><br>Converte texto em fala. Permite que pessoas com deficiência visual <em>"ouçam"</em> textos da tela.</p>
+          <p>🎤 <span class="pill-purple pill">ASR — Reconhecimento Automático de Fala</span><br>Converte fala em texto. Permite que pessoas com deficiência motora usem o computador <em>só com a voz</em>.</p>
+          <p>📖 <span class="pill-green pill">Leitores de Tela</span><br>Softwares que descrevem em voz alta tudo o que aparece na tela.</p>
+          <p style="margin-top:12px">✨ Essas tecnologias promovem <strong>inclusão digital</strong> — garantem que pessoas com deficiência possam estudar, trabalhar e se comunicar como qualquer outra.</p>
+        </div>
+        <div class="complementar">
+          <div class="label">💡 Para complementar em aula</div>
+          <ul>
+            <li>Demonstrar: ative o "TalkBack" (Android) ou "VoiceOver" (iOS) por 5 min em sala</li>
+            <li>Apps populares: Google Assistente, Siri, Alexa — todos dependem de NLP+ASR</li>
+            <li>Curiosidade: legendas automáticas do YouTube usam ASR — mudaram a vida de surdos</li>
+            <li>Reflexão: que tipos de "inclusão tecnológica" ainda estão por vir?</li>
+          </ul>
+        </div>
+      </div>
+
+      <!-- ─── 18. CRIPTOGRAFIA ─── -->
+      <div class="card-face card-front" data-idx="17" style="display:none">
+        <div class="card-icon">🔐</div>
+        <div class="card-title">Slide 18 · Segurança Digital</div>
+        <div class="card-heading">"Mensagens protegidas<br>com <span style="color:var(--purple)">criptografia</span><br>de ponta a ponta"</div>
+        <div class="card-body">
+          Você já viu essa mensagem no WhatsApp.<br>
+          Mas o que ela significa, na prática?
+        </div>
+        <div class="flip-hint">↻ Clique para revelar</div>
+      </div>
+      <div class="card-face card-back" data-idx="17" style="display:none">
+        <div class="card-icon">🔑</div>
+        <div class="card-title">A Arte do Segredo Digital</div>
+        <div class="card-heading">Mensagens viram<br>"código" no caminho</div>
+        <div class="card-body">
+          <p><strong>Criptografia</strong> = técnica de codificar uma mensagem para que <strong>só quem tem a "chave" certa</strong> consiga lê-la.</p>
+          <p style="margin-top:8px"><strong>Exemplo simples:</strong> imagine codificar "OI" deslocando cada letra 3 posições no alfabeto:</p>
+          <p style="background:var(--bg-soft);padding:12px;border-radius:8px;font-family:'JetBrains Mono',monospace;font-size:0.9em">
+            O → R<br>
+            I → L<br>
+            "OI" vira "RL"
+          </p>
+          <p style="margin-top:10px">🕵️ Quem interceptar verá <strong>"RL"</strong> e não vai entender nada.<br>👤 Seu amigo, que sabe que a chave é <em>3</em>, decifra facilmente.</p>
+          <p style="margin-top:10px"><span class="pill-cyan pill">Veja a demo interativa na aba "Visualizações"</span></p>
+        </div>
+        <div class="complementar">
+          <div class="label">💡 Para complementar em aula</div>
+          <ul>
+            <li>Hist: a "Cifra de César" foi usada por Júlio César no Império Romano (50 a.C.)</li>
+            <li>2ª Guerra: máquina Enigma dos nazistas usava criptografia (decifrada por Turing!)</li>
+            <li>Hoje: criptografia tem chaves de centenas de dígitos — impossível de quebrar</li>
+            <li>Atividade: peça à turma para "decifrar" mensagens com deslocamento simples</li>
+          </ul>
+        </div>
+      </div>
+
+      <!-- ─── 19. SIMÉTRICA × ASSIMÉTRICA ─── -->
+      <div class="card-face card-front" data-idx="18" style="display:none">
+        <div class="card-icon">🗝️</div>
+        <div class="card-title">Slide 19 · Tipos de Criptografia</div>
+        <div class="card-heading">Como o WhatsApp<br>protege as mensagens<br>de <span style="color:var(--cyan)">verdade</span>?</div>
+        <div class="card-body">
+          Existem dois tipos principais de criptografia.<br>
+          O WhatsApp e o internet banking usam o mais sofisticado deles.<br><br>
+          Qual é?
+        </div>
+        <div class="flip-hint">↻ Clique para revelar</div>
+      </div>
+      <div class="card-face card-back" data-idx="18" style="display:none">
+        <div class="card-icon">🔐</div>
+        <div class="card-title">Simétrica × Assimétrica</div>
+        <div class="card-heading">Uma chave só<br>vs. duas chaves</div>
+        <div class="card-body">
+          <p>🔑 <span class="pill">SIMÉTRICA</span> — usa a <strong>mesma chave</strong> para codificar e decodificar:</p>
+          <p>• Mais simples e rápida<br>• Desvantagem: as duas pessoas precisam <em>conhecer</em> a mesma chave secreta<br>• Ex. histórico: a máquina <strong>Enigma</strong> da 2ª Guerra Mundial</p>
+          <p style="margin-top:12px">🗝🔓 <span class="pill-purple pill">ASSIMÉTRICA</span> — usa <strong>duas chaves diferentes</strong>:</p>
+          <p>• <strong>Chave pública</strong> — qualquer pessoa pode usar para enviar mensagem criptografada<br>• <strong>Chave privada</strong> — só o destinatário tem, para decifrar<br>• Usada no <span class="pill-green pill">WhatsApp</span>, internet banking e sites seguros (https)</p>
+          <p style="margin-top:12px">🔒 Toda vez que você vê o cadeado <strong>🔒</strong> na barra do navegador, está usando criptografia assimétrica!</p>
+        </div>
+        <div class="complementar">
+          <div class="label">💡 Para complementar em aula</div>
+          <ul>
+            <li>Mostre o cadeado do https na barra do navegador — clique para ver detalhes do certificado</li>
+            <li>Analogia: chave pública = caixa de correio (qualquer um joga carta dentro). Chave privada = chave da casa (só você tem)</li>
+            <li>Conceito-chave: "ponta-a-ponta" — só remetente e destinatário leem; nem o WhatsApp lê</li>
+            <li>Pix usa criptografia também — proteção fundamental para o sistema bancário brasileiro</li>
+          </ul>
+        </div>
+      </div>
+
+      <!-- ─── 20. REFLEXÃO FINAL ─── -->
+      <div class="card-face card-front" data-idx="19" style="display:none">
+        <div class="card-icon">🤔</div>
+        <div class="card-title">Slide 20 · Encerramento</div>
+        <div class="card-heading">O que aprendemos<br>com os <span style="color:var(--primary)">algoritmos</span>?</div>
+        <div class="card-body">
+          Eles não são "vilões" nem "heróis".<br>
+          São ferramentas — e ferramentas <em>refletem quem as usa</em>.<br><br>
+          6 reflexões para levar para a vida.
+        </div>
+        <div class="flip-hint">↻ Clique para revelar</div>
+      </div>
+      <div class="card-face card-back" data-idx="19" style="display:none">
+        <div class="card-icon">🌟</div>
+        <div class="card-title">6 Pontos para Levar</div>
+        <div class="card-heading">Cidadania digital<br>= entender o que está por trás</div>
+        <div class="card-body">
+          <p>✅ <strong>Algoritmos não são mágica</strong> — são sequências lógicas criadas por pessoas, com limites e preconceitos</p>
+          <p>✅ <strong>O que você vê nas redes foi escolhido por um algoritmo</strong> — nem sempre representa a realidade</p>
+          <p>✅ <strong>Conteúdo polêmico se espalha mais</strong> — engajamento alimenta a desinformação</p>
+          <p>✅ <strong>Algoritmos podem discriminar</strong> — reconhecimento facial ainda apresenta vieses raciais graves</p>
+          <p>✅ <strong>Mas algoritmos também incluem</strong> — tecnologias assistivas ampliam acesso a pessoas com deficiência</p>
+          <p>✅ <strong>A criptografia nos protege</strong> — algoritmos matemáticos guardam suas mensagens e dados</p>
+          <p style="margin-top:12px;font-style:italic">📌 <strong>Para o futuro:</strong> entender como algoritmos funcionam é essencial para ser um <span class="pill">cidadão crítico na era digital</span> — tanto para aproveitar seus benefícios quanto para se proteger dos riscos.</p>
+        </div>
+        <div class="complementar">
+          <div class="label">💡 Para complementar em aula</div>
+          <ul>
+            <li>Encerre pedindo: "se eu pudesse mudar 1 coisa nos algoritmos das redes sociais, mudaria..."</li>
+            <li>Tarefa: cada aluno passa 1 dia <em>observando</em> os algoritmos do dia (TikTok, Google, YouTube)</li>
+            <li>Conexão: na próxima unidade, vamos falar de <strong>Inteligência Artificial</strong> — algoritmos que aprendem sozinhos</li>
+            <li>Discussão: como aplicar o "pensamento algorítmico" em problemas do campo? (rotina de plantio, manejo, etc.)</li>
+          </ul>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+<!-- ════════════════════════════════════════════
+     VISUALIZAÇÕES
+════════════════════════════════════════════ -->
+<div class="section" id="tab-visual">
+
+  <!-- ENTRADA / PROCESSAMENTO / SAÍDA -->
+  <div class="panel">
+    <h2>⚙️ Estrutura de um Algoritmo</h2>
+    <p class="lead">Toda receita, manual ou programa de computador segue essa estrutura. Da fritura de um ovo ao algoritmo do Instagram.</p>
+    <div class="flow-chart">
+      <div class="flow-block input">
+        <div class="ico">📥</div>
+        <h3>Entrada</h3>
+        <p>Os ingredientes / dados que você fornece</p>
+      </div>
+      <div class="flow-arrow">→</div>
+      <div class="flow-block process">
+        <div class="ico">⚙️</div>
+        <h3>Processamento</h3>
+        <p>Os passos que transformam a entrada</p>
+      </div>
+      <div class="flow-arrow">→</div>
+      <div class="flow-block output">
+        <div class="ico">📤</div>
+        <h3>Saída</h3>
+        <p>O resultado final</p>
+      </div>
+    </div>
+    <div style="margin-top:24px">
+      <h3 style="font-family:'Playfair Display',serif;color:var(--ink);margin-bottom:12px;font-size:1.1rem">🥪 Exemplo: algoritmo do sanduíche</h3>
+      <div class="algo-steps" id="algo-steps">
+        <div class="algo-step"><div class="num">1</div><p>Pegar 2 fatias de pão</p></div>
+        <div class="algo-step"><div class="num">2</div><p>Passar manteiga em um lado de cada fatia</p></div>
+        <div class="algo-step"><div class="num">3</div><p>Colocar queijo e presunto sobre uma fatia</p></div>
+        <div class="algo-step"><div class="num">4</div><p>Adicionar alface e tomate (opcional)</p></div>
+        <div class="algo-step"><div class="num">5</div><p>Fechar com a outra fatia</p></div>
+        <div class="algo-step"><div class="num">6</div><p>Cortar ao meio (opcional)</p></div>
+        <div class="algo-step"><div class="num">7</div><p>✅ Sanduíche pronto!</p></div>
+      </div>
+      <div style="margin-top:16px;display:flex;gap:10px;flex-wrap:wrap">
+        <button class="btn btn-primary" onclick="runAlgo()">▶ Executar passo a passo</button>
+        <button class="btn btn-ghost" onclick="resetAlgo()">↺ Resetar</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- GRAFO DE AMIZADES -->
+  <div class="panel">
+    <h2>🕸 Grafo de Amizades — Como o Instagram pensa</h2>
+    <p class="lead">Cada bolinha (vértice) é uma pessoa. Cada linha (aresta) é uma amizade. Clique numa pessoa para ver suas conexões — é assim que algoritmos sugerem "Pessoas que você pode conhecer".</p>
+    <div class="graph-wrap">
+      <svg class="graph-svg" viewBox="0 0 600 360" xmlns="http://www.w3.org/2000/svg">
+        <!-- Edges -->
+        <line class="graph-edge" x1="100" y1="80" x2="300" y2="80" data-from="ana" data-to="jose"/>
+        <line class="graph-edge" x1="300" y1="80" x2="500" y2="80" data-from="jose" data-to="laura"/>
+        <line class="graph-edge" x1="100" y1="80" x2="100" y2="280" data-from="ana" data-to="lucas"/>
+        <line class="graph-edge" x1="500" y1="80" x2="500" y2="280" data-from="laura" data-to="sofia"/>
+        <line class="graph-edge" x1="100" y1="280" x2="300" y2="280" data-from="lucas" data-to="vitor"/>
+        <line class="graph-edge" x1="300" y1="280" x2="500" y2="280" data-from="vitor" data-to="sofia"/>
+        <line class="graph-edge" x1="300" y1="80" x2="300" y2="280" data-from="jose" data-to="vitor"/>
+        <!-- Nodes -->
+        <g onclick="highlightNode('ana')" style="cursor:pointer">
+          <circle class="graph-node" cx="100" cy="80" r="28" data-id="ana"/>
+          <text class="graph-label" x="100" y="86" text-anchor="middle" fill="white">Ana</text>
+        </g>
+        <g onclick="highlightNode('jose')" style="cursor:pointer">
+          <circle class="graph-node" cx="300" cy="80" r="28" data-id="jose"/>
+          <text class="graph-label" x="300" y="86" text-anchor="middle" fill="white">José</text>
+        </g>
+        <g onclick="highlightNode('laura')" style="cursor:pointer">
+          <circle class="graph-node" cx="500" cy="80" r="28" data-id="laura"/>
+          <text class="graph-label" x="500" y="86" text-anchor="middle" fill="white">Laura</text>
+        </g>
+        <g onclick="highlightNode('lucas')" style="cursor:pointer">
+          <circle class="graph-node" cx="100" cy="280" r="28" data-id="lucas"/>
+          <text class="graph-label" x="100" y="286" text-anchor="middle" fill="white">Lucas</text>
+        </g>
+        <g onclick="highlightNode('vitor')" style="cursor:pointer">
+          <circle class="graph-node" cx="300" cy="280" r="28" data-id="vitor"/>
+          <text class="graph-label" x="300" y="286" text-anchor="middle" fill="white">Vítor</text>
+        </g>
+        <g onclick="highlightNode('sofia')" style="cursor:pointer">
+          <circle class="graph-node" cx="500" cy="280" r="28" data-id="sofia"/>
+          <text class="graph-label" x="500" y="286" text-anchor="middle" fill="white">Sofia</text>
+        </g>
+      </svg>
+    </div>
+    <p style="margin-top:14px;font-size:0.86rem;color:var(--muted);text-align:center" id="graph-info">
+      💡 Clique em uma pessoa para ver seus amigos diretos. Pessoas conectadas a vocês dois (mas não diretamente) viram <strong>"sugestões de amizade"</strong>.
+    </p>
+  </div>
+
+  <!-- CRIPTOGRAFIA -->
+  <div class="panel">
+    <h2>🔐 Criptografia — Cifra de César</h2>
+    <p class="lead">A forma mais antiga de criptografia: deslocar cada letra X posições no alfabeto. Digite uma mensagem e veja como ela é codificada.</p>
+
+    <div class="crypto-demo">
+      <div class="crypto-row">
+        <div class="crypto-box">
+          <div class="label">Mensagem original</div>
+          <div class="value" id="crypto-orig">OI AMIGO</div>
+        </div>
+        <div class="crypto-arrow">🔒 →</div>
+        <div class="crypto-box encoded">
+          <div class="label">Mensagem cifrada</div>
+          <div class="value" id="crypto-enc">RL DPLJR</div>
+        </div>
+      </div>
+      <div class="crypto-controls">
+        <input type="text" id="crypto-input" maxlength="40" value="OI AMIGO" oninput="updateCrypto()">
+        <span style="font-size:0.85rem;color:var(--muted)">Deslocamento:</span>
+        <span class="crypto-shift" id="shift-display">3</span>
+        <input type="range" id="crypto-shift" min="1" max="25" value="3" oninput="updateCrypto()" style="width:160px">
+      </div>
+    </div>
+
+    <div class="two-col" style="margin-top:24px">
+      <div class="info-card">
+        <h3><span class="ico">🕵️</span> Como decifrar?</h3>
+        <p>Quem recebe a mensagem precisa <strong>conhecer a chave</strong> (o número de deslocamento). Sem ela, a mensagem parece sem sentido — exatamente como a Cifra de César funcionava no Império Romano.</p>
+      </div>
+      <div class="info-card purple">
+        <h3><span class="ico">🚀</span> Hoje em dia</h3>
+        <p>Criptografias modernas (RSA, AES) usam <strong>chaves de centenas de dígitos</strong> — impossível de quebrar mesmo com supercomputadores. É o que protege seu banco, WhatsApp e Pix.</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- INFO CARDS DE FECHAMENTO -->
+  <div class="two-col">
+    <div class="info-card green">
+      <h3><span class="ico">🌾</span> Algoritmos no campo</h3>
+      <p>Pensamento algorítmico não serve só para tecnologia. <strong>Toda rotina rural</strong> — calendário de plantio, manejo, controle fitossanitário, irrigação programada — segue lógicas algorítmicas. Identificar e melhorar essas rotinas é competência valiosa para o agroecólogo.</p>
+    </div>
+    <div class="info-card orange">
+      <h3><span class="ico">🧠</span> Pensamento crítico</h3>
+      <p>Você convive com algoritmos o tempo todo. Saber <strong>identificá-los</strong> e <strong>questioná-los</strong> é tão importante quanto saber usar um celular. Por trás de cada notificação há decisões que alguém tomou — entender isso te dá poder de escolha.</p>
+    </div>
+  </div>
+</div>
+
+<!-- ════════════════════════════════════════════
+     QUIZ
+════════════════════════════════════════════ -->
+<div class="section" id="tab-quiz">
+
+  <div class="panel" style="margin-bottom:24px;text-align:center">
+    <h2>✏️ Quiz de Revisão</h2>
+    <p class="lead" style="margin-bottom:0">8 questões para revisar os principais conceitos da unidade. Cada resposta vem com explicação.</p>
+  </div>
+
+  <div class="quiz-grid">
+
+    <div class="quiz-card">
+      <h3>🥪 Questão 1</h3>
+      <p>Uma <strong>receita de bolo</strong> pode ser considerada um algoritmo?</p>
+      <div class="quiz-options">
+        <button class="quiz-opt" onclick="answer(0, this, true)">A) Sim, pois é uma sequência clara de instruções</button>
+        <button class="quiz-opt" onclick="answer(0, this, false)">B) Não, algoritmos são só de computador</button>
+        <button class="quiz-opt" onclick="answer(0, this, false)">C) Só se for digitada no celular</button>
+        <button class="quiz-opt" onclick="answer(0, this, false)">D) Só receitas profissionais</button>
+      </div>
+      <div class="quiz-feedback" id="qf-0"></div>
+    </div>
+
+    <div class="quiz-card">
+      <h3>⚙️ Questão 2</h3>
+      <p>Qual a estrutura básica de qualquer algoritmo?</p>
+      <div class="quiz-options">
+        <button class="quiz-opt" onclick="answer(1, this, false)">A) Início, meio e fim</button>
+        <button class="quiz-opt" onclick="answer(1, this, true)">B) Entrada, processamento e saída</button>
+        <button class="quiz-opt" onclick="answer(1, this, false)">C) Hardware, software e usuário</button>
+        <button class="quiz-opt" onclick="answer(1, this, false)">D) Letras, números e símbolos</button>
+      </div>
+      <div class="quiz-feedback" id="qf-1"></div>
+    </div>
+
+    <div class="quiz-card">
+      <h3>👩‍💻 Questão 3</h3>
+      <p>Quem é considerada a <strong>primeira programadora</strong> da história?</p>
+      <div class="quiz-options">
+        <button class="quiz-opt" onclick="answer(2, this, false)">A) Marie Curie</button>
+        <button class="quiz-opt" onclick="answer(2, this, true)">B) Ada Lovelace</button>
+        <button class="quiz-opt" onclick="answer(2, this, false)">C) Grace Hopper</button>
+        <button class="quiz-opt" onclick="answer(2, this, false)">D) Hedy Lamarr</button>
+      </div>
+      <div class="quiz-feedback" id="qf-2"></div>
+    </div>
+
+    <div class="quiz-card">
+      <h3>📱 Questão 4</h3>
+      <p>Por que o algoritmo do TikTok mostra cada vez mais conteúdos parecidos com o que você curte?</p>
+      <div class="quiz-options">
+        <button class="quiz-opt" onclick="answer(3, this, false)">A) Para te educar melhor</button>
+        <button class="quiz-opt" onclick="answer(3, this, true)">B) Para maximizar o tempo que você passa no app</button>
+        <button class="quiz-opt" onclick="answer(3, this, false)">C) Por acaso</button>
+        <button class="quiz-opt" onclick="answer(3, this, false)">D) Porque foi pago para isso</button>
+      </div>
+      <div class="quiz-feedback" id="qf-3"></div>
+    </div>
+
+    <div class="quiz-card">
+      <h3>🫧 Questão 5</h3>
+      <p>O que é o <strong>filtro-bolha</strong>?</p>
+      <div class="quiz-options">
+        <button class="quiz-opt" onclick="answer(4, this, false)">A) Um filtro de fotos do Instagram</button>
+        <button class="quiz-opt" onclick="answer(4, this, false)">B) Um vírus de computador</button>
+        <button class="quiz-opt" onclick="answer(4, this, true)">C) Quando o algoritmo te mostra só conteúdo igual ao que você já gosta</button>
+        <button class="quiz-opt" onclick="answer(4, this, false)">D) Tipo de bloqueador de anúncios</button>
+      </div>
+      <div class="quiz-feedback" id="qf-4"></div>
+    </div>
+
+    <div class="quiz-card">
+      <h3>🕸 Questão 6</h3>
+      <p>Em um grafo, o que são os <strong>vértices</strong>?</p>
+      <div class="quiz-options">
+        <button class="quiz-opt" onclick="answer(5, this, false)">A) As linhas que ligam pontos</button>
+        <button class="quiz-opt" onclick="answer(5, this, true)">B) Os pontos / pessoas / objetos representados</button>
+        <button class="quiz-opt" onclick="answer(5, this, false)">C) As cores do gráfico</button>
+        <button class="quiz-opt" onclick="answer(5, this, false)">D) As setas direcionais</button>
+      </div>
+      <div class="quiz-feedback" id="qf-5"></div>
+    </div>
+
+    <div class="quiz-card">
+      <h3>⚠️ Questão 7</h3>
+      <p>Por que algoritmos de reconhecimento facial cometem mais erros com rostos negros?</p>
+      <div class="quiz-options">
+        <button class="quiz-opt" onclick="answer(6, this, false)">A) Por culpa das pessoas negras</button>
+        <button class="quiz-opt" onclick="answer(6, this, true)">B) Porque foram treinados com mais imagens de pessoas brancas</button>
+        <button class="quiz-opt" onclick="answer(6, this, false)">C) É um bug aleatório</button>
+        <button class="quiz-opt" onclick="answer(6, this, false)">D) Câmeras não captam rostos negros</button>
+      </div>
+      <div class="quiz-feedback" id="qf-6"></div>
+    </div>
+
+    <div class="quiz-card">
+      <h3>🔐 Questão 8</h3>
+      <p>O cadeado 🔒 que aparece no navegador indica que o site usa:</p>
+      <div class="quiz-options">
+        <button class="quiz-opt" onclick="answer(7, this, false)">A) Um servidor brasileiro</button>
+        <button class="quiz-opt" onclick="answer(7, this, false)">B) Banco de dados</button>
+        <button class="quiz-opt" onclick="answer(7, this, true)">C) Criptografia (https) para proteger seus dados</button>
+        <button class="quiz-opt" onclick="answer(7, this, false)">D) Apenas um ícone decorativo</button>
+      </div>
+      <div class="quiz-feedback" id="qf-7"></div>
+    </div>
+
+  </div>
+</div>
+
+<div class="footer">
+  Unidade 02 · Algoritmos · 20 slides<br><br>
+  <a href="../roadmap.html">← Voltar ao Roadmap da Disciplina</a>
+</div>
+
+<script>
+// ══════════════════════════════════════
+//   TABS
+// ══════════════════════════════════════
+function switchTab(id) {
+  document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+  document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
+  const idx = ['cards','visual','quiz'].indexOf(id);
+  document.querySelectorAll('.tab')[idx].classList.add('active');
+  document.getElementById('tab-' + id).classList.add('active');
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+
+// ══════════════════════════════════════
+//   FLASH-CARDS
+// ══════════════════════════════════════
+const TOTAL = 20;
+let current = 0;
+let flipped = false;
+const done = new Set();
+
+function initDots() {
+  const container = document.getElementById('dots');
+  container.innerHTML = '';
+  for (let i = 0; i < TOTAL; i++) {
+    const d = document.createElement('div');
+    d.className = 'fc-dot' + (i === 0 ? ' active' : '');
+    d.onclick = (e) => { e.stopPropagation(); goToCard(i); };
+    container.appendChild(d);
+  }
+}
+
+function updateDots() {
+  document.querySelectorAll('.fc-dot').forEach((d, i) => {
+    d.className = 'fc-dot';
+    if (done.has(i)) d.classList.add('done');
+    if (i === current) d.classList.add('active');
+  });
+}
+
+function showCard(idx) {
+  document.querySelectorAll('[data-idx]').forEach(face => {
+    face.style.display = 'none';
+  });
+  document.querySelectorAll(`[data-idx="${idx}"]`).forEach(face => {
+    face.style.display = 'flex';
+  });
+  const fc = document.getElementById('fc');
+  fc.classList.remove('flipped');
+  flipped = false;
+  document.getElementById('prog').textContent = `Slide ${idx + 1} de ${TOTAL}`;
+  document.getElementById('prev-btn').disabled = idx === 0;
+  document.getElementById('next-btn').disabled = idx === TOTAL - 1;
+  updateDots();
+}
+
+function flipCard() {
+  const fc = document.getElementById('fc');
+  flipped = !flipped;
+  fc.classList.toggle('flipped', flipped);
+  if (flipped) done.add(current);
+  updateDots();
+}
+
+function nextCard() { if (current < TOTAL - 1) { current++; showCard(current); } }
+function prevCard() { if (current > 0) { current--; showCard(current); } }
+function goToCard(idx) { current = idx; showCard(idx); }
+
+initDots();
+showCard(0);
+
+document.addEventListener('keydown', (e) => {
+  const isCardsTab = document.getElementById('tab-cards').classList.contains('active');
+  if (!isCardsTab) return;
+  if (e.key === 'ArrowRight') nextCard();
+  if (e.key === 'ArrowLeft') prevCard();
+  if (e.key === ' ') { e.preventDefault(); flipCard(); }
+});
+
+// ══════════════════════════════════════
+//   ALGO STEPS ANIMATION
+// ══════════════════════════════════════
+let algoTimer = null;
+function runAlgo() {
+  resetAlgo();
+  const steps = document.querySelectorAll('.algo-step');
+  let i = 0;
+  algoTimer = setInterval(() => {
+    if (i >= steps.length) { clearInterval(algoTimer); return; }
+    steps[i].classList.add('done');
+    i++;
+  }, 700);
+}
+function resetAlgo() {
+  clearInterval(algoTimer);
+  document.querySelectorAll('.algo-step').forEach(s => s.classList.remove('done'));
+}
+
+// ══════════════════════════════════════
+//   GRAPH HIGHLIGHT
+// ══════════════════════════════════════
+const FRIENDS = {
+  ana:   ['jose', 'lucas'],
+  jose:  ['ana', 'laura', 'vitor'],
+  laura: ['jose', 'sofia'],
+  lucas: ['ana', 'vitor'],
+  vitor: ['lucas', 'sofia', 'jose'],
+  sofia: ['laura', 'vitor'],
+};
+const NAMES = { ana:'Ana', jose:'José', laura:'Laura', lucas:'Lucas', vitor:'Vítor', sofia:'Sofia' };
+
+function highlightNode(id) {
+  document.querySelectorAll('.graph-node').forEach(n => n.classList.remove('highlighted'));
+  document.querySelectorAll('.graph-edge').forEach(e => e.classList.remove('highlighted'));
+
+  const friends = FRIENDS[id];
+  document.querySelectorAll('.graph-node').forEach(n => {
+    const nid = n.dataset.id;
+    if (nid === id || friends.includes(nid)) n.classList.add('highlighted');
+  });
+  document.querySelectorAll('.graph-edge').forEach(e => {
+    const f = e.dataset.from, t = e.dataset.to;
+    if (f === id || t === id) e.classList.add('highlighted');
+  });
+
+  // Sugestões de amizade: amigos dos amigos que não são amigos diretos
+  const suggestions = new Set();
+  friends.forEach(friendId => {
+    FRIENDS[friendId].forEach(fof => {
+      if (fof !== id && !friends.includes(fof)) suggestions.add(fof);
+    });
+  });
+  const sugList = Array.from(suggestions).map(s => NAMES[s]).join(', ');
+  document.getElementById('graph-info').innerHTML = sugList
+    ? `🎯 <strong>${NAMES[id]}</strong> tem ${friends.length} amigos diretos. <strong>Sugestão de amizade</strong> (amigos dos amigos): <span style="color:var(--orange);font-weight:700">${sugList}</span>`
+    : `🎯 <strong>${NAMES[id]}</strong> já está conectado a todo mundo!`;
+}
+
+// ══════════════════════════════════════
+//   CIFRA DE CÉSAR
+// ══════════════════════════════════════
+function caesarCipher(text, shift) {
+  return text.toUpperCase().split('').map(ch => {
+    const code = ch.charCodeAt(0);
+    if (code >= 65 && code <= 90) {
+      return String.fromCharCode(((code - 65 + shift) % 26) + 65);
+    }
+    return ch;
+  }).join('');
+}
+
+function updateCrypto() {
+  const text = document.getElementById('crypto-input').value || ' ';
+  const shift = parseInt(document.getElementById('crypto-shift').value);
+  document.getElementById('shift-display').textContent = shift;
+  document.getElementById('crypto-orig').textContent = text.toUpperCase();
+  document.getElementById('crypto-enc').textContent = caesarCipher(text, shift);
+}
+updateCrypto();
+
+// ══════════════════════════════════════
+//   QUIZ
+// ══════════════════════════════════════
+const quizAnswered = Array(8).fill(false);
+const quizFB = [
+  { ok: 'Correto! Receitas, manuais e regras de jogos são todos algoritmos. Algoritmos não são exclusivos de computadores.', err: 'Sim — qualquer sequência clara de instruções é um algoritmo, mesmo escrita à mão num caderno.' },
+  { ok: 'Correto! Todo algoritmo recebe entrada, processa e gera saída — seja receita, app ou IA.', err: 'A estrutura básica é entrada → processamento → saída. Funciona para qualquer algoritmo.' },
+  { ok: 'Correto! Ada Lovelace escreveu o primeiro algoritmo destinado a uma máquina em 1843.', err: 'Foi Ada Lovelace, em 1843. As outras citadas também foram pioneiras importantes da ciência.' },
+  { ok: 'Correto! Quanto mais tempo no app, mais anúncios você vê — e mais a empresa fatura.', err: 'O objetivo é maximizar seu tempo na plataforma, para mostrar mais anúncios.' },
+  { ok: 'Correto! O filtro-bolha restringe sua visão de mundo, mostrando só o que reforça suas opiniões.', err: 'Filtro-bolha é o efeito de receber só conteúdo parecido com o que você já gosta.' },
+  { ok: 'Correto! Vértices = pontos (pessoas, lugares). Arestas = linhas (conexões entre eles).', err: 'Vértices são os pontos/pessoas. Arestas são as linhas que ligam vértices.' },
+  { ok: 'Correto! O viés vem do treinamento desequilibrado. Tecnologia não é neutra — reflete os dados dela.', err: 'O problema está no treinamento — algoritmos foram treinados com mais imagens de pessoas brancas.' },
+  { ok: 'Correto! O cadeado indica https, ou seja, criptografia assimétrica protegendo a conexão.', err: 'O cadeado indica que o site usa https — criptografia para proteger sua conexão.' },
+];
+
+function answer(idx, btn, correct) {
+  if (quizAnswered[idx]) return;
+  quizAnswered[idx] = true;
+  const card = btn.closest('.quiz-card');
+  card.querySelectorAll('.quiz-opt').forEach(o => o.disabled = true);
+  btn.classList.add(correct ? 'correct' : 'wrong');
+  if (!correct) {
+    card.querySelectorAll('.quiz-opt').forEach(o => {
+      const onclick = o.getAttribute('onclick') || '';
+      if (onclick.includes('true')) o.classList.add('correct');
+    });
+  }
+  const fb = document.getElementById('qf-' + idx);
+  fb.textContent = (correct ? '✓ ' : '✗ ') + (correct ? quizFB[idx].ok : quizFB[idx].err);
+  fb.style.color = correct ? '#2a6a40' : '#a04040';
+}
+</script>
+
+</body>
+</html>
