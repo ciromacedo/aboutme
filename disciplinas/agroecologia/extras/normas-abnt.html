@@ -1,0 +1,1992 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Trabalhos Acadêmicos & Normas ABNT — Do zero ao Google Docs</title>
+<link href="https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&family=DM+Sans:wght@300;400;600;800&family=Source+Serif+4:opsz,wght@8..60,400;8..60,600;8..60,700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #0e1117;
+    --panel: #161b23;
+    --panel2: #1f2530;
+    --accent: #e0b64c;      /* dourado acadêmico */
+    --accent2: #4db6ac;     /* teal */
+    --accent3: #7cc576;     /* verde agro */
+    --accent4: #d98a5b;     /* terracota */
+    --accent5: #b98ee6;     /* roxo */
+    --danger: #ff5d5d;
+    --text: #f1ede2;
+    --muted: #8b8778;
+    --paper: #f4efe4;
+    --grid: rgba(224,182,76,0.08);
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: 'DM Sans', sans-serif;
+    min-height: 100vh;
+    overflow-x: hidden;
+  }
+
+  /* ── HEADER ── */
+  header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 18px 36px;
+    border-bottom: 1px solid rgba(224,182,76,0.18);
+    background: rgba(14,17,23,0.9);
+    position: sticky; top: 0; z-index: 100;
+    backdrop-filter: blur(12px);
+    gap: 12px;
+    flex-wrap: wrap;
+  }
+  header h1 {
+    font-family: 'Space Mono', monospace;
+    font-size: 1.05rem;
+    color: var(--accent);
+    letter-spacing: 2px;
+    text-transform: uppercase;
+  }
+  .badge {
+    font-family: 'Space Mono', monospace;
+    font-size: 0.62rem;
+    background: rgba(224,182,76,0.1);
+    border: 1px solid rgba(224,182,76,0.3);
+    color: var(--accent);
+    padding: 4px 12px;
+    border-radius: 20px;
+    letter-spacing: 1px;
+  }
+
+  /* ── TABS ── */
+  .tabs {
+    display: flex;
+    gap: 6px;
+    padding: 20px 36px 0;
+    border-bottom: 1px solid rgba(255,255,255,0.06);
+    flex-wrap: wrap;
+  }
+  .tab {
+    padding: 10px 18px;
+    border-radius: 8px 8px 0 0;
+    background: var(--panel);
+    border: 1px solid rgba(255,255,255,0.06);
+    border-bottom: none;
+    color: var(--muted);
+    cursor: pointer;
+    font-weight: 600;
+    font-size: 0.82rem;
+    transition: all 0.2s;
+    position: relative; bottom: -1px;
+    white-space: nowrap;
+  }
+  .tab.active {
+    background: var(--panel2);
+    color: var(--text);
+    border-color: rgba(224,182,76,0.3);
+    border-bottom: 1px solid var(--panel2);
+  }
+  .tab:hover:not(.active) { color: var(--text); }
+
+  /* ── SECTIONS ── */
+  .section { display: none; padding: 36px; }
+  .section.active { display: block; }
+
+  /* ── CARDS ── */
+  .panel-card {
+    background: var(--panel);
+    border: 1px solid rgba(224,182,76,0.12);
+    border-radius: 20px;
+    padding: 28px;
+  }
+  .panel-card h2 {
+    font-family: 'Source Serif 4', serif;
+    font-size: 1.4rem;
+    font-weight: 700;
+    margin-bottom: 6px;
+  }
+  .panel-card > p {
+    color: var(--muted);
+    font-size: 0.9rem;
+    line-height: 1.65;
+    margin-bottom: 24px;
+  }
+
+  .info-card {
+    background: var(--panel);
+    border-radius: 16px;
+    padding: 20px;
+    border: 1px solid rgba(255,255,255,0.06);
+  }
+  .info-card h3 {
+    font-size: 0.85rem;
+    font-weight: 800;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    margin-bottom: 10px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  .info-card p {
+    font-size: 0.85rem;
+    color: var(--muted);
+    line-height: 1.65;
+  }
+  .info-card strong { color: var(--text); }
+
+  .dot { width: 10px; height: 10px; border-radius: 50%; display: inline-block; }
+  .dot-gold { background: var(--accent); }
+  .dot-teal { background: var(--accent2); }
+  .dot-green { background: var(--accent3); }
+  .dot-terra { background: var(--accent4); }
+  .dot-purple { background: var(--accent5); }
+
+  /* ── BUTTONS ── */
+  .btn {
+    padding: 10px 22px;
+    border-radius: 10px;
+    border: none;
+    font-family: 'DM Sans', sans-serif;
+    font-weight: 700;
+    font-size: 0.85rem;
+    cursor: pointer;
+    transition: all 0.2s;
+  }
+  .btn-primary { background: var(--accent); color: #241c05; }
+  .btn-primary:hover { background: #eec766; transform: translateY(-1px); }
+  .btn-secondary { background: var(--accent2); color: #06201d; }
+  .btn-secondary:hover { background: #63cbc0; transform: translateY(-1px); }
+  .btn-ghost {
+    background: rgba(255,255,255,0.05);
+    color: var(--text);
+    border: 1px solid rgba(255,255,255,0.1);
+  }
+  .btn-ghost:hover { background: rgba(255,255,255,0.1); }
+  .btn-green { background: var(--accent3); color: #0a2408; }
+  .btn-green:hover { background: #96d690; transform: translateY(-1px); }
+  .btn:disabled { opacity: 0.4; cursor: not-allowed; }
+
+  /* ── FLASHCARD LAYOUT ── */
+  .flashcard-nav {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 28px;
+    gap: 12px;
+  }
+  .fc-progress {
+    font-family: 'Space Mono', monospace;
+    font-size: 0.8rem;
+    color: var(--muted);
+    margin-bottom: 8px;
+  }
+  .fc-dots { display: flex; gap: 6px; flex-wrap: wrap; justify-content: center; max-width: 320px; }
+  .fc-dot {
+    width: 8px; height: 8px;
+    border-radius: 50%;
+    background: rgba(255,255,255,0.1);
+    transition: background 0.3s;
+    cursor: pointer;
+  }
+  .fc-dot.active { background: var(--accent); box-shadow: 0 0 8px var(--accent); }
+  .fc-dot.done { background: var(--accent3); }
+
+  .flashcard-wrapper {
+    perspective: 1500px;
+    min-height: 440px;
+    position: relative;
+    transition: min-height 0.3s ease;
+  }
+  .flashcard {
+    width: 100%;
+    min-height: 440px;
+    position: relative;
+    transform-style: preserve-3d;
+    transition: transform 0.7s cubic-bezier(0.4,0,0.2,1);
+  }
+  .flashcard.flipped { transform: rotateY(180deg); }
+  .card-face {
+    position: absolute;
+    width: 100%;
+    height: auto;
+    min-height: 440px;
+    backface-visibility: hidden;
+    border-radius: 20px;
+    padding: 36px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+  }
+  .card-front {
+    background: linear-gradient(135deg, #161b23 0%, #1f2530 100%);
+    border: 1px solid rgba(224,182,76,0.25);
+  }
+  .card-back {
+    background: linear-gradient(135deg, #1f2530 0%, #17231f 100%);
+    border: 1px solid rgba(124,197,118,0.3);
+    transform: rotateY(180deg);
+  }
+
+  .card-icon { font-size: 3rem; margin-bottom: 16px; }
+  .card-title {
+    font-family: 'Space Mono', monospace;
+    font-size: 0.68rem;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    color: var(--accent);
+    margin-bottom: 12px;
+    text-align: center;
+  }
+  .card-heading {
+    font-family: 'Source Serif 4', serif;
+    font-size: 1.65rem;
+    font-weight: 700;
+    text-align: center;
+    margin-bottom: 16px;
+    line-height: 1.3;
+  }
+  .card-body {
+    font-size: 0.92rem;
+    color: var(--muted);
+    line-height: 1.7;
+    text-align: center;
+    max-width: 640px;
+  }
+  .card-body strong { color: var(--text); }
+  .pill {
+    font-family: 'Space Mono', monospace;
+    padding: 2px 8px;
+    border-radius: 6px;
+    font-size: 0.88em;
+    white-space: nowrap;
+  }
+  .pill-gold { background: rgba(224,182,76,0.12); border: 1px solid rgba(224,182,76,0.35); color: var(--accent); }
+  .pill-teal { background: rgba(77,182,172,0.12); border: 1px solid rgba(77,182,172,0.35); color: var(--accent2); }
+  .pill-green { background: rgba(124,197,118,0.12); border: 1px solid rgba(124,197,118,0.35); color: var(--accent3); }
+  .pill-terra { background: rgba(217,138,91,0.12); border: 1px solid rgba(217,138,91,0.35); color: var(--accent4); }
+  .pill-purple { background: rgba(185,142,230,0.12); border: 1px solid rgba(185,142,230,0.35); color: var(--accent5); }
+  .pill-danger { background: rgba(255,93,93,0.12); border: 1px solid rgba(255,93,93,0.35); color: var(--danger); }
+
+  /* ── COMPLEMENTAR ── */
+  .complementar {
+    margin-top: 20px;
+    background: rgba(224,182,76,0.06);
+    border: 1px solid rgba(224,182,76,0.2);
+    border-left: 3px solid var(--accent);
+    border-radius: 10px;
+    padding: 14px 18px;
+    text-align: left;
+    max-width: 640px;
+  }
+  .complementar .comp-label {
+    font-family: 'Space Mono', monospace;
+    font-size: 0.6rem;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    color: var(--accent);
+    margin-bottom: 8px;
+  }
+  .complementar ul { padding-left: 18px; margin: 0; }
+  .complementar li { font-size: 0.8rem; color: var(--muted); line-height: 1.55; margin-bottom: 5px; }
+  .complementar li strong { color: var(--text); }
+
+  .flip-hint {
+    font-family: 'Space Mono', monospace;
+    font-size: 0.65rem;
+    letter-spacing: 1px;
+    color: var(--muted);
+    margin-top: 22px;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    cursor: pointer;
+    transition: color 0.2s;
+  }
+  .flip-hint:hover { color: var(--accent); }
+
+  .card-nav-btns { display: flex; gap: 12px; justify-content: center; margin-top: 24px; }
+
+  /* ── GRIDS ── */
+  .two-col { display: grid; grid-template-columns: 1fr 340px; gap: 28px; align-items: start; }
+  .sidebar-stack { display: flex; flex-direction: column; gap: 16px; }
+
+  /* ── TIPOS DE TRABALHO ── */
+  .tipos-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(230px, 1fr));
+    gap: 16px;
+    margin-top: 8px;
+  }
+  .tipo-card {
+    border-radius: 14px;
+    padding: 20px;
+    border: 1px solid rgba(255,255,255,0.08);
+    background: var(--panel);
+    border-top: 3px solid var(--accent);
+    transition: transform 0.2s, box-shadow 0.2s;
+  }
+  .tipo-card:hover { transform: translateY(-3px); box-shadow: 0 8px 24px rgba(0,0,0,0.3); }
+  .tipo-card .t-icon { font-size: 1.8rem; margin-bottom: 8px; }
+  .tipo-card h3 { font-family: 'Source Serif 4', serif; font-size: 1.15rem; margin-bottom: 4px; }
+  .tipo-card .t-quem { font-family: 'Space Mono', monospace; font-size: 0.68rem; color: var(--accent); text-transform: uppercase; letter-spacing: 1px; margin-bottom: 10px; }
+  .tipo-card p { font-size: 0.83rem; color: var(--muted); line-height: 1.55; margin-bottom: 10px; }
+  .tipo-meta { display: flex; flex-wrap: wrap; gap: 6px; }
+  .tipo-meta span { font-size: 0.68rem; background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.08); padding: 3px 9px; border-radius: 12px; color: var(--text); }
+
+  /* ── VERSUS ── */
+  .versus {
+    display: grid;
+    grid-template-columns: 1fr auto 1fr;
+    gap: 0;
+    margin-top: 20px;
+    border-radius: 16px;
+    overflow: hidden;
+    border: 1px solid rgba(255,255,255,0.08);
+  }
+  .versus-col { padding: 22px; }
+  .versus-col.a { background: rgba(77,182,172,0.06); }
+  .versus-col.b { background: rgba(217,138,91,0.06); }
+  .versus-mid { display: flex; align-items: center; justify-content: center; background: var(--panel2); padding: 0 14px; font-family: 'Space Mono', monospace; font-weight: 700; color: var(--muted); }
+  .versus-col h3 { font-family: 'Source Serif 4', serif; font-size: 1.2rem; margin-bottom: 4px; }
+  .versus-col.a h3 { color: var(--accent2); }
+  .versus-col.b h3 { color: var(--accent4); }
+  .versus-col .vsub { font-size: 0.75rem; color: var(--muted); margin-bottom: 14px; }
+  .versus-col ul { list-style: none; }
+  .versus-col li { font-size: 0.83rem; line-height: 1.5; margin-bottom: 10px; padding-left: 22px; position: relative; color: var(--text); }
+  .versus-col li::before { content: '▹'; position: absolute; left: 0; color: var(--muted); }
+
+  /* ── ANATOMIA ── */
+  .anatomia-wrap { display: grid; grid-template-columns: 300px 1fr; gap: 24px; align-items: start; }
+  .doc-stack { display: flex; flex-direction: column; gap: 8px; }
+  .doc-part {
+    display: flex; align-items: center; gap: 12px;
+    padding: 12px 16px;
+    border-radius: 10px;
+    background: var(--panel);
+    border: 1px solid rgba(255,255,255,0.07);
+    border-left: 4px solid rgba(255,255,255,0.12);
+    cursor: pointer;
+    transition: all 0.2s;
+  }
+  .doc-part:hover { background: var(--panel2); }
+  .doc-part.active { border-left-color: var(--accent); background: rgba(224,182,76,0.08); }
+  .doc-part .dp-num { font-family: 'Space Mono', monospace; font-size: 0.7rem; color: var(--muted); width: 22px; }
+  .doc-part .dp-name { font-size: 0.88rem; font-weight: 600; flex: 1; }
+  .doc-part .dp-tag { font-size: 0.6rem; font-family: 'Space Mono', monospace; text-transform: uppercase; letter-spacing: 1px; padding: 2px 7px; border-radius: 10px; }
+  .dp-tag.obg { background: rgba(224,182,76,0.15); color: var(--accent); }
+  .dp-tag.opc { background: rgba(139,135,120,0.15); color: var(--muted); }
+  .doc-detail {
+    background: var(--panel);
+    border: 1px solid rgba(224,182,76,0.15);
+    border-radius: 16px;
+    padding: 28px;
+    min-height: 320px;
+  }
+  .doc-detail .dd-icon { font-size: 2.4rem; margin-bottom: 10px; }
+  .doc-detail h3 { font-family: 'Source Serif 4', serif; font-size: 1.5rem; margin-bottom: 6px; }
+  .doc-detail .dd-sub { font-family: 'Space Mono', monospace; font-size: 0.7rem; color: var(--accent); text-transform: uppercase; letter-spacing: 1px; margin-bottom: 16px; }
+  .doc-detail p { font-size: 0.9rem; color: var(--muted); line-height: 1.7; margin-bottom: 16px; }
+  .doc-detail p strong { color: var(--text); }
+  .dd-example {
+    background: var(--paper);
+    color: #2a2620;
+    border-radius: 10px;
+    padding: 18px 22px;
+    font-family: 'Source Serif 4', serif;
+    font-size: 0.85rem;
+    line-height: 1.7;
+  }
+  .dd-example .ex-label { font-family: 'Space Mono', monospace; font-size: 0.58rem; letter-spacing: 2px; text-transform: uppercase; color: #8a8270; margin-bottom: 8px; }
+
+  /* ── FORMATAÇÃO — FOLHA A4 ── */
+  .a4-demo-wrap { display: grid; grid-template-columns: 1fr 300px; gap: 24px; align-items: start; }
+  .a4-page {
+    background: var(--paper);
+    color: #2a2620;
+    aspect-ratio: 210 / 297;
+    max-width: 420px;
+    margin: 0 auto;
+    position: relative;
+    box-shadow: 0 12px 40px rgba(0,0,0,0.5);
+    border-radius: 3px;
+    font-family: 'Source Serif 4', serif;
+    overflow: hidden;
+  }
+  .a4-margin {
+    position: absolute;
+    border: 1px dashed #c0392b;
+    top: 12%; left: 14%; right: 8%; bottom: 8%;
+    padding: 4%;
+    font-size: 0.5rem;
+    line-height: 1.5;
+    overflow: hidden;
+    color: #3a352c;
+  }
+  .a4-title { text-align: center; font-weight: 700; font-size: 0.62rem; text-transform: uppercase; margin-bottom: 6%; }
+  .a4-para { text-indent: 12%; text-align: justify; margin-bottom: 4%; }
+  .a4-ruler-top, .a4-ruler-left {
+    position: absolute; font-family: 'Space Mono', monospace; font-size: 0.42rem; color: #c0392b;
+  }
+  .a4-ruler-top { top: 5%; left: 50%; transform: translateX(-50%); }
+  .a4-ruler-left { left: 3%; top: 45%; transform: rotate(-90deg); transform-origin: left; }
+  .fmt-legend { display: flex; flex-direction: column; gap: 10px; }
+  .fmt-item { display: flex; gap: 10px; align-items: flex-start; font-size: 0.82rem; }
+  .fmt-item .fi-key { font-family: 'Space Mono', monospace; color: var(--accent); font-weight: 700; min-width: 88px; }
+  .fmt-item .fi-val { color: var(--muted); line-height: 1.5; }
+  .fmt-item .fi-val strong { color: var(--text); }
+
+  /* ── NORMS TABLE ── */
+  .norms-table { width: 100%; border-collapse: collapse; font-size: 0.82rem; margin-top: 8px; }
+  .norms-table th { background: var(--panel2); padding: 12px 14px; text-align: left; font-family: 'Space Mono', monospace; font-size: 0.72rem; text-transform: uppercase; letter-spacing: 1px; color: var(--accent); border-bottom: 1px solid rgba(224,182,76,0.2); }
+  .norms-table td { padding: 11px 14px; border-bottom: 1px solid rgba(255,255,255,0.06); vertical-align: top; line-height: 1.5; }
+  .norms-table tr:hover td { background: rgba(255,255,255,0.02); }
+  .norms-table .n-name { font-weight: 700; color: var(--text); }
+  .norms-table .n-area { color: var(--muted); }
+
+  /* ── CITATION BUILDER ── */
+  .form-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
+  .form-field { display: flex; flex-direction: column; gap: 5px; }
+  .form-field.full { grid-column: 1 / -1; }
+  .form-field label { font-family: 'Space Mono', monospace; font-size: 0.62rem; letter-spacing: 1px; text-transform: uppercase; color: var(--muted); }
+  .form-field input, .form-field select {
+    background: rgba(0,0,0,0.25);
+    border: 1px solid rgba(224,182,76,0.25);
+    border-radius: 8px;
+    padding: 10px 12px;
+    color: var(--text);
+    font-family: 'DM Sans', sans-serif;
+    font-size: 0.88rem;
+    outline: none;
+    transition: border-color 0.2s;
+  }
+  .form-field input:focus, .form-field select:focus { border-color: var(--accent); box-shadow: 0 0 0 3px rgba(224,182,76,0.1); }
+  .form-field select option { background: var(--panel2); }
+  .cite-output {
+    margin-top: 20px;
+    background: var(--paper);
+    color: #2a2620;
+    border-radius: 12px;
+    padding: 22px 24px;
+    font-family: 'Source Serif 4', serif;
+  }
+  .cite-block { margin-bottom: 18px; }
+  .cite-block:last-child { margin-bottom: 0; }
+  .cite-block .cb-label { font-family: 'Space Mono', monospace; font-size: 0.58rem; letter-spacing: 2px; text-transform: uppercase; color: #b8860b; margin-bottom: 7px; display: flex; align-items: center; gap: 6px; }
+  .cite-block .cb-text { font-size: 0.95rem; line-height: 1.65; }
+  .cite-block .cb-text .hl { background: rgba(224,182,76,0.35); padding: 0 3px; border-radius: 3px; }
+
+  /* ── PESQUISAR ── */
+  .search-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 16px; }
+  .search-card {
+    border-radius: 14px; padding: 20px;
+    background: var(--panel); border: 1px solid rgba(255,255,255,0.08);
+    border-top: 3px solid var(--accent2);
+    display: flex; flex-direction: column;
+  }
+  .search-card .sc-icon { font-size: 1.7rem; margin-bottom: 8px; }
+  .search-card h3 { font-family: 'Source Serif 4', serif; font-size: 1.15rem; margin-bottom: 2px; }
+  .search-card .sc-type { font-family: 'Space Mono', monospace; font-size: 0.62rem; text-transform: uppercase; letter-spacing: 1px; color: var(--accent2); margin-bottom: 10px; }
+  .search-card p { font-size: 0.82rem; color: var(--muted); line-height: 1.55; margin-bottom: 12px; flex: 1; }
+  .search-card a { align-self: flex-start; font-size: 0.75rem; font-family: 'Space Mono', monospace; color: var(--accent); text-decoration: none; border: 1px solid rgba(224,182,76,0.3); padding: 5px 12px; border-radius: 8px; transition: all 0.2s; }
+  .search-card a:hover { background: rgba(224,182,76,0.12); }
+
+  .checklist { display: flex; flex-direction: column; gap: 10px; }
+  .check-item { display: flex; gap: 12px; align-items: flex-start; padding: 12px 16px; background: var(--panel); border-radius: 10px; border: 1px solid rgba(255,255,255,0.06); }
+  .check-item .ci-icon { font-size: 1.1rem; flex-shrink: 0; }
+  .check-item .ci-text { font-size: 0.85rem; line-height: 1.5; color: var(--text); }
+  .check-item .ci-text small { color: var(--muted); display: block; margin-top: 2px; font-size: 0.78rem; }
+
+  /* ── GOOGLE DOCS STEPS ── */
+  .steps { counter-reset: step; display: flex; flex-direction: column; gap: 14px; }
+  .step {
+    display: flex; gap: 16px; align-items: flex-start;
+    background: var(--panel); border: 1px solid rgba(255,255,255,0.07);
+    border-radius: 12px; padding: 18px 20px;
+    position: relative;
+  }
+  .step::before {
+    counter-increment: step; content: counter(step);
+    font-family: 'Space Mono', monospace; font-weight: 700; font-size: 1rem;
+    width: 34px; height: 34px; flex-shrink: 0;
+    display: flex; align-items: center; justify-content: center;
+    border-radius: 50%; background: rgba(224,182,76,0.15); color: var(--accent);
+    border: 1px solid rgba(224,182,76,0.35);
+  }
+  .step .step-body h3 { font-size: 0.98rem; font-weight: 700; margin-bottom: 5px; }
+  .step .step-body p { font-size: 0.85rem; color: var(--muted); line-height: 1.6; }
+  .step .step-body code { font-family: 'Space Mono', monospace; background: rgba(224,182,76,0.1); color: var(--accent); padding: 1px 6px; border-radius: 5px; font-size: 0.82em; }
+  .step .step-body strong { color: var(--text); }
+
+  /* ── SORTEIO ── */
+  .draw-box { text-align: center; padding: 20px; }
+  .draw-display {
+    background: linear-gradient(135deg, #1f2530 0%, #17231f 100%);
+    border: 1px solid rgba(124,197,118,0.3);
+    border-radius: 18px;
+    padding: 40px 32px;
+    min-height: 240px;
+    display: flex; flex-direction: column; align-items: center; justify-content: center;
+    margin: 0 auto 24px;
+    max-width: 720px;
+    transition: transform 0.15s;
+  }
+  .draw-display.rolling { animation: shake 0.15s infinite; }
+  @keyframes shake { 0%,100% { transform: translateX(0); } 25% { transform: translateX(-4px); } 75% { transform: translateX(4px); } }
+  .draw-eyebrow { font-family: 'Space Mono', monospace; font-size: 0.66rem; letter-spacing: 2px; text-transform: uppercase; color: var(--accent3); margin-bottom: 14px; }
+  .draw-tema { font-family: 'Source Serif 4', serif; font-size: 1.6rem; font-weight: 700; line-height: 1.3; margin-bottom: 18px; max-width: 620px; }
+  .draw-pergunta { font-size: 0.92rem; color: var(--muted); line-height: 1.65; max-width: 560px; }
+  .draw-pergunta strong { color: var(--accent); }
+  .draw-num { font-family: 'Space Mono', monospace; font-size: 0.7rem; color: var(--muted); margin-top: 16px; }
+
+  /* ── QUIZ ── */
+  .quiz-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
+  .quiz-card { background: var(--panel); border-radius: 16px; padding: 24px; border: 1px solid rgba(255,255,255,0.06); }
+  .quiz-card h3 { font-size: 1rem; font-weight: 800; margin-bottom: 8px; }
+  .quiz-card > p { font-size: 0.88rem; color: var(--text); line-height: 1.6; margin-bottom: 16px; }
+  .quiz-options { display: flex; flex-direction: column; gap: 8px; }
+  .quiz-opt {
+    padding: 10px 16px; border-radius: 8px;
+    border: 1px solid rgba(255,255,255,0.1); background: rgba(255,255,255,0.03);
+    color: var(--text); cursor: pointer; font-size: 0.85rem;
+    font-family: 'DM Sans', sans-serif; transition: all 0.2s; text-align: left;
+  }
+  .quiz-opt:hover:not(:disabled) { border-color: var(--accent); color: var(--accent); }
+  .quiz-opt.correct { border-color: var(--accent3) !important; background: rgba(124,197,118,0.12) !important; color: var(--accent3) !important; }
+  .quiz-opt.wrong { border-color: var(--danger) !important; background: rgba(255,93,93,0.1) !important; color: var(--danger) !important; }
+  .quiz-feedback { margin-top: 12px; font-size: 0.82rem; line-height: 1.55; min-height: 20px; }
+
+  /* scrollbar */
+  ::-webkit-scrollbar { width: 8px; height: 8px; }
+  ::-webkit-scrollbar-track { background: var(--bg); }
+  ::-webkit-scrollbar-thumb { background: rgba(224,182,76,0.25); border-radius: 4px; }
+
+  .footer-link {
+    text-align: center; padding: 30px 20px 10px;
+    font-size: 0.85rem;
+  }
+  .footer-link a { color: var(--accent); text-decoration: none; font-weight: 600; }
+  .footer-link a:hover { text-decoration: underline; }
+  .copyright { text-align:center; padding:14px 20px; font-size:0.72rem; opacity:0.5; border-top:1px solid rgba(224,182,76,0.12); }
+  .copyright a { color: inherit; text-decoration: none; font-weight: 600; }
+
+  @media (max-width: 900px) {
+    .two-col { grid-template-columns: 1fr; }
+    .quiz-grid { grid-template-columns: 1fr; }
+    .anatomia-wrap { grid-template-columns: 1fr; }
+    .a4-demo-wrap { grid-template-columns: 1fr; }
+    .form-grid { grid-template-columns: 1fr; }
+    .versus { grid-template-columns: 1fr; }
+    .versus-mid { padding: 8px; }
+    .tabs { padding: 16px 12px 0; gap: 4px; }
+    .tab { padding: 8px 12px; font-size: 0.74rem; }
+    .section { padding: 20px 14px; }
+    header { padding: 14px 16px; }
+    header h1 { font-size: 0.82rem; }
+    .card-heading { font-size: 1.35rem; }
+    .norms-table { font-size: 0.74rem; }
+    .norms-table th, .norms-table td { padding: 8px 9px; }
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <h1>📑 Trabalhos Acadêmicos & ABNT</h1>
+  <span class="badge">1º ANO · AGROECOLOGIA · CONTEÚDO EXTRA</span>
+</header>
+
+<div class="tabs">
+  <div class="tab active" onclick="switchTab('flashcards')">📚 Flash-cards</div>
+  <div class="tab" onclick="switchTab('tipos')">🧬 Tipos de Trabalho</div>
+  <div class="tab" onclick="switchTab('anatomia')">🏛️ Anatomia ABNT</div>
+  <div class="tab" onclick="switchTab('formatacao')">📐 Formatação</div>
+  <div class="tab" onclick="switchTab('citacoes')">🔖 Citações</div>
+  <div class="tab" onclick="switchTab('pesquisar')">🔍 Onde Pesquisar</div>
+  <div class="tab" onclick="switchTab('googledocs')">✅ Google Docs</div>
+  <div class="tab" onclick="switchTab('sorteio')">🎲 Sortear Tema</div>
+  <div class="tab" onclick="switchTab('quiz')">🌱 Quiz</div>
+</div>
+
+<!-- ══════════════════════════════════════
+     TAB 1 — FLASH-CARDS
+══════════════════════════════════════ -->
+<div class="section active" id="tab-flashcards">
+
+  <div class="flashcard-nav">
+    <button class="btn btn-ghost" id="btn-prev" onclick="prevCard()">← Anterior</button>
+    <div style="text-align:center">
+      <div class="fc-progress" id="fc-progress">Card 1 de 18</div>
+      <div class="fc-dots" id="fc-dots"></div>
+    </div>
+    <button class="btn btn-primary" id="btn-next" onclick="nextCard()">Próximo →</button>
+  </div>
+
+  <div class="flashcard-wrapper">
+    <div class="flashcard" id="flashcard" onclick="flipCard()">
+
+      <!-- ── CARD 0 ── -->
+      <div class="card-face card-front" id="cf-0">
+        <div class="card-icon">📝</div>
+        <div class="card-title">Ponto de Partida</div>
+        <div class="card-heading">O que é, afinal,<br>um <span style="color:var(--accent)">trabalho acadêmico</span>?</div>
+        <div class="card-body">
+          Você já fez um "trabalho de escola" copiando texto da internet e colando no caderno?<br><br>
+          Um trabalho <strong>acadêmico</strong> é diferente disso. Descubra por quê →
+        </div>
+        <div class="flip-hint">↩ Clique para revelar</div>
+      </div>
+      <div class="card-face card-back" id="cb-0">
+        <div class="card-icon">🎓</div>
+        <div class="card-title">Explicação</div>
+        <div class="card-heading">Um texto que<br><span style="color:var(--accent3)">investiga</span> e <span style="color:var(--accent3)">comprova</span></div>
+        <div class="card-body">
+          Trabalho acadêmico é um texto produzido para <strong>investigar uma pergunta</strong> e apresentar respostas com base em <strong>evidências</strong> — não em "achismo".<br><br>
+          Ele tem três marcas: <span class="pill pill-gold">método</span> (um caminho organizado), <span class="pill pill-teal">fontes</span> (quem já estudou o assunto) e <span class="pill pill-green">linguagem clara e formal</span>.<br><br>
+          É a forma como o conhecimento é construído e compartilhado no mundo todo — da escola técnica à universidade.
+          <div class="complementar">
+            <div class="comp-label">💡 Para complementar em aula</div>
+            <ul>
+              <li>Pergunte: "qual a diferença entre <strong>dar sua opinião</strong> sobre agrotóxicos e <strong>provar</strong> algo sobre agrotóxicos?"</li>
+              <li>Mostre um exemplo real: um post de rede social × um artigo científico sobre o mesmo tema rural.</li>
+              <li>Curiosidade: a palavra "acadêmico" vem de <em>Academia</em>, o jardim onde Platão ensinava, há 2.400 anos.</li>
+            </ul>
+          </div>
+        </div>
+        <div class="flip-hint">↩ Clique para voltar</div>
+      </div>
+
+      <!-- ── CARD 1 ── -->
+      <div class="card-face card-front" id="cf-1" style="display:none">
+        <div class="card-icon">📏</div>
+        <div class="card-title">A Grande Pergunta</div>
+        <div class="card-heading">Por que todo mundo tem<br>que seguir o <span style="color:var(--accent)">mesmo padrão</span>?</div>
+        <div class="card-body">
+          Imagine se cada aluno entregasse o trabalho com uma fonte, tamanho e organização diferentes...<br><br>
+          Por que padronizar ajuda tanto?
+        </div>
+        <div class="flip-hint">↩ Clique para revelar</div>
+      </div>
+      <div class="card-face card-back" id="cb-1" style="display:none">
+        <div class="card-icon">🚦</div>
+        <div class="card-title">Explicação</div>
+        <div class="card-heading">Padrão = uma<br><span style="color:var(--accent3)">linguagem comum</span></div>
+        <div class="card-body">
+          Padronizar é como as <strong>placas de trânsito</strong>: funcionam porque são iguais em todo lugar. Todo motorista entende.<br><br>
+          Num trabalho, o padrão faz com que qualquer leitor <strong>encontre a informação no mesmo lugar</strong>: o objetivo na introdução, as fontes nas referências.<br><br>
+          Vantagens: <span class="pill pill-teal">clareza</span> · <span class="pill pill-teal">justiça</span> (todos avaliados igual) · <span class="pill pill-teal">credibilidade</span> · e permite <strong>verificar</strong> de onde veio cada informação.
+          <div class="complementar">
+            <div class="comp-label">💡 Para complementar em aula</div>
+            <ul>
+              <li>Analogia rural: uma <strong>receita de compostagem</strong> só funciona se as medidas forem padronizadas — "um pouco disso" não replica.</li>
+              <li>Peça à turma comparar duas embalagens de sementes: uma com informações padronizadas, outra sem. Qual passa confiança?</li>
+              <li>Padrão também protege o autor: fica claro o que é ideia sua e o que veio de outra pessoa.</li>
+            </ul>
+          </div>
+        </div>
+        <div class="flip-hint">↩ Clique para voltar</div>
+      </div>
+
+      <!-- ── CARD 2 ── -->
+      <div class="card-face card-front" id="cf-2" style="display:none">
+        <div class="card-icon">🧱</div>
+        <div class="card-title">Estrutura</div>
+        <div class="card-heading">Qual a <span style="color:var(--accent)">estrutura mínima</span><br>de um trabalho?</div>
+        <div class="card-body">
+          Todo trabalho tem um "esqueleto" — partes que aparecem sempre, na mesma ordem.<br><br>
+          Você sabe quais são as partes essenciais?
+        </div>
+        <div class="flip-hint">↩ Clique para revelar</div>
+      </div>
+      <div class="card-face card-back" id="cb-2" style="display:none">
+        <div class="card-icon">🗂️</div>
+        <div class="card-title">Explicação</div>
+        <div class="card-heading">Começo, meio<br>e fim — com <span style="color:var(--accent3)">nome próprio</span></div>
+        <div class="card-body" style="text-align:left; max-width:600px">
+          <strong>1. Capa</strong> — identifica escola, autor, título, ano.<br>
+          <strong>2. Sumário</strong> — o índice, com as páginas.<br>
+          <strong>3. Introdução</strong> — o tema, o problema e o objetivo.<br>
+          <strong>4. Desenvolvimento</strong> — o "miolo": o que você pesquisou e discutiu.<br>
+          <strong>5. Conclusão</strong> — o que você concluiu, respondendo ao objetivo.<br>
+          <strong>6. Referências</strong> — a lista de todas as fontes usadas.<br><br>
+          Regra de ouro: <span class="pill pill-gold">introdução apresenta</span> → <span class="pill pill-teal">desenvolvimento discute</span> → <span class="pill pill-green">conclusão responde</span>.
+          <div class="complementar">
+            <div class="comp-label">💡 Para complementar em aula</div>
+            <ul>
+              <li>Compare com uma <strong>viagem</strong>: introdução = para onde vamos e por quê; desenvolvimento = o caminho; conclusão = chegamos e o que aprendemos.</li>
+              <li>Aviso comum: a conclusão <strong>não</strong> traz informação nova — ela amarra o que já foi dito.</li>
+              <li>Na aba "🏛️ Anatomia ABNT" a turma pode clicar em cada parte e ver um exemplo real.</li>
+            </ul>
+          </div>
+        </div>
+        <div class="flip-hint">↩ Clique para voltar</div>
+      </div>
+
+      <!-- ── CARD 3 ── -->
+      <div class="card-face card-front" id="cf-3" style="display:none">
+        <div class="card-icon">🏛️</div>
+        <div class="card-title">A Sigla Misteriosa</div>
+        <div class="card-heading">O que é a <span style="color:var(--accent)">ABNT</span>?</div>
+        <div class="card-body">
+          Você vê essa sigla em todo trabalho de faculdade.<br><br>
+          Mas o que ela significa e quem inventou essas regras?
+        </div>
+        <div class="flip-hint">↩ Clique para revelar</div>
+      </div>
+      <div class="card-face card-back" id="cb-3" style="display:none">
+        <div class="card-icon">📐</div>
+        <div class="card-title">Explicação</div>
+        <div class="card-heading">Associação Brasileira<br>de <span style="color:var(--accent3)">Normas Técnicas</span></div>
+        <div class="card-body">
+          A <strong>ABNT</strong> é a instituição, fundada em <strong>1940</strong>, que cria normas técnicas para o Brasil inteiro — não só para trabalhos, mas para <strong>capacete, brinquedo, tomada, alimento</strong>...<br><br>
+          Para trabalhos acadêmicos, ela publica normas chamadas <span class="pill pill-gold">NBR</span> (Norma Brasileira). Cada NBR cuida de uma parte: uma para a estrutura, outra para citações, outra para referências.<br><br>
+          Ou seja: ABNT é <strong>quem define as regras</strong>; a NBR é <strong>a regra escrita</strong>.
+          <div class="complementar">
+            <div class="comp-label">💡 Para complementar em aula</div>
+            <ul>
+              <li>A famosa <strong>tomada de 3 pinos</strong> brasileira é uma norma ABNT (NBR 14136) — mostre que padrão está no dia a dia.</li>
+              <li>A ABNT representa o Brasil na <strong>ISO</strong>, a organização internacional de normas.</li>
+              <li>Cada escola/universidade pode ter um "manual" que adapta a ABNT — sempre confira o da instituição.</li>
+            </ul>
+          </div>
+        </div>
+        <div class="flip-hint">↩ Clique para voltar</div>
+      </div>
+
+      <!-- ── CARD 4 ── -->
+      <div class="card-face card-front" id="cf-4" style="display:none">
+        <div class="card-icon">🔢</div>
+        <div class="card-title">As NBRs</div>
+        <div class="card-heading">Existe UMA norma<br>ou <span style="color:var(--accent)">várias</span>?</div>
+        <div class="card-body">
+          Você já ouviu falar em "NBR 6023" ou "NBR 14724"?<br><br>
+          Cada número cuida de uma parte diferente do trabalho. Vamos conhecer as principais?
+        </div>
+        <div class="flip-hint">↩ Clique para revelar</div>
+      </div>
+      <div class="card-face card-back" id="cb-4" style="display:none">
+        <div class="card-icon">📚</div>
+        <div class="card-title">Explicação</div>
+        <div class="card-heading">Cada NBR tem<br>um <span style="color:var(--accent3)">trabalho específico</span></div>
+        <div class="card-body" style="text-align:left; max-width:600px">
+          <span class="pill pill-gold">NBR 14724</span> — estrutura do trabalho (capa, margens, ordem das partes).<br><br>
+          <span class="pill pill-teal">NBR 10520</span> — como fazer <strong>citações</strong> dentro do texto.<br><br>
+          <span class="pill pill-green">NBR 6023</span> — como montar as <strong>referências</strong> no final.<br><br>
+          <span class="pill pill-terra">NBR 6024</span> — a <strong>numeração</strong> dos títulos (1, 1.1, 1.2...).<br><br>
+          <span class="pill pill-purple">NBR 6027 / 6028</span> — o <strong>sumário</strong> e o <strong>resumo</strong>.<br><br>
+          Você não precisa decorar os números — só saber que <strong>existe uma regra para cada parte</strong>.
+          <div class="complementar">
+            <div class="comp-label">💡 Para complementar em aula</div>
+            <ul>
+              <li>Deixe claro: no 1º ano, o foco é <strong>14724, 10520 e 6023</strong> (estrutura, citação, referência).</li>
+              <li>As NBRs são atualizadas com o tempo — a de referências teve versão nova em 2018, por exemplo.</li>
+              <li>Ideia de jogo: mostre uma "quebra de regra" e pergunte "qual NBR foi desrespeitada?"</li>
+            </ul>
+          </div>
+        </div>
+        <div class="flip-hint">↩ Clique para voltar</div>
+      </div>
+
+      <!-- ── CARD 5 ── -->
+      <div class="card-face card-front" id="cf-5" style="display:none">
+        <div class="card-icon">🌍</div>
+        <div class="card-title">Fora do Brasil</div>
+        <div class="card-heading">A ABNT vale<br>no <span style="color:var(--accent)">mundo todo</span>?</div>
+        <div class="card-body">
+          Se um estudante dos EUA ou da Europa escrever um trabalho, ele também usa ABNT?<br><br>
+          Será que existe só um padrão no planeta?
+        </div>
+        <div class="flip-hint">↩ Clique para revelar</div>
+      </div>
+      <div class="card-face card-back" id="cb-5" style="display:none">
+        <div class="card-icon">🗺️</div>
+        <div class="card-title">Explicação</div>
+        <div class="card-heading">Cada área e país têm<br>seu <span style="color:var(--accent3)">estilo</span></div>
+        <div class="card-body" style="text-align:left; max-width:600px">
+          A ABNT é o padrão <strong>brasileiro</strong>. No mundo, os mais famosos são:<br><br>
+          <span class="pill pill-teal">APA</span> — Psicologia e Educação (muito usado).<br>
+          <span class="pill pill-gold">IEEE</span> — Engenharia e Tecnologia (usa números: [1], [2]).<br>
+          <span class="pill pill-terra">Chicago</span> — História e Humanas (usa notas de rodapé).<br>
+          <span class="pill pill-green">Vancouver</span> — Medicina e Saúde.<br>
+          <span class="pill pill-purple">MLA</span> — Letras e Literatura.<br><br>
+          Muda a "roupa" (como se escreve a citação), mas a <strong>ideia é a mesma</strong>: dar crédito a quem produziu o conhecimento.
+          <div class="complementar">
+            <div class="comp-label">💡 Para complementar em aula</div>
+            <ul>
+              <li>Analogia: é como <strong>tomadas de países diferentes</strong> — todas levam energia, mas o formato do plugue muda.</li>
+              <li>Mostre a mesma citação em ABNT e em APA lado a lado (a aba "📐 Formatação" traz uma tabela comparativa).</li>
+              <li>Reforce: o aluno deve usar <strong>o estilo que a instituição pedir</strong> — aqui, ABNT.</li>
+            </ul>
+          </div>
+        </div>
+        <div class="flip-hint">↩ Clique para voltar</div>
+      </div>
+
+      <!-- ── CARD 6 ── -->
+      <div class="card-face card-front" id="cf-6" style="display:none">
+        <div class="card-icon">💬</div>
+        <div class="card-title">Dar Crédito</div>
+        <div class="card-heading">O que é <span style="color:var(--accent)">citar</span> —<br>e por que é obrigatório?</div>
+        <div class="card-body">
+          Quando você usa a ideia de outra pessoa no seu trabalho, precisa dizer de onde veio.<br><br>
+          O que acontece se você não fizer isso?
+        </div>
+        <div class="flip-hint">↩ Clique para revelar</div>
+      </div>
+      <div class="card-face card-back" id="cb-6" style="display:none">
+        <div class="card-icon">⚖️</div>
+        <div class="card-title">Explicação</div>
+        <div class="card-heading">Não citar<br>é <span style="color:var(--danger)">plágio</span></div>
+        <div class="card-body">
+          <strong>Citar</strong> é indicar, dentro do texto, de quem é a ideia que você está usando: <span class="pill pill-gold">(SILVA, 2020)</span>.<br><br>
+          Usar a ideia ou o texto de alguém <strong>sem dar crédito</strong> se chama <span class="pill pill-danger">plágio</span> — é como colar na prova ou "roubar" a ideia de outro. É falta grave (e até crime).<br><br>
+          Citar, ao contrário, <strong>fortalece</strong> seu trabalho: mostra que você pesquisou e que grandes autores concordam com você.
+          <div class="complementar">
+            <div class="comp-label">💡 Para complementar em aula</div>
+            <ul>
+              <li>Frase-chave: "citar não é sinal de fraqueza — é sinal de que você estudou".</li>
+              <li>Existem detectores de plágio (Turnitin, CopySpider) usados por escolas e revistas.</li>
+              <li>Discussão: copiar da Wikipédia sem citar é plágio? (Sim — mas a Wikipédia pode ser um <em>ponto de partida</em> para achar boas fontes.)</li>
+            </ul>
+          </div>
+        </div>
+        <div class="flip-hint">↩ Clique para voltar</div>
+      </div>
+
+      <!-- ── CARD 7 ── -->
+      <div class="card-face card-front" id="cf-7" style="display:none">
+        <div class="card-icon">✂️</div>
+        <div class="card-title">Dois Jeitos de Citar</div>
+        <div class="card-heading">Citação <span style="color:var(--accent2)">direta</span><br>× citação <span style="color:var(--accent4)">indireta</span></div>
+        <div class="card-body">
+          Você pode copiar as palavras exatas do autor... ou explicar a ideia dele com as suas palavras.<br><br>
+          Qual a diferença — e como marcar cada uma?
+        </div>
+        <div class="flip-hint">↩ Clique para revelar</div>
+      </div>
+      <div class="card-face card-back" id="cb-7" style="display:none">
+        <div class="card-icon">🔀</div>
+        <div class="card-title">Explicação</div>
+        <div class="card-heading">Copiar entre aspas<br>× <span style="color:var(--accent3)">reescrever com sua voz</span></div>
+        <div class="card-body" style="text-align:left; max-width:600px">
+          <strong>Direta</strong> — as palavras <em>exatas</em> do autor, entre <span class="pill pill-teal">"aspas"</span>, com a página:<br>
+          <em>"A agroecologia respeita os ciclos naturais"</em> (SANTOS, 2019, p. 12).<br><br>
+          <strong>Indireta</strong> — você explica a ideia com <em>suas próprias palavras</em> (sem aspas, sem página):<br>
+          Segundo Santos (2019), a agroecologia segue os ritmos da natureza.<br><br>
+          Dica: prefira a <span class="pill pill-green">indireta</span> — mostra que você <strong>entendeu</strong>, não só copiou.
+          <div class="complementar">
+            <div class="comp-label">💡 Para complementar em aula</div>
+            <ul>
+              <li>Exercício: dê uma frase e peça à turma para transformá-la em citação indireta (parafrasear).</li>
+              <li>Cuidado: parafrasear <strong>não é trocar uma palavra por sinônimo</strong> — é reescrever a ideia inteira.</li>
+              <li>Citação direta com mais de 3 linhas tem recuo de 4 cm e letra menor (regra da NBR 10520).</li>
+            </ul>
+          </div>
+        </div>
+        <div class="flip-hint">↩ Clique para voltar</div>
+      </div>
+
+      <!-- ── CARD 8 ── -->
+      <div class="card-face card-front" id="cf-8" style="display:none">
+        <div class="card-icon">📖</div>
+        <div class="card-title">A Lista Final</div>
+        <div class="card-heading">O que é uma<br><span style="color:var(--accent)">referência bibliográfica</span>?</div>
+        <div class="card-body">
+          No fim de todo trabalho tem uma lista de livros e sites.<br><br>
+          Para que serve essa lista e qual a diferença dela para a citação?
+        </div>
+        <div class="flip-hint">↩ Clique para revelar</div>
+      </div>
+      <div class="card-face card-back" id="cb-8" style="display:none">
+        <div class="card-icon">🧾</div>
+        <div class="card-title">Explicação</div>
+        <div class="card-heading">O <span style="color:var(--accent3)">endereço completo</span><br>de cada fonte</div>
+        <div class="card-body">
+          A <strong>citação</strong> é o apelido rápido no meio do texto: (SILVA, 2020).<br>
+          A <strong>referência</strong> é a ficha completa no final, que permite <strong>encontrar</strong> aquela fonte:<br><br>
+          <span class="pill pill-gold" style="white-space:normal">SILVA, João. <strong>Agroecologia na prática</strong>. São Paulo: Editora Campo, 2020.</span><br><br>
+          A ordem básica de um livro: <span class="pill pill-teal">SOBRENOME, Nome. Título. Cidade: Editora, ano.</span><br><br>
+          Regra: <strong>tudo que foi citado precisa estar nas referências</strong> — e vice-versa.
+          <div class="complementar">
+            <div class="comp-label">💡 Para complementar em aula</div>
+            <ul>
+              <li>Analogia: a citação é o <strong>nome</strong> da pessoa; a referência é o <strong>endereço + CPF</strong> dela.</li>
+              <li>As referências ficam em <strong>ordem alfabética</strong> pelo sobrenome do autor.</li>
+              <li>Na aba "🔖 Citações" há um montador: digite os dados e veja a referência pronta.</li>
+            </ul>
+          </div>
+        </div>
+        <div class="flip-hint">↩ Clique para voltar</div>
+      </div>
+
+      <!-- ── CARD 9 ── -->
+      <div class="card-face card-front" id="cf-9" style="display:none">
+        <div class="card-icon">🔎</div>
+        <div class="card-title">Qualidade da Fonte</div>
+        <div class="card-heading">Toda informação da<br>internet é <span style="color:var(--accent)">confiável</span>?</div>
+        <div class="card-body">
+          Um blog, um vídeo do YouTube e um artigo científico falam do mesmo assunto.<br><br>
+          Em qual você pode confiar para um trabalho acadêmico?
+        </div>
+        <div class="flip-hint">↩ Clique para revelar</div>
+      </div>
+      <div class="card-face card-back" id="cb-9" style="display:none">
+        <div class="card-icon">🛡️</div>
+        <div class="card-title">Explicação</div>
+        <div class="card-heading">Boa fonte tem<br><span style="color:var(--accent3)">autor, data e revisão</span></div>
+        <div class="card-body" style="text-align:left; max-width:600px">
+          Uma fonte confiável quase sempre tem:<br>
+          ✅ <strong>Autor identificado</strong> (quem escreveu?)<br>
+          ✅ <strong>Data</strong> (é atual?)<br>
+          ✅ <strong>Origem séria</strong> (universidade, Embrapa, revista científica, órgão oficial)<br>
+          ✅ <strong>Referências próprias</strong> (cita de onde tirou)<br><br>
+          Desconfie de: textos <span class="pill pill-danger">sem autor</span>, correntes de WhatsApp, sites que só querem vender algo, ou que não mostram de onde tiraram a informação.
+          <div class="complementar">
+            <div class="comp-label">💡 Para complementar em aula</div>
+            <ul>
+              <li>Teste prático: peça à turma avaliar 3 fontes sobre "adubo orgânico" e votar na mais confiável, justificando.</li>
+              <li><strong>Embrapa, IFs, universidades e SciELO</strong> são ótimas fontes para temas agro.</li>
+              <li>Domínios <code style="font-family:Space Mono">.gov</code> e <code style="font-family:Space Mono">.edu</code> costumam ser mais confiáveis (mas sempre verifique).</li>
+            </ul>
+          </div>
+        </div>
+        <div class="flip-hint">↩ Clique para voltar</div>
+      </div>
+
+      <!-- ── CARD 10 ── -->
+      <div class="card-face card-front" id="cf-10" style="display:none">
+        <div class="card-icon">🆚</div>
+        <div class="card-title">Não Confunda</div>
+        <div class="card-heading">Artigo <span style="color:var(--accent2)">científico</span><br>× artigo de <span style="color:var(--accent4)">revista</span></div>
+        <div class="card-body">
+          Uma reportagem da Veja e um artigo da revista científica parecem parecidos.<br><br>
+          Mas são MUITO diferentes. Você sabe por quê?
+        </div>
+        <div class="flip-hint">↩ Clique para revelar</div>
+      </div>
+      <div class="card-face card-back" id="cb-10" style="display:none">
+        <div class="card-icon">🔬</div>
+        <div class="card-title">Explicação</div>
+        <div class="card-heading">A diferença está na<br><span style="color:var(--accent3)">revisão por pares</span></div>
+        <div class="card-body" style="text-align:left; max-width:600px">
+          <strong>Artigo científico:</strong> escrito por pesquisadores, com método, dados e <span class="pill pill-teal">revisão por pares</span> — outros especialistas leem e aprovam antes de publicar. Publicado em <em>periódicos científicos</em>.<br><br>
+          <strong>Artigo de revista/jornal:</strong> escrito por jornalistas para o público geral. Informa e é útil — mas <strong>não</strong> passa por revisão científica e pode simplificar demais.<br><br>
+          Para o trabalho: use o científico como <span class="pill pill-green">base</span>; a reportagem pode servir de <span class="pill pill-gold">gancho ou exemplo</span>.
+          <div class="complementar">
+            <div class="comp-label">💡 Para complementar em aula</div>
+            <ul>
+              <li>"Revisão por pares" = colegas cientistas conferem o trabalho antes de sair, como um controle de qualidade.</li>
+              <li>Explore isso na aba "🧬 Tipos de Trabalho", que traz um comparativo lado a lado.</li>
+              <li>Curiosidade: uma revista científica pode <strong>recusar</strong> 80% ou mais dos artigos enviados.</li>
+            </ul>
+          </div>
+        </div>
+        <div class="flip-hint">↩ Clique para voltar</div>
+      </div>
+
+      <!-- ── CARD 11 ── -->
+      <div class="card-face card-front" id="cf-11" style="display:none">
+        <div class="card-icon">🧬</div>
+        <div class="card-title">Família de Trabalhos</div>
+        <div class="card-heading">TCC, monografia, artigo,<br>dissertação, <span style="color:var(--accent)">tese</span>...</div>
+        <div class="card-body">
+          Existem vários "tamanhos" de trabalho acadêmico.<br><br>
+          Qual é maior? Quem faz cada um deles?
+        </div>
+        <div class="flip-hint">↩ Clique para revelar</div>
+      </div>
+      <div class="card-face card-back" id="cb-11" style="display:none">
+        <div class="card-icon">📈</div>
+        <div class="card-title">Explicação</div>
+        <div class="card-heading">Do menor ao maior,<br>por <span style="color:var(--accent3)">nível de estudo</span></div>
+        <div class="card-body" style="text-align:left; max-width:600px">
+          <span class="pill pill-gold">Resumo / Resenha</span> — textos curtos, na escola.<br>
+          <span class="pill pill-teal">Artigo</span> — poucas páginas, foca uma pergunta.<br>
+          <span class="pill pill-green">TCC / Monografia</span> — trabalho de fim de curso (técnico ou faculdade).<br>
+          <span class="pill pill-terra">Dissertação</span> — mestrado, mais aprofundada.<br>
+          <span class="pill pill-purple">Tese</span> — doutorado, precisa trazer algo <strong>novo</strong> para a ciência.<br><br>
+          Todos seguem a <strong>mesma lógica</strong> (introdução → desenvolvimento → conclusão); mudam o tamanho e a profundidade.
+          <div class="complementar">
+            <div class="comp-label">💡 Para complementar em aula</div>
+            <ul>
+              <li>Diga que o professor deles fez uma <strong>tese</strong> (doutorado) — aproxime a realidade.</li>
+              <li>No curso técnico, o mais provável é produzirem um <strong>artigo</strong> ou <strong>TCC</strong>.</li>
+              <li>A aba "🧬 Tipos de Trabalho" detalha cada um com ícone, nível e tamanho.</li>
+            </ul>
+          </div>
+        </div>
+        <div class="flip-hint">↩ Clique para voltar</div>
+      </div>
+
+      <!-- ── CARD 12 ── -->
+      <div class="card-face card-front" id="cf-12" style="display:none">
+        <div class="card-icon">🗺️</div>
+        <div class="card-title">Antes de Escrever</div>
+        <div class="card-heading">O que é <span style="color:var(--accent)">revisão<br>de literatura</span>?</div>
+        <div class="card-body">
+          Antes de escrever, o pesquisador lê muito sobre o assunto.<br><br>
+          Por que "ler o que já existe" é um passo tão importante?
+        </div>
+        <div class="flip-hint">↩ Clique para revelar</div>
+      </div>
+      <div class="card-face card-back" id="cb-12" style="display:none">
+        <div class="card-icon">🧭</div>
+        <div class="card-title">Explicação</div>
+        <div class="card-heading">Descobrir o que<br><span style="color:var(--accent3)">já se sabe</span> sobre o tema</div>
+        <div class="card-body">
+          <strong>Revisão de literatura</strong> é ler e organizar o que <strong>outros já pesquisaram</strong> sobre seu tema, antes de dar sua contribuição.<br><br>
+          Serve para: não <span class="pill pill-danger">"reinventar a roda"</span>, descobrir o que ainda falta estudar, e apoiar suas ideias em <span class="pill pill-teal">autores confiáveis</span>.<br><br>
+          É como um agricultor que, antes de plantar, <strong>estuda o solo e o clima da região</strong> e conversa com quem já plantou ali.
+          <div class="complementar">
+            <div class="comp-label">💡 Para complementar em aula</div>
+            <ul>
+              <li>Passos simples: escolher o tema → definir palavras-chave → buscar → ler → anotar → organizar.</li>
+              <li>Ferramenta útil: uma tabela com "autor · ano · o que diz · página" para organizar as leituras.</li>
+              <li>Conecte com a próxima aba: onde buscar essas leituras (Scholar, SciELO...).</li>
+            </ul>
+          </div>
+        </div>
+        <div class="flip-hint">↩ Clique para voltar</div>
+      </div>
+
+      <!-- ── CARD 13 ── -->
+      <div class="card-face card-front" id="cf-13" style="display:none">
+        <div class="card-icon">🌐</div>
+        <div class="card-title">Onde Procurar</div>
+        <div class="card-heading">Google comum é o<br>melhor lugar para <span style="color:var(--accent)">pesquisar</span>?</div>
+        <div class="card-body">
+          Para achar fontes confiáveis, o Google normal ajuda...<br>mas existem buscadores feitos só para a ciência.<br><br>
+          Você conhece algum?
+        </div>
+        <div class="flip-hint">↩ Clique para revelar</div>
+      </div>
+      <div class="card-face card-back" id="cb-13" style="display:none">
+        <div class="card-icon">🔭</div>
+        <div class="card-title">Explicação</div>
+        <div class="card-heading">Buscadores <span style="color:var(--accent3)">acadêmicos</span></div>
+        <div class="card-body" style="text-align:left; max-width:600px">
+          <span class="pill pill-gold">Google Acadêmico</span> — busca só trabalhos científicos (gratuito, ótimo para começar).<br><br>
+          <span class="pill pill-teal">SciELO</span> — revistas científicas brasileiras e latinas, de graça.<br><br>
+          <span class="pill pill-green">Periódicos CAPES</span> — enorme acervo do governo brasileiro.<br><br>
+          <span class="pill pill-terra">Scopus</span> — base internacional gigante (parte é paga).<br><br>
+          <span class="pill pill-purple">Embrapa / repositórios dos IFs</span> — ótimos para temas agrícolas.
+          <div class="complementar">
+            <div class="comp-label">💡 Para complementar em aula</div>
+            <ul>
+              <li>Comece pelo <strong>Google Acadêmico</strong> (scholar.google.com) — a interface é igual à do Google normal.</li>
+              <li>Ensine o filtro "desde 2020" para achar fontes atuais.</li>
+              <li>A aba "🔍 Onde Pesquisar" traz os links e uma explicação de cada um.</li>
+            </ul>
+          </div>
+        </div>
+        <div class="flip-hint">↩ Clique para voltar</div>
+      </div>
+
+      <!-- ── CARD 14 ── -->
+      <div class="card-face card-front" id="cf-14" style="display:none">
+        <div class="card-icon">🔑</div>
+        <div class="card-title">Pesquisar Direito</div>
+        <div class="card-heading">Como achar exatamente<br>o que <span style="color:var(--accent)">preciso</span>?</div>
+        <div class="card-body">
+          Digitar "agroecologia" traz milhões de resultados.<br><br>
+          Existe um jeito esperto de refinar a busca?
+        </div>
+        <div class="flip-hint">↩ Clique para revelar</div>
+      </div>
+      <div class="card-face card-back" id="cb-14" style="display:none">
+        <div class="card-icon">🎯</div>
+        <div class="card-title">Explicação</div>
+        <div class="card-heading">Palavras-chave +<br>alguns <span style="color:var(--accent3)">truques</span></div>
+        <div class="card-body" style="text-align:left; max-width:600px">
+          Escolha <strong>palavras-chave</strong> (os termos centrais do tema) em vez de frases inteiras.<br><br>
+          Truques que funcionam em quase todo buscador:<br>
+          <span class="pill pill-teal">"aspas"</span> — busca a frase exata: <em>"agricultura familiar"</em><br>
+          <span class="pill pill-gold">AND</span> — junta temas: <em>compostagem AND hortaliças</em><br>
+          <span class="pill pill-terra">-palavra</span> — exclui algo: <em>caju -receita</em><br>
+          <span class="pill pill-purple">filetype:pdf</span> — só arquivos PDF<br><br>
+          Comece amplo, depois vá <strong>afunilando</strong> conforme entende o tema.
+          <div class="complementar">
+            <div class="comp-label">💡 Para complementar em aula</div>
+            <ul>
+              <li>Atividade ao vivo: projete o Google Acadêmico e refine uma busca junto com a turma.</li>
+              <li>Ensine a pensar em <strong>sinônimos</strong> (ex.: "defensivo natural" e "biopesticida").</li>
+              <li>Combine PT e EN: muita ciência está em inglês (<em>family farming</em>).</li>
+            </ul>
+          </div>
+        </div>
+        <div class="flip-hint">↩ Clique para voltar</div>
+      </div>
+
+      <!-- ── CARD 15 ── -->
+      <div class="card-face card-front" id="cf-15" style="display:none">
+        <div class="card-icon">🧩</div>
+        <div class="card-title">O Caminho Completo</div>
+        <div class="card-heading">Qual a <span style="color:var(--accent)">ordem</span> para<br>construir um trabalho?</div>
+        <div class="card-body">
+          Do tema em branco até o trabalho entregue, existe uma sequência que evita dor de cabeça.<br><br>
+          Por onde começar?
+        </div>
+        <div class="flip-hint">↩ Clique para revelar</div>
+      </div>
+      <div class="card-face card-back" id="cb-15" style="display:none">
+        <div class="card-icon">🚜</div>
+        <div class="card-title">Explicação</div>
+        <div class="card-heading">Do <span style="color:var(--accent3)">tema</span> até a<br>entrega, passo a passo</div>
+        <div class="card-body" style="text-align:left; max-width:600px">
+          <strong>1.</strong> Escolher/receber o <span class="pill pill-gold">tema</span> e transformá-lo numa <strong>pergunta</strong>.<br>
+          <strong>2.</strong> Definir o <span class="pill pill-teal">objetivo</span> (o que quero descobrir?).<br>
+          <strong>3.</strong> <span class="pill pill-green">Pesquisar</span> fontes confiáveis (revisão).<br>
+          <strong>4.</strong> Ler, anotar e <strong>organizar as ideias</strong>.<br>
+          <strong>5.</strong> Escrever: introdução → desenvolvimento → conclusão.<br>
+          <strong>6.</strong> Montar as <span class="pill pill-terra">referências</span> e <strong>formatar em ABNT</strong>.<br>
+          <strong>7.</strong> Revisar (erros, plágio) e <span class="pill pill-purple">entregar</span>.
+          <div class="complementar">
+            <div class="comp-label">💡 Para complementar em aula</div>
+            <ul>
+              <li>Dica de ouro: escreva a <strong>introdução por último</strong> — fica mais fácil apresentar o que você já concluiu.</li>
+              <li>Combine prazos por etapa (não deixar tudo para a véspera).</li>
+              <li>Formatar em ABNT vem <strong>no fim</strong> — primeiro o conteúdo, depois a "roupa".</li>
+            </ul>
+          </div>
+        </div>
+        <div class="flip-hint">↩ Clique para voltar</div>
+      </div>
+
+      <!-- ── CARD 16 ── -->
+      <div class="card-face card-front" id="cf-16" style="display:none">
+        <div class="card-icon">🤖</div>
+        <div class="card-title">Ética Acadêmica</div>
+        <div class="card-heading">Posso usar o <span style="color:var(--accent)">ChatGPT</span><br>para fazer o trabalho?</div>
+        <div class="card-body">
+          A inteligência artificial escreve textos em segundos.<br><br>
+          Usar isso é trapaça? Ou pode ser uma ferramenta?
+        </div>
+        <div class="flip-hint">↩ Clique para revelar</div>
+      </div>
+      <div class="card-face card-back" id="cb-16" style="display:none">
+        <div class="card-icon">🧠</div>
+        <div class="card-title">Explicação</div>
+        <div class="card-heading">Ferramenta sim,<br><span style="color:var(--danger)">substituto não</span></div>
+        <div class="card-body">
+          A IA pode <span class="pill pill-green">ajudar</span>: explicar um conceito difícil, sugerir palavras-chave, revisar a escrita.<br><br>
+          Mas <strong>entregar um texto da IA como se fosse seu</strong> é desonestidade — e a IA <span class="pill pill-danger">inventa fontes falsas</span> (referências que não existem!).<br><br>
+          Regra de ouro: <strong>a ideia e a verificação têm que ser suas</strong>. Sempre confira cada fonte e escreva com sua própria compreensão. O trabalho é seu aprendizado, não o da máquina.
+          <div class="complementar">
+            <div class="comp-label">💡 Para complementar em aula</div>
+            <ul>
+              <li>Mostre um exemplo de "referência fantasma" que a IA inventa — impacta muito os alunos.</li>
+              <li>Combine uma <strong>regra de turma</strong> para uso de IA (ex.: pode para revisar, não para escrever por você).</li>
+              <li>Conecte com o card de plágio: copiar da IA sem pensar é o mesmo problema.</li>
+            </ul>
+          </div>
+        </div>
+        <div class="flip-hint">↩ Clique para voltar</div>
+      </div>
+
+      <!-- ── CARD 17 ── -->
+      <div class="card-face card-front" id="cf-17" style="display:none">
+        <div class="card-icon">🌟</div>
+        <div class="card-title">Revisão Final</div>
+        <div class="card-heading">Resumão:<br>o que <span style="color:var(--accent)">aprendemos</span>?</div>
+        <div class="card-body">
+          Chegamos ao fim! Vamos amarrar tudo num checklist que serve de guia para o seu trabalho.
+        </div>
+        <div class="flip-hint">↩ Clique para revelar</div>
+      </div>
+      <div class="card-face card-back" id="cb-17" style="display:none">
+        <div class="card-icon">✅</div>
+        <div class="card-title">Checklist Final</div>
+        <div class="card-heading">Seu trabalho<br>está <span style="color:var(--accent3)">completo</span>?</div>
+        <div class="card-body" style="text-align:left; max-width:600px">
+          ☑️ Tem <strong>capa, sumário, introdução, desenvolvimento, conclusão e referências</strong>?<br>
+          ☑️ A <strong>introdução</strong> apresenta tema, problema e objetivo?<br>
+          ☑️ Toda ideia de outro autor foi <strong>citada</strong>?<br>
+          ☑️ Toda citação tem sua <strong>referência</strong> no final (e vice-versa)?<br>
+          ☑️ As fontes são <strong>confiáveis</strong> (autor, data, origem séria)?<br>
+          ☑️ Está formatado em <strong>ABNT</strong> (margens, fonte, espaçamento 1,5)?<br>
+          ☑️ Você <strong>revisou</strong> erros e não cometeu plágio?<br><br>
+          Se marcou tudo: <span class="pill pill-green">parabéns, é um trabalho acadêmico de verdade!</span> 🎉
+          <div class="complementar">
+            <div class="comp-label">💡 Para complementar em aula</div>
+            <ul>
+              <li>Transforme este checklist na <strong>rubrica de avaliação</strong> do trabalho.</li>
+              <li>Próximo passo prático: sortear o tema (aba 🎲) e montar o trabalho no Google Docs (aba ✅).</li>
+              <li>Feche perguntando: "qual foi a coisa mais surpreendente que você aprendeu hoje?"</li>
+            </ul>
+          </div>
+        </div>
+        <div class="flip-hint">↩ Clique para voltar</div>
+      </div>
+
+    </div><!-- end .flashcard -->
+  </div><!-- end .flashcard-wrapper -->
+
+</div><!-- end tab-flashcards -->
+
+
+<!-- ══════════════════════════════════════
+     TAB 2 — TIPOS DE TRABALHO
+══════════════════════════════════════ -->
+<div class="section" id="tab-tipos">
+  <div class="panel-card" style="margin-bottom:24px">
+    <h2>🧬 A família dos trabalhos acadêmicos</h2>
+    <p>Todos têm a mesma lógica (introdução → desenvolvimento → conclusão). O que muda é o <strong>tamanho</strong>, a <strong>profundidade</strong> e <strong>quem produz</strong>. Do mais simples (escola) ao mais complexo (doutorado).</p>
+    <div class="tipos-grid" id="tipos-grid"></div>
+  </div>
+
+  <div class="panel-card">
+    <h2>🆚 Artigo científico × Artigo de revista/jornal</h2>
+    <p>Os dois se chamam "artigo", mas são mundos diferentes. A grande separação é a <strong>revisão por pares</strong>: no científico, outros especialistas conferem antes de publicar.</p>
+    <div class="versus">
+      <div class="versus-col a">
+        <h3>🔬 Artigo Científico</h3>
+        <div class="vsub">Publicado em periódico científico</div>
+        <ul>
+          <li>Escrito por <strong>pesquisadores</strong> da área</li>
+          <li>Passa por <strong>revisão por pares</strong> (outros cientistas avaliam)</li>
+          <li>Traz <strong>método, dados e referências</strong></li>
+          <li>Linguagem técnica e precisa</li>
+          <li>Serve como <strong>base sólida</strong> do seu trabalho</li>
+          <li>Ex.: estudo sobre produtividade da agrofloresta na SciELO</li>
+        </ul>
+      </div>
+      <div class="versus-mid">VS</div>
+      <div class="versus-col b">
+        <h3>📰 Artigo de Revista/Jornal</h3>
+        <div class="vsub">Publicado na imprensa</div>
+        <ul>
+          <li>Escrito por <strong>jornalistas</strong> para o público geral</li>
+          <li><strong>Não</strong> passa por revisão científica</li>
+          <li>Foca informar rápido, sem método detalhado</li>
+          <li>Linguagem simples e acessível</li>
+          <li>Serve como <strong>gancho ou exemplo</strong>, não como base</li>
+          <li>Ex.: reportagem "Feiras orgânicas crescem no país"</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+<!-- ══════════════════════════════════════
+     TAB 3 — ANATOMIA ABNT
+══════════════════════════════════════ -->
+<div class="section" id="tab-anatomia">
+  <div class="panel-card" style="margin-bottom:24px">
+    <h2>🏛️ Anatomia de um trabalho ABNT</h2>
+    <p>Clique em cada parte para descobrir <strong>o que é</strong>, <strong>para que serve</strong> e ver um <strong>exemplo</strong>. As partes marcadas como "obrigatória" não podem faltar num trabalho simples.</p>
+  </div>
+  <div class="anatomia-wrap">
+    <div class="doc-stack" id="doc-stack"></div>
+    <div class="doc-detail" id="doc-detail">
+      <div class="dd-icon">👆</div>
+      <h3>Escolha uma parte</h3>
+      <div class="dd-sub">Clique nos itens à esquerda</div>
+      <p>Cada peça do trabalho tem uma função. Comece pela <strong>Capa</strong> e vá descendo até as <strong>Referências</strong> para entender a ordem completa que a ABNT recomenda.</p>
+    </div>
+  </div>
+</div>
+
+
+<!-- ══════════════════════════════════════
+     TAB 4 — FORMATAÇÃO
+══════════════════════════════════════ -->
+<div class="section" id="tab-formatacao">
+  <div class="panel-card" style="margin-bottom:24px">
+    <h2>📐 Como formatar a página (ABNT)</h2>
+    <p>A "roupa" oficial de um trabalho ABNT. A folha ao lado mostra as margens; a legenda explica cada regra. No Google Docs tudo isso se configura em poucos cliques (veja a aba ✅ Google Docs).</p>
+    <div class="a4-demo-wrap">
+      <div class="a4-page">
+        <div class="a4-ruler-top">← 210 mm (A4) →</div>
+        <div class="a4-margin">
+          <div class="a4-title">Título da Seção</div>
+          <div class="a4-para">Este é um parágrafo de exemplo mostrando o alinhamento justificado, o recuo da primeira linha e o espaçamento entre linhas típico de um trabalho acadêmico formatado segundo as normas.</div>
+          <div class="a4-para">Cada novo parágrafo começa recuado. O texto ocupa a área dentro das margens (linha tracejada vermelha). Fora dela fica o espaço em branco exigido pela norma.</div>
+          <div class="a4-para">A leitura fica organizada e padronizada, permitindo que qualquer avaliador encontre as informações sempre no mesmo formato.</div>
+        </div>
+      </div>
+      <div class="sidebar-stack">
+        <div class="info-card">
+          <h3><span class="dot dot-gold"></span> Regras principais</h3>
+          <div class="fmt-legend" style="margin-top:6px">
+            <div class="fmt-item"><span class="fi-key">Papel</span><span class="fi-val"><strong>A4</strong> (21 × 29,7 cm)</span></div>
+            <div class="fmt-item"><span class="fi-key">Margens</span><span class="fi-val">Esquerda e superior <strong>3 cm</strong>; direita e inferior <strong>2 cm</strong></span></div>
+            <div class="fmt-item"><span class="fi-key">Fonte</span><span class="fi-val"><strong>Arial ou Times New Roman</strong>, tamanho <strong>12</strong></span></div>
+            <div class="fmt-item"><span class="fi-key">Espaçamento</span><span class="fi-val">Entre linhas <strong>1,5</strong></span></div>
+            <div class="fmt-item"><span class="fi-key">Alinhamento</span><span class="fi-val"><strong>Justificado</strong> (texto reto nas duas bordas)</span></div>
+            <div class="fmt-item"><span class="fi-key">Recuo</span><span class="fi-val">1ª linha do parágrafo: <strong>1,25 cm</strong></span></div>
+            <div class="fmt-item"><span class="fi-key">Citação longa</span><span class="fi-val">Recuo <strong>4 cm</strong>, fonte <strong>10</strong>, espaço simples</span></div>
+            <div class="fmt-item"><span class="fi-key">Páginas</span><span class="fi-val">Número no <strong>canto superior direito</strong></span></div>
+          </div>
+        </div>
+        <div class="info-card">
+          <h3><span class="dot dot-green"></span> Dica</h3>
+          <p>Não decore tudo! O importante é saber que <strong>existe um padrão</strong> e onde consultar. Configure uma vez no Google Docs e reaproveite em todos os trabalhos.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="panel-card">
+    <h2>🌍 ABNT × outros padrões do mundo</h2>
+    <p>Muda a "roupa" da citação, mas todos têm o mesmo objetivo: dar crédito às fontes. Veja como a mesma citação aparece em cada estilo.</p>
+    <div style="overflow-x:auto">
+      <table class="norms-table">
+        <thead>
+          <tr><th>Estilo</th><th>Origem / Área</th><th>Como cita no texto</th><th>Marca registrada</th></tr>
+        </thead>
+        <tbody id="norms-body"></tbody>
+      </table>
+    </div>
+  </div>
+</div>
+
+
+<!-- ══════════════════════════════════════
+     TAB 5 — CITAÇÕES & REFERÊNCIAS
+══════════════════════════════════════ -->
+<div class="section" id="tab-citacoes">
+  <div class="two-col">
+    <div class="panel-card">
+      <h2>🔖 Montador de Citação e Referência</h2>
+      <p>Preencha os dados da sua fonte e veja, na hora, a <strong>referência ABNT</strong> (para o final do trabalho) e a <strong>citação</strong> (para o meio do texto), nos dois formatos: direta e indireta.</p>
+
+      <div class="form-grid">
+        <div class="form-field full">
+          <label>Tipo de fonte</label>
+          <select id="cite-tipo" onchange="buildCitation()">
+            <option value="livro">📕 Livro</option>
+            <option value="artigo">📄 Artigo de revista científica</option>
+            <option value="site">🌐 Site / página da internet</option>
+          </select>
+        </div>
+        <div class="form-field">
+          <label>Sobrenome do autor</label>
+          <input type="text" id="cite-sobrenome" placeholder="Ex.: Santos" oninput="buildCitation()">
+        </div>
+        <div class="form-field">
+          <label>Nome do autor</label>
+          <input type="text" id="cite-nome" placeholder="Ex.: Maria" oninput="buildCitation()">
+        </div>
+        <div class="form-field full">
+          <label>Título</label>
+          <input type="text" id="cite-titulo" placeholder="Ex.: Agroecologia na agricultura familiar" oninput="buildCitation()">
+        </div>
+        <div class="form-field">
+          <label>Ano</label>
+          <input type="text" id="cite-ano" placeholder="Ex.: 2021" oninput="buildCitation()">
+        </div>
+        <div class="form-field" id="ff-pagina">
+          <label>Página (p/ citação direta)</label>
+          <input type="text" id="cite-pagina" placeholder="Ex.: 45" oninput="buildCitation()">
+        </div>
+        <div class="form-field" id="ff-cidade">
+          <label>Cidade</label>
+          <input type="text" id="cite-cidade" placeholder="Ex.: São Paulo" oninput="buildCitation()">
+        </div>
+        <div class="form-field" id="ff-editora">
+          <label>Editora</label>
+          <input type="text" id="cite-editora" placeholder="Ex.: Editora Campo" oninput="buildCitation()">
+        </div>
+        <div class="form-field" id="ff-revista" style="display:none">
+          <label>Nome da revista</label>
+          <input type="text" id="cite-revista" placeholder="Ex.: Revista Brasileira de Agroecologia" oninput="buildCitation()">
+        </div>
+        <div class="form-field full" id="ff-url" style="display:none">
+          <label>Endereço (URL)</label>
+          <input type="text" id="cite-url" placeholder="Ex.: https://..." oninput="buildCitation()">
+        </div>
+        <div class="form-field" id="ff-acesso" style="display:none">
+          <label>Data de acesso</label>
+          <input type="text" id="cite-acesso" placeholder="Ex.: 3 jul. 2026" oninput="buildCitation()">
+        </div>
+      </div>
+
+      <div class="cite-output" id="cite-output">
+        <div class="cite-block">
+          <div class="cb-label">📖 Referência (vai no final do trabalho)</div>
+          <div class="cb-text" id="out-ref">Preencha os campos acima…</div>
+        </div>
+        <div class="cite-block">
+          <div class="cb-label">💬 Citação indireta (suas palavras)</div>
+          <div class="cb-text" id="out-ind">—</div>
+        </div>
+        <div class="cite-block">
+          <div class="cb-label">✂️ Citação direta (palavras exatas, entre aspas)</div>
+          <div class="cb-text" id="out-dir">—</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="sidebar-stack">
+      <div class="info-card">
+        <h3><span class="dot dot-gold"></span> Direta × Indireta</h3>
+        <p><strong>Direta:</strong> copia as palavras exatas entre "aspas" e <strong>exige a página</strong>.<br><br><strong>Indireta:</strong> você explica a ideia com suas palavras (sem aspas e sem página). Prefira esta!</p>
+      </div>
+      <div class="info-card">
+        <h3><span class="dot dot-teal"></span> Ordem da referência</h3>
+        <p><strong>Livro:</strong><br>SOBRENOME, Nome. <em>Título</em>. Cidade: Editora, ano.<br><br>O sobrenome vai em <strong>MAIÚSCULAS</strong> e o título em <strong>negrito</strong>.</p>
+      </div>
+      <div class="info-card">
+        <h3><span class="dot dot-green"></span> Regra de ouro</h3>
+        <p>Tudo que você <strong>cita</strong> no texto precisa aparecer nas <strong>referências</strong> — e as referências ficam em <strong>ordem alfabética</strong>.</p>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+<!-- ══════════════════════════════════════
+     TAB 6 — ONDE PESQUISAR
+══════════════════════════════════════ -->
+<div class="section" id="tab-pesquisar">
+  <div class="panel-card" style="margin-bottom:24px">
+    <h2>🔍 Onde buscar boas referências</h2>
+    <p>O Google normal mistura tudo. Estes buscadores foram feitos para a <strong>ciência</strong> — trazem artigos, teses e livros confiáveis. Comece pelo <strong>Google Acadêmico</strong>, que é gratuito e fácil.</p>
+    <div class="search-grid" id="search-grid"></div>
+  </div>
+
+  <div class="panel-card">
+    <h2>✅ Como saber se uma fonte é boa?</h2>
+    <p>Antes de usar qualquer texto no trabalho, passe-o por este checklist rápido de confiabilidade.</p>
+    <div class="checklist" id="checklist"></div>
+  </div>
+</div>
+
+
+<!-- ══════════════════════════════════════
+     TAB 7 — GOOGLE DOCS PASSO A PASSO
+══════════════════════════════════════ -->
+<div class="section" id="tab-googledocs">
+  <div class="panel-card">
+    <h2>✅ Montando o trabalho no Google Docs (passo a passo)</h2>
+    <p>O Google Docs é <strong>gratuito</strong>, funciona no navegador (não precisa instalar nada) e salva sozinho na internet. Perfeito para quem está começando. Siga a ordem abaixo para deixar seu trabalho no padrão ABNT.</p>
+    <div class="steps" id="gd-steps"></div>
+    <div class="info-card" style="margin-top:20px; border-color: rgba(124,197,118,0.3)">
+      <h3><span class="dot dot-green"></span> Atalho útil</h3>
+      <p>Crie <strong>um único documento modelo</strong> já formatado (margens, fonte, espaçamento) e, no futuro, use <strong>Arquivo → Fazer uma cópia</strong> para começar todo trabalho já no padrão ABNT. Menos trabalho, sempre certo!</p>
+    </div>
+  </div>
+</div>
+
+
+<!-- ══════════════════════════════════════
+     TAB 8 — SORTEADOR DE TEMAS
+══════════════════════════════════════ -->
+<div class="section" id="tab-sorteio">
+  <div class="panel-card">
+    <h2>🎲 Sorteador de temas — Agroecologia & Agricultura Familiar</h2>
+    <p>Clique no botão para sortear um tema de trabalho. Cada tema já vem com uma <strong>pergunta de pesquisa</strong> sugerida para você começar. Sorteou um que não gostou? Sorteie de novo!</p>
+    <div class="draw-box">
+      <div class="draw-display" id="draw-display">
+        <div class="draw-eyebrow">Seu tema aparecerá aqui</div>
+        <div class="draw-tema">🌱 Pronto para descobrir seu tema?</div>
+        <div class="draw-pergunta">Clique em <strong>"Sortear tema"</strong> abaixo e receba um tema de pesquisa com uma pergunta para investigar.</div>
+      </div>
+      <div style="display:flex; gap:12px; justify-content:center; flex-wrap:wrap">
+        <button class="btn btn-green" onclick="drawTheme()">🎲 Sortear tema</button>
+        <button class="btn btn-ghost" onclick="drawTheme()" id="draw-again" style="display:none">🔁 Sortear outro</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+<!-- ══════════════════════════════════════
+     TAB 9 — QUIZ
+══════════════════════════════════════ -->
+<div class="section" id="tab-quiz">
+  <div class="panel-card" style="margin-bottom:24px">
+    <h2>🌱 Quiz — Fixe o que aprendeu</h2>
+    <p>Oito questões para revisar os conceitos. Escolha uma alternativa: você recebe uma explicação, tanto no acerto quanto no erro. Boa sorte!</p>
+  </div>
+  <div class="quiz-grid" id="quiz-grid"></div>
+</div>
+
+<div class="footer-link">
+  <a href="../roadmap.html">← Voltar ao Roadmap da Disciplina</a>
+</div>
+<div class="copyright">© 2026 <a href="https://github.com/ciromacedo" target="_blank" rel="noopener">Ciro Macedo</a></div>
+
+<script>
+// ══════════════════════════════════
+//  TABS
+// ══════════════════════════════════
+const TAB_NAMES = ['flashcards','tipos','anatomia','formatacao','citacoes','pesquisar','googledocs','sorteio','quiz'];
+function switchTab(name) {
+  document.querySelectorAll('.tab').forEach((t, i) => {
+    t.classList.toggle('active', TAB_NAMES[i] === name);
+  });
+  document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
+  document.getElementById('tab-' + name).classList.add('active');
+  if (name === 'tipos') initTipos();
+  if (name === 'anatomia') initAnatomia();
+  if (name === 'formatacao') initNorms();
+  if (name === 'citacoes') buildCitation();
+  if (name === 'pesquisar') initPesquisar();
+  if (name === 'googledocs') initSteps();
+  if (name === 'quiz') initQuiz();
+}
+
+// ══════════════════════════════════
+//  FLASH-CARDS
+// ══════════════════════════════════
+let currentCard = 0;
+const totalCards = 18;
+let flipped = false;
+const donecards = new Set();
+
+function initDots() {
+  const container = document.getElementById('fc-dots');
+  container.innerHTML = '';
+  for (let i = 0; i < totalCards; i++) {
+    const d = document.createElement('div');
+    d.className = 'fc-dot' + (i === 0 ? ' active' : '');
+    d.onclick = (e) => { e.stopPropagation(); goToCard(i); };
+    container.appendChild(d);
+  }
+}
+function updateDots() {
+  document.querySelectorAll('.fc-dot').forEach((d, i) => {
+    d.className = 'fc-dot';
+    if (donecards.has(i)) d.classList.add('done');
+    if (i === currentCard) d.classList.add('active');
+  });
+}
+function adjustHeight() {
+  const face = document.getElementById((flipped ? 'cb-' : 'cf-') + currentCard);
+  if (!face) return;
+  const h = Math.max(440, face.scrollHeight);
+  document.getElementById('flashcard').style.minHeight = h + 'px';
+  document.querySelector('.flashcard-wrapper').style.minHeight = h + 'px';
+}
+function showCard(idx) {
+  for (let i = 0; i < totalCards; i++) {
+    const cf = document.getElementById('cf-' + i);
+    const cb = document.getElementById('cb-' + i);
+    if (cf) cf.style.display = 'none';
+    if (cb) cb.style.display = 'none';
+  }
+  const cf = document.getElementById('cf-' + idx);
+  const cb = document.getElementById('cb-' + idx);
+  if (cf) cf.style.display = 'flex';
+  if (cb) cb.style.display = 'flex';
+  const fc = document.getElementById('flashcard');
+  fc.classList.remove('flipped');
+  flipped = false;
+  document.getElementById('fc-progress').textContent = `Card ${idx + 1} de ${totalCards}`;
+  document.getElementById('btn-prev').disabled = idx === 0;
+  document.getElementById('btn-next').disabled = idx === totalCards - 1;
+  updateDots();
+  adjustHeight();
+}
+function flipCard() {
+  const fc = document.getElementById('flashcard');
+  flipped = !flipped;
+  fc.classList.toggle('flipped', flipped);
+  if (flipped) donecards.add(currentCard);
+  updateDots();
+  adjustHeight();
+}
+function nextCard() { if (currentCard < totalCards - 1) { currentCard++; showCard(currentCard); } }
+function prevCard() { if (currentCard > 0) { currentCard--; showCard(currentCard); } }
+function goToCard(idx) { currentCard = idx; showCard(idx); }
+
+document.addEventListener('keydown', (e) => {
+  const onFlash = document.getElementById('tab-flashcards').classList.contains('active');
+  if (!onFlash) return;
+  if (e.key === 'ArrowRight') nextCard();
+  else if (e.key === 'ArrowLeft') prevCard();
+  else if (e.key === ' ') { e.preventDefault(); flipCard(); }
+});
+window.addEventListener('resize', adjustHeight);
+
+initDots();
+showCard(0);
+
+// ══════════════════════════════════
+//  TIPOS DE TRABALHO
+// ══════════════════════════════════
+const TIPOS = [
+  { icon:'📝', nome:'Resumo', quem:'Estudantes', desc:'Síntese curta das ideias principais de um texto ou aula. Ótimo para treinar leitura e escrita.', meta:['Curtíssimo','Escola','Base'] },
+  { icon:'🧐', nome:'Resenha', quem:'Estudantes', desc:'Resumo + sua análise crítica: você comenta e avalia a obra, não só resume.', meta:['Curto','Escola','Crítica'] },
+  { icon:'📄', nome:'Artigo', quem:'Pesquisadores', desc:'Texto que investiga UMA pergunta específica, com método e fontes. Publicado em revistas científicas.', meta:['Médio','Foco único','Revisado'] },
+  { icon:'🎓', nome:'TCC / Monografia', quem:'Fim de curso', desc:'Trabalho de Conclusão de Curso. Aprofunda um tema e é exigido para se formar (técnico ou faculdade).', meta:['Longo','Graduação','Orientador'] },
+  { icon:'🔬', nome:'Dissertação', quem:'Mestrado', desc:'Pesquisa aprofundada de mestrado. Investiga um problema com mais profundidade que o TCC.', meta:['Muito longo','Mestrado','Pesquisa'] },
+  { icon:'🏆', nome:'Tese', quem:'Doutorado', desc:'O trabalho mais complexo. Precisa trazer uma contribuição ORIGINAL, algo novo para a ciência.', meta:['Extenso','Doutorado','Inédito'] },
+];
+function initTipos() {
+  const grid = document.getElementById('tipos-grid');
+  if (grid.children.length) return;
+  const colors = ['#e0b64c','#4db6ac','#7cc576','#d98a5b','#b98ee6','#e0b64c'];
+  TIPOS.forEach((t, i) => {
+    const c = document.createElement('div');
+    c.className = 'tipo-card';
+    c.style.borderTopColor = colors[i % colors.length];
+    c.innerHTML = `
+      <div class="t-icon">${t.icon}</div>
+      <h3>${t.nome}</h3>
+      <div class="t-quem">${t.quem}</div>
+      <p>${t.desc}</p>
+      <div class="tipo-meta">${t.meta.map(m => `<span>${m}</span>`).join('')}</div>`;
+    grid.appendChild(c);
+  });
+}
+
+// ══════════════════════════════════
+//  ANATOMIA ABNT
+// ══════════════════════════════════
+const PARTES = [
+  { nome:'Capa', tag:'obg', icon:'📕', sub:'Elemento pré-textual · obrigatório',
+    desc:'A primeira página. Identifica <strong>quem fez</strong> e <strong>sobre o quê</strong> é o trabalho. Não leva número de página visível.',
+    ex:'INSTITUTO FEDERAL DE GOIÁS<br>Câmpus Cidade de Goiás<br><br><br>NOME DO ALUNO<br><br><br><strong>TÍTULO DO TRABALHO</strong><br><br><br>Cidade de Goiás<br>2026' },
+  { nome:'Folha de rosto', tag:'obg', icon:'📄', sub:'Elemento pré-textual · obrigatório',
+    desc:'Parecida com a capa, mas acrescenta a <strong>natureza do trabalho</strong> (a que disciplina/curso se destina) e o nome do professor.',
+    ex:'NOME DO ALUNO<br><br><strong>TÍTULO DO TRABALHO</strong><br><br><span style="font-size:0.85em">Trabalho apresentado à disciplina de Educação Digital do curso de Agroecologia do IFG, sob orientação do Prof. Dr. Ciro Macedo.</span><br><br>Cidade de Goiás — 2026' },
+  { nome:'Sumário', tag:'obg', icon:'🗂️', sub:'Elemento pré-textual · obrigatório',
+    desc:'O <strong>índice</strong> do trabalho: lista as seções e as páginas onde começam. No Google Docs pode ser gerado <strong>automaticamente</strong>.',
+    ex:'SUMÁRIO<br><br>1 INTRODUÇÃO ...................... 3<br>2 DESENVOLVIMENTO ............. 4<br>2.1 O que é agroecologia ...... 4<br>3 CONCLUSÃO ....................... 8<br>REFERÊNCIAS ......................... 9' },
+  { nome:'Introdução', tag:'obg', icon:'🚪', sub:'Elemento textual · obrigatório',
+    desc:'<strong>Apresenta</strong> o trabalho: o tema, o problema (a pergunta) e o objetivo. O leitor entende aqui o que vai encontrar.',
+    ex:'1 INTRODUÇÃO<br><br>A agricultura familiar é responsável por grande parte dos alimentos que chegam à mesa dos brasileiros. Este trabalho tem como objetivo compreender como a agroecologia pode fortalecer esse setor...' },
+  { nome:'Objetivos', tag:'obg', icon:'🎯', sub:'Dentro da introdução · obrigatório',
+    desc:'O que você quer <strong>alcançar/descobrir</strong>. Começam com verbo no infinitivo: <em>analisar, compreender, identificar, comparar</em>. Ficam dentro da introdução.',
+    ex:'Objetivo geral: compreender a importância da agroecologia para a agricultura familiar.<br><br>Objetivos específicos: identificar práticas agroecológicas; analisar seus benefícios para o pequeno produtor.' },
+  { nome:'Desenvolvimento', tag:'obg', icon:'📚', sub:'Elemento textual · obrigatório',
+    desc:'O <strong>corpo</strong> do trabalho, dividido em seções. Aqui você discute o tema com base nas fontes pesquisadas — é onde entram as <strong>citações</strong>.',
+    ex:'2 DESENVOLVIMENTO<br><br>2.1 O que é agroecologia<br><br>Segundo Santos (2021), a agroecologia é uma forma de produzir alimentos respeitando os ciclos da natureza...' },
+  { nome:'Conclusão', tag:'obg', icon:'🏁', sub:'Elemento textual · obrigatório',
+    desc:'<strong>Responde</strong> ao objetivo: o que você concluiu depois da pesquisa. Não traz informação nova, apenas amarra o que foi discutido.',
+    ex:'3 CONCLUSÃO<br><br>Conclui-se que a agroecologia fortalece a agricultura familiar ao reduzir custos e preservar o solo, confirmando o objetivo deste trabalho...' },
+  { nome:'Referências', tag:'obg', icon:'📖', sub:'Elemento pós-textual · obrigatório',
+    desc:'A lista de <strong>todas as fontes citadas</strong>, em ordem alfabética. Permite ao leitor encontrar cada fonte usada.',
+    ex:'REFERÊNCIAS<br><br>SANTOS, Maria. <strong>Agroecologia na prática</strong>. São Paulo: Editora Campo, 2021.<br><br>SILVA, João. Agricultura familiar hoje. <strong>Revista do Campo</strong>, v. 3, n. 2, 2020.' },
+  { nome:'Anexos / Apêndices', tag:'opc', icon:'📎', sub:'Elemento pós-textual · opcional',
+    desc:'Materiais extras: fotos, tabelas, questionários. <strong>Apêndice</strong> = feito por você; <strong>Anexo</strong> = feito por outra pessoa. Só use se precisar.',
+    ex:'APÊNDICE A — Fotografias da horta escolar<br><br>ANEXO A — Cartilha da Embrapa sobre compostagem' },
+];
+function initAnatomia() {
+  const stack = document.getElementById('doc-stack');
+  if (stack.children.length) return;
+  PARTES.forEach((p, i) => {
+    const el = document.createElement('div');
+    el.className = 'doc-part';
+    el.innerHTML = `
+      <span class="dp-num">${String(i+1).padStart(2,'0')}</span>
+      <span class="dp-name">${p.icon} ${p.nome}</span>
+      <span class="dp-tag ${p.tag}">${p.tag === 'obg' ? 'obrigatória' : 'opcional'}</span>`;
+    el.onclick = () => showParte(i, el);
+    stack.appendChild(el);
+  });
+}
+function showParte(i, el) {
+  document.querySelectorAll('.doc-part').forEach(p => p.classList.remove('active'));
+  el.classList.add('active');
+  const p = PARTES[i];
+  document.getElementById('doc-detail').innerHTML = `
+    <div class="dd-icon">${p.icon}</div>
+    <h3>${p.nome}</h3>
+    <div class="dd-sub">${p.sub}</div>
+    <p>${p.desc}</p>
+    <div class="dd-example">
+      <div class="ex-label">Exemplo</div>
+      ${p.ex}
+    </div>`;
+}
+
+// ══════════════════════════════════
+//  NORMS TABLE
+// ══════════════════════════════════
+const NORMS = [
+  { estilo:'ABNT', area:'Brasil · todas as áreas', txt:'(SANTOS, 2021)', marca:'AUTOR em maiúsculas + ano' },
+  { estilo:'APA', area:'EUA · Psicologia, Educação', txt:'(Santos, 2021)', marca:'Autor + ano, entre parênteses' },
+  { estilo:'IEEE', area:'Mundo · Engenharia, TI', txt:'[1]', marca:'Números entre colchetes' },
+  { estilo:'Chicago', area:'EUA · História, Humanas', txt:'nota de rodapé¹', marca:'Notas no rodapé da página' },
+  { estilo:'Vancouver', area:'Mundo · Medicina, Saúde', txt:'(1)', marca:'Números na ordem de citação' },
+  { estilo:'MLA', area:'EUA · Letras, Literatura', txt:'(Santos 45)', marca:'Autor + página, sem vírgula' },
+];
+function initNorms() {
+  const body = document.getElementById('norms-body');
+  if (body.children.length) return;
+  NORMS.forEach(n => {
+    const tr = document.createElement('tr');
+    tr.innerHTML = `
+      <td class="n-name">${n.estilo}</td>
+      <td class="n-area">${n.area}</td>
+      <td style="font-family:'Space Mono',monospace;color:var(--accent2)">${n.txt}</td>
+      <td>${n.marca}</td>`;
+    body.appendChild(tr);
+  });
+}
+
+// ══════════════════════════════════
+//  CITATION BUILDER
+// ══════════════════════════════════
+function val(id){ return (document.getElementById(id).value || '').trim(); }
+function buildCitation() {
+  const tipo = document.getElementById('cite-tipo').value;
+  // show/hide fields
+  document.getElementById('ff-cidade').style.display = (tipo === 'livro') ? 'flex' : 'none';
+  document.getElementById('ff-editora').style.display = (tipo === 'livro') ? 'flex' : 'none';
+  document.getElementById('ff-revista').style.display = (tipo === 'artigo') ? 'flex' : 'none';
+  document.getElementById('ff-url').style.display = (tipo === 'site') ? 'flex' : 'none';
+  document.getElementById('ff-acesso').style.display = (tipo === 'site') ? 'flex' : 'none';
+
+  const sob = val('cite-sobrenome');
+  const nome = val('cite-nome');
+  const titulo = val('cite-titulo');
+  const ano = val('cite-ano');
+  const pagina = val('cite-pagina');
+  const cidade = val('cite-cidade');
+  const editora = val('cite-editora');
+  const revista = val('cite-revista');
+  const url = val('cite-url');
+  const acesso = val('cite-acesso');
+
+  const SOB = sob ? sob.toUpperCase() : 'SOBRENOME';
+  const Nome = nome || 'Nome';
+  const Tit = titulo || 'Título do trabalho';
+  const Ano = ano || 'ANO';
+
+  let ref = '';
+  if (tipo === 'livro') {
+    ref = `${SOB}, ${Nome}. <strong>${Tit}</strong>. ${cidade || 'Cidade'}: ${editora || 'Editora'}, ${Ano}.`;
+  } else if (tipo === 'artigo') {
+    ref = `${SOB}, ${Nome}. ${Tit}. <strong>${revista || 'Nome da Revista'}</strong>, ${Ano}.`;
+  } else {
+    ref = `${SOB}, ${Nome}. <strong>${Tit}</strong>. ${Ano}. Disponível em: ${url || 'URL'}. Acesso em: ${acesso || 'data de acesso'}.`;
+  }
+
+  // in-text citations
+  const nomeAutorCap = sob ? (sob.charAt(0).toUpperCase() + sob.slice(1).toLowerCase()) : 'Sobrenome';
+  const ind = `Segundo <span class="hl">${nomeAutorCap} (${Ano})</span>, [explique a ideia do autor com suas próprias palavras].`;
+  const pag = pagina ? `, p. ${pagina}` : '';
+  const dir = `"[copie aqui a frase exata do autor]" <span class="hl">(${SOB}, ${Ano}${pag})</span>.`;
+
+  document.getElementById('out-ref').innerHTML = ref;
+  document.getElementById('out-ind').innerHTML = ind;
+  document.getElementById('out-dir').innerHTML = dir;
+}
+
+// ══════════════════════════════════
+//  ONDE PESQUISAR
+// ══════════════════════════════════
+const FONTES = [
+  { icon:'🎓', nome:'Google Acadêmico', tipo:'Buscador · gratuito', desc:'A porta de entrada. Busca só trabalhos científicos, com interface igual à do Google. Mostra quantas vezes cada trabalho foi citado.', link:'https://scholar.google.com.br' },
+  { icon:'📗', nome:'SciELO', tipo:'Biblioteca · gratuito', desc:'Acervo de revistas científicas do Brasil e da América Latina. Textos completos e de graça, muitos em português.', link:'https://www.scielo.br' },
+  { icon:'🏛️', nome:'Periódicos CAPES', tipo:'Portal do governo · gratuito', desc:'Um dos maiores acervos científicos do mundo, mantido pelo governo brasileiro. Acesso ampliado por escolas e universidades.', link:'https://www.periodicos.capes.gov.br' },
+  { icon:'🌾', nome:'Embrapa', tipo:'Órgão de pesquisa · gratuito', desc:'Empresa Brasileira de Pesquisa Agropecuária. Fonte de ouro para temas de agricultura, solo, plantas e agroecologia.', link:'https://www.embrapa.br' },
+  { icon:'🌐', nome:'Scopus', tipo:'Base internacional · parte paga', desc:'Enorme base de dados internacional de artigos científicos. Muito usada em pesquisas avançadas (parte do conteúdo é paga).', link:'https://www.scopus.com' },
+  { icon:'📚', nome:'Repositórios dos IFs/Universidades', tipo:'Acervo institucional · gratuito', desc:'Cada instituto e universidade guarda TCCs, dissertações e teses de seus alunos. Ótimo para ver trabalhos parecidos com o seu.', link:'#' },
+];
+function initPesquisar() {
+  const grid = document.getElementById('search-grid');
+  if (!grid.children.length) {
+    FONTES.forEach(f => {
+      const c = document.createElement('div');
+      c.className = 'search-card';
+      const linkHtml = f.link !== '#'
+        ? `<a href="${f.link}" target="_blank" rel="noopener">Acessar ↗</a>`
+        : `<a href="#" onclick="return false" style="opacity:0.6;cursor:default">Busque o do seu IF</a>`;
+      c.innerHTML = `
+        <div class="sc-icon">${f.icon}</div>
+        <h3>${f.nome}</h3>
+        <div class="sc-type">${f.tipo}</div>
+        <p>${f.desc}</p>
+        ${linkHtml}`;
+      grid.appendChild(c);
+    });
+  }
+  const cl = document.getElementById('checklist');
+  if (!cl.children.length) {
+    const CHECKS = [
+      { icon:'✍️', t:'Tem autor identificado?', s:'Fuja de textos anônimos. Quem escreveu deve estar claro.' },
+      { icon:'📅', t:'A informação é atual?', s:'Veja a data. Para muitos temas, prefira fontes dos últimos anos.' },
+      { icon:'🏛️', t:'A origem é séria?', s:'Universidade, Embrapa, revista científica e órgão oficial valem mais que um blog qualquer.' },
+      { icon:'🔗', t:'A fonte cita suas próprias fontes?', s:'Bons textos mostram de onde tiraram as informações.' },
+      { icon:'🎯', t:'O objetivo é informar (e não vender)?', s:'Desconfie de sites cujo foco é vender um produto.' },
+      { icon:'🔁', t:'Outras fontes confirmam?', s:'Se várias fontes confiáveis dizem o mesmo, mais seguro fica.' },
+    ];
+    CHECKS.forEach(c => {
+      const el = document.createElement('div');
+      el.className = 'check-item';
+      el.innerHTML = `<span class="ci-icon">${c.icon}</span><span class="ci-text">${c.t}<small>${c.s}</small></span>`;
+      cl.appendChild(el);
+    });
+  }
+}
+
+// ══════════════════════════════════
+//  GOOGLE DOCS STEPS
+// ══════════════════════════════════
+const STEPS = [
+  { t:'Crie o documento', p:'Acesse <strong>docs.google.com</strong> com sua conta Google e clique em <strong>Documento em branco</strong>. Ele salva sozinho na internet — não precisa apertar "salvar".' },
+  { t:'Ajuste as margens', p:'Vá em <code>Arquivo → Configuração da página</code>. Defina as margens: <strong>esquerda e superior 3 cm</strong>; <strong>direita e inferior 2 cm</strong>. Confirme que o papel é <strong>A4</strong>.' },
+  { t:'Escolha a fonte', p:'Na barra de ferramentas, selecione a fonte <strong>Arial</strong> (ou Times New Roman) e o tamanho <strong>12</strong>. Deixe isso definido antes de começar a escrever.' },
+  { t:'Configure o espaçamento', p:'Clique no ícone de <strong>espaçamento entre linhas</strong> e escolha <strong>1,5</strong>. Ative também o alinhamento <strong>justificado</strong> (texto reto nos dois lados).' },
+  { t:'Monte a capa', p:'Na primeira página, escreva nome da escola, seu nome, o <strong>título</strong> e cidade/ano, tudo <strong>centralizado</strong>. Depois use <code>Inserir → Quebra → Quebra de página</code> para a próxima parte começar em folha nova.' },
+  { t:'Use títulos de verdade', p:'Para cada seção (Introdução, Desenvolvimento...), aplique o estilo <strong>Título 1</strong> no menu de estilos. Isso é o segredo para o sumário automático funcionar!' },
+  { t:'Gere o sumário automático', p:'Coloque o cursor na página do sumário e vá em <code>Inserir → Sumário</code>. O Google Docs monta a lista sozinho, com as páginas certas. Mudou algo? Clique em <strong>atualizar</strong>.' },
+  { t:'Numere as páginas', p:'Vá em <code>Inserir → Números de página</code> e escolha o <strong>canto superior direito</strong>, como pede a ABNT.' },
+  { t:'Escreva citando as fontes', p:'No desenvolvimento, ao usar a ideia de um autor, escreva a citação: <strong>(SOBRENOME, ano)</strong>. Anote a fonte para as referências. Use a aba <strong>🔖 Citações</strong> para montar cada uma.' },
+  { t:'Monte as referências', p:'Na última página, liste todas as fontes em <strong>ordem alfabética</strong>, seguindo o padrão ABNT. Confira: tudo que foi citado está aqui?' },
+  { t:'Revise e exporte', p:'Releia procurando erros e trechos copiados. Para entregar, use <code>Arquivo → Fazer download → PDF</code> — assim a formatação não se perde.' },
+];
+function initSteps() {
+  const box = document.getElementById('gd-steps');
+  if (box.children.length) return;
+  STEPS.forEach(s => {
+    const el = document.createElement('div');
+    el.className = 'step';
+    el.innerHTML = `<div class="step-body"><h3>${s.t}</h3><p>${s.p}</p></div>`;
+    box.appendChild(el);
+  });
+}
+
+// ══════════════════════════════════
+//  SORTEADOR DE TEMAS
+// ══════════════════════════════════
+const TEMAS = [
+  { t:'Compostagem na escola', q:'Como transformar restos de comida da merenda em adubo para a horta?' },
+  { t:'Hortas agroecológicas urbanas', q:'É possível produzir alimentos saudáveis em pequenos espaços na cidade?' },
+  { t:'Agricultura familiar e o PNAE', q:'Como a merenda escolar pode fortalecer os pequenos agricultores da região?' },
+  { t:'Sementes crioulas', q:'Por que guardar sementes tradicionais é importante para a agroecologia?' },
+  { t:'Agrofloresta (SAF)', q:'Como plantar árvores e alimentos juntos beneficia o solo e o produtor?' },
+  { t:'Controle biológico de pragas', q:'Como usar insetos e plantas para combater pragas sem veneno?' },
+  { t:'Água e irrigação sustentável', q:'Quais técnicas ajudam o pequeno produtor a economizar água?' },
+  { t:'Feiras de produtores locais', q:'Qual a importância das feiras para a renda da agricultura familiar?' },
+  { t:'Adubação verde', q:'Como certas plantas podem "adubar" o solo naturalmente?' },
+  { t:'Rotação de culturas', q:'Por que alternar as plantações protege o solo de esgotar?' },
+  { t:'Plantas medicinais no campo', q:'Como o conhecimento tradicional sobre plantas se conecta à agroecologia?' },
+  { t:'Uso de agrotóxicos x agroecologia', q:'Quais os impactos dos agrotóxicos e como a agroecologia oferece alternativas?' },
+  { t:'Minhocultura (húmus)', q:'Como criar minhocas para produzir adubo de alta qualidade?' },
+  { t:'Segurança alimentar', q:'Como a produção local ajuda a garantir comida saudável para todos?' },
+  { t:'Quintais produtivos', q:'Como o quintal de casa pode virar fonte de alimento e renda?' },
+  { t:'Cooperativas rurais', q:'Como pequenos produtores ganham força ao se unir em cooperativas?' },
+  { t:'Preservação de nascentes', q:'Qual a relação entre proteger nascentes e produzir alimentos?' },
+  { t:'Tecnologia no campo (Agro 4.0)', q:'Como celulares e apps podem ajudar o pequeno agricultor?' },
+  { t:'Alimentação orgânica x convencional', q:'Quais as diferenças entre alimentos orgânicos e convencionais?' },
+  { t:'Juventude e permanência no campo', q:'O que faz os jovens quererem (ou não) continuar na atividade rural?' },
+  { t:'Biofertilizantes caseiros', q:'Como produzir fertilizantes líquidos a partir de materiais simples?' },
+  { t:'Cerrado e agroecologia', q:'Como produzir respeitando o bioma Cerrado da nossa região?' },
+  { t:'Perda e desperdício de alimentos', q:'Quanto alimento se perde no campo e como reduzir isso?' },
+  { t:'Comercialização direta (do produtor à mesa)', q:'Como vender sem atravessador melhora a vida do agricultor?' },
+  { t:'Manejo ecológico do solo', q:'Que práticas mantêm o solo vivo e fértil sem produtos químicos?' },
+  { t:'Mulheres na agricultura familiar', q:'Qual o papel das mulheres na produção agroecológica?' },
+  { t:'Consórcio de plantas', q:'Por que plantar espécies diferentes juntas dá bons resultados?' },
+  { t:'Mudança climática e o campo', q:'Como o clima afeta a produção e o que a agroecologia pode fazer?' },
+  { t:'Agroecologia e povos tradicionais', q:'O que aprendemos com quilombolas e indígenas sobre produzir alimentos?' },
+  { t:'Da roça ao prato: cadeia dos alimentos', q:'Que caminho um alimento percorre até chegar à nossa mesa?' },
+];
+let lastTheme = -1;
+function drawTheme() {
+  const disp = document.getElementById('draw-display');
+  document.getElementById('draw-again').style.display = 'inline-block';
+  disp.classList.add('rolling');
+  let ticks = 0;
+  const spin = setInterval(() => {
+    const r = Math.floor(Math.random() * TEMAS.length);
+    disp.querySelector('.draw-eyebrow').textContent = 'Sorteando…';
+    disp.querySelector('.draw-tema').textContent = '🎲 ' + TEMAS[r].t;
+    disp.querySelector('.draw-pergunta').innerHTML = '...';
+    ticks++;
+    if (ticks > 12) {
+      clearInterval(spin);
+      let idx = Math.floor(Math.random() * TEMAS.length);
+      if (idx === lastTheme) idx = (idx + 1) % TEMAS.length;
+      lastTheme = idx;
+      const tema = TEMAS[idx];
+      disp.classList.remove('rolling');
+      disp.querySelector('.draw-eyebrow').textContent = 'Seu tema sorteado · ' + String(idx+1).padStart(2,'0') + '/' + TEMAS.length;
+      disp.querySelector('.draw-tema').textContent = '🌱 ' + tema.t;
+      disp.querySelector('.draw-pergunta').innerHTML = '<strong>Pergunta de pesquisa:</strong> ' + tema.q;
+    }
+  }, 70);
+}
+
+// ══════════════════════════════════
+//  QUIZ
+// ══════════════════════════════════
+const QUIZ = [
+  { icon:'📝', q:'O que diferencia um trabalho acadêmico de uma simples opinião?',
+    opts:['Ser mais longo','Basear-se em método e fontes confiáveis','Usar palavras difíceis','Ter capa colorida'],
+    correct:1,
+    ok:'Isso! O que faz um trabalho ser acadêmico é usar método e apoiar as ideias em fontes confiáveis — não opinião solta.',
+    err:'Não é o tamanho nem as palavras difíceis. O que importa é ter método e fontes confiáveis por trás.' },
+  { icon:'🏛️', q:'O que significa a sigla ABNT?',
+    opts:['Agência Brasileira de Notas Técnicas','Associação Brasileira de Normas Técnicas','Academia Brasileira de Novos Trabalhos','Associação Básica de Nomes e Títulos'],
+    correct:1,
+    ok:'Correto! ABNT = Associação Brasileira de Normas Técnicas, fundada em 1940.',
+    err:'A resposta certa é Associação Brasileira de Normas Técnicas — ela cria normas para tudo, não só trabalhos.' },
+  { icon:'⚖️', q:'Usar a ideia de outro autor SEM dar crédito é chamado de:',
+    opts:['Citação','Referência','Plágio','Resumo'],
+    correct:2,
+    ok:'Exato! Isso é plágio — falta grave. Sempre cite de onde veio a ideia.',
+    err:'Isso se chama plágio. Citar é justamente o contrário: dar o crédito devido ao autor.' },
+  { icon:'✂️', q:'Numa citação DIRETA, o que é obrigatório além do autor e do ano?',
+    opts:['A editora','O número da página','O nome da escola','A data de acesso'],
+    correct:1,
+    ok:'Isso mesmo! Citação direta (palavras exatas, entre aspas) exige o número da página.',
+    err:'Na citação direta é obrigatório indicar a página — ex.: (SANTOS, 2021, p. 45).' },
+  { icon:'🔬', q:'A grande diferença entre artigo científico e artigo de revista é:',
+    opts:['O tamanho do texto','A revisão por pares (avaliação de especialistas)','A cor da capa','O idioma'],
+    correct:1,
+    ok:'Correto! O artigo científico passa por revisão por pares; o de revista/jornal, não.',
+    err:'A chave é a revisão por pares: no científico, outros especialistas avaliam antes de publicar.' },
+  { icon:'🔍', q:'Qual destes é um buscador feito para pesquisa científica?',
+    opts:['Instagram','Google Acadêmico','WhatsApp','Loja de aplicativos'],
+    correct:1,
+    ok:'Isso! O Google Acadêmico (scholar.google.com) busca só trabalhos científicos.',
+    err:'O certo é o Google Acadêmico — ele filtra só conteúdo científico, ótimo para começar.' },
+  { icon:'📐', q:'Segundo a ABNT, o espaçamento entre linhas do texto deve ser:',
+    opts:['Simples (1,0)','1,5','Duplo (2,0)','Não importa'],
+    correct:1,
+    ok:'Correto! O padrão ABNT para o texto é espaçamento 1,5 entre linhas.',
+    err:'O padrão é 1,5. (O espaço simples fica só em citações longas e nas referências.)' },
+  { icon:'🤖', q:'Sobre usar inteligência artificial (como o ChatGPT) no trabalho, o correto é:',
+    opts:['Copiar tudo que ela escreve e entregar','Usar como apoio, mas verificar e escrever com sua própria compreensão','Nunca abrir a internet','Pedir para ela inventar as referências'],
+    correct:1,
+    ok:'Perfeito! A IA pode ajudar, mas a ideia e a verificação são suas — e cuidado: ela inventa fontes falsas.',
+    err:'A IA é ferramenta de apoio. Entregar o texto dela como seu é desonesto, e ela costuma inventar referências que não existem.' },
+];
+function initQuiz() {
+  const grid = document.getElementById('quiz-grid');
+  if (grid.children.length) return;
+  QUIZ.forEach((item, i) => {
+    const letters = ['A','B','C','D'];
+    const card = document.createElement('div');
+    card.className = 'quiz-card';
+    card.innerHTML = `
+      <h3>${item.icon} Questão ${i+1}</h3>
+      <p>${item.q}</p>
+      <div class="quiz-options">
+        ${item.opts.map((o, j) => `<button class="quiz-opt" onclick="answerQuiz(${i}, this, ${j})">${letters[j]}) ${o}</button>`).join('')}
+      </div>
+      <div class="quiz-feedback" id="qf-${i}"></div>`;
+    grid.appendChild(card);
+  });
+}
+const quizAnswered = Array(8).fill(false);
+function answerQuiz(idx, btn, choice) {
+  if (quizAnswered[idx]) return;
+  quizAnswered[idx] = true;
+  const item = QUIZ[idx];
+  const correct = choice === item.correct;
+  const card = btn.closest('.quiz-card');
+  const opts = card.querySelectorAll('.quiz-opt');
+  opts.forEach(o => o.disabled = true);
+  btn.classList.add(correct ? 'correct' : 'wrong');
+  if (!correct) opts[item.correct].classList.add('correct');
+  const fb = document.getElementById('qf-' + idx);
+  fb.style.color = correct ? 'var(--accent3)' : 'var(--danger)';
+  fb.textContent = (correct ? '✓ ' : '✗ ') + (correct ? item.ok : item.err);
+}
+</script>
+</body>
+</html>
