@@ -1,0 +1,1221 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Auditoria CEP 2026 — O que mudou na análise ética</title>
+<link href="https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&family=DM+Sans:wght@300;400;600;800&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #0a0f1e;
+    --panel: #111827;
+    --panel2: #1a2236;
+    --accent: #00e5ff;      /* novo */
+    --accent2: #ff6b35;     /* alterado */
+    --accent3: #7cf56e;     /* mantido */
+    --accent4: #ffcc00;     /* atenção */
+    --accent5: #cc44ff;     /* suspenso */
+    --text: #e8f4f8;
+    --muted: #6b8097;
+    --grid: rgba(0,229,255,0.08);
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: 'DM Sans', system-ui, sans-serif;
+    min-height: 100vh;
+    overflow-x: hidden;
+  }
+
+  /* ── HEADER ── */
+  header {
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 18px 36px; gap: 16px; flex-wrap: wrap;
+    border-bottom: 1px solid rgba(0,229,255,0.15);
+    background: rgba(10,15,30,0.92);
+    position: sticky; top: 0; z-index: 100;
+    backdrop-filter: blur(12px);
+  }
+  header h1 {
+    font-family: 'Space Mono', monospace;
+    font-size: 1.05rem; color: var(--accent);
+    letter-spacing: 2px; text-transform: uppercase;
+  }
+  header .sub { font-size: .75rem; color: var(--muted); margin-top: 3px; letter-spacing: .5px; }
+  .badge {
+    font-family: 'Space Mono', monospace; font-size: 0.65rem;
+    background: rgba(0,229,255,0.1); border: 1px solid rgba(0,229,255,0.3);
+    color: var(--accent); padding: 4px 12px; border-radius: 20px; letter-spacing: 1px;
+  }
+
+  /* ── TABS ── */
+  .tabs {
+    display: flex; gap: 6px; padding: 20px 36px 0;
+    border-bottom: 1px solid rgba(255,255,255,0.06); flex-wrap: wrap;
+  }
+  .tab {
+    padding: 10px 20px; border-radius: 8px 8px 0 0;
+    background: var(--panel); border: 1px solid rgba(255,255,255,0.06);
+    border-bottom: none; color: var(--muted); cursor: pointer;
+    font-weight: 600; font-size: 0.82rem; transition: all 0.2s;
+    position: relative; bottom: -1px; font-family: inherit;
+  }
+  .tab.active {
+    background: var(--panel2); color: var(--text);
+    border-color: rgba(0,229,255,0.25); border-bottom: 1px solid var(--panel2);
+  }
+  .tab:hover:not(.active) { color: var(--text); }
+  .tab .num { font-family: 'Space Mono', monospace; color: var(--accent); margin-right: 7px; font-size: .75rem; }
+
+  /* ── SECTIONS ── */
+  .section { display: none; padding: 32px 36px 80px; }
+  .section.active { display: block; animation: fade .35s ease; }
+  @keyframes fade { from { opacity: 0; transform: translateY(8px);} to {opacity:1; transform:none;} }
+
+  .sec-head { margin-bottom: 26px; max-width: 950px; }
+  .sec-head .kicker {
+    font-family: 'Space Mono', monospace; font-size: .7rem; letter-spacing: 2px;
+    text-transform: uppercase; color: var(--accent); margin-bottom: 8px;
+  }
+  .sec-head h2 { font-size: 1.75rem; font-weight: 800; line-height: 1.2; margin-bottom: 10px; }
+  .sec-head p { color: var(--muted); font-size: .93rem; line-height: 1.7; }
+
+  /* ── LEGEND ── */
+  .legend { display: flex; gap: 16px; flex-wrap: wrap; margin: 18px 0 26px; }
+  .lg { display: flex; align-items: center; gap: 7px; font-size: .72rem; color: var(--muted);
+        font-family: 'Space Mono', monospace; letter-spacing: .5px; }
+  .dot { width: 10px; height: 10px; border-radius: 50%; display: inline-block; flex: none; }
+  .d-new { background: var(--accent); }
+  .d-chg { background: var(--accent2); }
+  .d-keep{ background: var(--accent3); }
+  .d-warn{ background: var(--accent4); }
+  .d-susp{ background: var(--accent5); }
+
+  /* ── CARD GRID ── */
+  .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(340px, 1fr)); gap: 16px; }
+  .grid.wide { grid-template-columns: repeat(auto-fill, minmax(460px, 1fr)); }
+
+  .card {
+    background: var(--panel); border: 1px solid rgba(255,255,255,0.07);
+    border-radius: 16px; padding: 20px 22px; cursor: pointer;
+    transition: border-color .22s, transform .22s, background .22s;
+    position: relative; overflow: hidden;
+  }
+  .card::before {
+    content:''; position: absolute; left: 0; top: 0; bottom: 0; width: 3px; background: var(--muted);
+  }
+  .card[data-k="new"]::before { background: var(--accent); }
+  .card[data-k="chg"]::before { background: var(--accent2); }
+  .card[data-k="keep"]::before{ background: var(--accent3); }
+  .card[data-k="warn"]::before{ background: var(--accent4); }
+  .card[data-k="susp"]::before{ background: var(--accent5); }
+  .card:hover { transform: translateY(-2px); border-color: rgba(0,229,255,0.28); }
+  .card.open { border-color: rgba(0,229,255,0.35); background: var(--panel2); }
+
+  .card-top { display: flex; align-items: flex-start; justify-content: space-between; gap: 12px; }
+  .card h3 { font-size: .97rem; font-weight: 800; line-height: 1.35; }
+  .tagline {
+    font-family: 'Space Mono', monospace; font-size: .6rem; letter-spacing: 1.2px;
+    text-transform: uppercase; padding: 3px 8px; border-radius: 5px; flex: none;
+    border: 1px solid currentColor; opacity: .9;
+  }
+  .t-new { color: var(--accent); }
+  .t-chg { color: var(--accent2); }
+  .t-keep{ color: var(--accent3); }
+  .t-warn{ color: var(--accent4); }
+  .t-susp{ color: var(--accent5); }
+
+  .card .teaser { color: var(--muted); font-size: .84rem; line-height: 1.6; margin-top: 9px; }
+  .chev {
+    font-family: 'Space Mono', monospace; font-size: .68rem; color: var(--accent);
+    margin-top: 12px; letter-spacing: 1px; display: block;
+  }
+  .card.open .chev { color: var(--muted); }
+
+  .body { display: none; margin-top: 16px; padding-top: 16px; border-top: 1px dashed rgba(255,255,255,0.12); }
+  .card.open .body { display: block; animation: fade .3s ease; }
+  .body p { font-size: .87rem; line-height: 1.72; color: #cbd9e4; margin-bottom: 12px; }
+  .body p strong { color: var(--text); }
+  .body ul { margin: 0 0 12px 18px; }
+  .body li { font-size: .86rem; line-height: 1.68; color: #cbd9e4; margin-bottom: 6px; }
+  .body li strong { color: var(--text); }
+
+  /* ── BEFORE / AFTER ── */
+  .ba { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin: 4px 0 14px; }
+  @media (max-width: 640px) { .ba { grid-template-columns: 1fr; } }
+  .ba > div { border-radius: 10px; padding: 12px 14px; font-size: .82rem; line-height: 1.6; }
+  .ba .before { background: rgba(255,107,53,0.07); border: 1px solid rgba(255,107,53,0.22); }
+  .ba .after  { background: rgba(0,229,255,0.07);  border: 1px solid rgba(0,229,255,0.22); }
+  .ba h5 {
+    font-family: 'Space Mono', monospace; font-size: .62rem; letter-spacing: 1.5px;
+    text-transform: uppercase; margin-bottom: 7px;
+  }
+  .ba .before h5 { color: var(--accent2); }
+  .ba .after h5 { color: var(--accent); }
+  .ba p { font-size: .82rem !important; margin: 0 !important; color: #cbd9e4; }
+
+  /* ── CITATION ── */
+  .cit {
+    background: rgba(0,0,0,0.28); border-left: 2px solid var(--accent);
+    border-radius: 0 8px 8px 0; padding: 11px 14px; margin: 10px 0;
+  }
+  .cit .src {
+    font-family: 'Space Mono', monospace; font-size: .64rem; letter-spacing: .6px;
+    color: var(--accent); display: block; margin-bottom: 6px; line-height: 1.5;
+  }
+  .cit .loc { color: var(--muted); }
+  .cit q, .cit .q {
+    display: block; font-size: .81rem; line-height: 1.62; color: #b9cbd8; font-style: italic;
+  }
+  .cit .q::before { content: '“'; } .cit .q::after { content: '”'; }
+
+  .note {
+    background: rgba(255,204,0,0.07); border: 1px solid rgba(255,204,0,0.25);
+    border-radius: 10px; padding: 12px 15px; margin: 12px 0;
+    font-size: .83rem; line-height: 1.68; color: #e6dfc4;
+  }
+  .note b { color: var(--accent4); }
+
+  /* ── TIMELINE ── */
+  .tl { position: relative; margin: 10px 0 6px; padding-left: 26px; }
+  .tl::before { content:''; position:absolute; left: 6px; top: 6px; bottom: 6px; width: 2px;
+                background: linear-gradient(var(--accent2), var(--accent)); }
+  .tl-item { position: relative; margin-bottom: 20px; }
+  .tl-item::before {
+    content:''; position: absolute; left: -25px; top: 5px; width: 11px; height: 11px;
+    border-radius: 50%; background: var(--bg); border: 2px solid var(--accent);
+  }
+  .tl-item .date {
+    font-family: 'Space Mono', monospace; font-size: .68rem; color: var(--accent);
+    letter-spacing: 1px; display: block; margin-bottom: 3px;
+  }
+  .tl-item .what { font-size: .88rem; font-weight: 700; margin-bottom: 3px; }
+  .tl-item .desc { font-size: .82rem; color: var(--muted); line-height: 1.6; }
+
+  /* ── TABLE ── */
+  .tbl-wrap { overflow-x: auto; border-radius: 12px; border: 1px solid rgba(255,255,255,0.08); }
+  table { width: 100%; border-collapse: collapse; font-size: .83rem; min-width: 640px; }
+  th, td { padding: 11px 14px; text-align: left; border-bottom: 1px solid rgba(255,255,255,0.06); vertical-align: top; }
+  th {
+    background: var(--panel2); font-family: 'Space Mono', monospace; font-size: .66rem;
+    letter-spacing: 1px; text-transform: uppercase; color: var(--accent); font-weight: 400;
+  }
+  td { color: #cbd9e4; line-height: 1.6; }
+  tr:last-child td { border-bottom: none; }
+  td code { font-family: 'Space Mono', monospace; font-size: .76rem; color: var(--accent4); }
+
+  /* ── STAT ── */
+  .stats { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px,1fr)); gap: 12px; margin-bottom: 24px; }
+  .stat { background: var(--panel); border: 1px solid rgba(255,255,255,0.07); border-radius: 14px; padding: 16px 18px; }
+  .stat .n { font-family: 'Space Mono', monospace; font-size: 1.7rem; font-weight: 700; color: var(--accent); line-height: 1; }
+  .stat .l { font-size: .72rem; color: var(--muted); margin-top: 7px; line-height: 1.45; }
+
+  footer {
+    padding: 26px 36px 40px; border-top: 1px solid rgba(255,255,255,0.06);
+    color: var(--muted); font-size: .76rem; line-height: 1.7;
+  }
+  footer code { font-family: 'Space Mono', monospace; color: var(--accent4); font-size: .74rem; }
+  .expand-all {
+    background: rgba(255,255,255,0.05); color: var(--text); border: 1px solid rgba(255,255,255,0.12);
+    padding: 7px 15px; border-radius: 8px; cursor: pointer; font-family: 'Space Mono', monospace;
+    font-size: .68rem; letter-spacing: 1px; margin-bottom: 18px;
+  }
+  .expand-all:hover { background: rgba(0,229,255,0.1); border-color: rgba(0,229,255,0.3); }
+</style>
+</head>
+<body>
+
+<header>
+  <div>
+    <h1>Auditoria CEP · Marco 2024–2026</h1>
+    <div class="sub">Cruzamento documental: regime CNS (CEP/CONEP) × novo Sinep / Inaep</div>
+  </div>
+  <span class="badge">12 documentos analisados</span>
+</header>
+
+<nav class="tabs">
+  <button class="tab active" data-s="s0"><span class="num">00</span>Panorama</button>
+  <button class="tab" data-s="s1"><span class="num">01</span>Prazos</button>
+  <button class="tab" data-s="s2"><span class="num">02</span>Fluxo &amp; Pendências</button>
+  <button class="tab" data-s="s3"><span class="num">03</span>Alçada &amp; Risco</button>
+  <button class="tab" data-s="s4"><span class="num">04</span>Multicêntrico</button>
+  <button class="tab" data-s="s5"><span class="num">05</span>Checklist item a item</button>
+  <button class="tab" data-s="s6"><span class="num">06</span>Fontes &amp; Método</button>
+</nav>
+
+<!-- ══════════════════ 00 PANORAMA ══════════════════ -->
+<section class="section active" id="s0">
+  <div class="sec-head">
+    <div class="kicker">Seção 00 — Panorama</div>
+    <h2>O que efetivamente mudou de arquitetura</h2>
+    <p>O Sistema CEP/CONEP não foi extinto por revogação frontal: ele foi <strong>substituído por sucessão de competências</strong>. A Lei nº 14.874/2024 instituiu o Sinep; o Decreto nº 12.651/2025 o regulamentou; a Inaep se instalou e passou a emitir Despachos de Orientação a partir de abril de 2026. As normas do CNS continuam válidas apenas <em>naquilo que não contrariarem</em> o novo regime.</p>
+  </div>
+
+  <div class="stats">
+    <div class="stat"><div class="n">2</div><div class="l">categorias de CEP passam a existir: credenciado e acreditado</div></div>
+    <div class="stat"><div class="n">20</div><div class="l">dias úteis — teto global e único de suspensão por diligências</div></div>
+    <div class="stat"><div class="n">8</div><div class="l">CEPs acreditados no país durante a transição</div></div>
+    <div class="stat"><div class="n">1</div><div class="l">único CEP analisa pesquisa multicêntrica (parecer único)</div></div>
+  </div>
+
+  <div class="legend">
+    <span class="lg"><i class="dot d-new"></i>Novo</span>
+    <span class="lg"><i class="dot d-chg"></i>Alterado</span>
+    <span class="lg"><i class="dot d-keep"></i>Mantido</span>
+    <span class="lg"><i class="dot d-warn"></i>Atenção / risco de erro</span>
+    <span class="lg"><i class="dot d-susp"></i>Suspenso / aguarda norma</span>
+  </div>
+
+  <button class="expand-all">▸ ABRIR / FECHAR TODOS OS CARDS DESTA SEÇÃO</button>
+
+  <div class="grid wide">
+
+    <div class="card" data-k="new">
+      <div class="card-top"><h3>Glossário essencial — leia antes de tudo</h3><span class="tagline t-new">Definições</span></div>
+      <div class="teaser">Quatro termos do novo marco que não existiam com esse sentido no regime CNS: credenciado, acreditado, diligência e suspensão do prazo.</div>
+      <span class="chev">▸ CLIQUE PARA ABRIR</span>
+      <div class="body">
+
+        <p><strong>1. CEP CREDENCIADO — o ato que <em>autoriza</em>.</strong> É a porta de entrada: sem credenciamento, o comitê não é instância de análise ética. Habilita a analisar pesquisas de <strong>risco baixo e moderado</strong>.</p>
+        <div class="cit"><span class="src">DECRETO Nº 12.651/2025 <span class="loc">· art. 18 · linhas 262–265</span></span><span class="q">O credenciamento é o ato formal, emitido pela Instância Nacional de Ética em Pesquisa, que autoriza os CEPs a atuarem no Sistema Nacional de Ética em Pesquisa com Seres Humanos, com competência para realizarem a análise ética de protocolos de pesquisa classificados como de risco baixo ou moderado.</span></div>
+
+        <p><strong>2. CEP ACREDITADO — o ato que <em>reconhece capacidade</em>.</strong> Não autoriza a atuar: atesta que um CEP <em>já credenciado</em> demonstrou capacidade técnica e operacional para a classe mais complexa. É <strong>cumulativo</strong> — pressupõe o credenciamento prévio — e dá competência <strong>exclusiva</strong> sobre o risco elevado.</p>
+        <div class="cit"><span class="src">DECRETO Nº 12.651/2025 <span class="loc">· art. 19 · linhas 269–272</span></span><span class="q">A acreditação consiste no reconhecimento formal de que os CEPs atendem a requisitos previamente definidos pela Instância Nacional de Ética em Pesquisa e demonstram capacidade técnica e operacional para realizar a análise ética de protocolos de pesquisa classificados como de risco elevado, e podem também analisar pesquisas de risco baixo e moderado.</span></div>
+        <div class="cit"><span class="src">DECRETO Nº 12.651/2025 <span class="loc">· art. 25, inciso II · linhas 340–341</span></span><span class="q">CEP acreditado - instância que, além de ter sido credenciada, tenha sido acreditada para análise ética das pesquisas de risco elevado e para análise das pesquisas de risco baixo e moderado.</span></div>
+
+        <p><strong>3. DILIGÊNCIA — o pedido formal do CEP ao pesquisador.</strong> É a solicitação de informações, documentos adicionais ou ajustes, feita <em>antes</em> de emitir o parecer. Na Plataforma Brasil, hoje, ela se materializa exatamente naquilo que você já conhece: o <strong>parecer consubstanciado “pendente”</strong>.</p>
+        <div class="cit"><span class="src">DESPACHO Nº 2/2026 — INAEP <span class="loc">· item V · linhas 60–62</span></span><span class="q">Nos termos do § 1º do art. 14 da Lei nº 14.874/2024, o CEP pode, previamente à emissão do parecer, formular diligência ao pesquisador ou ao patrocinador da pesquisa, solicitando informações, documentos adicionais ou ajustes.</span></div>
+        <div class="cit"><span class="src">DESPACHO Nº 2/2026 — INAEP <span class="loc">· item X · linhas 79–82</span></span><span class="q">O CEP pode solicitar diligências para a adequação do protocolo de pesquisa às diretrizes éticas vigentes […] por meio de emissão do parecer consubstanciado "pendente" na Plataforma Brasil, enquanto o novo sistema oficial de tramitação de protocolos não estiver disponível.</span></div>
+
+        <p><strong>4. SUSPENSÃO DO PRAZO — o cronômetro que pausa.</strong> Emitida a diligência, os 30 dias úteis de análise <strong>param de correr</strong> enquanto a resposta está com o pesquisador, e voltam a correr de onde pararam. Esse tempo de pausa não é prazo do CEP, e todas as pausas somadas têm teto de 20 dias úteis.</p>
+        <div class="cit"><span class="src">DESPACHO Nº 2/2026 — INAEP <span class="loc">· item XI e alíneas “a” e “b” · linhas 84–89</span></span><span class="q">A formulação de diligência implica suspensão do prazo de análise ética, a partir de sua comunicação ao pesquisador ou ao patrocinador da pesquisa. a) a suspensão não constitui prazo autônomo do CEP; e b) a duração da suspensão corresponde ao período efetivamente utilizado pelo pesquisador ou patrocinador para atendimento da diligência.</span></div>
+        <div class="note"><b>Onde cada termo é aprofundado:</b> credenciado × acreditado na <strong>Seção 03</strong>; diligência e suspensão, com exemplo cronológico completo, na <strong>Seção 02</strong>.</div>
+      </div>
+    </div>
+
+    <div class="card" data-k="new">
+      <div class="card-top"><h3>Linha do tempo normativa</h3><span class="tagline t-new">Novo</span></div>
+      <div class="teaser">Da Lei 14.874/2024 até o Despacho nº 4/2026 — os marcos que produzem efeito hoje.</div>
+      <span class="chev">▸ CLIQUE PARA ABRIR</span>
+      <div class="body">
+        <div class="tl">
+          <div class="tl-item"><span class="date">28/05/2024</span><div class="what">Lei nº 14.874/2024</div><div class="desc">Dispõe sobre a pesquisa com seres humanos e institui o Sistema Nacional de Ética em Pesquisa com Seres Humanos (Sinep). <em>Observação: o texto integral da Lei não está na pasta do projeto; ela é referida e parcialmente transcrita pelos demais documentos.</em></div></div>
+          <div class="tl-item"><span class="date">07/10/2025 · DOU 08/10/2025</span><div class="what">Decreto nº 12.651/2025</div><div class="desc">Regulamenta a Lei. Cria a Inaep, define credenciamento × acreditação, classificação de risco, protocolo único multicêntrico e o regime de transição.</div></div>
+          <div class="tl-item"><span class="date">12/11/2025</span><div class="what">Nota Técnica nº 43/2025-Decit/SECTICS/MS</div><div class="desc">Define, na transição, que “risco elevado” = área temática da Res. CNS 466/2012, e lista os 8 CEPs acreditados.</div></div>
+          <div class="tl-item"><span class="date">12–13/01/2026</span><div class="what">Nota Técnica nº 1/2026-Decit/SCTIE/MS</div><div class="desc">Procedimento de encaminhamento de protocolo de risco elevado, protocolos do MS, prorrogação de credenciamento e sobrestamento de biobancos.</div></div>
+          <div class="tl-item"><span class="date">02/04/2026</span><div class="what">Resolução do Colegiado da Inaep nº 01/2026</div><div class="desc">Aprova o Regimento Interno da Inaep. <em>Citada como fundamento dos Despachos; o texto não está na pasta do projeto.</em></div></div>
+          <div class="tl-item"><span class="date">27/04/2026 · DOU 28/04/2026</span><div class="what">Despachos nº 1 e nº 2 da Inaep</div><div class="desc">Nº 1: regimento interno, composição, quórum, suplência, ad hoc e alterações cadastrais. Nº 2: contagem de prazos e regime de diligências (vigor em 05/05/2026).</div></div>
+          <div class="tl-item"><span class="date">29/05/2026 · DOU 01/06/2026</span><div class="what">Despacho nº 3 da Inaep</div><div class="desc">Parecer ético único em pesquisa multicêntrica; separação entre análise ética e análise administrativa. Vigor em 08/06/2026.</div></div>
+          <div class="tl-item"><span class="date">01/06/2026 · DOU 02/06/2026</span><div class="what">Despacho nº 4 da Inaep</div><div class="desc">Prorroga até 02/07/2026 a Consulta Pública nº 01/2026 sobre a nova regulamentação de biobancos.</div></div>
+        </div>
+        <div class="cit"><span class="src">DESPACHO Nº 2/2026 — INAEP <span class="loc">· item XXIII · linha 151</span></span><span class="q">Este Despacho entra em vigor em 05 de maio de 2026.</span></div>
+        <div class="cit"><span class="src">DESPACHO Nº 3/2026 — INAEP <span class="loc">· item IX · linha 304</span></span><span class="q">Este Despacho entra em vigor em 8 de junho de 2026.</span></div>
+        <div class="cit"><span class="src">DESPACHO Nº 4/2026 — INAEP <span class="loc">· linhas 10–14</span></span><span class="q">resolve, ad referendum, prorrogar por 30 (trinta) dias, até 2 de julho de 2026, o prazo para apresentação de críticas e sugestões relativas à proposta de Resolução do Colegiado da Inaep que dispõe sobre a nova regulamentação de biobancos de material biológico humano e de informações a eles associadas, objeto da Consulta Pública nº 01, de 1º de abril de 2026</span></div>
+      </div>
+    </div>
+
+    <div class="card" data-k="warn">
+      <div class="card-top"><h3>As Resoluções do CNS foram revogadas?</h3><span class="tagline t-warn">Atenção</span></div>
+      <div class="teaser">Não. Continuam válidas — mas sob filtro de compatibilidade. Isso muda como o parecerista deve citá-las.</div>
+      <span class="chev">▸ CLIQUE PARA ABRIR</span>
+      <div class="body">
+        <p>O Decreto estabeleceu regra de transição expressa: as normas do CNS <strong>permanecem válidas até que a Inaep publique normas próprias</strong>, e apenas na medida em que não contrariem a Lei nº 14.874/2024 e o Decreto. Portanto, a Resolução CNS 466/2012, a Resolução CNS 510/2016 e a Norma Operacional 001/2013 <strong>continuam sendo base legítima de fundamentação do parecer</strong> — desde que o dispositivo invocado não colida com o novo regime.</p>
+        <div class="cit"><span class="src">DECRETO Nº 12.651/2025 <span class="loc">· art. 39 · linhas 533–535</span></span><span class="q">Até que sejam publicadas as normas regulamentadoras sobre ética em pesquisa pela Instância Nacional de Ética em Pesquisa, permanecem válidas as normas do Conselho Nacional de Saúde que não contrariem o disposto na Lei nº 14.874, de 28 de maio de 2024, e neste Decreto.</span></div>
+        <div class="cit"><span class="src">DESPACHO Nº 1/2026 — INAEP <span class="loc">· considerandos · linhas 48–51</span></span><span class="q">Considerando que a Resolução CNS nº 706, de 16 de fevereiro de 2023, contém parâmetros operacionais úteis quanto à composição, às condições mínimas de funcionamento e à alteração de dados dos CEPs, sem prejuízo da necessária filtragem de compatibilidade com o novo regime legal e regulamentar</span></div>
+        <div class="cit"><span class="src">NOTA TÉCNICA Nº 43/2025 <span class="loc">· item 2.7 · linhas 88–96</span></span><span class="q">o art. 39 do Decreto nº 12.651/2025 estabelece, de forma expressa, o regime de transição normativa entre o Sistema CEP/Conep e o SINEP, determinando que, até a edição de normas próprias, permanecem em vigor as normas do Conselho Nacional de Saúde (CNS), desde que não contrariem o disposto na Lei nº 14.874/2024 ou no referido Decreto.</span></div>
+        <div class="note"><b>Consequência prática para o parecer:</b> não é erro citar a Res. 466/2012 ou a 510/2016. É erro citá-las <em>naquilo que o novo regime já substituiu</em> — sobretudo em prazos (Seção 01), em alçada de análise (Seção 03) e em duplicidade de análise em multicêntricos (Seção 04).</div>
+      </div>
+    </div>
+
+    <div class="card" data-k="chg">
+      <div class="card-top"><h3>Quem é quem agora: Sinep, Inaep, CONEP</h3><span class="tagline t-chg">Alterado</span></div>
+      <div class="teaser">A CONEP deixou de ser a instância de análise de área temática e passou a papel exclusivamente recursal — e transitório.</div>
+      <span class="chev">▸ CLIQUE PARA ABRIR</span>
+      <div class="body">
+        <div class="ba">
+          <div class="before"><h5>Antes</h5><p>Sistema CEP/CONEP. A CONEP analisava originariamente os protocolos de área temática e era última instância recursal.</p></div>
+          <div class="after"><h5>Agora</h5><p>Sinep, segmentado em Inaep (instância nacional) e CEPs (instância de análise ética). A CONEP atua <strong>como instância recursal apenas até a posse dos membros da Inaep</strong>.</p></div>
+        </div>
+        <div class="cit"><span class="src">DECRETO Nº 12.651/2025 <span class="loc">· art. 3º, I e II · linhas 45–51</span></span><span class="q">O Sistema Nacional de Ética em Pesquisa com Seres Humanos segmenta-se em: I - Instância Nacional de Ética em Pesquisa; e II - Instância de Análise Ética em Pesquisa, representada pelos Comitês de Ética em Pesquisa - CEPs.</span></div>
+        <div class="cit"><span class="src">DECRETO Nº 12.651/2025 <span class="loc">· art. 10, VI · linha 165</span></span><span class="q">VI - atuar como instância recursal das decisões proferidas pelos CEPs;</span></div>
+        <div class="cit"><span class="src">DECRETO Nº 12.651/2025 <span class="loc">· art. 40 · linhas 537–538</span></span><span class="q">A Comissão Nacional de Ética em Pesquisa continuará a atuar como instância recursal até a posse dos membros da Instância Nacional de Ética em Pesquisa.</span></div>
+        <div class="cit"><span class="src">NOTA TÉCNICA Nº 1/2026 <span class="loc">· item 4.2 · linhas 193–195</span></span><span class="q">Porém, conforme art. 40 do Decreto nº 12.651/2025, à Conep atualmente cabe a atribuição de instância recursal.</span></div>
+        <div class="note"><b>Nomenclatura do parecer:</b> os textos-padrão do Checklist Pessoal que dizem “o Sistema CEP-CONEP possa proceder a análise ética” (item 4.3) reproduzem a redação da Norma Operacional 001/2013, item 3.4. A referência institucional correta hoje é <strong>Sinep</strong> / <strong>Inaep</strong>. O conteúdo material do item permanece; a designação do sistema, não.</div>
+      </div>
+    </div>
+
+    <div class="card" data-k="new">
+      <div class="card-top"><h3>Princípios legais que o parecer passa a ter de observar cumulativamente</h3><span class="tagline t-new">Novo</span></div>
+      <div class="teaser">O Decreto elevou a decreto um rol de sete princípios — incluindo um que não existia: o estímulo à inovação responsável.</div>
+      <span class="chev">▸ CLIQUE PARA ABRIR</span>
+      <div class="body">
+        <p>O art. 26 do Decreto define os princípios que a análise ética deve observar <strong>de forma cumulativa</strong>. Seis deles são reconhecíveis no regime anterior; o inciso II é a novidade material.</p>
+        <div class="cit"><span class="src">DECRETO Nº 12.651/2025 <span class="loc">· art. 26, I a VII · linhas 351–370</span></span><span class="q">O processo de análise ética conduzido pelos CEPs deverá observar a classificação de risco, a legislação vigente e considerar, de forma cumulativa, os seguintes princípios legais: I - a proteção da dignidade, da segurança, da integridade e do bem-estar dos participantes da pesquisa; II - o estímulo ao desenvolvimento técnico-científico e à inovação responsável; III - a garantia de independência, transparência e publicidade nos procedimentos e nas decisões; IV - a isonomia na aplicação dos critérios e procedimentos de análise, conforme a relação risco-benefício […]; V - a busca por eficiência, celeridade e qualidade na análise e emissão dos pareceres; VI - a composição interdisciplinar e plural dos colegiados como elemento qualificador do julgamento ético; e VII - o controle social, com envolvimento de representantes dos participantes de pesquisa.</span></div>
+        <div class="cit"><span class="src">DECRETO Nº 12.651/2025 <span class="loc">· art. 23, I · linhas 318–320</span></span><span class="q">observar os princípios da administração pública na avaliação ética dos protocolos de pesquisa que envolvam seres humanos, respeitados os prazos estabelecidos na Lei nº 14.874, de 28 de maio de 2024, de forma a evitar redundâncias que possam ocasionar morosidade na análise;</span></div>
+        <p><strong>Continuidade:</strong> a vedação à redundância que gera morosidade já constava do regime CNS, atribuída aos CEPs.</p>
+        <div class="cit"><span class="src">RESOLUÇÃO CNS 466/2012 <span class="loc">· item VIII.1 · linhas 481–486</span></span><span class="q">avaliar protocolos de pesquisa envolvendo seres humanos […] emitindo parecer, devidamente justificado, sempre orientado, dentre outros, pelos princípios da impessoalidade, transparência, razoabilidade, proporcionalidade e eficiência, dentro dos prazos estabelecidos em norma operacional, evitando redundâncias que resultem em morosidade na análise;</span></div>
+        <div class="cit"><span class="src">DECRETO Nº 12.651/2025 <span class="loc">· art. 26, parágrafo único · linhas 371–373</span></span><span class="q">O integrante de CEP que tenha interesse, de qualquer natureza, na pesquisa ou que mantenha vínculo com o patrocinador ou com os pesquisadores é impedido de participar da deliberação acerca da pesquisa na qual esteja envolvido.</span></div>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<!-- ══════════════════ 01 PRAZOS ══════════════════ -->
+<section class="section" id="s1">
+  <div class="sec-head">
+    <div class="kicker">Seção 01 — Diretrizes internas · Prazos</div>
+    <h2>Prazos de recepção e de análise: a mudança de maior impacto operacional</h2>
+    <p>Os números 10 e 30 permaneceram. O que mudou foi a <strong>unidade de contagem</strong> (dias corridos → dias úteis), a existência de <strong>regra expressa de início e vencimento</strong>, e — o ponto crítico — o surgimento de um <strong>teto global de suspensão</strong> que substitui o antigo prazo de 30 dias por pendência.</p>
+  </div>
+
+  <button class="expand-all">▸ ABRIR / FECHAR TODOS OS CARDS DESTA SEÇÃO</button>
+
+  <div class="grid wide">
+
+    <div class="card" data-k="chg">
+      <div class="card-top"><h3>Checagem documental e parecer inicial</h3><span class="tagline t-chg">Alterado</span></div>
+      <div class="teaser">10 dias e 30 dias continuam existindo — mas agora são dias úteis, com marco inicial definido.</div>
+      <span class="chev">▸ CLIQUE PARA ABRIR</span>
+      <div class="body">
+        <div class="ba">
+          <div class="before"><h5>Regime CNS</h5><p>Checagem documental em até <strong>10 dias</strong> após a submissão; parecer inicial em <strong>30 dias</strong> a partir da aceitação da integralidade documental. A norma não qualifica os dias como úteis nem define regra de contagem.</p></div>
+          <div class="after"><h5>Regime Sinep</h5><p><strong>10 dias úteis</strong> para verificação da integralidade documental, contados da submissão; <strong>30 dias úteis</strong> para emissão do parecer ético, contados da aceitação documental. Contagem exclui o dia do início e inclui o do vencimento, iniciando no primeiro dia útil subsequente.</p></div>
+        </div>
+        <div class="cit"><span class="src">NORMA OPERACIONAL 001/2013 <span class="loc">· item 2.2.D · linhas 210–212</span></span><span class="q">Dos prazos: O prazo para emissão do parecer inicial pelo CEP é de trinta (30) dias a partir da aceitação na integralidade dos documentos do protocolo, cuja checagem documental deverá ser realizada em até 10 dias após a submissão.</span></div>
+        <div class="cit"><span class="src">DESPACHO Nº 2/2026 — INAEP <span class="loc">· item II, alíneas “a” e “b” · linhas 44–51</span></span><span class="q">O art. 14 da Lei nº 14.874/2024, estabelece dois marcos temporais distintos no processo de análise ética: a) prazo de até 10 (dez) dias úteis para verificação da integralidade documental, contado da submissão do protocolo; e b) prazo de até 30 (trinta) dias úteis para emissão do parecer ético, contado da aceitação da integralidade documental;</span></div>
+        <div class="cit"><span class="src">DESPACHO Nº 2/2026 — INAEP <span class="loc">· item I · linhas 40–42</span></span><span class="q">Na ausência de disciplina específica na Lei nº 14.874/2024, a contagem de prazos em dias úteis observa o critério geral do ordenamento jurídico brasileiro, excluindo-se o dia do início e incluindo-se o dia do vencimento, com início no primeiro dia útil subsequente ao ato que inaugura o prazo.</span></div>
+        <div class="cit"><span class="src">DESPACHO Nº 2/2026 — INAEP <span class="loc">· item IV · linhas 57–58</span></span><span class="q">O prazo para verificação da integralidade documental inicia-se no primeiro dia útil subsequente à submissão do protocolo.</span></div>
+        <p>A base subsidiária da regra de contagem é explicitada nos considerandos do próprio Despacho.</p>
+        <div class="cit"><span class="src">DESPACHO Nº 2/2026 — INAEP <span class="loc">· considerandos · linhas 23–24</span></span><span class="q">Considerando a aplicação subsidiária da Lei nº 9.784, de 29 de janeiro de 1999, especialmente o disposto no art. 66, que se refere à contagem de prazos administrativos;</span></div>
+      </div>
+    </div>
+
+    <div class="card" data-k="chg">
+      <div class="card-top"><h3>O prazo do pesquisador deixou de ser 30 dias por pendência</h3><span class="tagline t-chg">Alterado</span></div>
+      <div class="teaser">Passou a ser um teto único e contínuo de 20 dias úteis para todas as diligências somadas.</div>
+      <span class="chev">▸ CLIQUE PARA ABRIR</span>
+      <div class="body">
+        <div class="ba">
+          <div class="before"><h5>Regime CNS</h5><p>Emitida a pendência, o pesquisador tinha <strong>30 dias</strong> a contar da emissão na Plataforma Brasil para atendê-la. Decorrido o prazo, o CEP tinha <strong>mais 30 dias</strong> para o parecer final. Cada nova pendência reabria o ciclo.</p></div>
+          <div class="after"><h5>Regime Sinep</h5><p>A diligência <strong>suspende</strong> o prazo de análise. A suspensão corresponde ao tempo efetivamente usado pelo pesquisador e observa <strong>limite máximo global de 20 dias úteis</strong>. Diligências sucessivas são admitidas, mas o limite é <strong>único e contínuo</strong> — vedado reiniciar a contagem a cada nova diligência.</p></div>
+        </div>
+        <div class="cit"><span class="src">NORMA OPERACIONAL 001/2013 <span class="loc">· item 2.2.E · linhas 214–216</span></span><span class="q">Se o parecer for de pendência, o pesquisador terá o prazo de trinta (30) dias, contados a partir de sua emissão na Plataforma Brasil, para atendê-la. Decorrido este prazo, o CEP terá trinta (30) dias para emitir o parecer final, aprovando ou reprovando o protocolo.</span></div>
+        <div class="cit"><span class="src">DESPACHO Nº 2/2026 — INAEP <span class="loc">· item XI e alíneas “a” e “b” · linhas 84–89</span></span><span class="q">A formulação de diligência implica suspensão do prazo de análise ética, a partir de sua comunicação ao pesquisador ou ao patrocinador da pesquisa. a) a suspensão não constitui prazo autônomo do CEP; e b) a duração da suspensão corresponde ao período efetivamente utilizado pelo pesquisador ou patrocinador para atendimento da diligência.</span></div>
+        <div class="cit"><span class="src">DESPACHO Nº 2/2026 — INAEP <span class="loc">· item “XIV” final [numeração repetida no original], alíneas “b” a “d” · linhas 101–106</span></span><span class="q">b) observa-se o limite máximo global de 20 (vinte) dias úteis, nos termos do § 1º do art. 14 da Lei nº 14.874/2024; c) admite a realização de diligências sucessivas, desde que observado o limite global de 20 (vinte) dias úteis de suspensão previsto no § 1º do art. 14 da Lei nº 14.874/2024; e d) o limite de suspensão é único e contínuo, vedado o reinício da contagem do prazo suspensivo a cada nova diligência.</span></div>
+        <div class="cit"><span class="src">DESPACHO Nº 2/2026 — INAEP <span class="loc">· itens XII, XIII e XIV · linhas 90–97</span></span><span class="q">XII - O prazo para atendimento da diligência pelo pesquisador ou pelo patrocinador da pesquisa: a) inicia-se no primeiro dia útil subsequente ao recebimento formal da solicitação […] XIII - A retomada da contagem do prazo de análise ocorre no primeiro dia útil subsequente ao registro do recebimento da resposta no sistema oficial de tramitação da análise ética. XIV - Apresentada a resposta antes do término do prazo concedido, a suspensão cessa imediatamente.</span></div>
+        <div class="note"><b>Impacto direto no seu Checklist:</b> o item 7 do Checklist Pessoal instrui o pesquisador a reorganizar todo o material de resposta (“copiem essas partes em um novo documento, no formato Word […] Salve o documento como ‘Resposta às pendências’”). Esse retrabalho passa a consumir o mesmo orçamento de 20 dias úteis que serve para <em>todas</em> as rodadas de diligência do protocolo. A recomendação de forma permanece legítima, mas o custo temporal dela agora é finito e compartilhado.</div>
+        <div class="note"><b>Observação de auditoria — divergência de numeração no documento oficial:</b> o Despacho nº 2/2026, tal como publicado, apresenta <strong>dois itens numerados “XIV”</strong> (linhas 96–97 e 98–106) e não possui item “XV”, embora o item XVII, alínea “e” (linha 114) faça remissão expressa “à prorrogação de prazo a que se refere o inciso XV”. Trata-se de inconsistência do texto publicado, não de leitura. Ao fundamentar pareceres, convém citar pelo conteúdo do dispositivo, e não apenas pelo algarismo romano.</div>
+      </div>
+    </div>
+
+    <div class="card" data-k="new">
+      <div class="card-top"><h3>Dever novo: calcular o prazo remanescente antes de emitir pendência</h3><span class="tagline t-new">Novo</span></div>
+      <div class="teaser">A Inaep recomenda que o CEP avalie a adequação temporal da pendência — algo que o regime CNS não previa.</div>
+      <span class="chev">▸ CLIQUE PARA ABRIR</span>
+      <div class="body">
+        <p>No regime anterior, emitir pendência era um ato sem custo temporal aferível pelo relator: o prazo do pesquisador era autônomo e fixo. No novo regime, a pendência consome um recurso escasso e compartilhado, e a decisão de pendenciar passa a exigir juízo sobre o tempo disponível.</p>
+        <div class="cit"><span class="src">DESPACHO Nº 2/2026 — INAEP <span class="loc">· item III · linhas 53–55</span></span><span class="q">Recomenda-se que o CEP avalie a adequação temporal para emissão de parecer de pendência, considerando o prazo remanescente, de forma a assegurar tempo hábil para manifestação do pesquisador e deliberação final dentro do prazo legal.</span></div>
+        <div class="cit"><span class="src">DESPACHO Nº 2/2026 — INAEP <span class="loc">· item VII · linhas 66–67</span></span><span class="q">A formulação de diligências deve observar os princípios da razoabilidade, proporcionalidade e eficiência, vedada sua utilização com finalidade meramente protelatória.</span></div>
+        <div class="note"><b>Leitura para o parecerista:</b> a combinação do item VII (vedação a diligência protelatória), do art. 23, I do Decreto (evitar redundâncias que ocasionem morosidade) e do teto de 20 dias úteis desloca o padrão de conduta. Pendências de baixa densidade ética, que antes eram inócuas, hoje consomem prazo legal e podem ser questionadas quanto à proporcionalidade.</div>
+      </div>
+    </div>
+
+    <div class="card" data-k="new">
+      <div class="card-top"><h3>Prorrogação do prazo de resposta: agora tem rito</h3><span class="tagline t-new">Novo</span></div>
+      <div class="teaser">Depende de pedido justificado, decisão expressa do CEP e registro formal — e não pode ultrapassar o teto global.</div>
+      <span class="chev">▸ CLIQUE PARA ABRIR</span>
+      <div class="body">
+        <div class="cit"><span class="src">DESPACHO Nº 2/2026 — INAEP <span class="loc">· item XVII, alíneas “a” a “e” · linhas 109–116</span></span><span class="q">A prorrogação do prazo para atendimento de diligência: a) depende de solicitação justificada do pesquisador ou do patrocinador; b) deve ser expressamente decidida pelo CEP; c) deve ser formalmente registrada no processo; d) observa o limite máximo global de suspensão previsto na legislação, e; e) a prorrogação de prazo a que se refere o inciso XV deve ser solicitada pelo pesquisador por meio de resposta ao parecer de pendência na Plataforma Brasil, acompanhada da justificativa do pedido de prorrogação de prazo.</span></div>
+        <div class="cit"><span class="src">DESPACHO Nº 2/2026 — INAEP <span class="loc">· itens XVI e XVIII · linhas 107–120</span></span><span class="q">XVI - Na hipótese de utilização integral do prazo pelo pesquisador ou patrocinador da pesquisa, a suspensão tem duração equivalente ao prazo concedido. […] XVIII - Na hipótese de prorrogação devidamente justificada do prazo concedido ao pesquisador ou ao patrocinador da pesquisa, a suspensão pode ser estendida, observado o limite máximo legal de 20 (vinte) dias úteis.</span></div>
+        <p><strong>No regime CNS não havia previsão de prorrogação:</strong> o prazo de 30 dias era peremptório e seu descumprimento levava ao arquivamento.</p>
+        <div class="cit"><span class="src">NORMA OPERACIONAL 001/2013 <span class="loc">· item 2.1.G.4 · linhas 87–88</span></span><span class="q">Arquivado: quando o pesquisador descumprir o prazo para enviar as respostas às pendências apontadas ou para recorrer.</span></div>
+      </div>
+    </div>
+
+    <div class="card" data-k="chg">
+      <div class="card-top"><h3>Periodicidade de relatórios do pesquisador</h3><span class="tagline t-chg">Alterado</span></div>
+      <div class="teaser">De semestral para, no mínimo, anual — ou sempre que o CEP solicitar.</div>
+      <span class="chev">▸ CLIQUE PARA ABRIR</span>
+      <div class="body">
+        <div class="ba">
+          <div class="before"><h5>Regime CNS</h5><p>Relatórios <strong>semestrais</strong>, tanto na Norma Operacional quanto na Resolução 466/2012.</p></div>
+          <div class="after"><h5>Regime Sinep</h5><p>Enviados <strong>sempre que o CEP solicitar, ou pelo menos uma vez por ano</strong>, durante a realização da pesquisa.</p></div>
+        </div>
+        <div class="cit"><span class="src">NORMA OPERACIONAL 001/2013 <span class="loc">· item 2.1.J · linhas 147–149</span></span><span class="q">Os relatórios de pesquisa devem ser enviados semestralmente, comunicando ao CEP a ocorrência de eventos adversos esperados ou não esperados.</span></div>
+        <div class="cit"><span class="src">RESOLUÇÃO CNS 466/2012 <span class="loc">· item X.1.3, alínea “b” · linhas 573–575</span></span><span class="q">acompanhar o desenvolvimento dos projetos, por meio de relatórios semestrais dos pesquisadores e de outras estratégias de monitoramento, de acordo com o risco inerente à pesquisa;</span></div>
+        <div class="cit"><span class="src">NOTA TÉCNICA Nº 1/2026 <span class="loc">· Anexo I, “É obrigatório continuar enviando relatório da pesquisa para o CEP?” · linhas 412–414</span></span><span class="q">O envio dos relatórios de pesquisa é uma determinação estabelecida no inciso IX, do art. 27 da Lei nº 14.874/2024. Portanto, devem ser enviados sempre que o CEP solicitar, ou pelo menos uma vez por ano, durante a realização da pesquisa.</span></div>
+        <div class="note"><b>Impacto no Checklist Pessoal, item 6.2:</b> a instrução atual — “O relatório parcial somente será solicitado se a pesquisa tiver duração de mais de 1 ano. O prazo para envio de relatório final será de no máximo 60 dias após o término da pesquisa” — precisa ser confrontada com o piso anual. Quanto ao <strong>prazo de 60 dias para o relatório final</strong>, registre-se que <em>não foi localizada base normativa</em> nem no conjunto legado nem no conjunto 2026 examinados; trata-se, aparentemente, de prática interna do CEP/IFG.</div>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<!-- ══════════════════ 02 FLUXO ══════════════════ -->
+<section class="section" id="s2">
+  <div class="sec-head">
+    <div class="kicker">Seção 02 — Fluxo interno · Pendências · Reincidência</div>
+    <h2>Recepção, tramitação e controle de reincidência de pendências</h2>
+    <p>Aqui está a resposta direta à sua pergunta sobre “controle de quantidade de vezes que o mesmo protocolo voltou como pendente”. A resposta mudou de natureza: <strong>não há limite no número de rodadas</strong>, mas passou a existir <strong>limite no tempo total</strong> — e mudou o desfecho do descumprimento.</p>
+  </div>
+
+  <button class="expand-all">▸ ABRIR / FECHAR TODOS OS CARDS DESTA SEÇÃO</button>
+
+  <div class="grid wide">
+
+    <div class="card" data-k="new">
+      <div class="card-top"><h3>O fluxo procedimental agora é normatizado em 8 etapas</h3><span class="tagline t-new">Novo</span></div>
+      <div class="teaser">O Despacho nº 2 descreve etapa a etapa o percurso do protocolo — algo que a Norma Operacional 001/2013 não fazia de forma sequencial.</div>
+      <span class="chev">▸ CLIQUE PARA ABRIR</span>
+      <div class="body">
+        <div class="cit"><span class="src">DESPACHO Nº 2/2026 — INAEP <span class="loc">· item XXII, alíneas “a” a “h” · linhas 141–150</span></span><span class="q">O fluxo procedimental da análise ética deve observar as seguintes etapas: a) submissão do protocolo de pesquisa; b) contagem do prazo de até 10 (dez) dias úteis para verificação da integralidade documental; c) manifestação quanto ao aceite documental; d) início da contagem do prazo de até 30 (trinta) dias úteis para análise ética; e) eventual expedição de diligência, com suspensão do prazo; f) contagem do prazo para resposta do pesquisador ou do patrocinador da pesquisa, com correspondência temporal à suspensão; g) retomada da contagem do prazo remanescente para análise; e h) observância do limite global de 20 (vinte) dias úteis de suspensão.</span></div>
+        <p><strong>O que permanece do regime anterior:</strong> a triagem documental prévia feita pela secretaria/coordenação continua compatível e útil, e agora ganha função de marco temporal (etapa “c” acima).</p>
+        <div class="cit"><span class="src">NORMA OPERACIONAL 001/2013 <span class="loc">· item 2.2.F · linhas 219–221</span></span><span class="q">As pendências meramente documentais serão previamente apreciadas pelo corpo técnico-administrativo e/ou pela coordenação do CEP, e comunicadas, diretamente, ao pesquisador.</span></div>
+        <div class="cit"><span class="src">MANUAL OPERACIONAL PARA COMITÊS DE ÉTICA EM PESQUISA <span class="loc">· cap. 8 · linhas 907–910</span></span><span class="q">No caso da ausência de documentos ou informações essenciais, o protocolo não deverá ser recebido antes que o pesquisador responsável complemente o que for preciso. Desta forma, protocolos de pesquisa incompletos não devem ser recebidos e apreciados pelo CEP</span></div>
+      </div>
+    </div>
+
+    <div class="card" data-k="warn">
+      <div class="card-top"><h3>Quantas vezes um protocolo pode voltar como pendente?</h3><span class="tagline t-warn">Atenção</span></div>
+      <div class="teaser">Antes: ilimitado, sem controle de tempo agregado. Agora: ilimitado em número, mas limitado em tempo — e é isso que precisa ser controlado.</div>
+      <span class="chev">▸ CLIQUE PARA ABRIR</span>
+      <div class="body">
+        <div class="ba">
+          <div class="before"><h5>Regime CNS</h5><p>Nenhum limite de rodadas. O protocolo permanecia em “pendência” indefinidamente enquanto a exigência não fosse integralmente atendida, e cada rodada recomeçava o ciclo de 30 + 30 dias.</p></div>
+          <div class="after"><h5>Regime Sinep</h5><p>Diligências sucessivas continuam permitidas e o CEP pode reiterar diligência não atendida integralmente — mas <strong>todas as rodadas somadas não podem exceder 20 dias úteis de suspensão</strong>. O controle deixa de ser “quantas vezes” e passa a ser “quanto tempo já foi consumido”.</p></div>
+        </div>
+        <div class="cit"><span class="src">NORMA OPERACIONAL 001/2013 <span class="loc">· item 2.1.G.2 · linhas 78–81</span></span><span class="q">Com pendência: quando a decisão é pela necessidade de correção, hipótese em que serão solicitadas alterações ou complementações do protocolo de pesquisa. Por mais simples que seja a exigência feita, o protocolo continua em “pendência”, enquanto esta não estiver completamente atendida.</span></div>
+        <div class="cit"><span class="src">RESOLUÇÃO CNS 466/2012 <span class="loc">· item X.3.5, alínea “b” · linhas 606–608</span></span><span class="q">pendente: quando o CEP considera necessária a correção do protocolo apresentado, e solicita revisão específica, modificação ou informação relevante, que deverá ser atendida em prazo estipulado em norma operacional; e</span></div>
+        <div class="cit"><span class="src">DESPACHO Nº 2/2026 — INAEP <span class="loc">· item XX · linhas 133–135</span></span><span class="q">Caso a resposta apresentada não atenda integralmente à diligência formulada, pode o CEP, mediante decisão fundamentada, reiterar a diligência, observado o limite global de suspensão previsto na legislação.</span></div>
+        <div class="note"><b>Consequência para o controle interno do CEP:</b> o indicador operacional que precisa existir a partir de agora não é “nº de pendências emitidas”, e sim <strong>“saldo de dias úteis de suspensão consumidos por protocolo”</strong>. Sem esse saldo, não é possível decidir com segurança se ainda cabe reiterar diligência.</div>
+      </div>
+    </div>
+
+    <div class="card" data-k="new">
+      <div class="card-top"><h3>O que é “suspensão por diligências”, passo a passo</h3><span class="tagline t-new">Conceito-chave</span></div>
+      <div class="teaser">O cronômetro dos 30 dias úteis pausa enquanto a bola está com o pesquisador — e o tempo total de pausa é debitado de uma reserva única de 20 dias úteis.</div>
+      <span class="chev">▸ CLIQUE PARA ABRIR</span>
+      <div class="body">
+        <p>Três conceitos encadeados, todos definidos no Despacho nº 2/2026:</p>
+        <ul>
+          <li><strong>Diligência</strong> — o pedido formal do CEP ao pesquisador ou patrocinador, feito antes de emitir o parecer. Na Plataforma Brasil, hoje, é o parecer consubstanciado <strong>“pendente”</strong>.</li>
+          <li><strong>Suspensão</strong> — o efeito da diligência sobre o prazo: os 30 dias úteis de análise <strong>param de correr</strong> a partir da comunicação ao pesquisador, e retomam de onde pararam.</li>
+          <li><strong>Teto global</strong> — a soma de todas as suspensões do protocolo não pode ultrapassar <strong>20 dias úteis</strong>, contados de forma única e contínua.</li>
+        </ul>
+        <div class="cit"><span class="src">DESPACHO Nº 2/2026 — INAEP <span class="loc">· item V · linhas 60–62</span></span><span class="q">Nos termos do § 1º do art. 14 da Lei nº 14.874/2024, o CEP pode, previamente à emissão do parecer, formular diligência ao pesquisador ou ao patrocinador da pesquisa, solicitando informações, documentos adicionais ou ajustes.</span></div>
+        <div class="cit"><span class="src">DESPACHO Nº 2/2026 — INAEP <span class="loc">· item XI, caput e alíneas “a” e “b” · linhas 84–89</span></span><span class="q">A formulação de diligência implica suspensão do prazo de análise ética, a partir de sua comunicação ao pesquisador ou ao patrocinador da pesquisa. a) a suspensão não constitui prazo autônomo do CEP; e b) a duração da suspensão corresponde ao período efetivamente utilizado pelo pesquisador ou patrocinador para atendimento da diligência.</span></div>
+
+        <p><strong>A alínea “a” é o ponto que mais muda a intuição de quem vem do regime anterior:</strong> a suspensão <em>não é um prazo que o CEP ganha</em>. É apenas uma pausa no relógio. Terminada a pausa, o CEP volta a dispor exatamente do <strong>saldo remanescente</strong> dos seus 30 dias úteis — não de 30 dias novos.</p>
+
+        <div class="ba">
+          <div class="before"><h5>Como era lido no regime CNS</h5><p>Emitida a pendência, começava um prazo de 30 dias do pesquisador; esgotado, abria-se um novo prazo de 30 dias para o CEP concluir. Cada rodada reiniciava o ciclo, e o tempo total do protocolo era, na prática, ilimitado.</p></div>
+          <div class="after"><h5>Como funciona no regime Sinep</h5><p>Um único cronômetro de 30 dias úteis para o CEP, que pausa a cada diligência. As pausas consomem uma reserva única de 20 dias úteis. Esgotada a reserva, não há mais como pausar — e o cronômetro corre até o fim.</p></div>
+        </div>
+
+        <p><strong>Exemplo cronológico</strong> — protocolo com duas diligências, todos os números em dias úteis:</p>
+        <div class="tbl-wrap">
+          <table>
+            <thead><tr><th>Etapa</th><th>Consumo</th><th>Saldo dos 30 d.ú. de análise</th><th>Reserva de suspensão (20 d.ú.)</th></tr></thead>
+            <tbody>
+              <tr><td>Aceite documental — início da análise</td><td>—</td><td><code>30</code></td><td><code>20</code></td></tr>
+              <tr><td>Relatoria até a 1ª diligência</td><td>8</td><td><code>22</code></td><td><code>20</code></td></tr>
+              <tr><td>1ª diligência — pesquisador leva 12 dias</td><td>pausa</td><td><code>22</code> (congelado)</td><td><code>8</code></td></tr>
+              <tr><td>Retomada; análise da resposta até a 2ª diligência</td><td>5</td><td><code>17</code></td><td><code>8</code></td></tr>
+              <tr><td>2ª diligência — pesquisador responde em 6 dias</td><td>pausa</td><td><code>17</code> (congelado)</td><td><code>2</code></td></tr>
+              <tr><td>Retomada — deliberação final</td><td>até 17</td><td><code>0</code></td><td><code>2</code></td></tr>
+            </tbody>
+          </table>
+        </div>
+        <div class="note"><b>Leitura do exemplo:</b> restam apenas <strong>2 dias úteis</strong> de reserva. Uma terceira diligência é juridicamente possível — o item XX a admite —, mas praticamente inútil: o pesquisador teria 2 dias úteis para responder, sob pena de reprovação por decurso de prazo. É exatamente por isso que o item III recomenda avaliar a <em>adequação temporal</em> antes de pendenciar.</div>
+
+        <p><strong>Regras de partida e de retomada:</strong></p>
+        <div class="cit"><span class="src">DESPACHO Nº 2/2026 — INAEP <span class="loc">· itens XII, XIII e XIV · linhas 90–97</span></span><span class="q">XII - O prazo para atendimento da diligência pelo pesquisador ou pelo patrocinador da pesquisa: a) inicia-se no primeiro dia útil subsequente ao recebimento formal da solicitação; e b) corresponde, para fins de suspensão, ao período efetivamente utilizado pelo pesquisador ou patrocinador da pesquisa para apresentação da resposta. XIII - A retomada da contagem do prazo de análise ocorre no primeiro dia útil subsequente ao registro do recebimento da resposta no sistema oficial de tramitação da análise ética. XIV - Apresentada a resposta antes do término do prazo concedido, a suspensão cessa imediatamente.</span></div>
+        <div class="cit"><span class="src">DESPACHO Nº 2/2026 — INAEP <span class="loc">· item XVI · linhas 107–108</span></span><span class="q">Na hipótese de utilização integral do prazo pelo pesquisador ou patrocinador da pesquisa, a suspensão tem duração equivalente ao prazo concedido.</span></div>
+
+        <div class="note"><b>Consequência aritmética, e não interpretativa:</b> somando o teto de análise ao teto de suspensão, o tempo máximo entre o aceite documental e o parecer final é de <strong>30 + 20 = 50 dias úteis</strong> — aos quais se acrescem os até 10 dias úteis da verificação de integralidade documental que antecedem o aceite. Este total não está escrito como tal em nenhum dispositivo: decorre da soma dos limites dos itens II, “a” e “b”, e do item “XIV”, “b”, do Despacho nº 2/2026.</div>
+
+        <p><strong>Por que a alínea “b” do item XI importa para o pesquisador:</strong> a suspensão dura o tempo <em>efetivamente utilizado</em>, e não o prazo concedido. Responder antes do fim do prazo devolve os dias não usados à reserva — é vantajoso para o próprio protocolo.</p>
+      </div>
+    </div>
+
+    <div class="card" data-k="chg">
+      <div class="card-top"><h3>Descumprimento do prazo pelo pesquisador: arquivar ou reprovar?</h3><span class="tagline t-chg">Alterado</span></div>
+      <div class="teaser">A categoria “Arquivado” dá lugar à reprovação por decurso de prazo — com deliberação colegiada registrada em ata.</div>
+      <span class="chev">▸ CLIQUE PARA ABRIR</span>
+      <div class="body">
+        <div class="ba">
+          <div class="before"><h5>Regime CNS</h5><p>O protocolo era <strong>arquivado</strong>. O arquivamento era categoria própria de deliberação e a Resolução 466/2012 o previa como determinação obrigatória dos CEPs.</p></div>
+          <div class="after"><h5>Regime Sinep</h5><p>O CEP <strong>pode reprovar o projeto por decurso de prazo</strong>, mediante <strong>deliberação colegiada registrada em ata</strong>, após a submissão da resposta na Plataforma Brasil, com posterior comunicação formal ao pesquisador e ao patrocinador.</p></div>
+        </div>
+        <div class="cit"><span class="src">NORMA OPERACIONAL 001/2013 <span class="loc">· item 2.1.G.4 · linhas 87–88</span></span><span class="q">Arquivado: quando o pesquisador descumprir o prazo para enviar as respostas às pendências apontadas ou para recorrer.</span></div>
+        <div class="cit"><span class="src">RESOLUÇÃO CNS 466/2012 <span class="loc">· item X.3.8 · linhas 617–620</span></span><span class="q">os CEP e a CONEP deverão determinar o arquivamento do protocolo de pesquisa nos casos em que o pesquisador responsável não atender, no prazo assinalado, às solicitações que lhe foram feitas.</span></div>
+        <div class="cit"><span class="src">DESPACHO Nº 2/2026 — INAEP <span class="loc">· item XIX, alíneas “a” e “b” · linhas 122–131</span></span><span class="q">XIX - Após a resposta da diligência, o CEP deve verificar se o prazo previsto no § 2º do art. 14 da Lei nº 14.874/2024, foi atendido. a) constatado o cumprimento do prazo, a análise ética deve ser retomada a partir da submissão da resposta na Plataforma Brasil […]; e b) na hipótese de descumprimento do prazo pelo pesquisador, o CEP pode reprovar o projeto por decurso de prazo, mediante deliberação colegiada registrada em ata, após a submissão da resposta na Plataforma Brasil, com posterior comunicação formal ao pesquisador e ao patrocinador.</span></div>
+        <div class="note"><b>Três diferenças que alteram a rotina:</b> (1) o efeito passa de arquivamento a <strong>reprovação</strong>, com consequências distintas para o pesquisador; (2) deixa de ser ato administrativo automático e exige <strong>deliberação do colegiado com registro em ata</strong>; (3) o verbo é “<em>pode</em>” reprovar, não “deverá” arquivar — há margem de apreciação que antes não existia.</div>
+      </div>
+    </div>
+
+    <div class="card" data-k="new">
+      <div class="card-top"><h3>Rastreabilidade: a contagem de prazos passou a ser tarefa do CEP</h3><span class="tagline t-new">Novo</span></div>
+      <div class="teaser">Enquanto não houver automação, o próprio CEP deve manter o controle, com consistência e rastreabilidade no histórico da Plataforma Brasil.</div>
+      <span class="chev">▸ CLIQUE PARA ABRIR</span>
+      <div class="body">
+        <div class="cit"><span class="src">DESPACHO Nº 2/2026 — INAEP <span class="loc">· item IX · linhas 73–77</span></span><span class="q">Enquanto não forem implementadas funcionalidades automatizadas no sistema oficial de tramitação ética de protocolos de pesquisa que permitam o monitoramento dos prazos legais para análise dos protocolos de pesquisa, a contagem dos prazos deve ser realizada pelo CEP por meio dos registros da checagem documental e dos pareceres emitidos, assegurada a consistência e a rastreabilidade das informações contidas no histórico de trâmites de cada protocolo de pesquisa na Plataforma Brasil.</span></div>
+        <div class="cit"><span class="src">DESPACHO Nº 2/2026 — INAEP <span class="loc">· itens VI e VIII · linhas 63–71</span></span><span class="q">VI - A diligência deve ser formalmente registrada no sistema oficial de tramitação, com indicação clara das exigências formuladas, do prazo concedido e da data de comunicação. […] VIII - Para fins de contagem de prazo, considera-se como data de comunicação da diligência aquela registrada no sistema de tramitação da pesquisa ou, na sua ausência, a data de envio por meio formal que assegure a ciência inequívoca do pesquisador ou patrocinador.</span></div>
+        <div class="cit"><span class="src">DESPACHO Nº 2/2026 — INAEP <span class="loc">· item X · linhas 79–82</span></span><span class="q">O CEP pode solicitar diligências para a adequação do protocolo de pesquisa às diretrizes éticas vigentes, identificando a necessidade de inclusão de documentos adicionais, ajustes ou correção de óbices éticos ao protocolo de pesquisa, por meio de emissão do parecer consubstanciado "pendente" na Plataforma Brasil, enquanto o novo sistema oficial de tramitação de protocolos não estiver disponível.</span></div>
+        <div class="note"><b>Elemento crítico que o parecer de pendência precisa passar a conter:</b> o item VI exige indicação expressa do <strong>prazo concedido</strong>. O modelo do Checklist Pessoal (itens 6.1 e 7) não prevê a fixação de prazo no corpo do parecer. Sem prazo concedido registrado, não há marco para calcular a suspensão nem para caracterizar o decurso de prazo do item XIX, “b”.</div>
+      </div>
+    </div>
+
+    <div class="card" data-k="chg">
+      <div class="card-top"><h3>Regimento interno, quórum, suplência e consultor ad hoc</h3><span class="tagline t-chg">Alterado</span></div>
+      <div class="teaser">O Despacho nº 1 fixa conteúdo mínimo obrigatório do regimento e veda expressamente o voto de suplente não convocado e de membro ad hoc.</div>
+      <span class="chev">▸ CLIQUE PARA ABRIR</span>
+      <div class="body">
+        <div class="cit"><span class="src">DESPACHO Nº 1/2026 — INAEP <span class="loc">· item II, alíneas “a” a “g” · linhas 63–73</span></span><span class="q">Estabelecer que o regimento interno do CEP deve prever, no mínimo: a) regras de convocação e realização de reuniões ordinárias e extraordinárias; b) quórum mínimo para instalação da reunião e para deliberação; c) regras sobre composição do colegiado, impedimento, suspeição e conflito de interesse; d) disciplina da lavratura de atas e do registro das deliberações; e) critérios de substituição de membros titulares por suplentes; f) que a periodicidade de reuniões deve ser suficiente para assegurar o funcionamento regular do colegiado, a tempestividade da análise ética, o cumprimento dos prazos estabelecidos na Lei nº 14.874 […]; e g) descrição das atribuições da coordenação e da coordenação adjunta</span></div>
+        <div class="cit"><span class="src">DESPACHO Nº 1/2026 — INAEP <span class="loc">· item III, alíneas “a” e “b” · linhas 74–80</span></span><span class="q">a) para fins de deliberação ética, considera-se membro efetivo o membro titular regularmente investido ou o suplente formalmente convocado para substituí-lo em razão de ausência, impedimento, suspeição, afastamento ou vacância […]; b) a presença do suplente em reunião, sem convocação formal para substituição, não lhe confere direito a voto.</span></div>
+        <div class="cit"><span class="src">DESPACHO Nº 1/2026 — INAEP <span class="loc">· item IV · linhas 81–82</span></span><span class="q">Os consultores ou membros ad hoc eventualmente convidados para subsidiar a análise de matéria específica não integram o colegiado deliberativo do CEP e não possuem direito a voto.</span></div>
+        <p><strong>Contraste com o regime anterior:</strong> a Norma Operacional já limitava o ad hoc ao fornecimento de subsídios técnicos, mas o Manual Operacional admitia expressamente a figura do “relator ad hoc”, o que a vedação atual torna incompatível com o exercício de voto.</p>
+        <div class="cit"><span class="src">NORMA OPERACIONAL 001/2013 <span class="loc">· item 2.2.B · linhas 191–193</span></span><span class="q">Poderá, ainda, contar com consultores “ad hoc”, pertencentes, ou não, à instituição, com a finalidade de fornecer subsídios técnicos.</span></div>
+        <div class="cit"><span class="src">MANUAL OPERACIONAL PARA COMITÊS DE ÉTICA EM PESQUISA <span class="loc">· cap. 4 · linha 777</span></span><span class="q">relator entre os membros do CEP ou um relator ad hoc, portanto de consultor não</span></div>
+        <div class="cit"><span class="src">MANUAL OPERACIONAL PARA COMITÊS DE ÉTICA EM PESQUISA <span class="loc">· item 3.2 · linhas 689–690</span></span><span class="q">As reuniões do CEP devem contar com a presença de mais da metade do colegiado para deliberar e/ou aprovar protocolos de pesquisa.</span></div>
+      </div>
+    </div>
+
+    <div class="card" data-k="new">
+      <div class="card-top"><h3>Alterações cadastrais do CEP: dois regimes distintos</h3><span class="tagline t-new">Novo</span></div>
+      <div class="teaser">Mudanças administrativas têm implementação imediata; mudanças de composição e governança dependem de anuência da Inaep em 10 dias úteis, com aprovação tácita pelo silêncio.</div>
+      <span class="chev">▸ CLIQUE PARA ABRIR</span>
+      <div class="body">
+        <div class="tbl-wrap">
+          <table>
+            <thead><tr><th>Matéria</th><th>Regime</th><th>Fundamento</th></tr></thead>
+            <tbody>
+              <tr><td>Endereço institucional; telefone e e-mail institucionais; substituição de funcionário administrativo; formato das reuniões; periodicidade das reuniões; demais alterações administrativas que não afetem composição, governança, quórum, coordenação, suplência ou estrutura decisória</td><td><strong>Implementação imediata</strong> após notificação formal à Inaep, com atualização do regimento quando cabível</td><td>Despacho nº 1/2026, item V, “a” a “f”</td></tr>
+              <tr><td>Atualização, inclusão ou substituição de membros; alteração da coordenação; demais alterações que impactem composição, governança ou estrutura decisória</td><td><strong>Anuência da Coordenação da Inaep</strong> em até <strong>10 dias úteis</strong> do recebimento da notificação devidamente instruída</td><td>Despacho nº 1/2026, item VI, “a” a “c”</td></tr>
+              <tr><td>Ausência de manifestação da Inaep no prazo</td><td><strong>Autoriza a implementação imediata</strong>, sem prejuízo de avaliação posterior de conformidade</td><td>Despacho nº 1/2026, item VII</td></tr>
+            </tbody>
+          </table>
+        </div>
+        <div class="cit"><span class="src">DESPACHO Nº 1/2026 — INAEP <span class="loc">· item VI · linhas 105–110</span></span><span class="q">Estabelecer que dependerão de anuência da Coordenação da Inaep, a ser proferida em até 10 (dez) dias úteis contados do recebimento da notificação formal devidamente instruída, as alterações relativas às seguintes matérias: a) atualização, inclusão ou substituição de membros do CEP; b) alteração da coordenação do CEP; e c) outras alterações que impactem a composição, a governança ou a estrutura decisória do CEP;</span></div>
+        <div class="cit"><span class="src">DESPACHO Nº 1/2026 — INAEP <span class="loc">· item VII · linhas 112–114</span></span><span class="q">A ausência de manifestação da Coordenação da Inaep no prazo previsto no item VI autoriza a implementação imediata da alteração notificada, sem prejuízo de avaliação posterior de conformidade e da adoção, a qualquer tempo, das medidas cabíveis pela Inaep;</span></div>
+        <div class="cit"><span class="src">DESPACHO Nº 1/2026 — INAEP <span class="loc">· item V, alínea “h” · linhas 99–100</span></span><span class="q">não é permitida a implementação imediata de alterações diversas daquelas expressamente previstas neste item;</span></div>
+        <p><strong>Antes:</strong> o interlocutor era a CONEP e não havia prazo de resposta nem aprovação tácita.</p>
+        <div class="cit"><span class="src">NORMA OPERACIONAL 001/2013 <span class="loc">· item 2.2.B.2 · linhas 202–204</span></span><span class="q">Da substituição de membros: ao CEP cabe comunicar as situações de vacância ou afastamento de membros e encaminhar à CONEP as substituições efetivadas, justificando-as.</span></div>
+      </div>
+    </div>
+
+    <div class="card" data-k="keep">
+      <div class="card-top"><h3>Credenciamento do CEP prorrogado automaticamente</h3><span class="tagline t-keep">Continuidade</span></div>
+      <div class="teaser">CEPs com vigência encerrada em 2025 tiveram prorrogação automática de 1 ano — sem dispensa da renovação.</div>
+      <span class="chev">▸ CLIQUE PARA ABRIR</span>
+      <div class="body">
+        <div class="cit"><span class="src">NOTA TÉCNICA Nº 1/2026 <span class="loc">· item 5.1 · linhas 217–227</span></span><span class="q">Com a finalidade de prevenir situações de insegurança jurídica e institucional e de assegurar a continuidade regular, legítima e ininterrupta do funcionamento dos Comitês de Ética em Pesquisa (CEPs), fica estabelecida, em caráter excepcional, a prorrogação automática, por 1 (um) ano, do credenciamento dos CEPs cujo prazo de vigência tenha se encerrado no exercício de 2025, contado a partir da respectiva data-limite de vencimento.</span></div>
+        <div class="cit"><span class="src">NOTA TÉCNICA Nº 1/2026 <span class="loc">· item 5.2 · linhas 229–241</span></span><span class="q">A prorrogação excepcional de que trata o item anterior não afasta, nem substitui, a obrigação da instituição mantenedora do CEP de promover a submissão tempestiva da documentação necessária à análise e à renovação do credenciamento, nos termos e prazos previstos no art. 8º da Resolução CNS nº 706, de 16 de fevereiro de 2023</span></div>
+        <div class="cit"><span class="src">DECRETO Nº 12.651/2025 <span class="loc">· art. 37 · linhas 503–505</span></span><span class="q">Até que seja feita nova avaliação pela Instância Nacional de Ética em Pesquisa, consideram-se credenciados e acreditados pela Instância Nacional de Ética em Pesquisa os CEPs já credenciados e acreditados para análise ética em pesquisa com seres humanos.</span></div>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<!-- ══════════════════ 03 ALÇADA ══════════════════ -->
+<section class="section" id="s3">
+  <div class="sec-head">
+    <div class="kicker">Seção 03 — Alçada de análise · Classificação de risco</div>
+    <h2>O CEP deixou de poder analisar qualquer protocolo</h2>
+    <p>Esta é a alteração estrutural mais silenciosa e mais perigosa para quem emite parecer: surgiu uma <strong>divisão de competência por grau de risco</strong>. Um CEP credenciado que emita parecer de mérito sobre protocolo de risco elevado está atuando fora de sua alçada legal.</p>
+  </div>
+
+  <button class="expand-all">▸ ABRIR / FECHAR TODOS OS CARDS DESTA SEÇÃO</button>
+
+  <div class="grid wide">
+
+    <div class="card" data-k="new">
+      <div class="card-top"><h3>Credenciado × Acreditado: duas categorias de CEP</h3><span class="tagline t-new">Novo</span></div>
+      <div class="teaser">Credenciamento habilita risco baixo e moderado. Acreditação habilita risco elevado — e é exclusiva.</div>
+      <span class="chev">▸ CLIQUE PARA ABRIR</span>
+      <div class="body">
+        <div class="cit"><span class="src">DECRETO Nº 12.651/2025 <span class="loc">· art. 18 · linhas 262–265</span></span><span class="q">O credenciamento é o ato formal, emitido pela Instância Nacional de Ética em Pesquisa, que autoriza os CEPs a atuarem no Sistema Nacional de Ética em Pesquisa com Seres Humanos, com competência para realizarem a análise ética de protocolos de pesquisa classificados como de risco baixo ou moderado.</span></div>
+        <div class="cit"><span class="src">DECRETO Nº 12.651/2025 <span class="loc">· art. 19 · linhas 269–272</span></span><span class="q">A acreditação consiste no reconhecimento formal de que os CEPs atendem a requisitos previamente definidos pela Instância Nacional de Ética em Pesquisa e demonstram capacidade técnica e operacional para realizar a análise ética de protocolos de pesquisa classificados como de risco elevado, e podem também analisar pesquisas de risco baixo e moderado.</span></div>
+        <div class="cit"><span class="src">DECRETO Nº 12.651/2025 <span class="loc">· art. 25, I e II · linhas 335–341</span></span><span class="q">Os CEPs serão definidos conforme a complexidade das análises éticas que realizam e o grau de risco envolvido nas pesquisas, nas seguintes categorias: I - CEP credenciado - instância para análise ética das pesquisas de risco baixo e moderado; ou II - CEP acreditado - instância que, além de ter sido credenciada, tenha sido acreditada para análise ética das pesquisas de risco elevado e para análise das pesquisas de risco baixo e moderado.</span></div>
+        <div class="cit"><span class="src">NOTA TÉCNICA Nº 43/2025 <span class="loc">· item 2.4 · linhas 53–61</span></span><span class="q">Em decorrência disso, aos CEPs credenciados compete apenas a apreciação das pesquisas de risco baixo e moderado, enquanto aos CEPs acreditados é conferida a competência exclusiva para a análise das pesquisas de risco elevado</span></div>
+
+        <p><strong>A diferença de fundo está na natureza dos dois atos:</strong> um <em>autoriza</em>, o outro <em>reconhece capacidade já demonstrada</em>. Ambos são de competência da Inaep.</p>
+        <div class="cit"><span class="src">DECRETO Nº 12.651/2025 <span class="loc">· art. 10, inciso III · linhas 159–160</span></span><span class="q">credenciar e acreditar os CEPs, de forma a garantir que estejam aptos a realizar a análise ética de pesquisas, conforme o grau de risco envolvido;</span></div>
+
+        <div class="tbl-wrap">
+          <table>
+            <thead><tr><th></th><th>Credenciamento</th><th>Acreditação</th></tr></thead>
+            <tbody>
+              <tr><td><strong>Natureza do ato</strong></td><td>Autoriza a atuar no Sinep</td><td>Reconhece formalmente capacidade técnica e operacional</td></tr>
+              <tr><td><strong>Alçada conferida</strong></td><td>Risco baixo e moderado</td><td>Risco elevado <strong>+</strong> baixo e moderado</td></tr>
+              <tr><td><strong>Pressuposto</strong></td><td>Nenhum — é a porta de entrada</td><td>Exige credenciamento prévio (art. 25, II)</td></tr>
+              <tr><td><strong>Procedimento</strong></td><td>Critérios a serem disciplinados pela Inaep</td><td>Precedida de <strong>processo de avaliação, que pode incluir inspeção presencial ou remota</strong></td></tr>
+              <tr><td><strong>Ordem de análise dos pedidos</strong></td><td>Não disciplinada no Decreto</td><td>Cronológica, com impessoalidade; admite priorização por interesse público ou emergência sanitária</td></tr>
+              <tr><td><strong>Exclusividade</strong></td><td>Não alcança risco elevado</td><td>Competência <strong>exclusiva</strong> sobre risco elevado</td></tr>
+            </tbody>
+          </table>
+        </div>
+        <div class="cit"><span class="src">DECRETO Nº 12.651/2025 <span class="loc">· art. 19, §§ 1º a 4º · linhas 273–281</span></span><span class="q">§ 1º A acreditação será precedida de processo de avaliação, que poderá incluir inspeção presencial ou remota, com vistas à verificação do cumprimento das diretrizes legais, éticas e técnicas aplicáveis. § 2º Os pedidos de acreditação serão analisados conforme a ordem cronológica de apresentação dos requerimentos, observado o princípio da impessoalidade. § 3º Poderá ser priorizada a análise de pedidos de acreditação em razão de interesse público, emergência sanitária ou estratégias de saúde definidas pelo Ministério da Saúde, devidamente justificada. § 4º Os critérios, requisitos e procedimentos para concessão, renovação, revisão, suspensão e cancelamento da acreditação serão estabelecidos pela Instância Nacional de Ética em Pesquisa.</span></div>
+        <div class="cit"><span class="src">DECRETO Nº 12.651/2025 <span class="loc">· art. 18, parágrafo único · linhas 266–268</span></span><span class="q">O processo de credenciamento será disciplinado pela Instância Nacional de Ética em Pesquisa, que estabelecerá critérios, requisitos e procedimentos para a concessão, a renovação, a revisão, a suspensão e o cancelamento.</span></div>
+
+        <p><strong>O vocabulário não é novo — o efeito vinculante é.</strong> “Acreditação” já constava da Resolução CNS 466/2012, atribuída à CONEP, mas dependia de resolução do CNS que nunca chegou a operacionalizar a divisão de alçadas.</p>
+        <div class="cit"><span class="src">RESOLUÇÃO CNS 466/2012 <span class="loc">· itens IX.5 e IX.6 · linhas 534–538</span></span><span class="q">IX.5 - fortalecer a participação dos CEP por meio de um processo contínuo de capacitação, qualificação e acreditação; IX.6 - coordenar o processo de acreditação dos CEP, credenciando-os de acordo com níveis de competência que lhes possibilitem ser delegadas responsabilidades originárias da CONEP;</span></div>
+        <div class="cit"><span class="src">RESOLUÇÃO CNS 466/2012 <span class="loc">· item XIII.2 · linhas 670–671</span></span><span class="q">O processo de acreditação dos Comitês de Ética em Pesquisa que compõem o Sistema CEP/CONEP será tratado em Resolução do CNS.</span></div>
+        <div class="cit"><span class="src">RESOLUÇÃO CNS 466/2012 <span class="loc">· item VII · linhas 448–450</span></span><span class="q">num trabalho cooperativo que visa, especialmente, à proteção dos participantes de pesquisa do Brasil, de forma coordenada e descentralizada por meio de um processo de acreditação.</span></div>
+
+        <div class="note"><b>Situação do CEP/IFG:</b> é comitê <strong>credenciado</strong>. Seu credenciamento foi automaticamente reconhecido pela Inaep até nova avaliação (Decreto, art. 37), e os credenciamentos vencidos em 2025 foram prorrogados por 1 ano (NT nº 1/2026, item 5.1). A consequência prática é direta: ao receber protocolo de área temática — equivalente transitório de risco elevado —, <strong>não pode analisar o mérito ético</strong>; deve conferir o enquadramento e, confirmando-se, realizar apenas a tramitação de encaminhamento à Inaep, na forma da NT nº 1/2026, item 3.2, “b”.</div>
+      </div>
+    </div>
+
+    <div class="card" data-k="warn">
+      <div class="card-top"><h3>Como saber se o protocolo é de “risco elevado” hoje</h3><span class="tagline t-warn">Atenção</span></div>
+      <div class="teaser">A lei não define. Na transição, adotou-se um proxy: risco elevado = área temática da Resolução CNS 466/2012.</div>
+      <span class="chev">▸ CLIQUE PARA ABRIR</span>
+      <div class="body">
+        <p>O Decreto define <strong>critérios</strong> de classificação de risco, mas não um conceito operacional de “risco elevado”. A Nota Técnica nº 43/2025 reconhece essa lacuna e as limitações operacionais da Plataforma Brasil, e estabelece a equivalência transitória com as áreas temáticas.</p>
+        <div class="cit"><span class="src">NOTA TÉCNICA Nº 43/2025 <span class="loc">· item 2.5 · linhas 63–73</span></span><span class="q">Entretanto, a legislação não apresenta definição objetiva para o conceito de “risco elevado”. O que se depreende do Decreto nº 12.651/2025 é que a classificação deve decorrer de uma análise multidimensional</span></div>
+        <div class="cit"><span class="src">NOTA TÉCNICA Nº 43/2025 <span class="loc">· item 4.27 · linhas 326–345</span></span><span class="q">propõe-se que, durante o período de transição e até o atendimento das necessidades descritas, para garantir a continuidade e a legitimidade das análises éticas realizadas pelos CEPs, sejam considerados de risco elevados os protocolos de pesquisa passíveis de serem classificados como de área temática, tendo em conta o disposto na Resolução CNS nº 466, de 12 de dezembro de 2012 e na Carta Circular nº. 172/2017/CONEP/CNS/MS, datada de 20 de abril de 2017.</span></div>
+        <div class="cit"><span class="src">NOTA TÉCNICA Nº 43/2025 <span class="loc">· item 4.25 · linhas 280–294</span></span><span class="q">inexistem condições gerenciais e operacionais para a implementação imediata das diretrizes estabelecidas no artigo 20 do Decreto nº 12.651/2025.</span></div>
+        <p><strong>As áreas temáticas que passam a significar “risco elevado”</strong> são as do item IX.4 da Resolução CNS 466/2012: genética humana (nas seis hipóteses listadas), reprodução humana (reprodução assistida; manipulação de gametas, pré-embriões, embriões e feto; medicina fetal invasiva), equipamentos e dispositivos terapêuticos novos ou não registrados no País, novos procedimentos terapêuticos invasivos, estudos com populações indígenas, OGM e células-tronco embrionárias, protocolos de constituição e funcionamento de biobancos, pesquisas com coordenação e/ou patrocínio originados fora do Brasil, e projetos que o próprio CEP julgue merecedores de análise superior.</p>
+        <div class="cit"><span class="src">RESOLUÇÃO CNS 466/2012 <span class="loc">· item IX.4, subitens 1 a 9 · linhas 499–533</span></span><span class="q">5. estudos com populações indígenas; […] 7. protocolos de constituição e funcionamento de biobancos para fins de pesquisa; 8. pesquisas com coordenação e/ou patrocínio originados fora do Brasil, excetuadas aquelas com copatrocínio do Governo Brasileiro; e 9. projetos que, a critério do CEP e devidamente justificados, sejam julgados merecedores de análise pela CONEP;</span></div>
+        <div class="cit"><span class="src">DECRETO Nº 12.651/2025 <span class="loc">· art. 20, § 1º, I a IX · linhas 286–296</span></span><span class="q">I - a natureza da intervenção ou do procedimento adotado na pesquisa; II - o grau de invasividade e o potencial de dano ao participante de pesquisa; III - a população envolvida, com atenção a grupos em situação de vulnerabilidade; IV - o uso de tecnologias emergentes, dados sensíveis ou inteligência artificial em saúde; V - o grau de incerteza científica quanto aos efeitos do objeto de estudo; VI - a existência de benefícios diretos da pesquisa ao participante e à coletividade; VII - a complexidade do desenho do estudo; VIII - o estágio de desenvolvimento clínico do produto ou da tecnologia avaliada; e IX - a pesquisa clínica em caráter multicêntrico ou internacional.</span></div>
+        <div class="note"><b>Nota de rigor:</b> a Carta Circular nº 172/2017/CONEP, indicada como Anexo I da Nota Técnica nº 43/2025 e que detalharia os critérios de enquadramento em área temática, <strong>não integra o arquivo PDF disponível na pasta do projeto</strong>. O mesmo vale para a “Imagem 1” do Anexo II, que descreveria graficamente o fluxo de transferência. Estas afirmações se baseiam exclusivamente no corpo textual da Nota Técnica.</div>
+      </div>
+    </div>
+
+    <div class="card" data-k="new">
+      <div class="card-top"><h3>Procedimento obrigatório ao receber protocolo de área temática</h3><span class="tagline t-new">Novo</span></div>
+      <div class="teaser">Duas condutas possíveis — e uma delas é emitir parecer “Aprovado” que expressamente não é juízo de mérito ético.</div>
+      <span class="chev">▸ CLIQUE PARA ABRIR</span>
+      <div class="body">
+        <p><strong>Primeiro passo — conferir o enquadramento.</strong> Se o pesquisador assinalou área temática indevidamente, o protocolo é devolvido para correção cadastral e, no retorno, o CEP credenciado prossegue com a análise ética normalmente.</p>
+        <div class="cit"><span class="src">NOTA TÉCNICA Nº 1/2026 <span class="loc">· item 3.2, alínea “a” · linhas 121–131</span></span><span class="q">Na condição de CEP do Centro Coordenador, ao receber para primeira tramitação um protocolo de pesquisa assinalado como pertencente a uma ou mais área temática, definidas no item IX.4 da Resolução CNS nº 466/2012, o CEP credenciado deverá checar se de fato o protocolo em questão se enquadra na(s) área(s) temática(s) informada(s) […] Quando o CEP credenciado atestar que o protocolo de pesquisa não se enquadra como área temática (risco elevado), o protocolo deverá ser devolvido ao pesquisador solicitando a correção da informação cadastrada, e quando retornar o CEP deverá prosseguir com a análise ética.</span></div>
+        <p><strong>Segundo passo — se de fato for área temática:</strong> tramitação protocolar <em>sem análise ética e sem caráter deliberativo</em>, com parecer “Aprovado” meramente instrumental para transferir o protocolo à Inaep, que o distribuirá a um CEP acreditado. O texto a inserir é padronizado e obrigatório.</p>
+        <div class="cit"><span class="src">NOTA TÉCNICA Nº 1/2026 <span class="loc">· item 3.2, alínea “b” · linhas 133–162</span></span><span class="q">deverá ser adotado procedimento administrativo de encaminhamento, exclusivamente para fins de direcionamento do protocolo à instância competente. Nessa hipótese, será realizada tramitação protocolar sem análise ética e sem caráter deliberativo, com a emissão de parecer consubstanciado classificado como ‘Aprovado’, exclusivamente para viabilizar a transferência do protocolo, via Plataforma Brasil, à Inaep […] Esclarece-se que esse procedimento não configura manifestação de mérito ético por parte do CEP credenciado, tampouco autoriza o início da pesquisa […] O próprio coordenador do CEP poderá realizar todas as etapas da tramitação, devendo incluir em todos os campos de preenchimento obrigatório do parecer a mensagem: “Em observância à Nota Técnica nº 1/2026-DECIT/SCTIE/MS e para fazer cumprir o artigo 9º, § 1º, inciso II, da Lei nº 14.874, de 24 de maio de 2024, e o artigo 25, inciso II, do Decreto nº 12.651, de 7 de outubro de 2025, informa-se que este parecer de "Aprovado" não representa a opinião do colegiado do CEP sobre a eticidade do protocolo de pesquisa e que a liberação deste parecer tem por único objetivo acelerar o seu processo de transferência para tramitação em um CEP acreditado. […]”</span></div>
+        <div class="cit"><span class="src">NOTA TÉCNICA Nº 1/2026 <span class="loc">· item 3.3 · linhas 164–166</span></span><span class="q">Estes procedimentos descritos deverão ser adotados por todo CEP credenciado.</span></div>
+        <div class="note"><b>Risco concreto para o parecerista:</b> aplicar o Checklist Pessoal integralmente a um protocolo de área temática — emitindo pendências de mérito, exigindo ajuste de TCLE, cronograma ou orçamento — significa exercer competência que hoje é <strong>exclusiva do CEP acreditado</strong>. A triagem de alçada precisa anteceder a abertura do checklist.</div>
+      </div>
+    </div>
+
+    <div class="card" data-k="new">
+      <div class="card-top"><h3>Os 8 CEPs acreditados durante a transição</h3><span class="tagline t-new">Novo</span></div>
+      <div class="teaser">Todos localizados no estado de São Paulo, conforme a Nota Técnica nº 43/2025.</div>
+      <span class="chev">▸ CLIQUE PARA ABRIR</span>
+      <div class="body">
+        <div class="tbl-wrap">
+          <table>
+            <thead><tr><th>Código</th><th>Instituição</th><th>UF / Município</th></tr></thead>
+            <tbody>
+              <tr><td><code>0082</code></td><td>Centro Universitário FMABC</td><td>SP · Santo André</td></tr>
+              <tr><td><code>5432</code></td><td>Fundação Antônio Prudente — A.C. Camargo Cancer Center</td><td>SP · São Paulo</td></tr>
+              <tr><td><code>5462</code></td><td>Instituto Dante Pazzanese de Cardiologia (IDPC)</td><td>SP · São Paulo</td></tr>
+              <tr><td><code>0071</code></td><td>Hospital Israelita Albert Einstein (HIAE)</td><td>SP · São Paulo</td></tr>
+              <tr><td><code>0068</code></td><td>Hospital das Clínicas da FMUSP (HCFMUSP)</td><td>SP · São Paulo</td></tr>
+              <tr><td><code>5415</code></td><td>Faculdade de Medicina de São José do Rio Preto — FAMERP</td><td>SP · São José do Rio Preto</td></tr>
+              <tr><td><code>8083</code></td><td>Faculdade Ceres — FACERES</td><td>SP · São José do Rio Preto</td></tr>
+              <tr><td><code>5411</code></td><td>Faculdade de Medicina de Botucatu (FMB)</td><td>SP · Botucatu</td></tr>
+            </tbody>
+          </table>
+        </div>
+        <div class="cit"><span class="src">NOTA TÉCNICA Nº 43/2025 <span class="loc">· item 3.20 · linhas 215–242</span></span><span class="q">Atualmente, oito Comitês de Ética encontram-se acreditados, representando centros de excelência técnico-científica e referência nacional em ética da pesquisa</span></div>
+        <div class="cit"><span class="src">NOTA TÉCNICA Nº 43/2025 <span class="loc">· item 6.39 · linhas 528–538</span></span><span class="q">todos os protocolos classificados como de risco elevado deverão ser direcionados a um dos oito CEPs acreditados para análise ética, em conformidade com as competências estabelecidas pela Lei nº 14.874/2024 e seu decreto regulamentador.</span></div>
+      </div>
+    </div>
+
+    <div class="card" data-k="susp">
+      <div class="card-top"><h3>Biobancos: tramitação sobrestada</h3><span class="tagline t-susp">Suspenso</span></div>
+      <div class="teaser">Protocolos de desenvolvimento de biobanco estão com tramitação suspensa até manifestação da Inaep.</div>
+      <span class="chev">▸ CLIQUE PARA ABRIR</span>
+      <div class="body">
+        <div class="cit"><span class="src">NOTA TÉCNICA Nº 1/2026 <span class="loc">· item 6.1 · linhas 256–270</span></span><span class="q">fica estabelecida, em caráter excepcional e transitório, o sobrestamento temporário das tramitações relacionadas aos protocolos de desenvolvimento de biobancos, independentemente de sua situação cadastral, até que sobrevenha manifestação específica da Inaep.</span></div>
+        <div class="cit"><span class="src">NOTA TÉCNICA Nº 1/2026 <span class="loc">· itens 6.2.1 a 6.2.3 · linhas 278–288</span></span><span class="q">6.2.1 Continuidade Operacional: Podem manter suas atividades, desde que restritas às condições, finalidades e procedimentos expressamente aprovados em seu registro original. 6.2.2 Vedação de Alterações: Durante o período de transição, fica proibida qualquer alteração em regimentos, governança ou rotinas operacionais que não tenha sido previamente aprovada pela instância competente. 6.2.3 Responsabilidade Institucional: As instituições mantenedoras devem reforçar medidas internas de controle</span></div>
+        <div class="cit"><span class="src">DECRETO Nº 12.651/2025 <span class="loc">· art. 33 · linhas 458–459</span></span><span class="q">O biobanco e o biorrepositório serão regulamentados por norma editada pela Instância Nacional de Ética em Pesquisa e por outras autoridades competentes.</span></div>
+        <div class="note"><b>Efeito sobre o Anexo II da Norma Operacional 001/2013:</b> a extensa lista de checagem documental para biobancos e biorrepositórios (linhas 584–735 do documento) permanece formalmente vigente por força do art. 39 do Decreto, mas sua aplicação a <strong>protocolos de desenvolvimento de biobanco</strong> está sobrestada, e a matéria está em consulta pública até 02/07/2026 (Despacho nº 4/2026).</div>
+      </div>
+    </div>
+
+    <div class="card" data-k="chg">
+      <div class="card-top"><h3>Protocolos com o Ministério da Saúde como instituição proponente</h3><span class="tagline t-chg">Alterado</span></div>
+      <div class="teaser">Deixam a CONEP e passam aos CEPs credenciados ou acreditados conforme o grau de risco.</div>
+      <span class="chev">▸ CLIQUE PARA ABRIR</span>
+      <div class="body">
+        <div class="cit"><span class="src">NOTA TÉCNICA Nº 1/2026 <span class="loc">· item 4.2 · linhas 195–207</span></span><span class="q">Determina-se, portanto, que até nova manifestação da Inaep sobre essa questão, será de responsabilidade dos CEPs credenciados de instituição vinculada ao Ministério da Saúde (ex.: fundações, institutos, hospitais etc.) a responsabilidade pela análise ética dos protocolos de pesquisa de risco baixo e moderado e que será de responsabilidade dos CEPs acreditados a análise ética de protocolos de pesquisa de risco elevado, que possuam o Ministério da Saúde como instituição proponente.</span></div>
+        <div class="cit"><span class="src">NOTA TÉCNICA Nº 1/2026 <span class="loc">· item 4.3 · linhas 209–213</span></span><span class="q">Serão direcionados tanto os protocolos de pesquisa que estiverem em tramitação inicial (PO), quanto as emendas e notificações de protocolos que tiverem sido previamente analisados e aprovados pela Conep.</span></div>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<!-- ══════════════════ 04 MULTICÊNTRICO ══════════════════ -->
+<section class="section" id="s4">
+  <div class="sec-head">
+    <div class="kicker">Seção 04 — Pesquisa multicêntrica</div>
+    <h2>Parecer ético único: o fim da análise local paralela</h2>
+    <p>No regime CNS, cada centro participante tinha seu CEP acompanhando o estudo. No regime Sinep, <strong>um único CEP analisa e decide</strong>, e o parecer vale para todos os centros. Aos CEPs locais restam competências residuais — de monitoramento, não de deliberação.</p>
+  </div>
+
+  <button class="expand-all">▸ ABRIR / FECHAR TODOS OS CARDS DESTA SEÇÃO</button>
+
+  <div class="grid wide">
+
+    <div class="card" data-k="chg">
+      <div class="card-top"><h3>Protocolo único, CEP único, parecer único</h3><span class="tagline t-chg">Alterado</span></div>
+      <div class="teaser">A eficácia do parecer favorável alcança todos os centros participantes, afastada nova análise de mérito.</div>
+      <span class="chev">▸ CLIQUE PARA ABRIR</span>
+      <div class="body">
+        <div class="ba">
+          <div class="before"><h5>Regime CNS</h5><p>O protocolo devia listar os centros participantes indicando, para cada um, o pesquisador responsável e <strong>o CEP que acompanharia o estudo naquele centro</strong>.</p></div>
+          <div class="after"><h5>Regime Sinep</h5><p>Protocolo único submetido a <strong>um único CEP</strong>, preferencialmente o do centro coordenador, que emite o parecer e notifica os CEPs dos demais centros. O parecer favorável tem eficácia para todos os centros.</p></div>
+        </div>
+        <div class="cit"><span class="src">NORMA OPERACIONAL 001/2013 <span class="loc">· item 3.4.2, alínea “c”, subitem “i” · linhas 528–530</span></span><span class="q">Protocolos multicêntricos no Brasil: elencar o centro coordenador, centros participantes (indicando o pesquisador responsável pela pesquisa no centro e o CEP que acompanhará o andamento do estudo);</span></div>
+        <div class="cit"><span class="src">DECRETO Nº 12.651/2025 <span class="loc">· art. 27, §§ 1º e 2º · linhas 375–383</span></span><span class="q">A pesquisa multicêntrica, executada em diferentes centros de pesquisa por mais de um pesquisador, segue protocolo único. § 1º Considera-se protocolo único o documento padronizado […] a ser submetido em um único CEP. § 2º A análise ética da pesquisa multicêntrica será realizada por um único CEP, preferencialmente aquele vinculado ao centro coordenador da pesquisa, que emitirá o parecer e notificará sua decisão aos CEPs dos demais centros participantes.</span></div>
+        <div class="cit"><span class="src">DESPACHO Nº 3/2026 — INAEP <span class="loc">· item I, alíneas “b” e “c” · linhas 70–77</span></span><span class="q">b) O parecer ético favorável emitido pelo CEP responsável pela análise ética da pesquisa multicêntrica possui eficácia e validade para todos os centros participantes, abrangidos pelo protocolo aprovado, afastada a necessidade de nova análise ética de mérito sobre o mesmo protocolo. c) O termo "preferencialmente" constante do § 7º do art. 14 da Lei nº 14.874/2024 indica que a vinculação da análise ética do centro coordenador constitui regra geral prioritária, sem afastar, de forma excepcional e mediante motivação formal e fundamentada, a possibilidade de designação de CEP diverso</span></div>
+        <div class="cit"><span class="src">DESPACHO Nº 3/2026 — INAEP <span class="loc">· item VIII, alínea “a” · linhas 286–289</span></span><span class="q">Considera-se sem eficácia e, portanto, inaplicáveis no âmbito do Sinep os atos normativos ou regras institucionais de nível inferior à Lei nº 14.874/2024, que estabeleçam a obrigatoriedade de dupla revisão ética ou ritos de convalidação local para protocolos de pesquisas multicêntricas já aprovados por parecer único.</span></div>
+      </div>
+    </div>
+
+    <div class="card" data-k="new">
+      <div class="card-top"><h3>O que o CEP local ainda pode e o que não pode fazer</h3><span class="tagline t-new">Novo</span></div>
+      <div class="teaser">Competências residuais de monitoramento — e nulidade expressa do ato de suspensão ética unilateral.</div>
+      <span class="chev">▸ CLIQUE PARA ABRIR</span>
+      <div class="body">
+        <p><strong>PODE — competências residuais expressas:</strong></p>
+        <div class="cit"><span class="src">DESPACHO Nº 3/2026 — INAEP <span class="loc">· item IV, alínea “b”, subitens b.i a b.iv · linhas 182–195</span></span><span class="q">Devem exercer o monitoramento material e institucional do estudo sob sua supervisão, sem caráter decisório sobre o protocolo único, restando-lhes as seguintes responsabilidades residuais: b.i. Atuar como canal de recepção de denúncias para os participantes da pesquisa integrados em sua instituição; b.ii. Receber as notificações de eventos adversos graves ocorridos localmente; b.iii. Proceder ao registro, à qualificação das informações obtidas e ao seu imediato encaminhamento ao comitê coordenador da análise ética e à Inaep; e b.iv. Acompanhar de forma capilarizada se o protocolo único aprovado está sendo cumprido na instituição.</span></div>
+        <p><strong>NÃO PODE — vedação com sanção de nulidade:</strong></p>
+        <div class="cit"><span class="src">DESPACHO Nº 3/2026 — INAEP <span class="loc">· item IV, alínea “c” · linhas 197–201</span></span><span class="q">O CEP local que não emitiu o parecer de aprovação ética original não possui competência legal para determinar, de forma autônoma, a suspensão ética da pesquisa ou do protocolo único. Eventual ato formal de suspensão ética, de caráter unilateral, emanado por CEP de centro participante que não foi responsável pela emissão do parecer de aprovação ética original, será considerado nulo por vício de competência</span></div>
+        <p><strong>O que fazer diante de risco iminente:</strong> recomendação técnica à direção da instituição e comunicação em até 24 horas.</p>
+        <div class="cit"><span class="src">DESPACHO Nº 3/2026 — INAEP <span class="loc">· item IV, alínea “d”, subitens d.i e d.ii · linhas 203–214</span></span><span class="q">d.i. Emitir recomendação técnica, devidamente justificada, à direção da instituição ou do centro de pesquisa para a adoção de medidas de interrupção imediata das atividades da pesquisa naquele local; e d.ii. Comunicar o fato e encaminhar a recomendação técnica, preferencialmente no prazo máximo de 24 (vinte e quatro) horas, ao CEP responsável pela análise ética e à Inaep, para que estas instâncias adotem as medidas pertinentes.</span></div>
+        <div class="cit"><span class="src">DESPACHO Nº 3/2026 — INAEP <span class="loc">· item VI, alínea “b” · linhas 254–257</span></span><span class="q">A recusa deliberada, por parte dos CEPs, em aderir ao regime de parecer único, o retardamento imotivado no início de pesquisas de interesse público ou a criação de embaraços procedimentais por meio de revisões éticas locais não previstas em lei caracterizam infração de governança e descumprimento das normas do Sinep.</span></div>
+      </div>
+    </div>
+
+    <div class="card" data-k="new">
+      <div class="card-top"><h3>Separação entre análise ética e análise administrativa</h3><span class="tagline t-new">Novo</span></div>
+      <div class="teaser">A Carta de Anuência permanece — mas negá-la por discordância do mérito ético é vício de legalidade.</div>
+      <span class="chev">▸ CLIQUE PARA ABRIR</span>
+      <div class="body">
+        <p>O Despacho nº 3 constrói a distinção com base no Parecer nº 00392/2026/CONJUR-MS/CGU/AGU: existe o <strong>plano ético</strong>, de competência exclusiva do CEP, e o <strong>plano administrativo-institucional</strong>, decorrente da autonomia universitária do art. 207, § 2º, da Constituição.</p>
+        <div class="cit"><span class="src">DESPACHO Nº 3/2026 — INAEP <span class="loc">· item III, alínea “i” · linhas 148–151</span></span><span class="q">Permanecem possíveis, legítimas e necessárias as autorizações institucionais para realização das pesquisas, tais como a emissão da Carta de Anuência e as verificações de infraestrutura técnica, organização logística, condições operacionais de execução, dotação orçamentária e adequação às normas de proteção de dados, nos termos da Lei nº 13.709/2018 - LGPD.</span></div>
+        <div class="cit"><span class="src">DESPACHO Nº 3/2026 — INAEP <span class="loc">· item III, alínea “k” · linhas 156–159</span></span><span class="q">As providências administrativas e as verificações locais não podem converter-se em nova deliberação ética ou análise indireta de mérito sobre protocolo já apreciado pelo comitê competente. Eventual negativa de anuência baseada em discordância do mérito ético configura vício de legalidade por invasão de competência da instância de análise única.</span></div>
+        <div class="cit"><span class="src">DESPACHO Nº 3/2026 — INAEP <span class="loc">· item III, alíneas “m” e “n” · linhas 165–174</span></span><span class="q">A atuação do CEP local na hipótese da alínea anterior dar-se-á em caráter estritamente consultivo, mediante solicitação da direção institucional, limitando-se à emissão de manifestação técnica interna […] Uma vez formalizada a adesão da instituição à pesquisa, não poderá o CEP local, nem a administração institucional, condicionar o início da execução do estudo à realização de nova avaliação ética ou revisão do protocolo aprovado.</span></div>
+        <div class="note"><b>Impacto no Checklist Pessoal, item 5.4:</b> a exigência de “Termos de Anuência das Instituições Coparticipantes” <strong>permanece legítima</strong> (Despacho nº 3, III, “i”). O que deixa de ser admissível é condicionar a aprovação a manifestação ética de CEP de centro participante, ou converter a ausência de anuência em juízo ético sobre o protocolo.</div>
+      </div>
+    </div>
+
+    <div class="card" data-k="new">
+      <div class="card-top"><h3>Texto padronizado para a Plataforma Brasil</h3><span class="tagline t-new">Novo</span></div>
+      <div class="teaser">Enquanto a Plataforma exigir manifestação do CEP participante, há redação recomendada oficialmente.</div>
+      <span class="chev">▸ CLIQUE PARA ABRIR</span>
+      <div class="body">
+        <div class="cit"><span class="src">DESPACHO Nº 3/2026 — INAEP <span class="loc">· item VII, alínea “a” · linhas 268–282</span></span><span class="q">Enquanto a Plataforma Brasil mantiver fluxo que exija manifestação dos CEPs vinculados aos centros participantes, essa manifestação deverá ser utilizada exclusivamente para fins de registro e organização da tramitação processual no sistema, sem natureza de nova análise ética, revisão de mérito, convalidação ou aprovação adicional do protocolo multicêntrico já aprovado […] recomenda-se o uso do seguinte texto em todos os campos da Plataforma Brasil: "Nos termos do art. 14, § 7º, da Lei nº 14.874, de 28 de maio de 2024, e do art. 27, §§ 1º e 2º, do Decreto nº 12.651, de 7 de outubro de 2025, a análise ética de pesquisa multicêntrica deve ser realizada por um único CEP, preferencialmente aquele vinculado ao centro coordenador da pesquisa. Considerando que o protocolo de pesquisa intitulado [TÍTULO DO PROJETO] foi aprovado pelo CEP [NOME DO CEP QUE APROVOU O ESTUDO], no dia [dia] de [mês] de [ano], emite-se este parecer unicamente como requisito operacional da Plataforma Brasil, sendo de conhecimento do colegiado do CEP [NOME DO CEP DO CENTRO PARTICIPANTE] que o presente documento não configura opinião sobre a qualidade ética do protocolo de pesquisa."</span></div>
+      </div>
+    </div>
+
+    <div class="card" data-k="warn">
+      <div class="card-top"><h3>TCLE em pesquisa multicêntrica: qual CEP deve constar?</h3><span class="tagline t-warn">Atenção</span></div>
+      <div class="teaser">Obrigatório o contato do CEP responsável. O contato do CEP local passou a ser recomendação — não pendência.</div>
+      <span class="chev">▸ CLIQUE PARA ABRIR</span>
+      <div class="body">
+        <div class="cit"><span class="src">DESPACHO Nº 3/2026 — INAEP <span class="loc">· item V, alíneas “a”, “b” e “c” · linhas 223–236</span></span><span class="q">a) De modo a assegurar o princípio da transparência e o amplo acesso à informação, no Termo de Consentimento Livre e Esclarecido (TCLE), é obrigatório constar de forma clara os canais de contato (endereço, telefone e e-mail) do CEP responsável pela análise ética do protocolo único. b) Com vistas ao fortalecimento da rede de proteção ao participante de pesquisa, recomenda-se, de forma complementar, a inclusão do contato do CEP local como canal adicional e compartilhado de comunicação e acolhimento […] c) A omissão do contato do CEP local no corpo do TCLE não configura cerceamento do direito de acesso do participante à instância ética competente, uma vez que o parâmetro normativo aplicável à transparência do Sinep possui caráter funcional e de governança sistêmica, e não natureza estritamente geográfica.</span></div>
+        <div class="note"><b>Impacto direto no Checklist Pessoal, item 5.2:</b> a pendência-tipo redigida no seu checklist — “Não consta no TCLE os dados para contato de <strong>ambos</strong> os comitês de Ética em Pesquisa” — <strong>não se sustenta mais em pesquisa multicêntrica</strong>. A alínea “c” do item V afasta expressamente a caracterização de cerceamento pela omissão do CEP local. A pendência permanece cabível apenas quanto ao contato do <em>CEP responsável pela análise ética</em> e do <em>pesquisador</em>.</div>
+        <p>Fundamento anterior invocado no seu checklist, que permanece válido quanto ao pesquisador e ao CEP responsável:</p>
+        <div class="cit"><span class="src">RESOLUÇÃO CNS 466/2012 <span class="loc">· item IV.5, alínea “d” · linhas 346–351</span></span><span class="q">Em ambas as vias deverão constar o endereço e contato telefônico ou outro, dos responsáveis pela pesquisa e do CEP local e da CONEP, quando pertinente.</span></div>
+        <div class="cit"><span class="src">RESOLUÇÃO CNS 510/2016 <span class="loc">· art. 17, inciso IX · linhas 397–398</span></span><span class="q">breve explicação sobre o que é o CEP, bem como endereço, e-mail e contato telefônico do CEP local e, quando for o caso, da CONEP; e</span></div>
+      </div>
+    </div>
+
+    <div class="card" data-k="new">
+      <div class="card-top"><h3>Governança colaborativa: prazo de 5 dias úteis aos CEPs locais</h3><span class="tagline t-new">Novo</span></div>
+      <div class="teaser">Recomendação de interlocução prévia — sem que isso configure reanálise.</div>
+      <span class="chev">▸ CLIQUE PARA ABRIR</span>
+      <div class="body">
+        <div class="cit"><span class="src">DESPACHO Nº 3/2026 — INAEP <span class="loc">· item II, alínea “d” · linhas 99–104</span></span><span class="q">Recomenda-se que o CEP vinculado ao centro coordenador assegure prazo para manifestação dos CEPs locais de, no mínimo, 5 (cinco) dias úteis, a fim de possibilitar o envio de considerações sobre vulnerabilidades específicas das populações envolvidas, particularidades regionais ou arranjos institucionais locais, previamente à emissão do parecer final, observada a necessidade de cumprimento do prazo de 30 (trinta) dias úteis para deliberação do CEP, previsto no art. 14 da Lei nº 14.874/2024.</span></div>
+        <div class="cit"><span class="src">DESPACHO Nº 3/2026 — INAEP <span class="loc">· item II, alíneas “a” e “b” · linhas 81–90</span></span><span class="q">a) É recomendado que o Sinep adote modelo de governança ética colaborativa, de forma que o regime de parecer ético único em pesquisas multicêntricas seja compreendido como um processo de mútua cooperação e confiança entre os comitês, e não como uma imposição hierárquica. b) […] vedada qualquer forma de reanálise ética paralela do protocolo aprovado.</span></div>
+        <div class="note"><b>Atenção ao encaixe temporal:</b> esses 5 dias úteis correm <em>dentro</em> dos 30 dias úteis de análise, e não em acréscimo a eles. O próprio dispositivo condiciona a recomendação à observância do prazo legal.</div>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<!-- ══════════════════ 05 CHECKLIST ══════════════════ -->
+<section class="section" id="s5">
+  <div class="sec-head">
+    <div class="kicker">Seção 05 — Avaliação ética · Checklist Pessoal item a item</div>
+    <h2>O que muda no seu roteiro de parecer</h2>
+    <p>Confronto direto entre o arquivo <code>Checklist Pessoal.md</code> e o novo marco. A maior parte dos itens <strong>permanece íntegra</strong> — o Decreto preservou as normas do CNS compatíveis. As alterações se concentram em quatro pontos, e há dois achados de auditoria que antecedem 2026.</p>
+  </div>
+
+  <div class="legend">
+    <span class="lg"><i class="dot d-keep"></i>Mantido — pode continuar usando</span>
+    <span class="lg"><i class="dot d-chg"></i>Alterado — revisar redação</span>
+    <span class="lg"><i class="dot d-new"></i>Novo — passar a incluir</span>
+    <span class="lg"><i class="dot d-warn"></i>Achado de auditoria</span>
+  </div>
+
+  <button class="expand-all">▸ ABRIR / FECHAR TODOS OS CARDS DESTA SEÇÃO</button>
+
+  <div class="grid wide">
+
+    <div class="card" data-k="new">
+      <div class="card-top"><h3>ITEM 0 — Triagem de alçada antes de abrir o checklist</h3><span class="tagline t-new">Novo</span></div>
+      <div class="teaser">Etapa que não existe no roteiro atual e que hoje precede tudo: este CEP tem competência para analisar este protocolo?</div>
+      <span class="chev">▸ CLIQUE PARA ABRIR</span>
+      <div class="body">
+        <p>O Checklist Pessoal inicia diretamente em “1. Apresentação do Projeto”. No novo regime, três perguntas antecedem essa etapa:</p>
+        <ul>
+          <li><strong>É de área temática / risco elevado?</strong> Se sim, o CEP credenciado não analisa mérito — encaminha (Seção 03).</li>
+          <li><strong>É multicêntrico com parecer único já emitido por outro CEP?</strong> Se sim, não há reanálise (Seção 04).</li>
+          <li><strong>É protocolo de desenvolvimento de biobanco?</strong> Se sim, a tramitação está sobrestada (Seção 03).</li>
+        </ul>
+        <div class="cit"><span class="src">DECRETO Nº 12.651/2025 <span class="loc">· art. 20, §§ 2º e 3º · linhas 297–301</span></span><span class="q">§ 2º A partir da classificação de risco, poderão ser adotados procedimentos simplificados para o protocolo dos documentos, a análise e a autorização das pesquisas clínicas. § 3º A tramitação dos protocolos de pesquisa será diferenciada de acordo com a gradação de risco.</span></div>
+        <p>A graduação de risco em quatro níveis já constava da Resolução 510/2016, mas dependia de resolução específica que não chegou a ser editada — o Decreto é que a tornou operante.</p>
+        <div class="cit"><span class="src">RESOLUÇÃO CNS 510/2016 <span class="loc">· art. 21 e § 1º · linhas 439–443</span></span><span class="q">O risco previsto no protocolo será graduado nos níveis mínimo, baixo, moderado ou elevado, considerando sua magnitude em função de características e circunstâncias do projeto, conforme definição de Resolução específica sobre tipificação e gradação de risco e sobre tramitação dos protocolos. § 1º A tramitação dos protocolos será diferenciada de acordo com a gradação de risco.</span></div>
+      </div>
+    </div>
+
+    <div class="card" data-k="keep">
+      <div class="card-top"><h3>Itens 3 e 4.5 — Riscos, benefícios e garantias éticas</h3><span class="tagline t-keep">Mantido</span></div>
+      <div class="teaser">Toda a fundamentação atual permanece válida. Nenhum dispositivo citado foi contrariado pelo novo marco.</div>
+      <span class="chev">▸ CLIQUE PARA ABRIR</span>
+      <div class="body">
+        <p>Os textos-modelo do seu checklist para “Avaliação dos Riscos e Benefícios” (item 3) e “Garantias Éticas aos Participantes” (item 4.5) invocam a Res. 466/2012, cap. V, itens V.3, V.6 e V.7; a Res. 510/2016, cap. IV, arts. 19 e 21; a Res. 466/2012, cap. III, itens III.1 e III.2; e a NO 001/2013, item 3.4.1, incisos 7 e 12. <strong>Todos permanecem aplicáveis.</strong></p>
+        <div class="cit"><span class="src">NORMA OPERACIONAL 001/2013 <span class="loc">· item 3.4.1, inciso 12 · linhas 491–495</span></span><span class="q">Riscos e benefícios envolvidos na execução da pesquisa: o risco, avaliando sua gradação, e descrevendo as medidas para sua minimização e proteção do participante da pesquisa; as medidas para assegurar os necessários cuidados, no caso de danos aos indivíduos; os possíveis benefícios, diretos ou indiretos, para a população estudada e a sociedade;</span></div>
+        <div class="cit"><span class="src">NORMA OPERACIONAL 001/2013 <span class="loc">· item 3.4.1, inciso 7 · linhas 470–476</span></span><span class="q">Garantias éticas aos participantes da pesquisa: medidas que garantam a liberdade de participação, a integridade do participante da pesquisa e a preservação dos dados que possam identificá-lo, garantindo, especialmente, a privacidade, sigilo e confidencialidade e o modo de efetivação.</span></div>
+        <div class="cit"><span class="src">RESOLUÇÃO CNS 510/2016 <span class="loc">· art. 19, § 1º · linhas 426–428</span></span><span class="q">Quando o pesquisador perceber qualquer possibilidade de dano ao participante, decorrente da participação na pesquisa, deverá discutir com os participantes as providências cabíveis, que podem incluir o encerramento da pesquisa e informar o sistema CEP/CONEP.</span></div>
+        <p><strong>Reforço no novo marco:</strong> o Decreto reafirma a proteção do participante como primeiro princípio da análise (art. 26, I) e condiciona a condução da pesquisa à aprovação ética.</p>
+        <div class="cit"><span class="src">DECRETO Nº 12.651/2025 <span class="loc">· art. 2º, parágrafo único · linhas 34–35</span></span><span class="q">A condução da pesquisa com seres humanos deverá ocorrer com aprovação ética, de forma a garantir a dignidade, a segurança e o bem-estar dos participantes.</span></div>
+      </div>
+    </div>
+
+    <div class="card" data-k="new">
+      <div class="card-top"><h3>NOVO eixo — LGPD, dados sensíveis e inteligência artificial</h3><span class="tagline t-new">Novo</span></div>
+      <div class="teaser">Ausente por completo do Checklist Pessoal. Passou a ser critério legal de risco e dever expresso do CEP.</div>
+      <span class="chev">▸ CLIQUE PARA ABRIR</span>
+      <div class="body">
+        <p>Nenhum dos 8 itens principais do Checklist Pessoal menciona proteção de dados pessoais, tratamento de dados sensíveis ou uso de inteligência artificial. O novo marco insere esses elementos em três níveis distintos: <strong>âmbito de aplicação</strong>, <strong>critério de classificação de risco</strong> e <strong>dever do CEP</strong>.</p>
+        <div class="cit"><span class="src">DECRETO Nº 12.651/2025 <span class="loc">· art. 1º, parágrafo único · linhas 25–28</span></span><span class="q">As disposições deste Decreto aplicam-se às pesquisas que envolvam seres humanos, de forma individual ou coletiva, incluídas aquelas que utilizem dados pessoais, informações sensíveis ou material biológico, de acordo com o disposto na Lei nº 13.709, de 14 de agosto de 2018, e nas demais normas aplicáveis à proteção de dados pessoais.</span></div>
+        <div class="cit"><span class="src">DECRETO Nº 12.651/2025 <span class="loc">· art. 20, § 1º, inciso IV · linha 291</span></span><span class="q">IV - o uso de tecnologias emergentes, dados sensíveis ou inteligência artificial em saúde;</span></div>
+        <div class="cit"><span class="src">DECRETO Nº 12.651/2025 <span class="loc">· art. 23, inciso II · linhas 322–324</span></span><span class="q">assegurar a confidencialidade e o controle de acesso a documentos e dados constantes de protocolos e relatórios de pesquisa, em conformidade com o disposto na Lei nº 13.709, de 14 de agosto de 2018, e na legislação aplicável;</span></div>
+        <div class="note"><b>Sugestão de incorporação:</b> o eixo natural para este novo exame é o item 4.5 do checklist (“Garantias Éticas aos Participantes”), que já trata de privacidade, sigilo e confidencialidade — mas hoje apenas sob a ótica das Resoluções 466/2012 e 510/2016, sem referência à LGPD nem ao tratamento algorítmico de dados.</div>
+      </div>
+    </div>
+
+    <div class="card" data-k="new">
+      <div class="card-top"><h3>NOVO eixo — Grupos especiais em rol expresso de decreto</h3><span class="tagline t-new">Novo</span></div>
+      <div class="teaser">Quilombolas, demais populações tradicionais, gestantes e lactantes passam a integrar lista expressa.</div>
+      <span class="chev">▸ CLIQUE PARA ABRIR</span>
+      <div class="body">
+        <div class="cit"><span class="src">DECRETO Nº 12.651/2025 <span class="loc">· art. 32, § 1º, incisos I a V, e § 2º · linhas 442–455</span></span><span class="q">Consideram-se grupos especiais, em razão de sua vulnerabilidade ou singularidade de modos de vida, as comunidades humanas cuja dignidade exige proteção diferenciada, dentre os quais: I - crianças e adolescentes; II - gestantes e lactantes; III - povos indígenas, comunidades quilombolas e demais populações tradicionais; IV - pessoas privadas de liberdade; e V - pessoas com deficiência que comprometa a capacidade de consentimento. § 2º A participação de grupos especiais em pesquisa dependerá da adoção de medidas específicas de proteção, consideradas as condições particulares de vulnerabilidade de cada grupo.</span></div>
+        <p><strong>No regime CNS</strong> a proteção existia, mas dispersa e com recorte distinto — centrada em capacidade de decisão e relações de autoridade:</p>
+        <div class="cit"><span class="src">RESOLUÇÃO CNS 466/2012 <span class="loc">· item IV.6, alínea “b” · linhas 361–367</span></span><span class="q">a liberdade do consentimento deverá ser particularmente garantida para aqueles participantes de pesquisa que, embora plenamente capazes, estejam expostos a condicionamentos específicos, ou à influência de autoridade, caracterizando situações passíveis de limitação da autonomia, como estudantes, militares, empregados, presidiários e internos em centros de readaptação, em casas-abrigo, asilos, associações religiosas e semelhantes</span></div>
+        <div class="cit"><span class="src">NORMA OPERACIONAL 001/2013 <span class="loc">· item 3.4.1, inciso 6 · linhas 456–464</span></span><span class="q">na ausência da delimitação da população, deve ser apresentada justificativa para a não apresentação da descrição da população, e das razões para a utilização de grupos vulneráveis, quando for o caso;</span></div>
+        <div class="note"><b>Cuidado ao avaliar:</b> a inclusão de <strong>comunidades quilombolas e demais populações tradicionais</strong> em rol expresso qualifica exigência de medidas específicas de proteção que, no regime anterior, dependia de construção interpretativa a partir da vulnerabilidade genérica. Já os <strong>estudos com populações indígenas</strong> continuam sendo área temática — portanto, risco elevado e alçada de CEP acreditado (Res. CNS 466/2012, IX.4, item 5).</div>
+      </div>
+    </div>
+
+    <div class="card" data-k="chg">
+      <div class="card-top"><h3>Item 4.3 — Metodologia: cuidado com pendência sem repercussão em risco</h3><span class="tagline t-chg">Alterado</span></div>
+      <div class="teaser">A vedação à análise do desenho metodológico já existia na 510/2016. Somada aos novos princípios, torna a pendência-tipo mais arriscada.</div>
+      <span class="chev">▸ CLIQUE PARA ABRIR</span>
+      <div class="body">
+        <p>O texto de pendência do seu item 4.3 exige detalhamento de local de realização, população estudada e métodos, com fundamento na NO 001/2013, item 3.4.1, incisos 5, 6 e 8, e na Res. 466/2012, cap. III, item III.2. <strong>Esses fundamentos permanecem válidos.</strong> O que exige cautela redobrada é a extensão da exigência quando o protocolo é de Ciências Humanas e Sociais.</p>
+        <div class="cit"><span class="src">RESOLUÇÃO CNS 510/2016 <span class="loc">· art. 25, §§ 1º e 2º · linhas 466–475</span></span><span class="q">A avaliação a ser feita pelo Sistema CEP/CONEP incidirá sobre os aspectos éticos dos projetos, considerando os riscos e a devida proteção dos direitos dos participantes da pesquisa. §1º. A avaliação científica dos aspectos teóricos dos projetos submetidos a essa Resolução compete às instâncias acadêmicas específicas […] Não cabe ao Sistema CEP/CONEP a análise do desenho metodológico em si. § 2º. A avaliação a ser realizada pelo Sistema CEP/CONEP incidirá somente sobre os procedimentos metodológicos que impliquem em riscos aos participantes.</span></div>
+        <div class="cit"><span class="src">DECRETO Nº 12.651/2025 <span class="loc">· art. 26, incisos IV e V · linhas 362–365</span></span><span class="q">IV - a isonomia na aplicação dos critérios e procedimentos de análise, conforme a relação risco-benefício, que deverá ser favorável para o participante de pesquisa e para a sociedade; V - a busca por eficiência, celeridade e qualidade na análise e emissão dos pareceres;</span></div>
+        <div class="note"><b>Leitura conjunta:</b> art. 23, I do Decreto (evitar redundâncias que ocasionem morosidade) + art. 26, V (celeridade) + Despacho nº 2, item VII (vedação a diligência protelatória) + teto de 20 dias úteis. Uma pendência metodológica <em>sem repercussão demonstrada sobre risco ao participante</em> passa a ter fundamento mais frágil e custo temporal real.</div>
+      </div>
+    </div>
+
+    <div class="card" data-k="warn">
+      <div class="card-top"><h3>ACHADO — Itens 5.3 e 5.4 citam resolução revogada desde 2012</h3><span class="tagline t-warn">Achado</span></div>
+      <div class="teaser">A Resolução CNS 196/1996 foi expressamente revogada pela Resolução CNS 466/2012. As citações precisam ser substituídas.</div>
+      <span class="chev">▸ CLIQUE PARA ABRIR</span>
+      <div class="body">
+        <p>Este achado <strong>não decorre da reforma de 2026</strong> — é anterior a ela, mas foi identificado na auditoria e compromete a fundamentação dos pareceres desde 2013.</p>
+        <p><strong>Onde ocorre no Checklist Pessoal:</strong></p>
+        <ul>
+          <li><strong>Item 5.3 (Termo de Compromisso), linha 163:</strong> “garante que o(s) pesquisador(es) se comprometem a cumprir o descrito na resolução CNS 196/1996 (VI.1 e VI.5)”.</li>
+          <li><strong>Item 5.4 (Termos de Anuência), linha 172:</strong> “A resolução CNS 196/1996 item VI-2, subitem h), tipifica instituição coparticipando como sendo, instituições nas quais se processarão as várias etapas da pesquisa”.</li>
+        </ul>
+        <div class="cit"><span class="src">RESOLUÇÃO CNS 466/2012 <span class="loc">· item XIV — Das Disposições Finais · linha 686</span></span><span class="q">Ficam revogadas as Resoluções CNS Nos 196/96, 303/2000 e 404/2008.</span></div>
+        <p><strong>Origem provável do equívoco:</strong> o Manual Operacional para Comitês de Ética em Pesquisa, que é anterior a 2012, faz exatamente essa remissão — e o texto do checklist a reproduz quase literalmente.</p>
+        <div class="cit"><span class="src">MANUAL OPERACIONAL PARA COMITÊS DE ÉTICA EM PESQUISA <span class="loc">· cap. 9.1 · linhas 948–953</span></span><span class="q">O primeiro documento é a Folha de Rosto, disponibilizada pela CONEP na home page, com o termo de compromisso do pesquisador e da instituição em cumprir a Res. CNS 196/96 (VI.1 e VI.5). Esse é o documento que dá consistência jurídica ao projeto, porque identifica o pesquisador responsável, a instituição e o CEP</span></div>
+        <p><strong>Fundamentos vigentes que substituem as citações:</strong></p>
+        <div class="cit"><span class="src">NORMA OPERACIONAL 001/2013 <span class="loc">· item 3.3, alínea “a” · linhas 386–391</span></span><span class="q">Folha de rosto: todos os campos devem ser preenchidos, datados e assinados, com identificação dos signatários. As informações prestadas devem ser compatíveis com as do protocolo. A identificação das assinaturas deve conter, com clareza, o nome completo e a função de quem assina</span></div>
+        <div class="cit"><span class="src">NORMA OPERACIONAL 001/2013 <span class="loc">· Anexo II, item 03 · linhas 598–601</span></span><span class="q">Apresentar “Folha de Rosto” com os termos de compromisso devidamente datados e assinados. O termo de compromisso deve ser assinado pelo responsável maior da Instituição. Caso o pesquisador seja o responsável maior da Instituição, o seu substituto deverá assinar o documento.</span></div>
+        <div class="cit"><span class="src">RESOLUÇÃO CNS 466/2012 <span class="loc">· item II.9 · linhas 98–100</span></span><span class="q">instituição coparticipante de pesquisa - organização, pública ou privada, legitimamente constituída e habilitada, na qual alguma das fases ou etapas da pesquisa se desenvolve;</span></div>
+        <div class="cit"><span class="src">NORMA OPERACIONAL 001/2013 <span class="loc">· item 3.4.2, alínea “c”, subitem “ii” · linhas 532–533</span></span><span class="q">Protocolos com centros coparticipantes: elencar, além do centro proponente do estudo, os centros coparticipantes.</span></div>
+      </div>
+    </div>
+
+    <div class="card" data-k="warn">
+      <div class="card-top"><h3>ACHADO — Item 5.5 registra prática interna sem base normativa localizada</h3><span class="tagline t-warn">Achado</span></div>
+      <div class="teaser">A regra de que dados básicos não podem ser editados após a primeira submissão não foi encontrada em nenhum documento do acervo.</div>
+      <span class="chev">▸ CLIQUE PARA ABRIR</span>
+      <div class="body">
+        <p>O item 5.5 do Checklist Pessoal (linha 180) afirma: “As informações do projeto básico somente podem ser alteradas/adicionadas na plataforma brasil na primeira submissão do projeto […] Nesta situação não se pode gerar pendência pois o participante não tem acesso de edição dessas informações.”</p>
+        <p>A auditoria <strong>não localizou fundamento normativo</strong> para essa afirmação em nenhum dos 12 documentos examinados — nem no acervo legado, nem no conjunto 2026. Trata-se, ao que tudo indica, de constatação empírica sobre o comportamento da Plataforma Brasil, e não de regra jurídica.</p>
+        <div class="note"><b>Recomendação:</b> a orientação de não gerar pendência sobre campo não editável é razoável e protege o pesquisador, mas <strong>não deve ser apresentada no parecer como fundamento normativo</strong>. Se mantida, convém registrá-la como prática interna do CEP, formalizada em ata ou no regimento — o que o Despacho nº 1/2026, item II, “d”, torna ainda mais pertinente ao exigir disciplina expressa do registro das deliberações.</div>
+        <p>Confirma-se, porém, que a Plataforma Brasil segue como sistema oficial durante a transição:</p>
+        <div class="cit"><span class="src">DESPACHO Nº 2/2026 — INAEP <span class="loc">· item X · linhas 79–82</span></span><span class="q">por meio de emissão do parecer consubstanciado "pendente" na Plataforma Brasil, enquanto o novo sistema oficial de tramitação de protocolos não estiver disponível.</span></div>
+        <div class="cit"><span class="src">DECRETO Nº 12.651/2025 <span class="loc">· art. 8º, incisos I e II · linhas 105–113</span></span><span class="q">O Ministério da Saúde manterá plataforma de pesquisas com seres humanos, sistema eletrônico integrado de cadastro, protocolo, informação e análise de pesquisas, sob sua governança […] II - adotar sistema único para peticionamento, submissão de documentos, avaliação e acompanhamento eletrônico dos processos relacionados a pesquisas com seres humanos;</span></div>
+      </div>
+    </div>
+
+    <div class="card" data-k="warn">
+      <div class="card-top"><h3>Item 5.2 / TCLE — uso futuro de material biológico e dados</h3><span class="tagline t-warn">Atenção</span></div>
+      <div class="teaser">O Decreto admite autorização prévia expressa no TCLE. O regime anterior exigia reconsentimento obrigatório. Há tensão — e biobancos estão sobrestados.</div>
+      <span class="chev">▸ CLIQUE PARA ABRIR</span>
+      <div class="body">
+        <div class="ba">
+          <div class="before"><h5>Regime CNS</h5><p>O uso futuro ficava condicionado <strong>cumulativamente</strong> a: (a) novo projeto aprovado pelo Sistema CEP/CONEP e (b) <strong>obrigatoriamente</strong> reconsentimento do participante por TCLE específico do novo projeto.</p></div>
+          <div class="after"><h5>Regime Sinep</h5><p>Uso exclusivo para a finalidade do projeto, <strong>“exceto se houver autorização expressa no termo de consentimento livre e esclarecido para sua utilização em pesquisas futuras”</strong>, observadas as normas a serem editadas pela Inaep.</p></div>
+        </div>
+        <div class="cit"><span class="src">NORMA OPERACIONAL 001/2013 <span class="loc">· Anexo II, item 02 · linhas 644–653</span></span><span class="q">O mesmo TCLE deve ainda informar ao participante a possibilidade de utilização futura da amostra armazenada. Ressalta-se que o uso da mesma estará condicionado à: (a) apresentação de novo projeto de pesquisa para ser analisado e aprovado pelo Sistema CEP/CONEP e (b) obrigatoriamente, ao reconsentimento do participante de pesquisa por meio de um TCLE específico referente ao novo projeto de pesquisa</span></div>
+        <div class="cit"><span class="src">DECRETO Nº 12.651/2025 <span class="loc">· art. 34 · linhas 460–464</span></span><span class="q">O material biológico e os dados obtidos na pesquisa serão utilizados exclusivamente para a finalidade prevista no respectivo projeto, exceto se houver autorização expressa no termo de consentimento livre e esclarecido para sua utilização em pesquisas futuras, para fins científicos, observado o disposto na Lei nº 14.874, de 28 de maio de 2024, e nas normas editadas pela Instância Nacional de Ética em Pesquisa.</span></div>
+        <div class="note"><b>Postura recomendada — e limite do que se pode afirmar:</b> o art. 34 remete expressamente às “normas editadas pela Inaep”, que <strong>ainda não foram publicadas</strong> quanto a esta matéria; e a regulamentação de biobancos está em consulta pública até 02/07/2026 (Despacho nº 4/2026). Portanto, <em>não é possível afirmar, com base nos documentos disponíveis, que a exigência de reconsentimento foi suprimida</em>. O que se pode afirmar é que o Decreto passou a admitir expressamente a autorização prévia no TCLE como hipótese de exceção, o que recomenda cautela antes de emitir pendência automática de reconsentimento.</div>
+      </div>
+    </div>
+
+    <div class="card" data-k="keep">
+      <div class="card-top"><h3>Item 4.10 — Cronograma e coleta iniciada antes da aprovação</h3><span class="tagline t-keep">Mantido e reforçado</span></div>
+      <div class="teaser">A pendência-tipo continua plenamente fundamentada — e ganhou reforço em nível de decreto.</div>
+      <span class="chev">▸ CLIQUE PARA ABRIR</span>
+      <div class="body">
+        <p>O texto de pendência do item 4.10 (“O Comitê de ética em pesquisa não avalia protocolos cuja etapa de coleta já tenha iniciado”) permanece sustentado pelos mesmos fundamentos e ganha reforço no Decreto.</p>
+        <div class="cit"><span class="src">NORMA OPERACIONAL 001/2013 <span class="loc">· item 3.4.1, inciso 9 · linhas 484–486</span></span><span class="q">Cronograma: informando a duração total e as diferentes etapas da pesquisa, em número de meses, com compromisso explícito do pesquisador de que a pesquisa somente será iniciada a partir da aprovação pelo Sistema CEP-CONEP;</span></div>
+        <div class="cit"><span class="src">NORMA OPERACIONAL 001/2013 <span class="loc">· item 3.3, alínea “f” · linhas 413–415</span></span><span class="q">Cronograma que descreva a duração total e as diferentes etapas da pesquisa, com compromisso explícito do pesquisador de que a pesquisa somente será iniciada a partir da aprovação pelo Sistema CEP-CONEP;</span></div>
+        <div class="cit"><span class="src">RESOLUÇÃO CNS 510/2016 <span class="loc">· art. 28, inciso I · linhas 492–493</span></span><span class="q">apresentar o protocolo devidamente instruído ao sistema CEP/Conep, aguardando a decisão de aprovação ética, antes de iniciar a pesquisa, conforme definido em resolução específica de tipificação e gradação de risco;</span></div>
+        <div class="cit"><span class="src">DECRETO Nº 12.651/2025 <span class="loc">· art. 2º, parágrafo único · linhas 34–35</span></span><span class="q">A condução da pesquisa com seres humanos deverá ocorrer com aprovação ética, de forma a garantir a dignidade, a segurança e o bem-estar dos participantes.</span></div>
+      </div>
+    </div>
+
+    <div class="card" data-k="keep">
+      <div class="card-top"><h3>Itens 4.6, 4.9, 4.11 e 6.2 — inclusão/exclusão, divulgação, orçamento, guarda de dados</h3><span class="tagline t-keep">Mantido</span></div>
+      <div class="teaser">Blocos que atravessam a reforma sem alteração de fundamento.</div>
+      <span class="chev">▸ CLIQUE PARA ABRIR</span>
+      <div class="body">
+        <div class="tbl-wrap">
+          <table>
+            <thead><tr><th>Item do checklist</th><th>Fundamento invocado</th><th>Situação</th></tr></thead>
+            <tbody>
+              <tr><td>4.6 Critérios de inclusão e exclusão</td><td>NO 001/2013, item 3.4.1, inciso 11</td><td>Vigente</td></tr>
+              <tr><td>4.9 Divulgação dos resultados</td><td>NO 001/2013, item 3.4.1, incisos 14 e 15; Res. 466/2012, XI.2, “g”; Res. 510/2016, art. 17, VI</td><td>Vigente</td></tr>
+              <tr><td>4.11 Orçamento</td><td>NO 001/2013, item 3.3, “e”, e item 3.4.1, inciso 10</td><td>Vigente</td></tr>
+              <tr><td>6.2 / 8.5 Guarda dos dados por 5 anos</td><td>Res. 466/2012, XI.2, “f”; Res. 510/2016, art. 28, IV</td><td>Vigente</td></tr>
+            </tbody>
+          </table>
+        </div>
+        <div class="cit"><span class="src">NORMA OPERACIONAL 001/2013 <span class="loc">· item 3.4.1, inciso 11 · linhas 489–490</span></span><span class="q">Critérios de inclusão e exclusão dos participantes da pesquisa: devem ser apresentados de acordo com as exigências da metodologia a ser utilizada;</span></div>
+        <div class="cit"><span class="src">NORMA OPERACIONAL 001/2013 <span class="loc">· item 3.4.1, incisos 14 e 15 · linhas 498–501</span></span><span class="q">14 – Resultados do estudo: garantia do pesquisador que os resultados do estudo serão divulgados para os participantes da pesquisa e instituições onde os dados foram obtidos. 15 – Divulgação dos resultados: garantia pelo pesquisador de encaminhar os resultados da pesquisa para publicação, com os devidos créditos aos autores;</span></div>
+        <div class="cit"><span class="src">RESOLUÇÃO CNS 466/2012 <span class="loc">· item XI.2, alínea “f” · linhas 640–642</span></span><span class="q">manter os dados da pesquisa em arquivo, físico ou digital, sob sua guarda e responsabilidade, por um período de 5 anos após o término da pesquisa;</span></div>
+        <div class="cit"><span class="src">RESOLUÇÃO CNS 510/2016 <span class="loc">· art. 28, inciso IV · linhas 499–500</span></span><span class="q">manter os dados da pesquisa em arquivo, físico ou digital, sob sua guarda e responsabilidade, por um período mínimo de 5 (cinco) anos após o término da pesquisa; e</span></div>
+        <div class="note"><b>Ressalva sobre o item 4.9:</b> a numeração usada no seu checklist alterna entre “inciso 14” e “inciso 15” da NO 001/2013 nos textos de pendência e de aprovação (linhas 103 e 104 do arquivo). Trata-se de dois incisos distintos: o 14 trata da <em>devolução dos resultados aos participantes e às instituições</em>; o 15, do <em>encaminhamento para publicação</em>. A pendência sobre retorno aos participantes deve invocar o inciso 14.</div>
+      </div>
+    </div>
+
+    <div class="card" data-k="chg">
+      <div class="card-top"><h3>Item 4.4 — Processo de obtenção do TCLE e o Ofício Circular nº 16/2020</h3><span class="tagline t-chg">Verificar</span></div>
+      <div class="teaser">A base de coleta em ambiente virtual citada no checklist não integra o acervo auditado.</div>
+      <span class="chev">▸ CLIQUE PARA ABRIR</span>
+      <div class="body">
+        <p>O texto de pendência do item 4.4 invoca o “ofício circular Nº 16/2020/CONEP/SECNS/MS de 05 de junho de 2020” a respeito da guarda de via do registro de consentimento em coletas por Google Forms, Redcap, Zoom e similares. Esse documento <strong>não está na pasta do projeto</strong> e, portanto, não pôde ser verificado nesta auditoria.</p>
+        <p>Os fundamentos do mesmo item que <strong>puderam ser verificados e permanecem vigentes</strong>:</p>
+        <div class="cit"><span class="src">RESOLUÇÃO CNS 466/2012 <span class="loc">· itens IV.1 e IV.2 · linhas 285–300</span></span><span class="q">A etapa inicial do Processo de Consentimento Livre e Esclarecido é a do esclarecimento ao convidado a participar da pesquisa […] IV.2 - Superada a etapa inicial de esclarecimento, o pesquisador responsável, ou pessoa por ele delegada, deverá apresentar, ao convidado para participar da pesquisa, ou a seu representante legal, o Termo de Consentimento Livre e Esclarecido para que seja lido e compreendido, antes da concessão do seu consentimento livre e esclarecido.</span></div>
+        <div class="cit"><span class="src">RESOLUÇÃO CNS 510/2016 <span class="loc">· art. 15, § 1º · linhas 347–348</span></span><span class="q">Quando não houver registro de consentimento e do assentimento, o pesquisador deverá entregar documento ao participante que contemple as informações previstas para o consentimento livre e esclarecido sobre a pesquisa.</span></div>
+        <div class="cit"><span class="src">RESOLUÇÃO CNS 510/2016 <span class="loc">· art. 17, § 3º · linhas 409–410</span></span><span class="q">Nos casos em que o consentimento ou o assentimento livre e esclarecido for registrado por escrito uma via, assinada pelo participante e pelo pesquisador responsável, deve ser entregue ao participante.</span></div>
+        <div class="note"><b>Situação normativa do Ofício Circular:</b> por ser ato de nível inferior à Lei nº 14.874/2024 emanado da CONEP, sua eficácia deve ser lida à luz do art. 39 do Decreto (validade condicionada à não contrariedade). Não se identificou, no acervo de 2026, dispositivo que o contrarie — mas tampouco foi possível confirmar sua vigência.</div>
+      </div>
+    </div>
+
+    <div class="card" data-k="susp">
+      <div class="card-top"><h3>Ciências Humanas e Sociais: análise simplificada ainda NÃO vale</h3><span class="tagline t-susp">Aguarda norma</span></div>
+      <div class="teaser">O Decreto autorizou notificação ou análise simplificada em CHS de risco baixo — mas condicionou a norma da Inaep, ainda não editada.</div>
+      <span class="chev">▸ CLIQUE PARA ABRIR</span>
+      <div class="body">
+        <p>Este é um ponto onde é fácil concluir mais do que os documentos autorizam. O Decreto <strong>previu</strong> a possibilidade, mas <strong>não a instituiu</strong>: ela depende de norma específica da Inaep, que não consta do acervo examinado.</p>
+        <div class="cit"><span class="src">DECRETO Nº 12.651/2025 <span class="loc">· art. 35, §§ 2º, 3º e 4º · linhas 477–485</span></span><span class="q">§ 2º Na hipótese de pesquisas em ciências humanas e sociais classificadas como de risco baixo, poderá ser adotado procedimento de notificação aos CEPs ou de análise simplificada, conforme norma a ser editada pela Instância Nacional de Ética em Pesquisa. § 3º A notificação ou a análise simplificada de que trata o § 2º não exime os pesquisadores do cumprimento integral das diretrizes éticas aplicáveis. § 4º O processo de pesquisa, a qualquer tempo, poderá ser objeto de avaliação completa pelos CEPs, e poderá resultar em suspensão, cancelamento do estudo ou outras medidas previstas em lei.</span></div>
+        <div class="cit"><span class="src">DECRETO Nº 12.651/2025 <span class="loc">· art. 35, caput e incisos I e II · linhas 467–473</span></span><span class="q">A Instância Nacional de Ética em Pesquisa disporá, em norma específica, sobre as particularidades das pesquisas em ciências humanas e sociais, observados: I - o respeito à autonomia dos participantes, com garantias adequadas de consentimento livre e esclarecido, inclusive em formatos adaptados aos contextos socioculturais; e II - o reconhecimento das: a) especificidades metodológicas e epistemológicas, e b) vulnerabilidades individuais e coletivas envolvidas.</span></div>
+        <div class="note"><b>Conclusão operacional:</b> até que a Inaep edite a norma específica, <strong>as pesquisas em CHS continuam integralmente submetidas à Resolução CNS 510/2016 e ao rito ordinário de análise</strong>. Nenhum protocolo de CHS pode, hoje, ser tratado por notificação ou análise simplificada com base apenas no Decreto.</div>
+        <p>Permanecem, contudo, aplicáveis as isenções já previstas na 510/2016 — que continuam sendo o instrumento correto para triagem de não incidência:</p>
+        <div class="cit"><span class="src">RESOLUÇÃO CNS 510/2016 <span class="loc">· art. 1º, parágrafo único, incisos I a VII · linhas 63–86</span></span><span class="q">Não serão registradas nem avaliadas pelo sistema CEP/CONEP: I - pesquisa de opinião pública com participantes não identificados; II - pesquisa que utilize informações de acesso público, nos termos da Lei nº 12.527, de 18 de novembro de 2011; III - pesquisa que utilize informações de domínio público; IV - pesquisa censitária; V - pesquisa com bancos de dados, cujas informações são agregadas, sem possibilidade de identificação individual; e VI - pesquisa realizada exclusivamente com textos científicos para revisão da literatura científica;</span></div>
+      </div>
+    </div>
+
+    <div class="card" data-k="new">
+      <div class="card-top"><h3>Ensaios clínicos: plano pós-estudo submetido ao CEP</h3><span class="tagline t-new">Novo</span></div>
+      <div class="teaser">Aplicação limitada ao perfil de um CEP institucional de ensino, mas registrado para completude.</div>
+      <span class="chev">▸ CLIQUE PARA ABRIR</span>
+      <div class="body">
+        <div class="cit"><span class="src">DECRETO Nº 12.651/2025 <span class="loc">· art. 31, caput e § 1º · linhas 428–436</span></span><span class="q">O patrocinador, após o término do ensaio clínico, deverá garantir aos participantes da pesquisa o fornecimento gratuito do produto sob investigação sempre que este for considerado pelo pesquisador responsável como a melhor alternativa terapêutica para a condição clínica do participante […] § 1º O programa de acesso pós-estudo deverá ser elaborado pelo patrocinador e submetido à avaliação do CEP competente, e conter a estratégia do fornecimento do produto sob investigação após o encerramento da participação individual.</span></div>
+        <div class="cit"><span class="src">DECRETO Nº 12.651/2025 <span class="loc">· art. 30 · linhas 424–426</span></span><span class="q">A Instância Nacional de Ética em Pesquisa regulamentará o plano de acompanhamento e assistência aos participantes de ensaio clínico descontinuado</span></div>
+        <p><strong>Antecedente no regime CNS:</strong></p>
+        <div class="cit"><span class="src">RESOLUÇÃO CNS 466/2012 <span class="loc">· item III.3, alínea “d” · linhas 269–271</span></span><span class="q">assegurar a todos os participantes ao final do estudo, por parte do patrocinador, acesso gratuito e por tempo indeterminado, aos melhores métodos profiláticos, diagnósticos e terapêuticos que se demonstraram eficazes:</span></div>
+        <div class="note"><b>Novidade material:</b> o Decreto transforma o que era uma <em>garantia genérica</em> em um <strong>documento específico — o programa de acesso pós-estudo — que deve ser submetido à avaliação do CEP</strong>. Passa a ser item verificável do protocolo, e não apenas cláusula do TCLE.</div>
+      </div>
+    </div>
+
+    <div class="card" data-k="keep">
+      <div class="card-top"><h3>Considerações Gerais do checklist: continuam íntegras</h3><span class="tagline t-keep">Mantido</span></div>
+      <div class="teaser">Vícios comuns do TCLE, estrutura do parecer e vedações de estilo permanecem plenamente compatíveis.</div>
+      <span class="chev">▸ CLIQUE PARA ABRIR</span>
+      <div class="body">
+        <p>O bloco “Considerações Gerais” do Checklist Pessoal (linhas 215–258) — pertinência e valor científico, adequação metodológica, grau de vulnerabilidade, binômio risco-benefício, repúdio ao exagero de expectativas de benefício e à minimização de riscos, vedação a observações de natureza pessoal e a expressões lacônicas — <strong>não sofre alteração</strong>. É integralmente compatível com o novo marco e encontra respaldo direto tanto no regime CNS quanto no Decreto.</p>
+        <div class="cit"><span class="src">NORMA OPERACIONAL 001/2013 <span class="loc">· item 2.1.E · linhas 58–66</span></span><span class="q">Do parecer: o parecer deve ser elaborado de forma clara, objetiva, detalhada e estar suficientemente motivado para subsidiar a decisão do colegiado, com ênfase nos seguintes pontos: análise ética do protocolo; risco-benefício da pesquisa e sua relevância social; processo de recrutamento, inclusão e exclusão dos participantes da pesquisa; processo de obtenção do TCLE; justificativa para a dispensa do TCLE, se couber; procedimentos aptos à efetivação da garantia do sigilo e confidencialidade; proteção dos participantes da pesquisa que se encontram em situação de vulnerabilidade, quando pertinente; orçamento para realização da pesquisa; cronograma de execução.</span></div>
+        <div class="cit"><span class="src">RESOLUÇÃO CNS 466/2012 <span class="loc">· item III.1, alíneas “a” a “d” · linhas 161–169</span></span><span class="q">A eticidade da pesquisa implica em: a) respeito ao participante da pesquisa em sua dignidade e autonomia, reconhecendo sua vulnerabilidade […] b) ponderação entre riscos e benefícios, tanto conhecidos como potenciais, individuais ou coletivos, comprometendo-se com o máximo de benefícios e o mínimo de danos e riscos; c) garantia de que danos previsíveis serão evitados; e d) relevância social da pesquisa</span></div>
+        <div class="cit"><span class="src">DECRETO Nº 12.651/2025 <span class="loc">· art. 24 · linhas 332–333</span></span><span class="q">Os membros dos CEPs terão, no exercício de suas atribuições, plena autonomia e independência em suas manifestações quanto à análise ética das pesquisas.</span></div>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<!-- ══════════════════ 06 FONTES ══════════════════ -->
+<section class="section" id="s6">
+  <div class="sec-head">
+    <div class="kicker">Seção 06 — Fontes, método e limites</div>
+    <h2>Como cada afirmação desta apresentação pode ser verificada</h2>
+    <p>Toda afirmação aqui traz o documento, o dispositivo e o intervalo de linhas do texto extraído, além da transcrição literal do trecho. Nenhuma conclusão foi produzida por inferência sobre matéria não escrita nos documentos.</p>
+  </div>
+
+  <div class="grid wide">
+
+    <div class="card open" data-k="new">
+      <div class="card-top"><h3>Método de extração e formato das citações</h3><span class="tagline t-new">Método</span></div>
+      <div class="teaser">Reprodutível a partir dos PDFs originais da pasta do projeto.</div>
+      <span class="chev">▸ CLIQUE PARA FECHAR</span>
+      <div class="body">
+        <p>Os 12 PDFs foram convertidos em texto preservando o leiaute, com codificação UTF-8, pelo comando:</p>
+        <div class="cit"><span class="src">COMANDO DE EXTRAÇÃO</span><span class="q">pdftotext -layout -enc UTF-8 "&lt;arquivo&gt;.pdf" "&lt;arquivo&gt;.txt"</span></div>
+        <p>As referências de linha (“linhas 210–212”) correspondem à numeração do arquivo <code>.txt</code> assim gerado. Reproduzir o comando sobre o mesmo PDF regenera exatamente a mesma numeração. Em todos os casos, a transcrição literal do trecho acompanha a referência, de modo que a verificação também pode ser feita por busca textual direta no PDF.</p>
+      </div>
+    </div>
+
+    <div class="card open" data-k="new">
+      <div class="card-top"><h3>Acervo auditado — 12 documentos</h3><span class="tagline t-new">Fontes</span></div>
+      <div class="teaser">7 documentos do novo marco, 5 do acervo legado.</div>
+      <span class="chev">▸ CLIQUE PARA FECHAR</span>
+      <div class="body">
+        <div class="tbl-wrap">
+          <table>
+            <thead><tr><th>Documento</th><th>Págs.</th><th>Grupo</th></tr></thead>
+            <tbody>
+              <tr><td>Decreto nº 12.651, de 7 de outubro de 2025 — DOU 08/10/2025, ed. 192, seção 1, p. 3</td><td>10</td><td>Novo marco</td></tr>
+              <tr><td>Despacho nº 1, de 27 de abril de 2026 — Inaep — DOU 28/04/2026, ed. 78, seção 1, p. 120</td><td>3</td><td>Novo marco</td></tr>
+              <tr><td>Despacho nº 2, de 27 de abril de 2026 — Inaep — DOU 28/04/2026, ed. 78, seção 1, p. 120</td><td>3</td><td>Novo marco</td></tr>
+              <tr><td>Despacho nº 3, de 29 de maio de 2026 — Inaep — DOU 01/06/2026, ed. 101, seção 1, p. 109</td><td>5</td><td>Novo marco</td></tr>
+              <tr><td>Despacho nº 4, de 1º de junho de 2026 — Inaep — DOU 02/06/2026, ed. 102, seção 1, p. 73</td><td>1</td><td>Novo marco</td></tr>
+              <tr><td>Nota Técnica nº 1/2026-DECIT/SCTIE/MS — SEI 25000.192788/2025-69, doc. 0052834543</td><td>6</td><td>Novo marco</td></tr>
+              <tr><td>Nota Técnica nº 43/2025-DECIT/SECTICS/MS — SEI 25000.192788/2025-69, doc. 0051734309</td><td>9</td><td>Novo marco</td></tr>
+              <tr><td>Norma Operacional CNS nº 001/2013</td><td>17</td><td>Legado</td></tr>
+              <tr><td>Resolução CNS nº 466, de 12 de dezembro de 2012</td><td>12</td><td>Legado</td></tr>
+              <tr><td>Resolução CNS nº 510, de 7 de abril de 2016</td><td>8</td><td>Legado</td></tr>
+              <tr><td>Resolução CNS nº 196, de 10 de outubro de 1996 <em>(revogada pela Res. 466/2012, item XIV)</em></td><td>9</td><td>Legado</td></tr>
+              <tr><td>Manual Operacional para Comitês de Ética em Pesquisa</td><td>125</td><td>Legado</td></tr>
+              <tr><td><code>Checklist Pessoal.md</code> — roteiro pessoal de parecer (293 linhas)</td><td>—</td><td>Objeto auditado</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+    <div class="card open" data-k="warn">
+      <div class="card-top"><h3>Limites desta auditoria — o que NÃO pôde ser verificado</h3><span class="tagline t-warn">Limites</span></div>
+      <div class="teaser">Documentos citados pelas fontes primárias que não integram a pasta do projeto.</div>
+      <span class="chev">▸ CLIQUE PARA FECHAR</span>
+      <div class="body">
+        <p>Os documentos abaixo são invocados pelas fontes auditadas, mas <strong>não estão na pasta do projeto</strong>. As afirmações desta apresentação sobre o conteúdo deles se limitam estritamente ao que os documentos disponíveis transcrevem ou descrevem:</p>
+        <ul>
+          <li><strong>Lei nº 14.874, de 28 de maio de 2024</strong> — os prazos do art. 14 e o regime do § 7º são conhecidos aqui apenas pela transcrição feita nos Despachos nº 2 e nº 3 e no Decreto.</li>
+          <li><strong>Resolução do Colegiado da Inaep — RCI nº 01, de 2 de abril de 2026</strong> (Regimento Interno da Inaep) — citada como fundamento dos quatro Despachos.</li>
+          <li><strong>Resolução CNS nº 706, de 16 de fevereiro de 2023</strong> — citada quanto a composição, condições mínimas de funcionamento e renovação de credenciamento.</li>
+          <li><strong>Carta Circular nº 172/2017/CONEP/CNS/MS</strong> — indicada como Anexo I da NT nº 43/2025; o anexo não integra o PDF disponível.</li>
+          <li><strong>Anexo II da NT nº 43/2025 (“Imagem 1” do fluxo)</strong> — o texto do anexo está presente, mas a imagem do fluxo não é legível na extração.</li>
+          <li><strong>Ofício Circular nº 16/2020/CONEP/SECNS/MS</strong> — citado no Checklist Pessoal, item 4.4.</li>
+          <li><strong>Parecer nº 00392/2026/CONJUR-MS/CGU/AGU</strong> — conhecido apenas pelos considerandos do Despacho nº 3/2026.</li>
+          <li><strong>Portaria SECTICS/MS nº 85, de 14/10/2025</strong> e <strong>Portaria de Pessoal SECTICS/MS nº 31, de 24/10/2025</strong> — citadas nas Notas Técnicas.</li>
+          <li><strong>Resolução CNS nº 441/2011, Portaria MS nº 2.201/2011 e Resolução CNS nº 506/2016</strong> — citadas, respectivamente, no Anexo II da NO 001/2013 e no item 5.34 da NT nº 43/2025.</li>
+          <li><strong>Página institucional do CEP/IFG</strong> (<code>ifg.edu.br/comites/cep</code>) — não foi consultada. Esta auditoria se restringiu, conforme solicitado, aos documentos contidos no projeto. As diretrizes internas do CEP/IFG publicadas naquele endereço não foram confrontadas com o novo marco.</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="card open" data-k="chg">
+      <div class="card-top"><h3>Síntese executiva — as 8 mudanças que exigem ação</h3><span class="tagline t-chg">Síntese</span></div>
+      <div class="teaser">O resumo mínimo para quem vai emitir parecer amanhã.</div>
+      <span class="chev">▸ CLIQUE PARA FECHAR</span>
+      <div class="body">
+        <div class="tbl-wrap">
+          <table>
+            <thead><tr><th>#</th><th>Mudança</th><th>Ação requerida</th><th>Fonte</th></tr></thead>
+            <tbody>
+              <tr><td><code>1</code></td><td>Prazos passam a correr em dias úteis, com regra expressa de contagem</td><td>Recalcular todos os controles internos de prazo</td><td>Despacho nº 2, itens I, II e IV</td></tr>
+              <tr><td><code>2</code></td><td>Teto global e contínuo de 20 dias úteis de suspensão por diligências</td><td>Criar controle de saldo de suspensão por protocolo</td><td>Despacho nº 2, item “XIV”, “b” a “d”</td></tr>
+              <tr><td><code>3</code></td><td>Parecer de pendência deve indicar o prazo concedido</td><td>Alterar o modelo dos itens 6.1 e 7 do checklist</td><td>Despacho nº 2, item VI</td></tr>
+              <tr><td><code>4</code></td><td>Descumprimento gera reprovação por decurso de prazo, com ata</td><td>Substituir a prática de arquivamento automático</td><td>Despacho nº 2, item XIX, “b”</td></tr>
+              <tr><td><code>5</code></td><td>Protocolo de área temática = risco elevado → alçada de CEP acreditado</td><td>Inserir triagem de alçada antes do checklist</td><td>NT nº 43/2025, item 4.27; NT nº 1/2026, item 3.2</td></tr>
+              <tr><td><code>6</code></td><td>Multicêntrico: parecer único, sem reanálise local</td><td>Interromper análise de mérito como centro participante</td><td>Decreto, art. 27; Despacho nº 3, itens I e IV</td></tr>
+              <tr><td><code>7</code></td><td>Pendência sobre ausência do contato do CEP local no TCLE não se sustenta em multicêntrico</td><td>Revisar o texto-padrão do item 5.2</td><td>Despacho nº 3, item V, “c”</td></tr>
+              <tr><td><code>8</code></td><td>Relatórios do pesquisador: piso anual, não semestral</td><td>Ajustar o texto de aprovação do item 6.2</td><td>NT nº 1/2026, Anexo I</td></tr>
+            </tbody>
+          </table>
+        </div>
+        <div class="note"><b>Dois achados independentes da reforma:</b> as citações à Resolução CNS 196/1996 nos itens 5.3 e 5.4 do checklist referem norma revogada desde a Resolução 466/2012 (item XIV); e a regra do item 5.5 sobre edição de dados básicos na Plataforma Brasil não possui base normativa localizada no acervo.</div>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<footer>
+  Auditoria documental produzida a partir exclusivamente dos arquivos contidos em <code>C:\workspace\ifg\cep\</code> e <code>C:\workspace\ifg\cep\legado\</code>.
+  Cada afirmação está vinculada ao documento, ao dispositivo e ao intervalo de linhas do texto extraído, com transcrição literal do trecho.
+  Onde a documentação disponível não permitiu conclusão, isso está declarado no próprio card, e não foi suprido por inferência.
+</footer>
+
+<script>
+  // Navegação por abas
+  document.querySelectorAll('.tab').forEach(function (t) {
+    t.addEventListener('click', function () {
+      document.querySelectorAll('.tab').forEach(function (x) { x.classList.remove('active'); });
+      document.querySelectorAll('.section').forEach(function (x) { x.classList.remove('active'); });
+      t.classList.add('active');
+      document.getElementById(t.dataset.s).classList.add('active');
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    });
+  });
+
+  // Cards clicáveis
+  document.querySelectorAll('.card').forEach(function (c) {
+    c.addEventListener('click', function (e) {
+      if (window.getSelection().toString().length > 0) return; // não fecha ao selecionar texto
+      c.classList.toggle('open');
+      var ch = c.querySelector('.chev');
+      if (ch) ch.textContent = c.classList.contains('open') ? '▾ CLIQUE PARA FECHAR' : '▸ CLIQUE PARA ABRIR';
+    });
+  });
+
+  // Abrir / fechar todos
+  document.querySelectorAll('.expand-all').forEach(function (btn) {
+    btn.addEventListener('click', function (e) {
+      e.stopPropagation();
+      var sec = btn.closest('.section');
+      var cards = sec.querySelectorAll('.card');
+      var anyClosed = Array.prototype.some.call(cards, function (c) { return !c.classList.contains('open'); });
+      cards.forEach(function (c) {
+        c.classList.toggle('open', anyClosed);
+        var ch = c.querySelector('.chev');
+        if (ch) ch.textContent = anyClosed ? '▾ CLIQUE PARA FECHAR' : '▸ CLIQUE PARA ABRIR';
+      });
+    });
+  });
+</script>
+
+</body>
+</html>
