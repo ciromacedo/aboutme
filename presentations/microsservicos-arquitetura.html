@@ -1,0 +1,1047 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Arquitetura de Microsserviços — versão de 30 minutos</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#0a1120;
+  --bg-2:#0f1a2e;
+  --surface:#15243d;
+  --surface-2:#1b2d4a;
+  --line:rgba(148,178,220,.20);
+  --line-strong:rgba(148,178,220,.38);
+  --ink:#e8eefb;
+  --ink-soft:#a9bbd6;
+  --ink-dim:#7689a8;
+  --cyan:#38bdf8;
+  --teal:#2dd4bf;
+  --amber:#fbbf24;
+  --rose:#fb7185;
+  --violet:#a78bfa;
+  --lime:#a3e635;
+}
+*{margin:0;padding:0;box-sizing:border-box}
+html,body{height:100%}
+body{
+  font-family:'Inter',system-ui,-apple-system,'Segoe UI',sans-serif;
+  background:var(--bg);
+  color:var(--ink);
+  overflow:hidden;
+  -webkit-font-smoothing:antialiased;
+}
+
+/* ---------- estrutura do slide ---------- */
+.deck{width:100%;height:100vh;position:relative}
+.slide{
+  display:none;
+  width:100%;height:100vh;
+  padding:clamp(34px,4.4vh,64px) clamp(38px,5vw,96px) clamp(60px,7vh,88px);
+  flex-direction:column;
+  justify-content:safe center;
+  overflow-y:auto;
+  background:
+    radial-gradient(1100px 620px at 88% -12%,rgba(56,189,248,.10),transparent 60%),
+    radial-gradient(900px 560px at -8% 108%,rgba(45,212,191,.09),transparent 60%),
+    var(--bg);
+}
+.slide.active{display:flex;animation:enter .38s ease-out}
+@keyframes enter{from{opacity:0;transform:translateY(14px)}to{opacity:1;transform:none}}
+
+.eyebrow{
+  font-family:'JetBrains Mono',monospace;
+  font-size:clamp(.62rem,.85vw,.78rem);
+  letter-spacing:.20em;text-transform:uppercase;
+  color:var(--cyan);margin-bottom:.7rem;font-weight:500;
+}
+.slide h1{
+  font-size:clamp(1.65rem,3.25vw,2.75rem);
+  font-weight:700;line-height:1.14;letter-spacing:-.02em;
+  margin-bottom:.45rem;
+}
+.slide h1 em{font-style:normal;color:var(--cyan)}
+.lead{
+  font-size:clamp(.95rem,1.35vw,1.2rem);
+  color:var(--ink-soft);font-weight:300;line-height:1.5;
+  max-width:62ch;margin-bottom:clamp(1rem,2.4vh,1.8rem);
+}
+.rule{height:3px;width:74px;background:linear-gradient(90deg,var(--cyan),var(--teal));border-radius:2px;margin:.9rem 0 1.4rem}
+.body{flex:none;display:flex;flex-direction:column;justify-content:center;gap:clamp(.8rem,1.8vh,1.4rem)}
+
+/* ---------- capa ---------- */
+.cover{justify-content:center;
+  background:
+    radial-gradient(1200px 700px at 78% 8%,rgba(56,189,248,.20),transparent 62%),
+    radial-gradient(900px 600px at 10% 96%,rgba(167,139,250,.16),transparent 60%),
+    linear-gradient(160deg,#0a1120 0%,#0e1c33 58%,#122742 100%);
+}
+.cover .tag{
+  display:inline-flex;align-items:center;gap:.6rem;
+  font-family:'JetBrains Mono',monospace;font-size:.75rem;letter-spacing:.18em;
+  text-transform:uppercase;color:var(--teal);
+  border:1px solid var(--line-strong);border-radius:999px;
+  padding:.45rem 1rem;margin-bottom:1.6rem;width:fit-content;
+}
+.cover h1{font-size:clamp(2.1rem,5.4vw,4.2rem);line-height:1.06;max-width:17ch;margin-bottom:1.1rem}
+.cover .sub{
+  font-size:clamp(1rem,1.75vw,1.5rem);color:var(--ink-soft);font-weight:300;
+  max-width:48ch;line-height:1.45;
+}
+.cover .who{
+  margin-top:clamp(2rem,5vh,3.4rem);padding-top:1.4rem;
+  border-top:1px solid var(--line);max-width:min(560px,70%);
+}
+.cover .who strong{display:block;font-size:clamp(1rem,1.5vw,1.2rem);font-weight:600}
+.cover .who span{display:block;color:var(--ink-dim);font-size:clamp(.82rem,1.1vw,.95rem);margin-top:.22rem}
+
+/* ---------- grades e cartões ---------- */
+.grid{display:grid;gap:clamp(.7rem,1.5vw,1.1rem)}
+.g2{grid-template-columns:repeat(2,1fr)}
+.g3{grid-template-columns:repeat(3,1fr)}
+.g4{grid-template-columns:repeat(4,1fr)}
+.g5{grid-template-columns:repeat(5,1fr)}
+
+.card{
+  background:linear-gradient(180deg,var(--surface),rgba(21,36,61,.55));
+  border:1px solid var(--line);border-left:3px solid var(--cyan);
+  border-radius:12px;padding:clamp(.85rem,1.7vh,1.25rem) clamp(1rem,1.5vw,1.35rem);
+}
+.card h3{
+  font-size:clamp(.92rem,1.25vw,1.1rem);font-weight:600;margin-bottom:.4rem;
+  display:flex;align-items:baseline;gap:.5rem;line-height:1.25;
+}
+.card p{font-size:clamp(.8rem,1.05vw,.96rem);color:var(--ink-soft);line-height:1.52;font-weight:300}
+.card p + p{margin-top:.5rem}
+.card.good{border-left-color:var(--teal)}
+.card.good h3{color:var(--teal)}
+.card.cost{border-left-color:var(--rose)}
+.card.cost h3{color:var(--rose)}
+.card.warn{border-left-color:var(--amber)}
+.card.warn h3{color:var(--amber)}
+.card.alt{border-left-color:var(--violet)}
+.card.alt h3{color:var(--violet)}
+.card .num{
+  font-family:'JetBrains Mono',monospace;font-size:.78rem;color:var(--ink-dim);
+  font-weight:500;flex:none;
+}
+.card code,.inline-code{
+  font-family:'JetBrains Mono',monospace;font-size:.86em;
+  background:rgba(56,189,248,.12);color:var(--cyan);
+  padding:.1em .38em;border-radius:4px;
+}
+
+/* ---------- citação ---------- */
+.quote{
+  border-left:3px solid var(--amber);
+  background:linear-gradient(90deg,rgba(251,191,36,.09),transparent 70%);
+  padding:clamp(1rem,2vh,1.4rem) clamp(1.1rem,2vw,1.7rem);border-radius:0 12px 12px 0;
+}
+.quote p{font-size:clamp(1rem,1.5vw,1.3rem);line-height:1.52;font-weight:300}
+.quote p em{color:var(--amber);font-style:normal;font-weight:500}
+.quote cite{
+  display:block;margin-top:.8rem;font-style:normal;
+  font-family:'JetBrains Mono',monospace;font-size:.76rem;
+  letter-spacing:.06em;color:var(--ink-dim);
+}
+
+/* ---------- diagramas ---------- */
+.flow{display:flex;align-items:center;justify-content:center;gap:clamp(.5rem,1.2vw,1rem);flex-wrap:wrap}
+.node{
+  background:var(--surface);border:1px solid var(--line-strong);border-radius:10px;
+  padding:.72rem 1rem;text-align:center;min-width:104px;
+}
+.node b{display:block;font-size:clamp(.78rem,1.02vw,.93rem);font-weight:600}
+.node span{display:block;font-family:'JetBrains Mono',monospace;font-size:.66rem;color:var(--ink-dim);margin-top:.2rem;letter-spacing:.04em}
+.node.gw{border-color:var(--violet);background:linear-gradient(180deg,rgba(167,139,250,.16),rgba(21,36,61,.6))}
+.node.svc{border-color:rgba(45,212,191,.5);background:linear-gradient(180deg,rgba(45,212,191,.12),rgba(21,36,61,.6))}
+.node.queue{border-color:var(--amber);background:linear-gradient(180deg,rgba(251,191,36,.13),rgba(21,36,61,.6))}
+.node.dead{opacity:.42;border-style:dashed}
+.arrow{color:var(--ink-dim);font-size:1.3rem;flex:none}
+.arrow.v{transform:rotate(90deg)}
+
+.mono-box{
+  border:2px solid var(--amber);border-radius:14px;
+  background:linear-gradient(180deg,rgba(251,191,36,.10),rgba(21,36,61,.5));
+  padding:clamp(.8rem,1.6vh,1.1rem);text-align:center;
+}
+.mono-box .label{
+  font-family:'JetBrains Mono',monospace;font-size:.68rem;letter-spacing:.16em;
+  text-transform:uppercase;color:var(--amber);margin-bottom:.7rem;
+}
+.chips{display:flex;flex-wrap:wrap;gap:.4rem;justify-content:center}
+.chip{
+  background:rgba(232,238,251,.07);border:1px solid var(--line);
+  border-radius:7px;padding:.36rem .7rem;font-size:clamp(.7rem,.95vw,.85rem);font-weight:500;
+}
+.db{
+  background:var(--surface-2);border:1px solid var(--line-strong);
+  border-radius:999px;padding:.42rem .95rem;text-align:center;
+  font-family:'JetBrains Mono',monospace;font-size:.7rem;color:var(--ink-soft);letter-spacing:.04em;
+}
+.svc-col{display:flex;flex-direction:column;align-items:stretch;gap:.4rem}
+.stage{
+  border:1px solid var(--line);border-radius:12px;padding:clamp(.75rem,1.5vh,1rem);
+  background:rgba(21,36,61,.45);
+}
+.stage .step{
+  font-family:'JetBrains Mono',monospace;font-size:.68rem;letter-spacing:.14em;
+  text-transform:uppercase;color:var(--cyan);margin-bottom:.6rem;
+}
+.stage p{font-size:clamp(.74rem,.95vw,.87rem);color:var(--ink-soft);line-height:1.45;font-weight:300;margin-top:.6rem}
+
+/* ---------- listas ---------- */
+ul.ticks{list-style:none;display:flex;flex-direction:column;gap:.55rem}
+ul.ticks li{
+  font-size:clamp(.82rem,1.1vw,1rem);color:var(--ink-soft);line-height:1.5;
+  padding-left:1.5rem;position:relative;font-weight:300;
+}
+ul.ticks li::before{
+  content:'▸';position:absolute;left:0;color:var(--cyan);font-size:.85em;top:.15em;
+}
+ul.ticks li strong{color:var(--ink);font-weight:600}
+ul.ticks.warn li::before{content:'✕';color:var(--rose);font-size:.8em}
+ul.ticks.plus li::before{content:'✓';color:var(--teal);font-size:.85em}
+
+.split{display:grid;grid-template-columns:1fr 1fr;gap:clamp(1rem,2.4vw,2rem);align-items:start}
+.panel-title{
+  font-family:'JetBrains Mono',monospace;font-size:.72rem;letter-spacing:.14em;
+  text-transform:uppercase;margin-bottom:.75rem;
+}
+.panel-title.a{color:var(--teal)}
+.panel-title.b{color:var(--rose)}
+.panel-title.c{color:var(--violet)}
+
+table.matrix{width:100%;border-collapse:collapse;font-size:clamp(.76rem,1vw,.93rem)}
+table.matrix th,table.matrix td{
+  text-align:left;padding:.62rem .8rem;border-bottom:1px solid var(--line);vertical-align:top;
+}
+table.matrix th{
+  font-family:'JetBrains Mono',monospace;font-size:.68rem;letter-spacing:.12em;
+  text-transform:uppercase;color:var(--ink-dim);font-weight:500;
+}
+table.matrix td:first-child{color:var(--ink);font-weight:500;width:26%}
+table.matrix td{color:var(--ink-soft);font-weight:300}
+table.matrix tr:last-child td{border-bottom:none}
+
+.big-q{
+  font-size:clamp(1.5rem,3.4vw,2.9rem);font-weight:300;line-height:1.28;
+  max-width:22ch;letter-spacing:-.015em;
+}
+.big-q b{font-weight:700;color:var(--cyan)}
+.answer{
+  margin-top:clamp(1.2rem,3vh,2rem);font-size:clamp(.95rem,1.4vw,1.2rem);
+  color:var(--ink-soft);font-weight:300;max-width:52ch;line-height:1.5;
+}
+
+.takeaway{
+  display:flex;gap:1rem;align-items:flex-start;
+  border-top:1px solid var(--line);padding-top:1rem;
+}
+.takeaway .n{
+  font-family:'JetBrains Mono',monospace;font-size:clamp(1.4rem,2.6vw,2.2rem);
+  font-weight:700;color:var(--cyan);line-height:1;opacity:.75;flex:none;
+}
+.takeaway p{font-size:clamp(.88rem,1.2vw,1.08rem);line-height:1.48;color:var(--ink-soft);font-weight:300;max-width:88ch}
+.takeaway p strong{color:var(--ink);font-weight:600}
+
+.refs{display:flex;flex-direction:column;gap:.6rem}
+.refs li{list-style:none;font-size:clamp(.78rem,1vw,.92rem);color:var(--ink-soft);font-weight:300;line-height:1.45}
+.refs li b{color:var(--ink);font-weight:600}
+
+/* ---------- palavra-gatilho: marca-texto para guiar a fala ---------- */
+.kw{
+  color:var(--ink);font-weight:600;
+  background:linear-gradient(transparent 58%,rgba(56,189,248,.32) 58%);
+  padding:0 .12em;border-radius:2px;
+}
+.lead .kw,.ticks .kw,.quote .kw{color:var(--ink)}
+
+/* ---------- glossário: jargão em português claro ---------- */
+.termo{border-bottom:1.5px dashed var(--cyan);padding-bottom:1px}
+.glossario{
+  border:1px solid var(--line);border-radius:12px;
+  background:rgba(56,189,248,.05);
+  padding:clamp(.6rem,1.2vh,.85rem) clamp(.85rem,1.4vw,1.15rem);
+}
+.glossario-label{
+  font-family:'JetBrains Mono',monospace;font-size:.66rem;letter-spacing:.14em;
+  text-transform:uppercase;color:var(--cyan);margin-bottom:.5rem;
+}
+.glossario-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(210px,1fr));gap:.45rem 1.2rem}
+.glos{font-size:clamp(.7rem,.88vw,.82rem);line-height:1.42;color:var(--ink-soft);font-weight:300}
+.glos b{display:block;color:var(--ink);font-weight:600;margin-bottom:.1rem}
+
+/* ---------- cromo da apresentação ---------- */
+.progress{position:fixed;top:0;left:0;height:3px;background:linear-gradient(90deg,var(--cyan),var(--teal));width:0;z-index:60;transition:width .3s ease}
+.hud{
+  position:fixed;bottom:0;left:0;right:0;z-index:50;
+  display:flex;align-items:center;justify-content:space-between;
+  padding:.7rem clamp(20px,3vw,40px);
+  background:linear-gradient(180deg,transparent,rgba(10,17,32,.92) 42%);
+  font-family:'JetBrains Mono',monospace;font-size:.72rem;color:var(--ink-dim);letter-spacing:.06em;
+}
+.hud .block{text-transform:uppercase;letter-spacing:.16em}
+.hud .ctrl{display:flex;align-items:center;gap:.5rem}
+.hud button{
+  background:rgba(232,238,251,.06);color:var(--ink-soft);
+  border:1px solid var(--line);border-radius:7px;
+  padding:.36rem .7rem;font-family:inherit;font-size:.72rem;cursor:pointer;transition:.18s;
+}
+.hud button:hover:not(:disabled){background:rgba(56,189,248,.16);color:var(--ink);border-color:var(--cyan)}
+.hud button:disabled{opacity:.28;cursor:default}
+.counter{min-width:64px;text-align:center}
+
+.overview{
+  position:fixed;inset:0;z-index:80;display:none;
+  background:rgba(8,14,26,.97);padding:clamp(28px,5vh,56px) clamp(28px,5vw,64px);overflow-y:auto;
+}
+.overview.open{display:block}
+.overview h2{font-size:1.2rem;font-weight:600;margin-bottom:1.2rem}
+.overview .ov-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(230px,1fr));gap:.55rem}
+.overview button{
+  text-align:left;background:var(--surface);border:1px solid var(--line);
+  border-radius:9px;padding:.6rem .8rem;color:var(--ink-soft);cursor:pointer;
+  font-family:inherit;font-size:.82rem;transition:.18s;display:flex;gap:.6rem;align-items:baseline;
+}
+.overview button:hover{border-color:var(--cyan);color:var(--ink);background:var(--surface-2)}
+.overview button i{font-family:'JetBrains Mono',monospace;font-style:normal;color:var(--ink-dim);font-size:.72rem;flex:none}
+.overview .hint{margin-top:1.2rem;font-family:'JetBrains Mono',monospace;font-size:.72rem;color:var(--ink-dim)}
+
+@media (max-width:900px){
+  .g3,.g4,.g5{grid-template-columns:repeat(2,1fr)}
+  .split{grid-template-columns:1fr}
+  .slide{padding:28px 22px 66px}
+}
+@media (max-width:620px){
+  .g2,.g3,.g4,.g5{grid-template-columns:1fr}
+  .flow{flex-direction:column}
+  .arrow{transform:rotate(90deg)}
+}
+
+@media print{
+  body{overflow:visible;background:#fff}
+  .slide{display:flex!important;height:auto;min-height:0;page-break-after:always;background:var(--bg);padding:26px 30px}
+  .hud,.progress,.overview{display:none!important}
+}
+</style>
+</head>
+<body>
+
+<div class="progress" id="progress"></div>
+
+<div class="deck" id="deck">
+
+<!-- 1 · CAPA ============================================================= -->
+<section class="slide cover active" data-block="Abertura" data-title="Capa">
+  <div class="tag">Engenharia de Software · Arquitetura</div>
+  <h1>Arquitetura de Microsserviços</h1>
+  <p class="sub">Do monolito à decomposição — o que se ganha, o que se paga e como decidir com critério de engenharia.</p>
+  <div class="who">
+    <strong>Prof. Dr. Ciro J. A. Macedo</strong>
+    <span>Instituto Federal de Goiás · Câmpus Cidade de Goiás</span>
+    <span>ciro.macedo@ifg.edu.br</span>
+  </div>
+</section>
+
+<!-- 2 · A PERGUNTA ======================================================= -->
+<section class="slide" data-block="Abertura" data-title="A pergunta desta palestra">
+  <div class="eyebrow">Abertura</div>
+  <h1>A pergunta desta palestra</h1>
+  <p class="lead">Programar vocês já sabem — ou estão aprendendo. Esta palestra é sobre a parte que <span class="kw">não é programar</span>: a que decide se o sistema continua de pé no terceiro ano de vida, com outra equipe cuidando dele.</p>
+  <div class="body">
+    <p class="big-q">Microsserviços resolvem o meu problema — ou <b>criam um problema novo</b> que eu ainda não sei operar?</p>
+    <div class="grid g3">
+      <div class="card"><h3>O percurso</h3><p>Primeiro o <span class="kw">vocabulário</span> de arquitetura; no fim, as <span class="kw">competências</span> que o mercado cobra de quem trabalha com isso.</p></div>
+      <div class="card"><h3>Um caso só</h3><p>Uma <span class="kw">loja virtual</span>, do primeiro sistema “tudo junto” até a divisão em serviços.</p></div>
+      <div class="card"><h3>O compromisso</h3><p>Nenhuma tecnologia sem o <span class="kw">preço ao lado</span>. Arquitetura é escolha sob restrição, não catálogo de soluções.</p></div>
+    </div>
+    <div class="glossario">
+      <div class="glossario-label">📖 Termos desta tela — em português claro</div>
+      <div class="glossario-grid">
+        <div class="glos"><b>Monolito</b>Um sistema que é uma peça só: todo o código vira um único programa, que vai para o ar de uma vez.</div>
+        <div class="glos"><b>Microsserviços</b>O mesmo sistema dividido em vários programas pequenos e independentes, que conversam entre si pela rede.</div>
+        <div class="glos"><b>Operar</b>Manter o sistema funcionando depois de pronto: no ar, monitorado, atualizado, socorrido quando cai.</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- 3 · DESIGN × ARQUITETURA ============================================= -->
+<section class="slide" data-block="1 · O que é arquitetura" data-title="Design de código × arquitetura de software">
+  <div class="eyebrow">Bloco 1 · O que é arquitetura</div>
+  <h1>O difícil não é escrever o código — é <em>mudá-lo</em></h1>
+  <p class="lead">Custo de software é <span class="kw">custo de mudança</span>: a primeira versão é a parte barata. Caro é alterar, dois anos depois, um sistema que já está em uso — e quem altera <span class="kw">quase nunca é quem escreveu</span>.</p>
+  <div class="body">
+    <div class="split">
+      <div>
+        <div class="panel-title c">Design de código · zoom de perto</div>
+        <div class="card alt">
+          <h3>Como cada parte é escrita</h3>
+          <p>As classes, o que cada uma faz e como conversam. Perguntas: esta classe depende de <span class="kw">quantas outras</span>? Está <span class="termo">acoplada</span> demais?</p>
+          <p>Ferramentas: princípios <span class="termo">SOLID, DRY, KISS</span> e <span class="termo">padrões de projeto</span>.</p>
+        </div>
+      </div>
+      <div>
+        <div class="panel-title a">Arquitetura de software · zoom de longe</div>
+        <div class="card good">
+          <h3>Como as partes se organizam</h3>
+          <p>Os grandes blocos do sistema e como se relacionam. Perguntas: quais são os <span class="kw">módulos</span>? <span class="kw">Quem pode chamar quem</span>? Onde ficam as <span class="kw">fronteiras</span>?</p>
+          <p>Ferramentas: camadas, módulos, estilos como arquitetura limpa e hexagonal.</p>
+        </div>
+      </div>
+    </div>
+    <p class="lead" style="margin:0">Dominar a linguagem é <span class="kw">pré-requisito</span>, não diferencial. O que distingue o profissional experiente é saber onde traçar fronteiras — e <strong>quando não traçá-las</strong>.</p>
+    <div class="glossario">
+      <div class="glossario-label">📖 Termos desta tela — em português claro</div>
+      <div class="glossario-grid">
+        <div class="glos"><b>Acoplamento</b>O quanto uma parte depende de outra. Muito acoplado: mexeu num lugar, quebrou em outro.</div>
+        <div class="glos"><b>SOLID · DRY · KISS</b>Princípios para escrever código organizado: cada classe com uma responsabilidade; não repetir código; manter simples.</div>
+        <div class="glos"><b>Padrões de projeto</b>Soluções já testadas para problemas que se repetem — catálogo clássico de 1994, conhecido como GoF.</div>
+        <div class="glos"><b>Módulo</b>Um pedaço do sistema com responsabilidade própria e fronteira clara — como um departamento numa empresa.</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- 4 · CUSTO DE REVERSÃO ================================================ -->
+<section class="slide" data-block="1 · O que é arquitetura" data-title="O critério: custo de reversão">
+  <div class="eyebrow">Bloco 1 · O que é arquitetura</div>
+  <h1>O critério: custo de reversão</h1>
+  <p class="lead">A diferença entre os dois níveis não é de importância. É de <span class="kw">quanto custa desfazer</span> — pense numa casa.</p>
+  <div class="body">
+    <div class="split">
+      <div>
+        <div class="panel-title c">Design de interiores · reversível</div>
+        <div class="card alt">
+          <h3>Errar custa um fim de semana</h3>
+          <p>Sofá, iluminação, quadro na parede. Em software: o nome de uma classe, um trecho reorganizado, a troca de uma biblioteca.</p>
+          <p><span class="kw">Decida rápido</span> — deliberar demais aqui é desperdício.</p>
+        </div>
+      </div>
+      <div>
+        <div class="panel-title a">Planta da casa · cara de reverter</div>
+        <div class="card warn">
+          <h3>Errar custa <span class="kw">obra</span></h3>
+          <p>Paredes estruturais, acessos. Em software: as fronteiras entre partes, o <span class="termo">modelo de dados</span>, o <span class="termo">contrato da API</span>, uma base de dados ou várias.</p>
+          <p><span class="kw">Decida com evidência</span> — pergunte que problema isso resolve.</p>
+        </div>
+      </div>
+    </div>
+    <div class="quote">
+      <p>Se a decisão errada custa <em>um trimestre e um plano de migração</em>, é arquitetura. Se custa <em>uma tarde</em>, é design. Monolito ou microsserviços é <em>parede estrutural</em>: separar um módulo vira mais um servidor, mais um banco e uma rede no meio.</p>
+    </div>
+    <div class="glossario">
+      <div class="glossario-label">📖 Termos desta tela — em português claro</div>
+      <div class="glossario-grid">
+        <div class="glos"><b>Modelo de dados</b>Como as informações são organizadas no banco: que tabelas existem e como se ligam.</div>
+        <div class="glos"><b>API</b>A “porta de atendimento” de um programa: o conjunto de pedidos que outros programas podem fazer a ele.</div>
+        <div class="glos"><b>Contrato da API</b>O combinado sobre essa porta — o que se pode pedir e o que volta. Mudar o contrato quebra quem usa.</div>
+        <div class="glos"><b>Migração</b>Mover sistema ou dados de um formato para outro sem parar o que está funcionando.</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- 5 · O CASO: MONOLITO ================================================= -->
+<section class="slide" data-block="2 · O monolito" data-title="O caso condutor: a loja virtual">
+  <div class="eyebrow">Bloco 2 · O monolito · caso condutor</div>
+  <h1>A loja virtual, versão 1</h1>
+  <p class="lead">Navegador, aplicativo e parceiros enviam <span class="termo">requisições</span>. Um <span class="termo">balanceador de carga</span> reparte o movimento entre cópias de <span class="kw">uma única aplicação</span>, que faz tudo, sobre <span class="kw">um único banco</span>.</p>
+  <div class="body">
+    <div class="flow" style="align-items:stretch">
+      <div class="svc-col" style="justify-content:center">
+        <div class="node"><b>Navegador</b><span>web</span></div>
+        <div class="node"><b>App móvel</b><span>celular</span></div>
+        <div class="node"><b>Parceiro</b><span>outro sistema</span></div>
+      </div>
+      <div class="arrow">→</div>
+      <div class="node gw" style="align-self:center"><b>Balanceador de carga</b><span>reparte o movimento</span></div>
+      <div class="arrow">→</div>
+      <div class="svc-col" style="flex:1;max-width:460px;align-self:center">
+        <div class="mono-box">
+          <div class="label">Aplicação da loja · vai para o ar de uma vez</div>
+          <div class="chips">
+            <span class="chip">Catálogo</span><span class="chip">Carrinho</span><span class="chip">Pedidos</span>
+            <span class="chip">Pagamento</span><span class="chip">Estoque</span><span class="chip">Notificação</span>
+            <span class="chip">Relatórios</span>
+          </div>
+        </div>
+        <div class="arrow v" style="text-align:center">→</div>
+        <div class="db">banco de dados único · todas as tabelas juntas</div>
+      </div>
+    </div>
+    <p class="lead" style="margin:0">Um código, uma <span class="termo">implantação</span>, um banco. E isto <span class="kw">não é “como não fazer”</span>: é como quase todo sistema de sucesso <strong>nasceu</strong> — inclusive os que hoje são exemplo de microsserviços.</p>
+    <div class="glossario">
+      <div class="glossario-label">📖 Termos desta tela — em português claro</div>
+      <div class="glossario-grid">
+        <div class="glos"><b>Requisição</b>O pedido que o navegador ou o app envia ao servidor: “me mostre este produto”. O servidor devolve uma resposta.</div>
+        <div class="glos"><b>Balanceador de carga</b>Um “porteiro” que distribui os pedidos entre várias cópias do sistema para nenhuma ficar sobrecarregada.</div>
+        <div class="glos"><b>Implantação (deploy)</b>Colocar uma nova versão do sistema no ar, para os usuários.</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- 6 · O MONOLITO NÃO É O VILÃO ========================================= -->
+<section class="slide" data-block="2 · O monolito" data-title="O monolito não é o vilão">
+  <div class="eyebrow">Bloco 2 · O monolito</div>
+  <h1>O monolito não é o vilão</h1>
+  <p class="lead">Antes dos problemas, o que se <span class="kw">perde</span> ao sair dele. Tudo isto some no primeiro dia de sistema distribuído.</p>
+  <div class="body">
+    <div class="grid g4">
+      <div class="card good"><h3>Transação “tudo ou nada”</h3><p>Gravar o pedido, baixar o estoque e registrar o pagamento numa <span class="termo">transação ACID</span>: ou tudo dá certo, ou <span class="kw">nada acontece</span>. De graça.</p></div>
+      <div class="card good"><h3>O compilador ajuda</h3><p>Mudou o nome de um conceito? O <span class="termo">compilador</span> aponta cada lugar que quebrou. Ele <span class="kw">não atravessa a rede</span>.</p></div>
+      <div class="card good"><h3>Um código, uma implantação</h3><p>Uma versão no ar. A operação inteira <span class="kw">cabe na cabeça</span> de uma pessoa.</p></div>
+      <div class="card good"><h3>O erro vem com endereço</h3><p>O <span class="termo">rastro da pilha</span> mostra o caminho completo da falha. Depurar é <span class="kw">ler uma lista</span>, não investigar sete sistemas.</p></div>
+    </div>
+    <div class="quote">
+      <p>Não confunda <em>monolito</em> com <em>“grande bola de lama”</em>: o primeiro é um sistema que vai para o ar como peça única; o segundo é código <em>sem organização interna</em>. Microsserviço não cura bagunça — <em>espalha a bagunça pela rede</em>.</p>
+    </div>
+    <div class="glossario">
+      <div class="glossario-label">📖 Termos desta tela — em português claro</div>
+      <div class="glossario-grid">
+        <div class="glos"><b>Transação ACID</b>Garantias do banco: <b style="display:inline">A</b>tomicidade (tudo ou nada), <b style="display:inline">C</b>onsistência (regras sempre válidas), <b style="display:inline">I</b>solamento (uma não atrapalha a outra), <b style="display:inline">D</b>urabilidade (gravou, não perde).</div>
+        <div class="glos"><b>Compilador</b>O programa que traduz o código para a máquina — e reclama antes de rodar quando algo não bate.</div>
+        <div class="glos"><b>Rastro da pilha (stack trace)</b>A lista que o programa mostra no erro: qual função chamou qual até chegar à falha.</div>
+        <div class="glos"><b>Grande bola de lama</b>Tradução de <i>big ball of mud</i>: apelido de sistema onde tudo depende de tudo, sem divisão clara.</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- 7 · ONDE DÓI ========================================================= -->
+<section class="slide" data-block="2 · O monolito" data-title="Onde o monolito começa a doer">
+  <div class="eyebrow">Bloco 2 · O monolito</div>
+  <h1>Onde o monolito começa a doer</h1>
+  <p class="lead">Cinco dores, todas na nossa loja. Nenhuma é sobre código feio: todas são de <span class="kw">tamanho</span> — de movimento, de negócio ou de equipe.</p>
+  <div class="body">
+    <div class="grid g5">
+      <div class="card cost"><h3><span class="num">01</span> Tudo sobe junto</h3><p>Mudar <span class="kw">só o texto</span> de um e-mail exige recompilar, testar e implantar a loja inteira.</p></div>
+      <div class="card cost"><h3><span class="num">02</span> Uma falha derruba tudo</h3><p>Um <span class="termo">vazamento de memória</span> nos relatórios consome o programa e <span class="kw">derruba a compra</span> junto.</p></div>
+      <div class="card cost"><h3><span class="num">03</span> Cresce tudo ou nada</h3><p>Na <span class="kw">Black Friday</span> o gargalo é Pedidos, mas é preciso <span class="termo">escalar</span> a loja inteira — pagando por máquina ociosa.</p></div>
+      <div class="card cost"><h3><span class="num">04</span> Uma tecnologia só</h3><p>Preço em tempo real e página simples presos à <span class="kw">mesma linguagem</span> e ferramentas.</p></div>
+      <div class="card cost"><h3><span class="num">05</span> Equipes na fila</h3><p><span class="kw">Seis times</span> disputando o mesmo dia de publicar. Coordenar custa mais que programar.</p></div>
+    </div>
+    <p class="lead" style="margin:0">Com <span class="kw">quatro desenvolvedores e três mil usuários</span>, nenhuma dessas dores aparece. É a primeira pergunta antes de dividir qualquer coisa.</p>
+    <div class="glossario">
+      <div class="glossario-label">📖 Termos desta tela — em português claro</div>
+      <div class="glossario-grid">
+        <div class="glos"><b>Vazamento de memória</b>Defeito em que o programa vai ocupando memória e nunca devolve, até travar.</div>
+        <div class="glos"><b>Escalar</b>Aumentar a capacidade para atender mais gente — em geral, rodando mais cópias do sistema.</div>
+        <div class="glos"><b>Gargalo</b>A parte mais lenta, que segura todo o resto — como o caixa único de um supermercado lotado.</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- 8 · DEFINIÇÃO ======================================================== -->
+<section class="slide" data-block="3 · Ganho e preço" data-title="Microsserviços: definição">
+  <div class="eyebrow">Bloco 3 · Microsserviços</div>
+  <h1>A definição, e o que ela realmente exige</h1>
+  <div class="rule"></div>
+  <div class="body">
+    <div class="quote">
+      <p>“Microsserviços são uma abordagem <em>arquitetônica e organizacional</em> do desenvolvimento de software na qual o software consiste em <em>pequenos serviços independentes</em> que se comunicam usando <em>APIs bem definidas</em>. Esses serviços pertencem a <em>pequenas equipes autossuficientes</em>.”</p>
+      <cite>Definição da AWS (nuvem da Amazon) · leitura complementar: Sam Newman, Building Microservices</cite>
+    </div>
+    <div class="grid g4">
+      <div class="card"><h3>Técnica <em>e</em> organizacional</h3><p>Muda também <span class="kw">como as equipes se organizam</span>. Ignorar essa metade é a causa mais comum de fracasso.</p></div>
+      <div class="card"><h3>Independentes</h3><p>Cada um vai para o ar sozinho. Se dois sempre sobem juntos, <span class="kw">são um serviço só</span> — com rede no meio.</p></div>
+      <div class="card"><h3>APIs bem definidas</h3><p>A API é a <span class="kw">única porta</span>. Nada de ler direto a tabela do vizinho “só desta vez”.</p></div>
+      <div class="card"><h3>Divididos pelo negócio</h3><p>O recorte segue o <span class="termo">domínio</span> — Pedidos, Catálogo, Pagamento — e <span class="kw">não a parte técnica</span>.</p></div>
+    </div>
+    <div class="glossario">
+      <div class="glossario-label">📖 Termos desta tela — em português claro</div>
+      <div class="glossario-grid">
+        <div class="glos"><b>Serviço</b>Um programa que fica no ar atendendo pedidos de outros programas.</div>
+        <div class="glos"><b>Domínio</b>O assunto do negócio que o sistema atende: numa loja, produtos, pedidos, pagamentos.</div>
+        <div class="glos"><b>Equipe autossuficiente</b>Um time que cuida do seu serviço do código até o ar, sem depender de outros times.</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- 9 · A LOJA DECOMPOSTA ================================================ -->
+<section class="slide" data-block="3 · Ganho e preço" data-title="A loja decomposta">
+  <div class="eyebrow">Bloco 3 · Microsserviços · caso condutor</div>
+  <h1>A mesma loja, decomposta</h1>
+  <p class="lead">Cada parte do negócio vira um programa pequeno (<span class="kw">micro</span>) com uma responsabilidade clara (<span class="kw">serviço</span>) — e <span class="kw">seu próprio banco</span>.</p>
+  <div class="body">
+    <div class="flow" style="align-items:center">
+      <div class="node gw"><b>Portão de entrada</b><span>API Gateway</span></div>
+      <div class="arrow">→</div>
+      <div class="grid g5" style="flex:1">
+        <div class="svc-col"><div class="node svc"><b>Catálogo</b><span>produtos</span></div><div class="db">banco · catálogo</div></div>
+        <div class="svc-col"><div class="node svc"><b>Pedidos</b><span>fechar a compra</span></div><div class="db">banco · pedidos</div></div>
+        <div class="svc-col"><div class="node svc"><b>Pagamento</b><span>cobrança</span></div><div class="db">banco · pagamento</div></div>
+        <div class="svc-col"><div class="node svc"><b>Estoque</b><span>disponibilidade</span></div><div class="db">banco · estoque</div></div>
+        <div class="svc-col"><div class="node svc"><b>Notificação</b><span>e-mail · celular</span></div><div class="db">banco · notificação</div></div>
+      </div>
+    </div>
+    <div class="quote">
+      <p>Se <em>Pedidos</em> cair, o cliente ainda navega no catálogo e a loja segue aparecendo no Google. O prejuízo deixa de ser <em>loja fora do ar</em> e vira <em>degradação parcial</em>. Sistema cai — a diferença é que agora <em>cai um pedaço</em>.</p>
+    </div>
+    <div class="glossario">
+      <div class="glossario-label">📖 Termos desta tela — em português claro</div>
+      <div class="glossario-grid">
+        <div class="glos"><b>Portão de entrada (API Gateway)</b>Um ponto único por onde todos os pedidos entram antes de seguir para o serviço certo. Volta no slide 16.</div>
+        <div class="glos"><b>Degradação parcial</b>O sistema funciona “pela metade”: uma parte para, o resto continua atendendo.</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- 10 · O QUE SE GANHA ================================================== -->
+<section class="slide" data-block="3 · Ganho e preço" data-title="O que se ganha">
+  <div class="eyebrow">Bloco 3 · Microsserviços</div>
+  <h1>O que se ganha</h1>
+  <div class="rule"></div>
+  <div class="body">
+    <div class="grid g3">
+      <div class="card good"><h3>Falha isolada</h3><p>A falha fica no serviço que a causou — <span class="kw">desde que</span> quem chama tenha <span class="termo">tempo-limite</span> e <span class="termo">disjuntor</span>. Senão, ela atravessa a fronteira.</p></div>
+      <div class="card good"><h3>Publicação independente</h3><p>Corrigir o texto do e-mail vira uma publicação <span class="kw">de minutos</span>, sem encostar na compra.</p></div>
+      <div class="card good"><h3>Cresce só o que precisa</h3><p><span class="kw">Três cópias de Pedidos</span> na Black Friday, uma de Catálogo. Paga-se pela capacidade onde está o gargalo.</p></div>
+      <div class="card good"><h3>Tecnologia sob medida</h3><p>Cada serviço na ferramenta certa — <span class="kw">com moderação</span>: cada linguagem nova é mais uma coisa para socorrer <span class="kw">às 3h da manhã</span>.</p></div>
+      <div class="card good"><h3>Equipes donas do seu pedaço</h3><p>Times pequenos, do código ao ar, sem fila. É o ganho que <span class="kw">mais aparece</span> na prática.</p></div>
+      <div class="card warn"><h3>Atenção: Lei de Conway</h3><p>O sistema acaba <span class="kw">espelhando a organização</span>. Dividir o sistema sem dividir os times dá o pior dos dois mundos.</p></div>
+    </div>
+    <div class="glossario">
+      <div class="glossario-label">📖 Termos desta tela — em português claro</div>
+      <div class="glossario-grid">
+        <div class="glos"><b>Tempo-limite (timeout)</b>“Se não responder em 2 segundos, desisto” — evita esperar para sempre por um serviço travado.</div>
+        <div class="glos"><b>Disjuntor (circuit breaker)</b>Como o da sua casa: depois de várias falhas seguidas, para de chamar o serviço doente por um tempo.</div>
+        <div class="glos"><b>Lei de Conway</b>Observação de Melvin Conway (1968): equipes que não conversam produzem partes de sistema que não conversam bem.</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- 11 · O QUE SE PAGA =================================================== -->
+<section class="slide" data-block="3 · Ganho e preço" data-title="O que se paga">
+  <div class="eyebrow">Bloco 3 · Microsserviços</div>
+  <h1>O que se paga</h1>
+  <p class="lead">O que antes era uma chamada dentro do mesmo programa agora <span class="kw">atravessa a rede</span>. E a rede tem opinião própria.</p>
+  <div class="body">
+    <div class="grid g3">
+      <div class="card cost"><h3>A rede não é confiável</h3><p>As <span class="termo">falácias da computação distribuída</span> (1994) seguem valendo: a rede <span class="kw">falha</span>, a <span class="termo">latência</span> <span class="kw">não é zero</span>, o caminho muda.</p></div>
+      <div class="card cost"><h3>Adeus, “tudo ou nada”</h3><p>Não há transação ACID que atravesse <span class="kw">cinco bancos</span>. Entra a <span class="termo">consistência eventual</span>.</p></div>
+      <div class="card cost"><h3>O erro perde o endereço</h3><p>Aparece no serviço E, foi causado no B, começou no A. Sem rastreamento, investigar é <span class="kw">arqueologia</span>.</p></div>
+      <div class="card cost"><h3>Mais infraestrutura</h3><p>Mais servidores, mais publicações automáticas, mais certificados, <span class="kw">mais conta da nuvem</span> — e alguém mantendo tudo de pé.</p></div>
+      <div class="card cost"><h3>Cada conversa é uma decisão</h3><p>Esperar a resposta ou não? E <span class="kw">se demorar</span>? Cada ligação entre dois serviços tem consequência.</p></div>
+      <div class="card cost"><h3>Monitorar vira obrigação</h3><p>Sem saber o estado de cada serviço, não há como operar — <span class="kw">nem como dormir</span>.</p></div>
+    </div>
+    <div class="glossario">
+      <div class="glossario-label">📖 Termos desta tela — em português claro</div>
+      <div class="glossario-grid">
+        <div class="glos"><b>Falácias da computação distribuída</b>Oito suposições erradas que todo programador faz ao distribuir um sistema — listadas na Sun Microsystems.</div>
+        <div class="glos"><b>Latência</b>O tempo que a mensagem leva para ir e voltar pela rede. Nunca é zero.</div>
+        <div class="glos"><b>Consistência eventual</b>Os dados ficam certos <i>depois de um tempo</i>, não no mesmo instante — por alguns segundos, partes do sistema discordam.</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- 12 · O PRÊMIO ======================================================== -->
+<section class="slide" data-block="3 · Ganho e preço" data-title="O prêmio do microsserviço">
+  <div class="eyebrow">Bloco 3 · Microsserviços</div>
+  <h1>O prêmio do microsserviço</h1>
+  <p class="lead">“Prêmio” no sentido de <span class="kw">seguro</span> (Martin Fowler): abaixo de um certo tamanho, a equipe com microsserviços produz <strong>menos</strong> que a equipe com um monolito bem organizado. <span class="kw">Paga o seguro e não usa.</span></p>
+  <div class="body">
+    <div class="split">
+      <div>
+        <div class="panel-title b">Ainda não é hora</div>
+        <ul class="ticks warn">
+          <li><strong>Equipe única</strong> — não há fila de times para resolver.</li>
+          <li><strong>Negócio ainda mudando</strong> — mover fronteira entre serviços é caro.</li>
+          <li><strong>Publicar já é sofrido</strong> — com quinze serviços, dói quinze vezes.</li>
+          <li><strong>Sem monitoramento</strong> — você não conseguirá explicar a própria falha.</li>
+        </ul>
+      </div>
+      <div>
+        <div class="panel-title a">O patamar chegou</div>
+        <ul class="ticks plus">
+          <li><strong>Várias equipes</strong> disputando o mesmo dia de publicar.</li>
+          <li><strong>Partes com exigências diferentes</strong> — a compra não pode cair; o relatório pode esperar.</li>
+          <li><strong>Negócio maduro</strong>, com fronteiras que já se provaram estáveis.</li>
+          <li><strong>Cultura de operação</strong>: publicação automática, métricas, <span class="termo">plantão</span>.</li>
+        </ul>
+      </div>
+    </div>
+    <p class="lead" style="margin:0">Com três sinais da coluna esquerda, a resposta certa é <span class="kw">não</span>. E dizer não com esse argumento é <strong>engenharia</strong>, não conservadorismo.</p>
+    <div class="glossario">
+      <div class="glossario-label">📖 Termos desta tela — em português claro</div>
+      <div class="glossario-grid">
+        <div class="glos"><b>Patamar de complexidade</b>O ponto a partir do qual o sistema e a equipe ficaram grandes o bastante para a divisão compensar.</div>
+        <div class="glos"><b>Plantão</b>Escala de quem atende se o sistema cair fora do horário — inclusive de madrugada.</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- 13 · MONOLITO PRIMEIRO =============================================== -->
+<section class="slide" data-block="4 · Como se faz" data-title="Monolito primeiro">
+  <div class="eyebrow">Bloco 4 · Como se faz direito</div>
+  <h1>Monolito primeiro</h1>
+  <p class="lead">Recomendação de Martin Fowler. O motivo surpreende: é o sistema junto que permite <span class="kw">descobrir</span> onde ficam as fronteiras. Dentro dele, mover fronteira é <span class="kw">reorganizar código</span>; entre serviços, é <span class="kw">migrar dados e negociar entre times</span>.</p>
+  <div class="body">
+    <div class="flow">
+      <div class="node"><b>Monolito</b><span>negócio em descoberta</span></div>
+      <div class="arrow">→</div>
+      <div class="node svc"><b>Monolito modular</b><span>fronteiras explícitas</span></div>
+      <div class="arrow">→</div>
+      <div class="node svc"><b>Extração gradual</b><span>uma parte por vez</span></div>
+      <div class="arrow">→</div>
+      <div class="node gw"><b>Serviços</b><span>só onde compensa</span></div>
+    </div>
+    <div class="grid g2">
+      <div class="card good"><h3>A parada que basta para a maioria</h3><p>O <span class="termo">monolito modular</span>: <span class="kw">fronteiras claras</span>, um sistema só no ar. Ganha a organização <span class="kw">sem pagar a rede</span>. Para muitos sistemas, é o ponto final — e está tudo certo.</p></div>
+      <div class="card cost"><h3>Por que não começar dividido</h3><p>Fronteira desenhada antes de conhecer o negócio <span class="kw">sai errada</span> — e corte errado se paga em lentidão, em dado inconsistente e em reunião.</p></div>
+    </div>
+    <div class="quote"><p><em>“Comece com um monolito, migre para microsserviços.”</em> Quase todos os casos de sucesso seguiram esse caminho; quase todos os fracassos começaram divididos.</p><cite>Martin Fowler · MonolithFirst</cite></div>
+    <div class="glossario">
+      <div class="glossario-label">📖 Termos desta tela — em português claro</div>
+      <div class="glossario-grid">
+        <div class="glos"><b>Monolito modular</b>Um sistema só no ar, mas dividido por dentro em módulos que não invadem uns aos outros.</div>
+        <div class="glos"><b>Extração</b>Tirar uma parte de dentro do monolito e transformá-la num serviço separado.</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- 14 · O CORTE ========================================================= -->
+<section class="slide" data-block="4 · Como se faz" data-title="O corte é pelo negócio">
+  <div class="eyebrow">Bloco 4 · Como se faz direito</div>
+  <h1>O corte é pelo negócio, não pela parte técnica</h1>
+  <p class="lead">O critério vem do <span class="termo">Projeto Orientado ao Domínio</span>: cortar no <span class="termo">contexto delimitado</span> — o limite dentro do qual as palavras do negócio têm <span class="kw">um só significado</span>.</p>
+  <div class="body">
+    <div class="split">
+      <div>
+        <div class="panel-title b">Errado · por camada técnica</div>
+        <div class="flow" style="justify-content:flex-start">
+          <div class="node dead"><b>Serviço das<br>telas</b></div>
+          <div class="arrow">→</div>
+          <div class="node dead"><b>Serviço das<br>regras</b></div>
+          <div class="arrow">→</div>
+          <div class="node dead"><b>Serviço do<br>banco</b></div>
+        </div>
+        <ul class="ticks warn" style="margin-top:1rem">
+          <li>Toda mudança atravessa os três: <span class="kw">três publicações combinadas</span>.</li>
+          <li>Ganhou a lentidão da rede <span class="kw">sem ganhar autonomia</span>.</li>
+        </ul>
+      </div>
+      <div>
+        <div class="panel-title a">Certo · por parte do negócio</div>
+        <div class="flow" style="justify-content:flex-start">
+          <div class="node svc"><b>Catálogo</b><span>produto, preço</span></div>
+          <div class="node svc"><b>Pedidos</b><span>carrinho, compra</span></div>
+          <div class="node svc"><b>Pagamento</b><span>cobrança, fraude</span></div>
+        </div>
+        <ul class="ticks plus" style="margin-top:1rem">
+          <li><span class="kw">Uma mudança, um serviço, uma publicação.</span></li>
+          <li>“Produto” no Catálogo é foto e preço; no Estoque é código e quantidade. <span class="kw">Modelos diferentes — e tudo bem.</span></li>
+        </ul>
+      </div>
+    </div>
+    <p class="lead" style="margin:0"><strong>Teste prático:</strong> se toda alteração exige mexer em <span class="kw">três serviços ao mesmo tempo</span>, o corte está no lugar errado.</p>
+    <div class="glossario">
+      <div class="glossario-label">📖 Termos desta tela — em português claro</div>
+      <div class="glossario-grid">
+        <div class="glos"><b>Projeto Orientado ao Domínio (DDD)</b>Método de Eric Evans (2003): modelar o software a partir da linguagem e das regras do negócio.</div>
+        <div class="glos"><b>Contexto delimitado (bounded context)</b>Uma “região” do negócio com vocabulário próprio — candidata natural a virar um serviço.</div>
+        <div class="glos"><b>Camada técnica</b>Divisão por função de programação — tela, regra, banco — e não por assunto do negócio.</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- 15 · FIGUEIRA-MATA-ÁRVORE============================================== -->
+<section class="slide" data-block="4 · Como se faz" data-title="Figueira-mata-árvore: extração gradual">
+  <div class="eyebrow">Bloco 4 · Como se faz direito</div>
+  <h1>Figueira-mata-árvore — extração gradual</h1>
+  <p class="lead">A figueira cresce <span class="kw">envolvendo a árvore</span> hospedeira até substituí-la. É a metáfora de Fowler (<i>Strangler Fig</i>) para migrar <span class="kw">sem parar o negócio</span> — nada de reescrever tudo de uma vez.</p>
+  <div class="body">
+    <div class="grid g3">
+      <div class="stage">
+        <div class="step">Passo 1 · <span class="kw">interceptar</span></div>
+        <div class="flow" style="justify-content:flex-start">
+          <div class="node gw"><b>Portão</b></div><div class="arrow">→</div><div class="node"><b>Monolito</b></div>
+        </div>
+        <p>Todo pedido passa a entrar por um portão na frente do monolito. Nada muda para o usuário — mas agora há <strong>onde desviar</strong>.</p>
+      </div>
+      <div class="stage">
+        <div class="step">Passo 2 · <span class="kw">extrair a ponta</span></div>
+        <div class="flow" style="justify-content:flex-start">
+          <div class="node gw"><b>Portão</b></div><div class="arrow">→</div>
+          <div class="svc-col"><div class="node svc"><b>Notificação</b></div><div class="node"><b>Monolito</b></div></div>
+        </div>
+        <p>Começa-se pela parte <strong>menos ligada às outras</strong> e de menor risco. Só os pedidos de Notificação vão para o serviço novo.</p>
+      </div>
+      <div class="stage">
+        <div class="step">Passo 3 · <span class="kw">migrar e desligar</span></div>
+        <div class="flow" style="justify-content:flex-start">
+          <div class="node gw"><b>Portão</b></div><div class="arrow">→</div>
+          <div class="svc-col"><div class="node svc"><b>Notificação</b></div><div class="node dead"><b>trecho antigo</b></div></div>
+        </div>
+        <p>Os dados mudam de casa, o código antigo sai do monolito. <strong>Repete-se</strong> com a próxima parte.</p>
+      </div>
+    </div>
+    <ul class="ticks">
+      <li><span class="kw">Volta atrás a cada passo</span>: se o serviço novo falhar, o desvio é desfeito — o monolito nunca saiu do ar.</li>
+      <li><span class="kw">O negócio não espera</span>: funcionalidade nova continua saindo durante a migração. Reescrever tudo de uma vez é a receita de fracasso mais documentada da área.</li>
+    </ul>
+  </div>
+</section>
+
+<!-- 16 · GATEWAY E DADOS ================================================= -->
+<section class="slide" data-block="4 · Como se faz" data-title="Portão de entrada e banco por serviço">
+  <div class="eyebrow">Bloco 4 · Padrões estruturais</div>
+  <h1>Duas decisões estruturais: a entrada e os dados</h1>
+  <div class="rule"></div>
+  <div class="body">
+    <div class="split">
+      <div>
+        <div class="panel-title c">Portão de entrada · API Gateway</div>
+        <div class="flow" style="justify-content:flex-start">
+          <div class="node"><b>Clientes</b></div><div class="arrow">→</div>
+          <div class="node gw"><b>Portão</b><span>rota · login · limites</span></div><div class="arrow">→</div>
+          <div class="node svc"><b>Serviços</b></div>
+        </div>
+        <div class="card good" style="margin-top:1rem"><h3>Resolve</h3><p>É o <span class="termo">padrão Fachada</span> um nível acima: <span class="kw">manda cada pedido ao serviço certo</span>, confere o login uma vez só, limita abusos e esconde do cliente as mudanças internas.</p></div>
+        <div class="card cost" style="margin-top:.6rem"><h3>Ameaça</h3><p>Se regra de negócio for morar nele, você <span class="kw">reconstruiu o monolito</span> — agora como <span class="termo">ponto único de falha</span>.</p></div>
+      </div>
+      <div>
+        <div class="panel-title a">Um banco por serviço · e o mundo real</div>
+        <div class="flow" style="justify-content:flex-start;gap:.6rem">
+          <div class="svc-col"><div class="node svc"><b>Pedidos</b></div><div class="db">banco próprio</div></div>
+          <div class="svc-col"><div class="node svc"><b>Estoque</b></div><div class="db">banco próprio</div></div>
+        </div>
+        <ul class="ticks plus" style="margin-top:1rem">
+          <li>É o que torna o serviço <span class="kw">independente de verdade</span>: se o time A muda uma tabela, os times B e C não quebram.</li>
+        </ul>
+        <ul class="ticks" style="margin-top:.55rem">
+          <li><strong>Se o banco compartilhado for inevitável</strong> (sistema antigo, relatório geral): trate como separado — <span class="kw">cada tabela tem um dono</span>, ninguém consulta tabela alheia. E <span class="kw">com data para acabar</span>.</li>
+        </ul>
+      </div>
+    </div>
+    <div class="glossario">
+      <div class="glossario-label">📖 Termos desta tela — em português claro</div>
+      <div class="glossario-grid">
+        <div class="glos"><b>Padrão Fachada (Facade)</b>Padrão de projeto clássico: uma porta única e simples na frente de algo complicado — como uma recepção.</div>
+        <div class="glos"><b>Ponto único de falha</b>Uma peça que, se parar, para tudo. É o que toda arquitetura tenta evitar.</div>
+        <div class="glos"><b>Tabela</b>Onde o banco guarda um tipo de informação — pedidos, clientes — em linhas e colunas, como uma planilha.</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- 17 · SÍNCRONO × ASSÍNCRONO =========================================== -->
+<section class="slide" data-block="4 · Como se faz" data-title="Síncrono × assíncrono">
+  <div class="eyebrow">Bloco 4 · Padrões estruturais</div>
+  <h1>Esperar a resposta <em>×</em> deixar recado</h1>
+  <p class="lead">Nem tudo se resolve na hora. A <span class="kw">análise antifraude</span> de uma compra pode levar minutos — o cliente não pode ficar com a tela travada.</p>
+  <div class="body">
+    <div class="split">
+      <div>
+        <div class="panel-title c">Síncrono · como um telefonema</div>
+        <div class="flow" style="justify-content:flex-start">
+          <div class="node svc"><b>Pedidos</b></div><div class="arrow">→</div><div class="node svc"><b>Estoque</b></div>
+        </div>
+        <ul class="ticks" style="margin-top:.9rem">
+          <li>Pergunta e <span class="kw">espera na linha</span>: simples, resposta na hora.</li>
+          <li><strong>Se o outro cai ou demora, quem ligou trava junto.</strong> Tempo-limite, <span class="termo">nova tentativa</span> e disjuntor são <span class="kw">obrigatórios</span>.</li>
+        </ul>
+      </div>
+      <div>
+        <div class="panel-title a">Assíncrono · como deixar recado</div>
+        <div class="flow" style="justify-content:flex-start">
+          <div class="node svc"><b>Pagamento</b></div><div class="arrow">→</div>
+          <div class="node queue"><b>Fila de mensagens</b><span>RabbitMQ · Kafka</span></div><div class="arrow">→</div>
+          <div class="node svc"><b>Antifraude</b></div>
+        </div>
+        <ul class="ticks plus" style="margin-top:.9rem">
+          <li>Deixa o recado <span class="kw">na fila</span> e segue; a fila segura picos e quedas temporárias.</li>
+          <li><strong>Custo:</strong> o pedido nasce <span class="kw">“em análise”</span> e muda depois; e a mesma mensagem pode chegar <span class="kw">duas vezes</span> — exige <span class="termo">idempotência</span>.</li>
+        </ul>
+      </div>
+    </div>
+    <div class="quote"><p>Regra prática: <em>síncrono</em> quando o usuário está olhando a tela esperando a resposta; <em>assíncrono</em> quando o resto do mundo pode saber daqui a alguns segundos.</p></div>
+    <div class="glossario">
+      <div class="glossario-label">📖 Termos desta tela — em português claro</div>
+      <div class="glossario-grid">
+        <div class="glos"><b>Nova tentativa (retry)</b>Falhou? Tentar de novo, com intervalo — porque muita falha de rede é passageira.</div>
+        <div class="glos"><b>Fila de mensagens</b>Uma caixa de recados entre serviços; quem recebe lê quando puder. RabbitMQ e Kafka são as ferramentas mais conhecidas.</div>
+        <div class="glos"><b>Idempotência</b>Fazer duas vezes dá o mesmo resultado que fazer uma. Essencial para não cobrar o cliente em dobro.</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- 18 · OBSERVABILIDADE ================================================= -->
+<section class="slide" data-block="4 · Como se faz" data-title="Observabilidade">
+  <div class="eyebrow">Bloco 4 · Operação</div>
+  <h1>Observabilidade — o rastro do erro que você perdeu</h1>
+  <p class="lead">No monolito, os registros já saem juntos. Dividido, <span class="kw">cada serviço fala sozinho</span>: é preciso <strong>reconstruir</strong> a visão de sistema único — em três frentes.</p>
+  <div class="body">
+    <div class="grid g3">
+      <div class="card"><h3>Registros (logs)</h3><p>O <span class="kw">diário de bordo</span> de cada serviço, num <span class="kw">formato único</span> para todos — qualquer que seja a linguagem — e reunido num só lugar.</p></div>
+      <div class="card"><h3>Métricas</h3><p>Números ao longo do tempo: <span class="termo">tempo de resposta, erros, saturação</span>. Permitem <span class="kw">antecipar</span>: “às 19h a carga sobe — aumente as cópias meia hora antes”.</p></div>
+      <div class="card"><h3>Rastreamento distribuído</h3><p>Um <span class="termo">identificador de correlação</span> que <span class="kw">acompanha a compra</span> por todos os serviços. Substitui o rastro da pilha perdido.</p></div>
+    </div>
+    <div class="quote"><p>No monolito, observabilidade é desejável. Em microsserviços, é <em>infraestrutura crítica</em>: sem ela você não tem um sistema — tem um conjunto de <em>caixas-pretas</em> que às vezes conversam.</p></div>
+    <div class="glossario">
+      <div class="glossario-label">📖 Termos desta tela — em português claro</div>
+      <div class="glossario-grid">
+        <div class="glos"><b>Observabilidade</b>A capacidade de entender o que está acontecendo dentro do sistema olhando só o que ele registra.</div>
+        <div class="glos"><b>Saturação</b>O quanto um recurso está perto do limite — memória, processador, conexões.</div>
+        <div class="glos"><b>Identificador de correlação</b>Um “número de protocolo” dado ao pedido na entrada e carimbado em cada serviço por onde passa.</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- 19 · COMPETÊNCIAS ==================================================== -->
+<section class="slide" data-block="5 · Competências" data-title="Eu sei programar. Isso resolve?">
+  <div class="eyebrow">Bloco 5 · O que isso exige de você</div>
+  <h1>“Eu sei programar.” <em>Isso resolve?</em></h1>
+  <p class="lead"><span class="kw">Não</span> — e é boa notícia, porque mostra o que estudar. Quem sabe criar uma API já sabe escrever um microsserviço. O trabalho está em <span class="kw">operar dezenas deles</span>.</p>
+  <div class="body">
+    <div class="grid g5">
+      <div class="card"><h3>Contêineres e orquestração</h3><p>Empacotar cada serviço e <span class="kw">gerenciar as cópias</span> no ar.</p><p><span class="inline-code">Docker</span> <span class="inline-code">Kubernetes</span></p></div>
+      <div class="card"><h3>Redes</h3><p>Endereços, balanceamento, tempo-limite: <span class="kw">o espaço entre dois serviços</span>.</p></div>
+      <div class="card"><h3>Segurança</h3><p>Dado protegido <span class="kw">viajando e guardado</span>; quem é você × o que pode fazer.</p></div>
+      <div class="card"><h3>Entrega</h3><p><span class="termo">Publicação automática</span>, ambientes de teste e <span class="kw">como voltar atrás</span>.</p></div>
+      <div class="card"><h3>Observabilidade</h3><p>Registros, métricas, rastreamento e alertas — <span class="kw">ver antes do cliente</span>.</p></div>
+    </div>
+    <div class="quote"><p>Quatro das cinco frentes são de <em>infraestrutura e operação</em> — por isso microsserviços e <em>DevOps</em> aparecem juntos nas vagas. E na entrevista, explicar <em>por que não</em> usar microsserviços num caso concreto impressiona mais do que dez tecnologias no currículo.</p></div>
+    <div class="glossario">
+      <div class="glossario-label">📖 Termos desta tela — em português claro</div>
+      <div class="glossario-grid">
+        <div class="glos"><b>Contêiner (Docker)</b>Uma “caixa” com o programa e tudo de que ele precisa, que roda igual em qualquer máquina.</div>
+        <div class="glos"><b>Orquestração (Kubernetes)</b>Software que liga, desliga, multiplica e reinicia contêineres sozinho.</div>
+        <div class="glos"><b>Publicação automática (CI/CD)</b>Uma esteira que testa e coloca cada versão no ar sem passos manuais.</div>
+        <div class="glos"><b>DevOps</b>Cultura em que quem desenvolve também cuida de pôr e manter o sistema no ar.</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- 20 · FECHAMENTO ====================================================== -->
+<section class="slide" data-block="Fechamento" data-title="Três ideias para levar · contato">
+  <div class="eyebrow">Fechamento</div>
+  <h1>Três ideias para levar</h1>
+  <div class="rule"></div>
+  <div class="body">
+    <div class="takeaway"><div class="n">01</div><p><strong>Arquitetura é o conjunto das <span class="kw">decisões caras de reverter</span>.</strong> Trate-as com mais evidência e menos opinião.</p></div>
+    <div class="takeaway"><div class="n">02</div><p><strong>Microsserviço <span class="kw">não é evolução</span> do monolito — <span class="kw">é uma troca</span>.</strong> Troca-se complexidade de código por complexidade de operação, e só compensa acima de um certo tamanho.</p></div>
+    <div class="takeaway"><div class="n">03</div><p><strong>O corte é <span class="kw">pelo negócio</span> e a extração é <span class="kw">gradual</span>.</strong> Uma parte por vez, nunca reescrevendo tudo.</p></div>
+    <div class="split" style="margin-top:.6rem">
+      <ul class="refs">
+        <li><b>NEWMAN, Sam.</b> <i>Building Microservices</i>. 2. ed. O'Reilly, 2021. — <i>comece por este</i></li>
+        <li><b>RICHARDSON, Chris.</b> <i>Microservices Patterns</i>. Manning, 2018.</li>
+        <li><b>EVANS, Eric.</b> <i>Domain-Driven Design</i>. Addison-Wesley, 2003.</li>
+        <li><b>FOWLER, Martin.</b> <i>MonolithFirst</i>; <i>Microservice Trade-Offs</i>; <i>StranglerFigApplication</i>. martinfowler.com — <i>artigos curtos e gratuitos</i></li>
+      </ul>
+      <div class="card">
+        <h3>Prof. Dr. Ciro J. A. Macedo</h3>
+        <p>Instituto Federal de Goiás · Câmpus Cidade de Goiás</p>
+        <p><span class="inline-code">ciro.macedo@ifg.edu.br</span> <span class="inline-code">github.com/ciromacedo</span></p>
+      </div>
+    </div>
+  </div>
+</section>
+
+</div>
+
+<div class="hud">
+  <div class="block" id="blockLabel">Abertura</div>
+  <div class="ctrl">
+    <button id="ovBtn" title="Índice (tecla O)">Índice</button>
+    <button id="prevBtn" title="Anterior (←)">←</button>
+    <span class="counter" id="counter">1 / 20</span>
+    <button id="nextBtn" title="Próximo (→)">→</button>
+  </div>
+</div>
+
+<div class="overview" id="overview">
+  <h2>Índice da apresentação</h2>
+  <div class="ov-grid" id="ovGrid"></div>
+  <p class="hint">Clique para saltar · <b>O</b> ou <b>Esc</b> fecha · ←/→ ou PgUp/PgDn navegam · Espaço avança · Home/End vão ao início e ao fim</p>
+</div>
+
+<script>
+(function(){
+  const slides = Array.from(document.querySelectorAll('.slide'));
+  const total = slides.length;
+  const progress = document.getElementById('progress');
+  const counter = document.getElementById('counter');
+  const blockLabel = document.getElementById('blockLabel');
+  const prevBtn = document.getElementById('prevBtn');
+  const nextBtn = document.getElementById('nextBtn');
+  const ovBtn = document.getElementById('ovBtn');
+  const overview = document.getElementById('overview');
+  const ovGrid = document.getElementById('ovGrid');
+  let current = 0;
+
+  function show(n){
+    const target = Math.max(0, Math.min(total - 1, n));
+    slides[current].classList.remove('active');
+    current = target;
+    const slide = slides[current];
+    slide.classList.add('active');
+    slide.scrollTop = 0;
+    progress.style.width = ((current + 1) / total * 100) + '%';
+    counter.textContent = (current + 1) + ' / ' + total;
+    blockLabel.textContent = slide.dataset.block || '';
+    prevBtn.disabled = current === 0;
+    nextBtn.disabled = current === total - 1;
+  }
+
+  function move(delta){ show(current + delta); }
+
+  function toggleOverview(force){
+    const open = (force !== undefined) ? force : !overview.classList.contains('open');
+    overview.classList.toggle('open', open);
+  }
+
+  slides.forEach(function(slide, i){
+    const btn = document.createElement('button');
+    btn.innerHTML = '<i>' + String(i + 1).padStart(2, '0') + '</i><span>' + (slide.dataset.title || '') + '</span>';
+    btn.addEventListener('click', function(){ show(i); toggleOverview(false); });
+    ovGrid.appendChild(btn);
+  });
+
+  prevBtn.addEventListener('click', function(){ move(-1); });
+  nextBtn.addEventListener('click', function(){ move(1); });
+  ovBtn.addEventListener('click', function(){ toggleOverview(); });
+
+  document.addEventListener('keydown', function(e){
+    if (e.key === 'Escape'){ toggleOverview(false); return; }
+    if (e.key === 'o' || e.key === 'O'){ toggleOverview(); return; }
+    if (overview.classList.contains('open')) return;
+    switch(e.key){
+      case 'ArrowRight': case 'PageDown': case ' ': e.preventDefault(); move(1); break;
+      case 'ArrowLeft': case 'PageUp': e.preventDefault(); move(-1); break;
+      case 'Home': e.preventDefault(); show(0); break;
+      case 'End': e.preventDefault(); show(total - 1); break;
+    }
+  });
+
+  // navegação por toque, para revisar no celular
+  let touchX = null;
+  document.addEventListener('touchstart', function(e){ touchX = e.changedTouches[0].clientX; }, {passive:true});
+  document.addEventListener('touchend', function(e){
+    if (touchX === null) return;
+    const dx = e.changedTouches[0].clientX - touchX;
+    if (Math.abs(dx) > 60) move(dx < 0 ? 1 : -1);
+    touchX = null;
+  }, {passive:true});
+
+  show(0);
+})();
+</script>
+</body>
+</html>
