@@ -1,0 +1,414 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Interpolação do Enxofre</title>
+<meta name="description" content="Recurso interativo para entender interpolação linear com teores de enxofre entre dois pontos de coleta de solo.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,600;12..96,800&family=Source+Sans+3:wght@400;600&family=JetBrains+Mono:wght@400;600&display=swap">
+<style>
+html{-webkit-text-size-adjust:100%}
+body{margin:0}
+[hidden]{display:none!important}
+/* Layout: talhão visto de cima no topo, gráfico de perfil logo abaixo, conta passo a passo ao lado */
+:root{
+  --bg:#F2F4EC; --surface:#FFFFFF; --ink:#1E2820; --muted:#5A675C; --line:#D3DACB;
+  --field:#E2EAD5; --row:#CCD8BD; --sulfur:#C99E00; --sulfur-ink:#755C00; --sulfur-soft:#F6EBB5;
+  --pt:#24372A; --pt-ink:#FFFFFF;
+  --f-display:"Bricolage Grotesque", "Segoe UI", system-ui, sans-serif;
+  --f-body:"Source Sans 3", "Segoe UI", system-ui, sans-serif;
+  --f-mono:"JetBrains Mono", ui-monospace, Consolas, monospace;
+}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){
+  --bg:#131915; --surface:#1B231D; --ink:#E5EBE2; --muted:#9BA89D; --line:#2D3930;
+  --field:#1D2A21; --row:#283629; --sulfur:#F0C53E; --sulfur-ink:#F0C53E; --sulfur-soft:#3A3417;
+  --pt:#E5EBE2; --pt-ink:#131915; color-scheme:dark}}
+:root[data-theme="dark"]{
+  --bg:#131915; --surface:#1B231D; --ink:#E5EBE2; --muted:#9BA89D; --line:#2D3930;
+  --field:#1D2A21; --row:#283629; --sulfur:#F0C53E; --sulfur-ink:#F0C53E; --sulfur-soft:#3A3417;
+  --pt:#E5EBE2; --pt-ink:#131915; color-scheme:dark}
+
+*{box-sizing:border-box}
+body{background:var(--bg);color:var(--ink);font-family:var(--f-body);font-size:16px;line-height:1.5}
+.wrap{max-width:1180px;margin:0 auto;padding-block:28px 48px;
+  padding-left:max(16px, env(safe-area-inset-left, 0px));padding-right:max(16px, env(safe-area-inset-right, 0px));
+  display:grid;gap:22px}
+header{display:grid;gap:6px;max-width:72ch}
+.eyebrow{font-family:var(--f-mono);font-size:12px;letter-spacing:.08em;text-transform:uppercase;color:var(--sulfur-ink)}
+h1{font-family:var(--f-display);font-weight:800;font-size:clamp(28px,4.4vw,44px);line-height:1.05;margin:0;text-wrap:balance}
+h1 .s{display:inline-grid;place-items:center;width:1.15em;height:1.15em;border-radius:6px;background:var(--sulfur);color:#1E2820;font-size:.8em;vertical-align:.08em;margin-right:.12em}
+header p{margin:0;color:var(--muted)}
+h2{font-family:var(--f-display);font-weight:600;font-size:18px;margin:0}
+.grid{display:grid;grid-template-columns:minmax(0,1.7fr) minmax(0,1fr);gap:22px;align-items:start}
+@media (max-width:900px){.grid{grid-template-columns:minmax(0,1fr)}}
+.col{display:grid;gap:22px;min-width:0}
+.panel{background:var(--surface);border:1px solid var(--line);border-radius:10px;padding:18px;display:grid;gap:12px;min-width:0}
+.panel-head{display:flex;justify-content:space-between;align-items:baseline;gap:12px;flex-wrap:wrap}
+.hint{font-size:13px;color:var(--muted)}
+svg{display:block;width:100%;height:auto;touch-action:none;user-select:none}
+.map{cursor:grab}
+.map:active{cursor:grabbing}
+
+/* slider */
+.slider{display:grid;gap:6px}
+.slider-row{display:flex;justify-content:space-between;font-family:var(--f-mono);font-size:12px;color:var(--muted)}
+input[type=range]{width:100%;accent-color:var(--sulfur);height:28px}
+
+/* inputs */
+.inputs{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px}
+@media (max-width:520px){.inputs{grid-template-columns:minmax(0,1fr)}}
+fieldset{border:1px solid var(--line);border-radius:8px;padding:10px 12px 12px;margin:0;display:grid;gap:8px;min-width:0}
+legend{font-family:var(--f-display);font-weight:600;padding:0 6px;display:flex;align-items:center;gap:6px}
+.tag{display:inline-grid;place-items:center;width:22px;height:22px;border-radius:50%;background:var(--pt);color:var(--pt-ink);font-family:var(--f-mono);font-size:12px;font-weight:600}
+label{display:grid;gap:2px;font-size:13px;color:var(--muted)}
+input[type=number],select{font-family:var(--f-mono);font-size:14px;padding:6px 8px;border:1px solid var(--line);border-radius:6px;background:var(--bg);color:var(--ink);width:100%;min-width:0}
+input:focus-visible,select:focus-visible,button:focus-visible{outline:2px solid var(--sulfur);outline-offset:2px}
+
+/* conta */
+.result{display:grid;gap:2px;padding:14px;border-radius:8px;background:var(--sulfur-soft)}
+.result .big{font-family:var(--f-display);font-weight:800;font-size:40px;line-height:1;font-variant-numeric:tabular-nums}
+.result .big small{font-family:var(--f-body);font-weight:400;font-size:15px;color:var(--muted)}
+.pill{justify-self:start;font-size:12px;font-weight:600;padding:2px 10px;border-radius:99px;border:1px solid currentColor}
+.steps{display:grid;gap:10px;margin:0;padding:0;list-style:none;counter-reset:s}
+.steps li{display:grid;grid-template-columns:24px minmax(0,1fr);gap:8px;counter-increment:s}
+.steps li::before{content:counter(s);font-family:var(--f-mono);font-size:12px;color:var(--sulfur-ink);padding-top:2px}
+.steps .t{font-size:14px;color:var(--muted)}
+.eq{font-family:var(--f-mono);font-size:14px;font-variant-numeric:tabular-nums;overflow-x:auto;white-space:nowrap}
+.eq b{color:var(--sulfur-ink);font-weight:600}
+.weights{display:grid;gap:6px}
+.wbar{display:flex;height:26px;border-radius:6px;overflow:hidden;font-family:var(--f-mono);font-size:12px}
+.wbar span{display:flex;align-items:center;padding:0 8px;white-space:nowrap;overflow:hidden;transition:flex-basis .15s}
+.wbar .wa{background:var(--pt);color:var(--pt-ink)}
+.wbar .wb{background:var(--sulfur);color:#1E2820;justify-content:flex-end}
+
+/* tabela */
+.tools{display:flex;gap:10px;align-items:end;flex-wrap:wrap}
+.tools label{width:170px}
+button{font-family:var(--f-body);font-weight:600;font-size:14px;padding:7px 14px;border-radius:6px;border:1px solid var(--line);background:var(--bg);color:var(--ink);cursor:pointer}
+button:hover{border-color:var(--sulfur)}
+button[aria-pressed=true]{background:var(--sulfur);color:#1E2820;border-color:var(--sulfur)}
+.tablewrap{overflow-x:auto}
+table{border-collapse:collapse;width:100%;font-variant-numeric:tabular-nums;font-size:14px}
+th,td{text-align:right;padding:6px 10px;border-bottom:1px solid var(--line);white-space:nowrap}
+th{font-weight:600;color:var(--muted);font-size:12px;text-transform:uppercase;letter-spacing:.05em}
+th:first-child,td:first-child{text-align:left}
+td.mono{font-family:var(--f-mono);font-size:13px}
+tr.end td{color:var(--muted)}
+.note{font-size:14px;color:var(--muted);border-left:3px solid var(--sulfur);padding-left:12px;margin:0}
+
+/* svg classes */
+.f-field{fill:var(--field)} .s-row{stroke:var(--row)} .s-line{stroke:var(--line)}
+.f-pt{fill:var(--pt)} .f-ptink{fill:var(--pt-ink)} .f-ink{fill:var(--ink)} .f-muted{fill:var(--muted)}
+.f-sulfur{fill:var(--sulfur)} .s-sulfur{stroke:var(--sulfur)} .s-ink{stroke:var(--ink)} .s-muted{stroke:var(--muted)}
+.f-surface{fill:var(--surface)} .s-surface{stroke:var(--surface)}
+.lbl{font-family:var(--f-mono);font-size:12px}
+.lbl-b{font-family:var(--f-display);font-weight:600;font-size:14px}
+@media (prefers-reduced-motion:reduce){.wbar span{transition:none}}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <div class="eyebrow">Matemática aplicada · Agronomia de precisão</div>
+    <h1><span class="s">S</span>Quanto enxofre tem entre as duas amostras?</h1>
+    <p>Um agrônomo coletou solo em dois pontos do talhão (0–20 cm) e mediu o enxofre em laboratório. No caminho entre eles ninguém coletou nada. A <strong>interpolação linear</strong> estima esses valores supondo que o teor muda de forma constante de um ponto ao outro.</p>
+  </header>
+
+  <div class="grid">
+    <div class="col">
+      <section class="panel">
+        <div class="panel-head">
+          <h2>Talhão visto de cima</h2>
+          <span class="hint">Arraste o ponto amarelo ou use o controle abaixo</span>
+        </div>
+        <svg id="map" class="map" viewBox="0 0 800 380" role="img" aria-label="Mapa do talhão com os pontos de coleta A e B e o ponto estimado P"></svg>
+        <div class="slider">
+          <input id="t" type="range" min="0" max="1000" value="350" aria-label="Posição do ponto P entre A e B">
+          <div class="slider-row"><span>A (0%)</span><span id="tlabel">35%</span><span>B (100%)</span></div>
+        </div>
+      </section>
+
+      <section class="panel">
+        <div class="panel-head">
+          <h2>Perfil do enxofre ao longo do caminho</h2>
+          <span class="hint">Distância a partir de A × teor estimado</span>
+        </div>
+        <svg id="chart" viewBox="0 0 800 300" role="img" aria-label="Gráfico do teor de enxofre em função da distância"></svg>
+      </section>
+
+      <section class="panel">
+        <div class="panel-head">
+          <h2>Gerar pontos intermediários</h2>
+          <span class="hint">Pontos igualmente espaçados entre A e B</span>
+        </div>
+        <div class="tools">
+          <label for="n">Quantidade de pontos
+            <select id="n">
+              <option>1</option><option>2</option><option>3</option><option selected>4</option>
+              <option>5</option><option>6</option><option>7</option><option>8</option><option>9</option>
+            </select>
+          </label>
+          <button id="show" type="button" aria-pressed="true">Mostrar no mapa</button>
+        </div>
+        <div class="tablewrap"><table id="tbl"></table></div>
+      </section>
+    </div>
+
+    <div class="col">
+      <section class="panel">
+        <h2>Ponto estimado P</h2>
+        <div class="result">
+          <span class="hint">Enxofre estimado (S‑SO₄)</span>
+          <span class="big" id="sval">–</span>
+          <span class="pill" id="sclass">–</span>
+        </div>
+        <ol class="steps" id="steps"></ol>
+        <div class="weights">
+          <span class="hint">Peso de cada amostra no resultado</span>
+          <div class="wbar"><span class="wa" id="wa">A</span><span class="wb" id="wb">B</span></div>
+        </div>
+      </section>
+
+      <section class="panel">
+        <h2>Dados de campo</h2>
+        <div class="inputs">
+          <fieldset>
+            <legend><span class="tag">A</span>Amostra A</legend>
+            <label for="aLat">Latitude<input id="aLat" type="number" step="0.0001"></label>
+            <label for="aLon">Longitude<input id="aLon" type="number" step="0.0001"></label>
+            <label for="aS">Enxofre (mg/dm³)<input id="aS" type="number" step="0.1" min="0"></label>
+          </fieldset>
+          <fieldset>
+            <legend><span class="tag">B</span>Amostra B</legend>
+            <label for="bLat">Latitude<input id="bLat" type="number" step="0.0001"></label>
+            <label for="bLon">Longitude<input id="bLon" type="number" step="0.0001"></label>
+            <label for="bS">Enxofre (mg/dm³)<input id="bS" type="number" step="0.1" min="0"></label>
+          </fieldset>
+        </div>
+        <span class="hint">Valores de exemplo. Troque pelos dados da turma.</span>
+      </section>
+
+      <p class="note">A interpolação é uma <strong>estimativa</strong>. Ela só usa A e B e supõe uma variação em linha reta. Se houver uma mancha de solo diferente no meio do caminho, só uma nova coleta revela. Por isso, quanto mais pontos de coleta, melhor o mapa.</p>
+      <p class="hint">Faixas de referência aproximadas para S no Cerrado (0–20 cm): baixo ≤ 4, médio 5–9, adequado ≥ 10 mg/dm³.</p>
+    </div>
+  </div>
+</div>
+<script>
+const st = {
+  A:{lat:-16.6012, lon:-49.2645, s:4},
+  B:{lat:-16.6048, lon:-49.2581, s:18},
+  t:0.35, n:4, show:true
+};
+const $ = id => document.getElementById(id);
+const fmt = (v,d=1) => v.toLocaleString('pt-BR',{minimumFractionDigits:d,maximumFractionDigits:d});
+const lerp = (a,b,t) => a + t*(b-a);
+const clamp = (v,a,b) => Math.max(a,Math.min(b,v));
+
+function haversine(p,q){
+  const R=6371000, r=Math.PI/180;
+  const dLat=(q.lat-p.lat)*r, dLon=(q.lon-p.lon)*r;
+  const h=Math.sin(dLat/2)**2+Math.cos(p.lat*r)*Math.cos(q.lat*r)*Math.sin(dLon/2)**2;
+  return 2*R*Math.asin(Math.sqrt(h));
+}
+function pointAt(t){
+  return {lat:lerp(st.A.lat,st.B.lat,t), lon:lerp(st.A.lon,st.B.lon,t), s:lerp(st.A.s,st.B.s,t)};
+}
+function sClass(s){
+  if (s <= 4.5) return {txt:'Baixo', c:'#B5502E'};
+  if (s < 9.5) return {txt:'Médio', c:'#B07D00'};
+  return {txt:'Adequado', c:'#2F7A4C'};
+}
+// cor do enxofre: claro (pouco) a amarelo intenso (muito)
+function sColor(s, max){
+  const k = clamp(s/max,0,1);
+  const a=[247,239,196], b=[199,150,0];
+  return `rgb(${a.map((v,i)=>Math.round(lerp(v,b[i],k))).join(',')})`;
+}
+function niceStep(x){
+  const p=10**Math.floor(Math.log10(x)), m=x/p;
+  return (m<1.5?1:m<3.5?2:m<7.5?5:10)*p;
+}
+
+/* ---------- mapa ---------- */
+const MW=800, MH=380, PAD=70;
+let proj;
+function buildProj(){
+  const lat0=(st.A.lat+st.B.lat)/2, lon0=(st.A.lon+st.B.lon)/2;
+  const kx=111320*Math.cos(lat0*Math.PI/180), ky=110540;
+  const toM = p => ({x:(p.lon-lon0)*kx, y:(p.lat-lat0)*ky});
+  const a=toM(st.A), b=toM(st.B);
+  const w=Math.max(Math.abs(b.x-a.x),1), h=Math.max(Math.abs(b.y-a.y),1);
+  const scale=Math.min((MW-2*PAD)/w,(MH-2*PAD)/h);
+  proj = {
+    scale,
+    xy: p => { const m=toM(p); return {x:MW/2+m.x*scale, y:MH/2-m.y*scale}; }
+  };
+}
+function renderMap(){
+  buildProj();
+  const A=proj.xy(st.A), B=proj.xy(st.B);
+  const P=pointAt(st.t), Pp=proj.xy(P);
+  const max=Math.max(st.A.s,st.B.s,1)*1.1;
+  let g='';
+  // talhão com linhas de plantio
+  g+=`<defs><pattern id="rows" width="18" height="18" patternUnits="userSpaceOnUse" patternTransform="rotate(-28)"><line x1="0" y1="0" x2="0" y2="18" class="s-row" stroke-width="2"/></pattern>
+      <linearGradient id="sg" gradientUnits="userSpaceOnUse" x1="${A.x}" y1="${A.y}" x2="${B.x}" y2="${B.y}">
+        <stop offset="0" stop-color="${sColor(st.A.s,max)}"/><stop offset="1" stop-color="${sColor(st.B.s,max)}"/></linearGradient></defs>`;
+  g+=`<rect x="10" y="10" width="${MW-20}" height="${MH-20}" rx="14" class="f-field"/>`;
+  g+=`<rect x="10" y="10" width="${MW-20}" height="${MH-20}" rx="14" fill="url(#rows)"/>`;
+  // faixa colorida do enxofre
+  g+=`<line x1="${A.x}" y1="${A.y}" x2="${B.x}" y2="${B.y}" stroke="url(#sg)" stroke-width="22" stroke-linecap="round"/>`;
+  g+=`<line x1="${A.x}" y1="${A.y}" x2="${B.x}" y2="${B.y}" class="s-ink" stroke-width="1.5" stroke-dasharray="4 5" opacity=".55"/>`;
+  // pontos intermediários
+  if (st.show){
+    for(let i=1;i<=st.n;i++){
+      const q=proj.xy(pointAt(i/(st.n+1)));
+      g+=`<circle cx="${q.x}" cy="${q.y}" r="6" class="f-surface s-ink" stroke-width="1.5"/>`;
+      g+=`<text x="${q.x}" y="${q.y+24}" text-anchor="middle" class="lbl f-muted">${i}</text>`;
+    }
+  }
+  // A e B
+  const pin=(p,l,d)=>{
+    const dy = p.y < MH/2 ? 1 : -1;
+    return `<circle cx="${p.x}" cy="${p.y}" r="15" class="f-pt"/>
+      <text x="${p.x}" y="${p.y+5}" text-anchor="middle" class="lbl-b f-ptink">${l}</text>
+      <text x="${p.x}" y="${p.y+dy*34}" text-anchor="middle" class="lbl-b f-ink">${fmt(d.s)} mg/dm³</text>
+      <text x="${p.x}" y="${p.y+dy*34+(dy>0?16:-16)}" text-anchor="middle" class="lbl f-muted">${d.lat.toFixed(4)}, ${d.lon.toFixed(4)}</text>`;
+  };
+  g+=pin(A,'A',st.A)+pin(B,'B',st.B);
+  // P
+  g+=`<circle id="probe" cx="${Pp.x}" cy="${Pp.y}" r="13" class="f-sulfur s-ink" stroke-width="2.5" style="cursor:grab"/>`;
+  g+=`<text x="${Pp.x}" y="${Pp.y+4.5}" text-anchor="middle" class="lbl-b" fill="#1E2820" pointer-events="none">P</text>`;
+  // norte + escala
+  g+=`<g transform="translate(${MW-44},44)"><path d="M0,-18 L7,6 L0,1 L-7,6 Z" class="f-ink"/><text y="22" text-anchor="middle" class="lbl f-ink">N</text></g>`;
+  const D=haversine(st.A,st.B);
+  const sm=niceStep(D/4), spx=sm*proj.scale;
+  g+=`<g transform="translate(30,${MH-34})"><rect x="-6" y="-16" width="${spx+70}" height="30" rx="5" class="f-surface" opacity=".85"/>
+      <line x1="0" y1="0" x2="${spx}" y2="0" class="s-ink" stroke-width="3"/>
+      <line x1="0" y1="-5" x2="0" y2="5" class="s-ink" stroke-width="2"/><line x1="${spx}" y1="-5" x2="${spx}" y2="5" class="s-ink" stroke-width="2"/>
+      <text x="${spx+8}" y="4" class="lbl f-ink">${fmt(sm,0)} m</text></g>`;
+  $('map').innerHTML=g;
+}
+
+/* ---------- gráfico ---------- */
+const CW=800, CH=300, cl=62, cr=24, ct=22, cb=48;
+function renderChart(){
+  const D=haversine(st.A,st.B);
+  const ymaxRaw=Math.max(st.A.s,st.B.s,1)*1.2;
+  const ys=niceStep(ymaxRaw/4), ymax=Math.ceil(ymaxRaw/ys)*ys;
+  const X=d=>cl+d/D*(CW-cl-cr), Y=v=>CH-cb-v/ymax*(CH-ct-cb);
+  let g='';
+  for(let v=0; v<=ymax+1e-9; v+=ys){
+    g+=`<line x1="${cl}" x2="${CW-cr}" y1="${Y(v)}" y2="${Y(v)}" class="s-line"/>`;
+    g+=`<text x="${cl-10}" y="${Y(v)+4}" text-anchor="end" class="lbl f-muted">${fmt(v,0)}</text>`;
+  }
+  const xs=niceStep(D/5);
+  for(let d=0; d<=D+1e-9; d+=xs){
+    g+=`<text x="${X(d)}" y="${CH-cb+20}" text-anchor="middle" class="lbl f-muted">${fmt(d,0)}</text>`;
+  }
+  g+=`<text x="${(cl+CW-cr)/2}" y="${CH-8}" text-anchor="middle" class="lbl f-muted">distância a partir de A (m)</text>`;
+  g+=`<text transform="translate(16,${(ct+CH-cb)/2}) rotate(-90)" text-anchor="middle" class="lbl f-muted">S (mg/dm³)</text>`;
+  // área + reta
+  g+=`<path d="M${X(0)},${Y(0)} L${X(0)},${Y(st.A.s)} L${X(D)},${Y(st.B.s)} L${X(D)},${Y(0)} Z" class="f-sulfur" opacity=".18"/>`;
+  g+=`<line x1="${X(0)}" y1="${Y(st.A.s)}" x2="${X(D)}" y2="${Y(st.B.s)}" class="s-sulfur" stroke-width="3"/>`;
+  if (st.show){
+    for(let i=1;i<=st.n;i++){
+      const t=i/(st.n+1);
+      g+=`<circle cx="${X(t*D)}" cy="${Y(lerp(st.A.s,st.B.s,t))}" r="5" class="f-surface s-ink" stroke-width="1.5"/>`;
+    }
+  }
+  // P com guias
+  const P=pointAt(st.t), px=X(st.t*D), py=Y(P.s);
+  g+=`<line x1="${px}" y1="${CH-cb}" x2="${px}" y2="${py}" class="s-muted" stroke-dasharray="4 4"/>`;
+  g+=`<line x1="${cl}" y1="${py}" x2="${px}" y2="${py}" class="s-muted" stroke-dasharray="4 4"/>`;
+  [[0,st.A.s,'A'],[D,st.B.s,'B']].forEach(([d,v,l])=>{
+    g+=`<circle cx="${X(d)}" cy="${Y(v)}" r="11" class="f-pt"/><text x="${X(d)}" y="${Y(v)+4}" text-anchor="middle" class="lbl-b f-ptink" style="font-size:12px">${l}</text>`;
+  });
+  g+=`<circle cx="${px}" cy="${py}" r="9" class="f-sulfur s-ink" stroke-width="2"/>`;
+  const right = px > CW-170;
+  g+=`<text x="${px+(right?-14:14)}" y="${py-12}" text-anchor="${right?'end':'start'}" class="lbl-b f-ink">P ≈ ${fmt(P.s)}</text>`;
+  g+=`<line x1="${cl}" y1="${CH-cb}" x2="${CW-cr}" y2="${CH-cb}" class="s-ink"/>`;
+  $('chart').innerHTML=g;
+}
+
+/* ---------- painel de cálculo ---------- */
+function renderCalc(){
+  const D=haversine(st.A,st.B), t=st.t, d=t*D, P=pointAt(t);
+  const c=sClass(P.s);
+  $('sval').innerHTML=`${fmt(P.s)} <small>mg/dm³</small>`;
+  const pill=$('sclass'); pill.textContent=c.txt; pill.style.color=c.c;
+  $('tlabel').textContent=`${fmt(t*100,0)}% do caminho`;
+  $('steps').innerHTML=`
+    <li><div><div class="t">Distância total entre A e B</div><div class="eq">D = <b>${fmt(D,1)} m</b></div></div></li>
+    <li><div><div class="t">Quanto P já andou a partir de A</div><div class="eq">d = <b>${fmt(d,1)} m</b></div></div></li>
+    <li><div><div class="t">Fração do caminho</div><div class="eq">t = d ÷ D = ${fmt(d,1)} ÷ ${fmt(D,1)} = <b>${fmt(t,3)}</b></div></div></li>
+    <li><div><div class="t">Fórmula da interpolação linear</div><div class="eq">S(P) = S<sub>A</sub> + t × (S<sub>B</sub> − S<sub>A</sub>)</div>
+      <div class="eq">S(P) = ${fmt(st.A.s)} + ${fmt(t,3)} × (${fmt(st.B.s)} − ${fmt(st.A.s)})</div>
+      <div class="eq">S(P) = ${fmt(st.A.s)} + ${fmt(t*(st.B.s-st.A.s),2)} = <b>${fmt(P.s,2)}</b></div></div></li>
+    <li><div><div class="t">Coordenada de P (mesma regra)</div>
+      <div class="eq">lat = <b>${P.lat.toFixed(5)}</b></div><div class="eq">lon = <b>${P.lon.toFixed(5)}</b></div></div></li>`;
+  const wa=(1-t)*100, wb=t*100;
+  $('wa').style.flexBasis=wa+'%'; $('wb').style.flexBasis=wb+'%';
+  $('wa').textContent=wa>=14?`A ${fmt(wa,0)}%`:'';
+  $('wb').textContent=wb>=14?`B ${fmt(wb,0)}%`:'';
+}
+
+/* ---------- tabela ---------- */
+function renderTable(){
+  const D=haversine(st.A,st.B);
+  let h=`<thead><tr><th>Ponto</th><th>Latitude</th><th>Longitude</th><th>Dist. de A (m)</th><th>t</th><th>S (mg/dm³)</th></tr></thead><tbody>`;
+  const row=(name,t,cls='')=>{
+    const p=pointAt(t);
+    return `<tr class="${cls}"><td>${name}</td><td class="mono">${p.lat.toFixed(5)}</td><td class="mono">${p.lon.toFixed(5)}</td><td>${fmt(t*D,1)}</td><td>${fmt(t,3)}</td><td><strong>${fmt(p.s,2)}</strong></td></tr>`;
+  };
+  h+=row('A (coletado)',0,'end');
+  for(let i=1;i<=st.n;i++) h+=row(`${i} (estimado)`, i/(st.n+1));
+  h+=row('B (coletado)',1,'end');
+  $('tbl').innerHTML=h+'</tbody>';
+}
+
+function render(){ renderMap(); renderChart(); renderCalc(); renderTable(); }
+
+/* ---------- interação ---------- */
+function svgPoint(svg,e){
+  const pt=svg.createSVGPoint(); pt.x=e.clientX; pt.y=e.clientY;
+  return pt.matrixTransform(svg.getScreenCTM().inverse());
+}
+function setT(t){ st.t=clamp(t,0,1); $('t').value=Math.round(st.t*1000); renderMap(); renderChart(); renderCalc(); }
+
+const map=$('map');
+let dragging=false;
+function tFromMap(e){
+  const p=svgPoint(map,e), A=proj.xy(st.A), B=proj.xy(st.B);
+  const vx=B.x-A.x, vy=B.y-A.y, L=vx*vx+vy*vy||1;
+  return ((p.x-A.x)*vx+(p.y-A.y)*vy)/L;
+}
+map.addEventListener('pointerdown',e=>{dragging=true; map.setPointerCapture(e.pointerId); setT(tFromMap(e));});
+map.addEventListener('pointermove',e=>{ if(dragging) setT(tFromMap(e)); });
+map.addEventListener('pointerup',()=>dragging=false);
+map.addEventListener('pointercancel',()=>dragging=false);
+
+const chart=$('chart'); let cdrag=false;
+const tFromChart=e=>(svgPoint(chart,e).x-cl)/(CW-cl-cr);
+chart.addEventListener('pointerdown',e=>{cdrag=true; chart.setPointerCapture(e.pointerId); setT(tFromChart(e));});
+chart.addEventListener('pointermove',e=>{ if(cdrag) setT(tFromChart(e)); });
+chart.addEventListener('pointerup',()=>cdrag=false);
+chart.addEventListener('pointercancel',()=>cdrag=false);
+
+$('t').addEventListener('input',e=>setT(e.target.value/1000));
+$('n').addEventListener('change',e=>{st.n=+e.target.value; render();});
+$('show').addEventListener('click',e=>{st.show=!st.show; e.currentTarget.setAttribute('aria-pressed',st.show); e.currentTarget.textContent=st.show?'Mostrar no mapa':'Mostrar no mapa'; render();});
+
+const fields={aLat:['A','lat'],aLon:['A','lon'],aS:['A','s'],bLat:['B','lat'],bLon:['B','lon'],bS:['B','s']};
+for(const [id,[k,f]] of Object.entries(fields)){
+  const el=$(id); el.value=st[k][f];
+  el.addEventListener('input',()=>{
+    const v=parseFloat(el.value);
+    if(Number.isFinite(v)){ st[k][f]= f==='s'?Math.max(0,v):v; render(); }
+  });
+}
+render();
+</script>
+</body>
+</html>
